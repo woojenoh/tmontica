@@ -16,59 +16,115 @@
     <i class="fas fa-bars menu-icon"></i>
     <h1 class="title">메뉴 관리</h1>
   </header>
-  <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-    <div class="sidebar-sticky">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fas fa-shopping-cart feather"></i>
-              주문 관리
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fas fa-coffee feather"></i>
-              메뉴 관리
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="far fa-flag feather"></i>
-              배너 관리
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="fas fa-user feather"></i>
-              사용자 관리
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="far fa-chart-bar feather"></i>
-              통계
-            </a>
-          </li>
-        </ul>      
-    </div>
-  </nav>
-  <section>
-    <div id="login-form" class="card">
-        <h3>로그인</h3>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">아이디</span>
+  <div class="main-wrapper">
+      <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+              <ul class="nav flex-column">
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-shopping-cart feather"></i>
+                    주문 관리
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-coffee feather"></i>
+                    메뉴 관리
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far fa-flag feather"></i>
+                    배너 관리
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="fas fa-user feather"></i>
+                    사용자 관리
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="far fa-chart-bar feather"></i>
+                    통계
+                  </a>
+                </li>
+              </ul>      
           </div>
-          <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="아이디를 입력하세요.">
-        </div>
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text">비밀번호</span>
+      </nav>
+      <main class="col-md-10">
+        <section>
+            <div class="content-head d-flex flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <button class="btn btn-primary" style="margin-right: 10px;" data-toggle="modal" data-target="#menuModal">메뉴 추가</button>
+                <button class="btn btn-primary">이달의 메뉴 보기</button>
+            </div>
+            <table class="content-table table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th>
+                    <input type="checkbox" aria-label="Checkbox for following text input">
+                  </th>
+                  <th>미리보기</th>
+                  <th>카테고리</th>
+                  <th>메뉴명</th>
+                  <th>설명</th>
+                  <th>이달의 메뉴</th>
+                  <th>상품가</th>
+                  <th>할인율</th>
+                  <th>판매가</th>
+                  <th>재고</th>
+                  <th>등록일</th>
+                  <th>등록인</th>
+                  <th>수정일</th>
+                  <th>수정인</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="checkbox" aria-label="Checkbox for following text input">
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+        </section>
+
+        <!-- 메뉴 등록/수정 모달 -->
+        <div class="modal fade" id="menuModal" tabindex="-1" role="dialog" aria-labelledby="menuModalLabel" aria-hidden="true">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="menuModalLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              ...
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
           </div>
-          <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="비밀번호를 입력하세요.">
         </div>
-        <button>로그인</button>   
-    </div>
-  </section>
+      </main>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>

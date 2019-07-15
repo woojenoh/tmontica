@@ -4,3 +4,18 @@
 body {
  font-family: 'Noto Sans KR', sans-serif;
 }
+
+.main-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.content-head h3{
+  color: rgb(33, 37, 41);
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.content-table {
+  min-width: 932px;
+}
