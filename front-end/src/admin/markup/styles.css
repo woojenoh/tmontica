@@ -1,0 +1,6 @@
+@font-face { font-family: 'TmonMonsori'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/TmonMonsori.woff') format('woff'); font-weight: normal; font-style: normal; }
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+body {
+ font-family: 'Noto Sans KR', sans-serif;
+}
