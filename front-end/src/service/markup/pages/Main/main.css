@@ -1,5 +1,5 @@
 .header {
-  box-shadow: 0px 1px 15px 0px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #ebebeb;
 }
 
 .header__container {
@@ -29,4 +29,19 @@
 
 .header__item:first-child {
   margin-left: 0;
+}
+
+.banner__wrapper {
+  max-width: 1024px;
+  margin: 0 auto;
+  margin-top: 50px;
+  padding: 0 20px;
+}
+
+.banner {
+  border: 1px solid #ebebeb;
+  height: 150px;
+}
+
+.banner__img {
 }
