@@ -9,11 +9,11 @@ USE `tmontica` ;
 -- -----------------------------------------------------
 -- Table `tmontica`.`user`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `tmontica`.`user` ;
+DROP TABLE IF EXISTS `tmontica`.`users` ;
 
 
 
-CREATE TABLE IF NOT EXISTS `tmontica`.`user` (
+CREATE TABLE IF NOT EXISTS `tmontica`.`users` (
   `name` VARCHAR(45) NOT NULL,
   `id` VARCHAR(45) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
@@ -29,13 +29,13 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `tmontica`.`menu`
+-- Table `tmontica`.`menus`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `tmontica`.`menu` ;
+DROP TABLE IF EXISTS `tmontica`.`menus` ;
 
 
 
-CREATE TABLE IF NOT EXISTS `tmontica`.`menu` (
+CREATE TABLE IF NOT EXISTS `tmontica`.`menus` (
   `name_eng` VARCHAR(45) NOT NULL,
   `product_price` INT NOT NULL,
   `category` VARCHAR(45) NOT NULL,
@@ -61,11 +61,11 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `tmontica`.`cart_menu`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `tmontica`.`cart_menu` ;
+DROP TABLE IF EXISTS `tmontica`.`cart_menus` ;
 
 
 
-CREATE TABLE IF NOT EXISTS `tmontica`.`cart_menu` (
+CREATE TABLE IF NOT EXISTS `tmontica`.`cart_menus` (
   `quantity` INT NOT NULL,
   `option` VARCHAR(255) NULL,
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -75,12 +75,12 @@ CREATE TABLE IF NOT EXISTS `tmontica`.`cart_menu` (
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_Cart_item_User`
     FOREIGN KEY (`user_id`)
-    REFERENCES `tmontica`.`user` (`id`)
+    REFERENCES `tmontica`.`users` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_cart_menu_menu1`
     FOREIGN KEY (`menu_id`)
-    REFERENCES `tmontica`.`menu` (`id`)
+    REFERENCES `tmontica`.`menus` (`id`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -92,11 +92,11 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `tmontica`.`order`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `tmontica`.`order` ;
+DROP TABLE IF EXISTS `tmontica`.`orders` ;
 
 
 
-CREATE TABLE IF NOT EXISTS `tmontica`.`order` (
+CREATE TABLE IF NOT EXISTS `tmontica`.`orders` (
   `id` INT NOT NULL,
   `order_date` DATETIME NOT NULL,
   `payment` VARCHAR(45) NOT NULL,
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `tmontica`.`order` (
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_order_user1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `tmontica`.`user` (`id`)
+    REFERENCES `tmontica`.`users` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -121,15 +121,15 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `tmontica`.`option`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `tmontica`.`option` ;
+DROP TABLE IF EXISTS `tmontica`.`options` ;
 
 
 
-CREATE TABLE IF NOT EXISTS `tmontica`.`option` (
+CREATE TABLE IF NOT EXISTS `tmontica`.`options` (
   `name` VARCHAR(45) NOT NULL,
   `price` INT NOT NULL,
   `type` VARCHAR(45) NOT NULL,
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -139,11 +139,11 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `tmontica`.`order_detail`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `tmontica`.`order_detail` ;
+DROP TABLE IF EXISTS `tmontica`.`order_details` ;
 
 
 
-CREATE TABLE IF NOT EXISTS `tmontica`.`order_detail` (
+CREATE TABLE IF NOT EXISTS `tmontica`.`order_details` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `order_id` INT NOT NULL,
   `option` VARCHAR(255) NULL,
@@ -153,12 +153,12 @@ CREATE TABLE IF NOT EXISTS `tmontica`.`order_detail` (
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_order_detail_order1`
     FOREIGN KEY (`order_id`)
-    REFERENCES `tmontica`.`order` (`id`)
+    REFERENCES `tmontica`.`orders` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_order_detail_menu1`
     FOREIGN KEY (`menu_id`)
-    REFERENCES `tmontica`.`menu` (`id`)
+    REFERENCES `tmontica`.`menus` (`id`)
     ON DELETE NO ACTION
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -169,11 +169,11 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `tmontica`.`point`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `tmontica`.`point` ;
+DROP TABLE IF EXISTS `tmontica`.`points` ;
 
 
 
-CREATE TABLE IF NOT EXISTS `tmontica`.`point` (
+CREATE TABLE IF NOT EXISTS `tmontica`.`points` (
   `user_id` VARCHAR(45) NOT NULL,
   `id` INT NOT NULL AUTO_INCREMENT,
   `type` CHAR(10) NOT NULL,
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `tmontica`.`point` (
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_point_user1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `tmontica`.`user` (`id`)
+    REFERENCES `tmontica`.`users` (`id`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -193,22 +193,22 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `tmontica`.`menu_option`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `tmontica`.`menu_option` ;
+DROP TABLE IF EXISTS `tmontica`.`menu_options` ;
 
 
 
-CREATE TABLE IF NOT EXISTS `tmontica`.`menu_option` (
+CREATE TABLE IF NOT EXISTS `tmontica`.`menu_options` (
   `menu_id` INT NOT NULL,
   `option_id` INT NOT NULL,
   PRIMARY KEY (`menu_id`, `option_id`),
   CONSTRAINT `fk_menu_has_option_menu2`
     FOREIGN KEY (`menu_id`)
-    REFERENCES `tmontica`.`menu` (`id`)
+    REFERENCES `tmontica`.`menus` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_menu_has_option_option2`
     FOREIGN KEY (`option_id`)
-    REFERENCES `tmontica`.`option` (`id`)
+    REFERENCES `tmontica`.`options` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -220,11 +220,11 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `tmontica`.`order_status_log`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `tmontica`.`order_status_log` ;
+DROP TABLE IF EXISTS `tmontica`.`order_status_logs` ;
 
 
 
-CREATE TABLE IF NOT EXISTS `tmontica`.`order_status_log` (
+CREATE TABLE IF NOT EXISTS `tmontica`.`order_status_logs` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `status_type` VARCHAR(45) NOT NULL,
   `editor_id` VARCHAR(45) NOT NULL,
@@ -233,7 +233,7 @@ CREATE TABLE IF NOT EXISTS `tmontica`.`order_status_log` (
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_order_status_log_order1`
     FOREIGN KEY (`order_id`)
-    REFERENCES `tmontica`.`order` (`id`)
+    REFERENCES `tmontica`.`orders` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -245,11 +245,11 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Table `tmontica`.`banner`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `tmontica`.`banner` ;
+DROP TABLE IF EXISTS `tmontica`.`banners` ;
 
 
 
-CREATE TABLE IF NOT EXISTS `tmontica`.`banner` (
+CREATE TABLE IF NOT EXISTS `tmontica`.`banners` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `use_page` VARCHAR(255) NULL,
   `usable` TINYINT(1) NOT NULL,
