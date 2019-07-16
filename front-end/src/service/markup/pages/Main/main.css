@@ -1,37 +1,3 @@
-.header {
-  border-bottom: 1px solid #ebebeb;
-  background-color: white;
-}
-
-.header__container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1024px;
-  height: 80px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.header__logo {
-  width: 50px;
-}
-
-.header__items {
-  display: flex;
-  justify-content: space-between;
-}
-
-.header__item {
-  margin-left: 20px;
-  cursor: pointer;
-  font-size: 18px;
-}
-
-.header__item:first-child {
-  margin-left: 0;
-}
-
 .banner {
   border: 1px solid #ebebeb;
   height: 150px;
@@ -197,18 +163,4 @@
   .menu__img {
     width: 70%;
   }
-}
-
-.footer {
-  border-top: 1px solid #ebebeb;
-  background-color: white;
-}
-
-.footer__container {
-  display: flex;
-  align-items: center;
-  max-width: 1024px;
-  height: 80px;
-  margin: 0 auto;
-  padding: 0 20px;
 }
