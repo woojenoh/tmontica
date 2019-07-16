@@ -115,6 +115,18 @@
   left: 0;
 }
 
+.menu__content--soldout::before {
+  content: "";
+  background-image: url("../../common/soldout.png");
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-size: cover;
+  opacity: 0.3;
+}
+
 .menu__name {
   display: block;
   font-size: 20px;
