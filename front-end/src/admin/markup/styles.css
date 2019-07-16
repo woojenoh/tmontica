@@ -130,3 +130,32 @@ img {
 #menuModal .modal-footer .btn {
   width: 105px;
 }
+
+/* 주문관리 */
+.order-circle {
+  border-radius: 100%;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-weight: 500;
+  text-decoration: none;
+  color: #000000;
+}
+
+.today-board-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0 30px;
+}
+
+.today-board-list {
+  max-width: 1024px;
+}
+
+.order-list__section, .today-board__section {
+  max-width: 1248px;
+}
