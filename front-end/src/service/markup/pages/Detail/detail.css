@@ -4,7 +4,6 @@
   min-height: 500px;
   border: 1px solid #ebebeb;
   margin: 0 auto;
-  padding: 0 20px;
   background-color: white;
 }
 
@@ -13,6 +12,7 @@
   display: flex;
   align-items: center;
   padding: 40px 0;
+  border-right: 1px solid #ebebeb;
 }
 
 .detail__img {
@@ -98,8 +98,7 @@
   justify-content: center;
   align-items: center;
   margin-right: 20px;
-  border: 1px solid #343a40;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .option__counter {
@@ -213,8 +212,12 @@ input[type="number"].counter__number::-webkit-inner-spin-button {
   .detail__left {
     width: 100%;
     padding: 0;
+    border-right: none;
   }
   .detail__right {
     width: 100%;
+  }
+  .option__title {
+    font-size: 13px;
   }
 }
