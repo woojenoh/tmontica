@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Cart</title>
+    <link rel="stylesheet" href="../../common/index.css" />
+    <link rel="stylesheet" href="../../common/reset.css" />
+    <link rel="stylesheet" href="./cart.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header__container">
+        <img
+          src="../../common/tmon-logo.png"
+          alt="Tmontica Logo"
+          class="header__logo"
+        />
+        <ul class="header__items">
+          <li class="header__item">
+            <div class="header__user">user</div>
+          </li>
+          <li class="header__item">
+            <div class="header__cart">cart</div>
+          </li>
+          <li class="header__item">
+            <div class="header__hamburg">hamburg</div>
+          </li>
+        </ul>
+      </div>
+    </header>
+    <main class="main">
+      <section class="cart">
+        <div class="cart__content">
+          <h1 class="cart__title">
+            장바구니
+          </h1>
+          <span class="cart__close">&times;</span>
+          <ul class="cart__top">
+            <span class="cart__edit">선택</span>
+            <span class="cart__delete">삭제</span>
+          </ul>
+          <ul class="cart__items">
+            <li class="cart__item">
+              <img
+                src="../../common/coffee-sample.png"
+                alt="Coffee Sample"
+                class="cart__item-img"
+              />
+              <div class="cart__item-info">
+                <span class="cart__item-name">아메리카노 - 1,000원</span>
+                <span class="cart__item-option"
+                  >HOT/샷추가(1개)/시럽추가(1개)/사이즈추가</span
+                >
+              </div>
+              <div class="cart__item-quantity">
+                <input
+                  type="number"
+                  class="cart__item-quantity-input"
+                  value="1"
+                />
+              </div>
+            </li>
+            <li class="cart__item">
+              <img
+                src="../../common/bread-sample.jpg"
+                alt="Coffee Sample"
+                class="cart__item-img"
+              />
+              <div class="cart__item-info">
+                <span class="cart__item-name">갈릭퐁당브레드 - 3,000원</span>
+                <span class="cart__item-option">옵션이 없습니다.</span>
+              </div>
+              <div class="cart__item-quantity">
+                <input
+                  type="number"
+                  class="cart__item-quantity-input"
+                  value="1"
+                />
+              </div>
+            </li>
+          </ul>
+          <div class="cart__bottom">
+            <div class="cart__total">
+              <span class="cart__total-quantity">총 2개</span>
+              <span class="cart__total-price">4,000원</span>
+            </div>
+            <button class="button cart__button">결제 및 주문하기</button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="footer__container"></div>
+    </footer>
+  </body>
+</html>
