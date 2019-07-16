@@ -4,6 +4,12 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100%;
+  background-color: rgba(250, 250, 250, 0.5);
+}
+
 html > body {
   font-family: "Nanum Gothic", sans-serif;
 }
