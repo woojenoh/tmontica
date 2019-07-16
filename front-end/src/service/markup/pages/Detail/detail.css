@@ -10,7 +10,6 @@
 
 .detail__left {
   width: 50%;
-  height: 100%;
   display: flex;
   align-items: center;
   padding: 40px 0;
@@ -57,7 +56,6 @@
   border: 1px solid #fa5252;
   color: #fa5252;
   cursor: pointer;
-  border-radius: 10px;
   font-size: 15px;
 }
 
@@ -80,7 +78,6 @@
   border: 1px solid #228be6;
   color: #228be6;
   cursor: pointer;
-  border-radius: 10px;
   font-size: 14px;
 }
 
@@ -102,7 +99,6 @@
   align-items: center;
   margin-right: 20px;
   border: 1px solid #343a40;
-  border-radius: 10px;
   font-size: 13px;
 }
 
@@ -118,7 +114,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
   cursor: pointer;
 }
 
@@ -140,7 +135,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
   text-align: center;
   font-size: 15px;
 }
@@ -162,7 +156,6 @@ input[type="number"].counter__number::-webkit-inner-spin-button {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
   cursor: pointer;
 }
 
@@ -183,7 +176,6 @@ input[type="number"].counter__number::-webkit-inner-spin-button {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
   cursor: pointer;
   font-size: 14px;
 }
@@ -207,7 +199,6 @@ input[type="number"].counter__number::-webkit-inner-spin-button {
 .detail__button {
   width: 40%;
   height: 40px;
-  border-radius: 10px;
 }
 
 .detail__button:first-child {
