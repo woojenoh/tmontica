@@ -21,6 +21,11 @@ body {
 }
 
 /* 모달 공통 */
+.modal .modal-dialog {
+  max-width: none;
+  margin: 0;
+}
+
 .modal .row {
   margin: 0;
 }
@@ -70,6 +75,14 @@ body {
   width: 100%;
 }
 
+#orderModal.modal.fade .modal-dialog {
+  /* transition: -webkit-transform .3s ease-out;
+  transition: transform .3s ease-out;
+  transition: transform .3s ease-out,-webkit-transform .3s ease-out;
+  -webkit-transform: translate(0,0);
+  transform: translate(0,0); */
+}
+
 
 /* 메뉴 모달 */
 #menuModal {
@@ -86,6 +99,13 @@ body {
 #menuModal .input-group-prepend {
   width: 9%;
   min-width: 87px;
+}
+
+#menuModal .input-group-prepend .input-group-text {
+  width: 100%;
+  /* text-align: center; */
+  display: flex;
+  justify-content: center;
 }
 
 #menuModal .menu-image {

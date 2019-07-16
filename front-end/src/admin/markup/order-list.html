@@ -107,7 +107,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr data-toggle="modal" data-target="#orderModal">
                 <td class="menu__td check">
                   <input type="checkbox" aria-label="Checkbox for following text input">
                 </td>
@@ -123,80 +123,82 @@
         </section>
 
         <!-- 주문 상세 모달 -->
-        <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true" style="display: block; opacity: 1;">
-          <div class="modal-content d-flex flex-column bg-white border-right-1 border-left-1 border-top-0 border-bottom-1 border-dark">
-            <div id="order-detail" class="input-group-wrap">
-              <!-- 주문번호/주문인 -->
-              <div class="row">
-                <div class="input-group order-num half">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text border-left-0">주문번호</span>
+        <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content d-flex flex-column bg-white border-right-1 border-left-1 border-top-0 border-bottom-1 border-dark">
+                <div id="order-detail" class="input-group-wrap">
+                  <!-- 주문번호/주문인 -->
+                  <div class="row">
+                    <div class="input-group order-num half">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text border-left-0">주문번호</span>
+                        </div>
+                        <span class="form-control border-right-0" id="basic-url" aria-describedby="basic-addon3" placeholder="메뉴명"></span>
                     </div>
-                    <span class="form-control border-right-0" id="basic-url" aria-describedby="basic-addon3" placeholder="메뉴명"></span>
-                </div>
-                <div class="input-group orderer half">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">주문인</span>
+                    <div class="input-group orderer half">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">주문인</span>
+                      </div>
+                      <span class="form-control border-right-0" id="basic-url" aria-describedby="basic-addon3" placeholder="메뉴명"></span>
+                    </div>
                   </div>
-                  <span class="form-control border-right-0" id="basic-url" aria-describedby="basic-addon3" placeholder="메뉴명"></span>
+                  <!-- 설명 -->
+                  <div class="row">
+                    <div class="input-group description mb-0">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text border-left-0 border-bottom-0">설명</span>
+                      </div>
+                    </div>
+                    <table class="table table-sm bg-white table-bordered">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th>메뉴명</th>
+                          <th>옵션</th>
+                          <th>결제금액</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>아메리카노</td>
+                          <td>HOT/시럽추가(1개)</td>
+                          <td>1,300원</td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <td colspan="3" class="" style="text-align: right;">
+                            총 결제금액: <span class="total-price">1,300</span>원
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+                </div>
+                <div class="">
+                  <h4 class="m-2">주문기록</h4>
+                  <table class="table table-sm bg-white table-bordered mb-0 border-bottom-0">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th>번호</th>
+                          <th>주문상태</th>
+                          <th>변경인</th>
+                          <th>변경일</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>1</td>
+                          <td>결제완료</td>
+                          <td>티몽이</td>
+                          <td>2019.07.15 11:13:02</td>
+                        </tr>
+                      </tbody>
+                    </table>
                 </div>
               </div>
-              <!-- 설명 -->
-              <div class="row">
-                <div class="input-group description mb-0">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text border-left-0 border-bottom-0">설명</span>
-                  </div>
-                </div>
-                <table class="table table-sm bg-white table-bordered">
-                  <thead class="thead-dark">
-                    <tr>
-                      <th>메뉴명</th>
-                      <th>옵션</th>
-                      <th>결제금액</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>아메리카노</td>
-                      <td>HOT/시럽추가(1개)</td>
-                      <td>1,300원</td>
-                    </tr>
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <td colspan="3" class="" style="text-align: right;">
-                        총 결제금액: <span class="total-price">1,300</span>원
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
+              <div class="modal-footer pl-0 pr-0 pb-0">
+                  <button class="close__button btn btn-primary pl-4 pr-4" data-dismiss="modal">닫기</button>
               </div>
-            </div>
-            <div class="">
-              <h4 class="m-2">주문기록</h4>
-              <table class="table table-sm bg-white table-bordered mb-0 border-bottom-0">
-                  <thead class="thead-dark">
-                    <tr>
-                      <th>번호</th>
-                      <th>주문상태</th>
-                      <th>변경인</th>
-                      <th>변경일</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>결제완료</td>
-                      <td>티몽이</td>
-                      <td>2019.07.15 11:13:02</td>
-                    </tr>
-                  </tbody>
-                </table>
-            </div>
-          </div>
-          <div class="modal-footer pl-0 pr-0 pb-0">
-              <button class="close__button btn btn-primary pl-4 pr-4">닫기</button>
           </div>
         </div>
       </main>
