@@ -82,22 +82,22 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>
+                  <td class="menu__td check">
                     <input type="checkbox" aria-label="Checkbox for following text input">
                   </td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td class="menu__td preview"></td>
+                  <td class="menu__td category"></td>
+                  <td class="menu__td name"></td>
+                  <td class="menu__td description"></td>
+                  <td class="menu__td monthly"></td>
+                  <td class="menu__td product-price"></td>
+                  <td class="menu__td discount-rate"></td>
+                  <td class="menu__td sales-price"></td>
+                  <td class="menu__td quantity"></td>
+                  <td class="menu__td create-date"></td>
+                  <td class="menu__td creator"></td>
+                  <td class="menu__td edit-date"></td>
+                  <td class="menu__td editor"></td>
                 </tr>
               </tbody>
             </table>
@@ -106,20 +106,100 @@
         <!-- 메뉴 등록/수정 모달 -->
         <div class="modal fade" id="menuModal" tabindex="-1" role="dialog" aria-labelledby="menuModalLabel" aria-hidden="true">
           <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="menuModalLabel">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+            <div class="input-group-wrap">
+                <div class="input-group name">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">메뉴명</span>
+                    </div>
+                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="메뉴명">
+                </div>  
+                <div class="input-group en-name">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">영문명</span>
+                  </div>
+                  <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="영문명">
+                </div>
+                <div class="input-group category">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">카테고리</span>
+                  </div>
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">카테고리</button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="#">음료</a>
+                      <a class="dropdown-item" href="#">디저트</a>
+                      <!-- <div role="separator" class="dropdown-divider"></div> -->
+                    </div>
+                  </div>
+                </div>
+                <div class="input-group description">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">설명</span>
+                  </div>
+                  <textarea class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="설명입니다."></textarea>
+                </div>
+                <div class="input-group monthly">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">이달의 메뉴</span>
+                  </div>
+                  <div class="form-control">
+                    <div class="input-group">
+                        <input type="radio" aria-label="Radio button for following text input" />
+                        <label class="choice yes">예</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="radio" aria-label="Radio button for following text input" checked />
+                        <label class="choice no">아니오</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-group product-price half">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">상품가</span>
+                    </div>
+                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="비밀번호를 입력하세요.">
+                  </div> 
+                  <div class="input-group discount-rate half">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">할인율</span>
+                    </div>
+                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="비밀번호를 입력하세요.">
+                  </div>
+                </div>
+                <div class="row">
+                    <div class="input-group sales-price half">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">판매가</span>
+                      </div>
+                      <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="비밀번호를 입력하세요.">
+                    </div>
+                    <div class="input-group quantity half">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">재고</span>
+                      </div>
+                      <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="비밀번호를 입력하세요.">
+                    </div>
+                </div>
+                <div class="input-group options">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">옵션</span>
+                  </div>
+                  <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="비밀번호를 입력하세요.">
+                </div>
             </div>
-            <div class="modal-body">
-              ...
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+            <div class="left-wrap">
+              <div class="menu-image">
+                <img src="https://dummyimage.com/600x400/ffffff/ff7300.png&text=tmontica" alt="메뉴 이미지"/>
+              </div>
+              <button class="reg-image__button btn btn-warning">이미지 등록</button>
+              <input type="file" class="hide" hidden />
             </div>
           </div>
+          <div class="modal-footer">
+              <button class="reg-menu__button btn btn-primary">등록</button>
+              <button class="cancle-menu__button btn btn-danger">취소</button>
+          </div>  
         </div>
       </main>
   </div>
