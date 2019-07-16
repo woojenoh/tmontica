@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Signin</title>
+    <link rel="stylesheet" href="../../common/index.css" />
+    <link rel="stylesheet" href="../../common/reset.css" />
+    <link rel="stylesheet" href="./signin.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header__container">
+        <img
+          src="../../common/tmon-logo.png"
+          alt="Tmontica Logo"
+          class="header__logo"
+        />
+        <ul class="header__items">
+          <li class="header__item">
+            <div class="header__user">user</div>
+          </li>
+          <li class="header__item">
+            <div class="header__cart">cart</div>
+          </li>
+          <li class="header__item">
+            <div class="header__hamburg">hamburg</div>
+          </li>
+        </ul>
+      </div>
+    </header>
+    <main class="main">
+      <section class="signin">
+        <div class="signin__logo-wrapper">
+          <img
+            src="../../common/tmon-logo.png"
+            alt="Tmon logo"
+            class="signin__logo"
+          />
+        </div>
+        <h1 class="signin__title">WELCOME</h1>
+        <form action="" class="signin__form">
+          <input
+            type="text"
+            name="id"
+            class="input signin__input"
+            placeholder="아이디"
+          />
+          <input
+            type="password"
+            name="password"
+            class="input signin__input"
+            placeholder="비밀번호"
+          />
+          <span class="signin__find">아이디/비밀번호 찾기</span>
+          <div class="signin__button-container">
+            <button class="button signin__button">회원가입</button>
+            <button type="submit" class="button button--orange signin__button">
+              로그인
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="footer__container"></div>
+    </footer>
+  </body>
+</html>

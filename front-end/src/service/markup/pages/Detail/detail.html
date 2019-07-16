@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Detail</title>
+    <link rel="stylesheet" href="../../common/index.css" />
+    <link rel="stylesheet" href="../../common/reset.css" />
+    <link rel="stylesheet" href="./detail.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header__container">
+        <img
+          src="../../common/tmon-logo.png"
+          alt="Tmontica Logo"
+          class="header__logo"
+        />
+        <ul class="header__items">
+          <li class="header__item">
+            <div class="header__user">user</div>
+          </li>
+          <li class="header__item">
+            <div class="header__cart">cart</div>
+          </li>
+          <li class="header__item">
+            <div class="header__hamburg">hamburg</div>
+          </li>
+        </ul>
+      </div>
+    </header>
+    <main class="main">
+      <section class="detail">
+        <div class="detail__left">
+          <img
+            src="../../common/coffee-sample.png"
+            alt="Coffee Sample"
+            class="detail__img"
+          />
+        </div>
+        <div class="detail__right">
+          <h1 class="detail__title">아메리카노</h1>
+          <ul class="detail__options">
+            <li class="detail__option">
+              <div class="detail__hot detail__hot--active">HOT</div>
+              <div class="detail__ice">ICE</div>
+            </li>
+            <li class="detail__option">
+              <span class="option__title">수량</span>
+              <div class="option__counter">
+                <div class="counter__minus">-</div>
+                <input
+                  type="number"
+                  name="quantity"
+                  class="counter__number"
+                  value="0"
+                />
+                <div class="counter__plus">+</div>
+              </div>
+            </li>
+            <li class="detail__option">
+              <span class="option__title">샷</span>
+              <div class="option__counter">
+                <div class="counter__minus">-</div>
+                <input
+                  type="number"
+                  name="shot"
+                  class="counter__number"
+                  value="0"
+                />
+                <div class="counter__plus">+</div>
+              </div>
+            </li>
+            <li class="detail__option">
+              <span class="option__title">시럽</span>
+              <div class="option__counter">
+                <div class="counter__minus">-</div>
+                <input
+                  type="number"
+                  name="syrup"
+                  class="counter__number"
+                  value="0"
+                />
+                <div class="counter__plus">+</div>
+              </div>
+            </li>
+            <li class="detail__option">
+              <div class="option__size">
+                사이즈 추가
+              </div>
+            </li>
+          </ul>
+          <div class="detail__buttons">
+            <button class="button detail__button">장바구니</button>
+            <button class="button button--orange detail__button">
+              구매하기
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="footer__container"></div>
+    </footer>
+  </body>
+</html>
