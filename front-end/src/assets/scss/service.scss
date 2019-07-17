@@ -32,6 +32,7 @@ body,
 
 .header__logo {
   width: 50px;
+  cursor: pointer;
 }
 
 .header__items {
@@ -40,9 +41,11 @@ body,
 }
 
 .header__item {
-  margin-left: 20px;
+  margin-left: 40px;
   cursor: pointer;
-  font-size: 18px;
+  svg {
+    font-size: 1.75em;
+  }
 }
 
 .header__item:first-child {

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Switch, Route } from "react-router-dom";
+import Main from "./service/pages/Main";
 
 class App extends React.Component {
   public render() {
@@ -10,7 +11,7 @@ class App extends React.Component {
         <Route exact path="/admin/users" />
         <Route exact path="/admin/banners" />
         <Route exact path="/admin/statistics" />
-        <Route path="/" />
+        <Route exact path="/" />
       </Switch>
     );
 
@@ -27,7 +28,7 @@ class App extends React.Component {
         <Route exact path="/categories/:category" />
         <Route exact path="/signin" />
         <Route exact path="/signup" />
-        <Route path="/" />
+        <Route exact path="/" component={Main} />
       </Switch>
     );
 
