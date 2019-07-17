@@ -1,0 +1,110 @@
+@import url("https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  background-color: rgba(250, 250, 250, 0.5);
+}
+
+#root {
+  font-family: "Nanum Gothic", sans-serif;
+}
+
+.header {
+  border-bottom: 1px solid #ebebeb;
+  background-color: white;
+}
+
+.header__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1024px;
+  height: 80px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header__logo {
+  width: 50px;
+}
+
+.header__items {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header__item {
+  margin-left: 20px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.header__item:first-child {
+  margin-left: 0;
+}
+
+.main {
+  max-width: 1024px;
+  min-height: calc(100% - 162px);
+  margin: 0 auto;
+  padding: 50px 20px;
+}
+
+.footer {
+  border-top: 1px solid #ebebeb;
+  background-color: white;
+}
+
+.footer__container {
+  display: flex;
+  align-items: center;
+  max-width: 1024px;
+  height: 80px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid #868e96;
+  padding: 10px 15px;
+  font-size: 14px;
+  transition: 0.1s border-bottom linear;
+  letter-spacing: 1px;
+}
+
+.input:focus {
+  outline: none;
+  border: 1px solid #f27835;
+}
+
+.button {
+  width: 100%;
+  height: 35px;
+  background-color: white;
+  border: 1px solid #f27835;
+  color: #f27835;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.button--orange {
+  background-color: #f27835;
+  color: white;
+}
+
+.button--green {
+  background-color: #19bc9b;
+  color: white;
+}
+
+.button--border-black {
+  border: 1px solid #343a40;
+}
