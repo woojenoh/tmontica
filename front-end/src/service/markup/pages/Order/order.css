@@ -1,3 +1,18 @@
+.d-flex {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
+  margin-bottom: 5px;
+}
+
+.d-inline-b {
+  display: inline-block;
+}
+
+img {
+  width: 100%;
+}
+
 body {
   background: #f1f1f1;
   font-weight: normal;
@@ -60,10 +75,6 @@ body > .main , h2{
     width: 72px;
 }
 
-img {
-    width: 100%;
-}
-
 li.order__menu {
     border-bottom: 1px solid #b7bfc8;
     display: flex;
@@ -82,10 +93,6 @@ h3.order__menu-title {
     font-size: 16px;
     margin-bottom: 2px;
     margin-top: 7px;
-}
-
-.d-inline-b {
-  display: inline-block;
 }
 
 .order__menu-cnt-wrap {
@@ -108,34 +115,7 @@ h3.order__menu-title {
     padding-bottom: 7px;
 }
 
-.price--name {}
-
-.d-flex {
-    display: flex;
-    justify-content: space-between;
-    padding: 0 15px;
-    margin-bottom: 5px;
-}
-
-.price > .d-flex:nth-child(4) {
-    margin-bottom: 15px;
-}
-
-.button--group {
-    margin: 0 15px;
-    display: flex;
-}
-
-.button--group .button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-section.price.card {
-    padding-bottom: 15px;
-}
-
+/* 포인트 결제 */
 .payment__points {
     padding: 15px;
     position: relative;
@@ -151,26 +131,41 @@ section.price.card {
     margin-bottom: 6px;
 }
 
-.payment__points > div:before {
-    display: inline-block;
-    position: absolute;
-    top: 5px;
-    left: 0;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background-color: #6c7580;
-    content: '';
-}
-
-.payment__poinrts > div {
-    position: relative;
-}
-
-div {}
-
 .payment__points > div {
     position: relative;
     padding-left: 11px;
     font-size: 14px;
+}
+
+/* 사용가능한 포인트 앞에 점찍기 */
+.payment__points > div:before {
+  display: inline-block;
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #6c7580;
+  content: '';
+}
+
+/* 결제 금액 확인 */
+.price > .d-flex:nth-child(4) {
+  margin-bottom: 15px;
+}
+
+.button--group {
+  margin: 0 15px;
+  display: flex;
+}
+
+.button--group .button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+section.price.card {
+  padding-bottom: 15px;
 }
