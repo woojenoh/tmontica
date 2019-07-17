@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>My Order</title>
+    <link rel="stylesheet" href="../../common/index.css" />
+    <link rel="stylesheet" href="../../common/reset.css" />
+    <link rel="stylesheet" href="./my-order.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header__container">
+        <img
+          src="../../common/tmon-logo.png"
+          alt="Tmontica Logo"
+          class="header__logo"
+        />
+        <ul class="header__items">
+          <li class="header__item">
+            <div class="header__user">user</div>
+          </li>
+          <li class="header__item">
+            <div class="header__cart">cart</div>
+          </li>
+          <li class="header__item">
+            <div class="header__hamburg">hamburg</div>
+          </li>
+        </ul>
+      </div>
+    </header>
+    <main class="main">
+      <section class="my-order">
+        <div class="my-order__top">
+          <h1 class="my-order__title">주문서(00001)</h1>
+          <span class="my-order__cancel">주문취소</span>
+        </div>
+        <div class="my-order__content">
+          <ul class="my-order__status-container">
+            <li class="my-order__status my-order__status--green">미결제</li>
+            <li class="my-order__status">결제완료</li>
+            <li class="my-order__status">준비중</li>
+            <li class="my-order__status">준비완료</li>
+            <li class="my-order__status">픽업완료</li>
+          </ul>
+          <ul class="my-order__items">
+            <li class="my-order__item">
+              <div class="my-order__item-info">
+                <h2 class="my-order__item-title">아메리카노 - 1,000원</h2>
+                <span class="my-order__item-option"
+                  >HOT/샷추가(1개)/시럽추가(1개)/사이즈추가</span
+                >
+              </div>
+              <span class="my-order__item-quantity">1개</span>
+            </li>
+            <li class="my-order__item">
+              <div class="my-order__item-info">
+                <h2 class="my-order__item-title">갈릭퐁당브레드 - 3,000원</h2>
+                <span class="my-order__item-option"
+                  >HOT/샷추가(1개)/시럽추가(1개)/사이즈추가</span
+                >
+              </div>
+              <span class="my-order__item-quantity">1개</span>
+            </li>
+          </ul>
+          <div class="my-order__total">
+            <div class="my-order__total-price">주문금액 - 4,000원</div>
+            <div class="my-order__total-discount">할인금액 - 1,000원</div>
+            <div class="my-order__total-result">최종금액 - 3,000원</div>
+          </div>
+        </div>
+      </section>
+      <section class="my-order-list">
+        <h1 class="my-order-list__title">주문내역(3)</h1>
+        <div class="my-order-list__content">
+          <ul class="my-order-list__items">
+            <li class="my-order-list__item">
+              <div class="my-order-list__item-left">
+                <span class="my-order-list__item-number">00001</span>
+                <span class="my-order-list__item-title">아메리카노 외 1개</span>
+              </div>
+              <div class="my-order-list__item-right">
+                <span class="my-order-list__item-date"
+                  >2019-07-09 11:12:40</span
+                >
+                <span class="my-order-list__item-status">미결제</span>
+              </div>
+            </li>
+            <li class="my-order-list__item">
+              <div class="my-order-list__item-left">
+                <span class="my-order-list__item-number">00002</span>
+                <span class="my-order-list__item-title">아메리카노 외 1개</span>
+              </div>
+              <div class="my-order-list__item-right">
+                <span class="my-order-list__item-date"
+                  >2019-07-09 11:12:40</span
+                >
+                <span class="my-order-list__item-status">준비완료</span>
+              </div>
+            </li>
+            <li class="my-order-list__item">
+              <div class="my-order-list__item-left">
+                <span class="my-order-list__item-number">00003</span>
+                <span class="my-order-list__item-title">아메리카노 외 1개</span>
+              </div>
+              <div class="my-order-list__item-right">
+                <span class="my-order-list__item-date"
+                  >2019-07-09 11:12:40</span
+                >
+                <span class="my-order-list__item-status">픽업완료</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="footer__container"></div>
+    </footer>
+  </body>
+</html>

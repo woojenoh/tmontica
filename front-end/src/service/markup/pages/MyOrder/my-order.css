@@ -1,20 +1,20 @@
-.order {
+.my-order {
   max-width: 500px;
   margin: 0 auto;
 }
 
-.order__top {
+.my-order__top {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
-.order__title {
+.my-order__title {
   font-size: 25px;
 }
 
-.order__cancel {
+.my-order__cancel {
   padding: 7px 10px;
   border: 1px solid #fa5252;
   color: #fa5252;
@@ -22,12 +22,12 @@
   cursor: pointer;
 }
 
-.order__cancel:hover {
+.my-order__cancel:hover {
   background-color: #fa5252;
   color: white;
 }
 
-.order__content {
+.my-order__content {
   width: 100%;
   min-height: 300px;
   border: 1px solid #ebebeb;
@@ -35,14 +35,14 @@
   padding: 20px 0;
 }
 
-.order__status-container {
+.my-order__status-container {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   padding: 0 20px;
 }
 
-.order__status {
+.my-order__status {
   font-size: 14px;
   border: 1px solid #ebebeb;
   background-color: white;
@@ -52,7 +52,7 @@
   z-index: 10;
 }
 
-.order__status::after {
+.my-order__status::after {
   content: "";
   position: absolute;
   width: 29px;
@@ -63,22 +63,22 @@
   z-index: 0;
 }
 
-.order__status:last-child::after {
+.my-order__status:last-child::after {
   display: none;
 }
 
-.order__status--green {
+.my-order__status--green {
   background-color: #37b24d;
   border: none;
   z-index: 10;
   color: white;
 }
 
-.order__items {
+.my-order__items {
   margin: 20px 0;
 }
 
-.order__item {
+.my-order__item {
   padding: 20px 20px;
   border-top: 1px solid #ebebeb;
   display: flex;
@@ -86,27 +86,27 @@
   align-items: center;
 }
 
-.order__item:last-child {
+.my-order__item:last-child {
   border-bottom: 1px solid #ebebeb;
 }
 
-.order__item-info {
+.my-order__item-info {
   margin-right: 10px;
   line-height: 1.2em;
 }
 
-.order__item-title {
+.my-order__item-title {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-.order__item-option {
+.my-order__item-option {
   display: block;
   font-size: 14px;
 }
 
-.order__item-quantity {
+.my-order__item-quantity {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -116,49 +116,49 @@
   border: 1px solid #343a40;
 }
 
-.order__total {
+.my-order__total {
   text-align: right;
   line-height: 1.2em;
   padding: 0 20px;
 }
 
-.order__total-price {
+.my-order__total-price {
   margin-bottom: 5px;
 }
 
-.order__total-discount {
+.my-order__total-discount {
   padding-bottom: 20px;
   margin-bottom: 20px;
   border-bottom: 1px solid #ebebeb;
 }
 
-.order__total-result {
+.my-order__total-result {
   color: #f27835;
   font-weight: bold;
 }
 
-.order-list {
+.my-order-list {
   max-width: 500px;
   margin: 0 auto;
   margin-top: 50px;
 }
 
-.order-list__title {
+.my-order-list__title {
   font-size: 25px;
   margin-bottom: 20px;
 }
 
-.order-list__content {
+.my-order-list__content {
   width: 100%;
   min-height: 80px;
   border: 1px solid #ebebeb;
   background-color: white;
 }
 
-.order-list__items {
+.my-order-list__items {
 }
 
-.order-list__item {
+.my-order-list__item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -168,50 +168,50 @@
   cursor: pointer;
 }
 
-.order-list__item:first-child {
+.my-order-list__item:first-child {
   border-top: none;
 }
 
-.order-list__item:last-child {
+.my-order-list__item:last-child {
   border-bottom: 1px solid #ebebeb;
 }
 
-.order-list__item-left {
+.my-order-list__item-left {
   flex: 1;
 }
 
-.order-list__item-number {
+.my-order-list__item-number {
   display: block;
   margin-bottom: 10px;
 }
 
-.order-list__item-title {
+.my-order-list__item-title {
   display: block;
 }
 
-.order-list__item-right {
+.my-order-list__item-right {
   flex: 1;
   text-align: right;
 }
 
-.order-list__item-date {
+.my-order-list__item-date {
   display: block;
   margin-bottom: 10px;
 }
 
-.order-list__item-status {
+.my-order-list__item-status {
   display: block;
 }
 
 @media (max-width: 480px) {
-  .order__status-container {
+  .my-order__status-container {
     display: block;
   }
-  .order__status {
+  .my-order__status {
     text-align: center;
     margin-bottom: 10px;
   }
-  .order__status::after {
+  .my-order__status::after {
     display: none;
   }
 }
