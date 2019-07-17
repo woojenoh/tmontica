@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import { Switch, Route } from "react-router-dom";
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  public render() {
+    const AdminRoutes = (
+      <Switch>
+        <Route exact path="/admin/orders" />
+        <Route exact path="/admin/menus" />
+        <Route exact path="/admin/users" />
+        <Route exact path="/admin/banners" />
+        <Route exact path="/admin/statistics" />
+        <Route path="/" />
+      </Switch>
+    );
+
+    const PrivateRoutes = (
+      <Switch>
+        <Route exact path="/payment" />
+        <Route exact path="/orders" />
+        <Route exact path="/user" />
+      </Switch>
+    );
+
+    const PublicRoutes = (
+      <Switch>
+        <Route exact path="/categories/:category" />
+        <Route exact path="/signin" />
+        <Route exact path="/signup" />
+        <Route path="/" />
+      </Switch>
+    );
+
+    return [PublicRoutes, PrivateRoutes, AdminRoutes];
+  }
 }
 
 export default App;
