@@ -1,0 +1,91 @@
+.signup {
+  position: relative;
+  max-width: 400px;
+  min-height: 300px;
+  background-color: #ffffff;
+  margin: 0 auto;
+  margin-top: 50px;
+  padding: 0 50px;
+  border: 1px solid #ebebeb;
+  text-align: center;
+}
+
+.signup__logo-wrapper {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 50%;
+  border: 1px solid #ebebeb;
+}
+
+.signup__logo {
+  width: 100%;
+}
+
+.signup__title {
+  padding-top: 80px;
+  font-size: 30px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.signup__form {
+  margin: 40px 0;
+}
+
+.input.signup__input {
+  margin-bottom: 10px;
+}
+
+.signup__birthday {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.signup__birthday-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  margin-right: 10px;
+  padding: 5px 10px;
+  border: 1px solid #868e96;
+  width: 70px;
+  height: 40px;
+}
+
+.signup__birthday > .signup__birthday-input {
+  margin-bottom: 0;
+  height: 40px;
+}
+
+.signup__find {
+  display: block;
+  text-align: right;
+  font-size: 14px;
+  margin: 10px 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.signup__button-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.button.signup__button {
+  width: 45%;
+  margin-top: 12px;
+}
+
+@media (max-width: 479px) {
+  .signup {
+    padding: 0 30px;
+  }
+}

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Signup</title>
+    <link rel="stylesheet" href="../../common/index.css" />
+    <link rel="stylesheet" href="../../common/reset.css" />
+    <link rel="stylesheet" href="./signup.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header__container">
+        <img
+          src="../../common/tmon-logo.png"
+          alt="Tmontica Logo"
+          class="header__logo"
+        />
+        <ul class="header__items">
+          <li class="header__item">
+            <div class="header__user">user</div>
+          </li>
+          <li class="header__item">
+            <div class="header__cart">cart</div>
+          </li>
+          <li class="header__item">
+            <div class="header__hamburg">hamburg</div>
+          </li>
+        </ul>
+      </div>
+    </header>
+    <main class="main">
+      <section class="signup">
+        <div class="signup__logo-wrapper">
+          <img
+            src="../../common/tmon-logo.png"
+            alt="Tmon logo"
+            class="signup__logo"
+          />
+        </div>
+        <h1 class="signup__title">WELCOME</h1>
+        <form action="" class="signup__form">
+          <input
+            type="text"
+            name="id"
+            class="input signup__input"
+            placeholder="아이디"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            class="input signup__input"
+            placeholder="비밀번호"
+            required
+          />
+          <input
+            type="password"
+            name="password-confirm"
+            class="input signup__input"
+            placeholder="비밀번호 확인"
+            required
+          />
+          <input
+            type="text"
+            name="name"
+            class="input signup__input"
+            placeholder="이름"
+            required
+          />
+          <input
+            type="text"
+            name="email"
+            class="input signup__input"
+            placeholder="이메일"
+            required
+          />
+          <div class="signup__birthday">
+            <span class="signup__birthday-label">생일</span>
+            <input
+              type="date"
+              name="birthday"
+              class="input signup__input signup__birthday-input"
+              required
+            />
+          </div>
+          <div class="signup__button-container">
+            <button class="button signup__button">로그인</button>
+            <button type="submit" class="button button--orange signup__button">
+              회원가입
+            </button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="footer__container"></div>
+    </footer>
+  </body>
+</html>
