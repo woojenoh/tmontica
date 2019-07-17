@@ -1,0 +1,176 @@
+body {
+  background: #f1f1f1;
+  font-weight: normal;
+}
+
+body > .main , h2{
+  font-family: 'Malgun Gothic','맑은 고딕',Helvetica,'Apple SD Gothic Neo',Dotum,'돋움',sans-serif;
+}
+
+.main h2 {
+  letter-spacing: -.06em;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 18px;
+  margin-bottom: 21px;
+  color: #16181a;
+}
+
+.main {
+  padding: 0;
+}
+
+.payment__methods {
+  display: flex;
+  padding: 0 1rem;
+}
+
+.payment__method {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  border-color: #6c7580;
+}
+
+.button:nth-child(2n) {
+  border-left: 0;
+}
+
+.card {
+  margin-top: 10px;
+  border-bottom: 1px solid #dfe2e6;
+  background: #fff;
+  padding: 21px 0 0;
+}
+
+.plr15 {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.order.card > .order__top {
+  border-bottom: 1px solid #b7bfc8;
+}
+
+.order__menu-img {
+    width: 72px;
+}
+
+img {
+    width: 100%;
+}
+
+li.order__menu {
+    border-bottom: 1px solid #b7bfc8;
+    display: flex;
+    flex-wrap: wrap;
+    padding: .5rem 15px;
+    font-size: 15px;
+}
+
+.order__menu-options {
+    font-size: 14px;
+    color: #959da6;
+    letter-spacing: initial;
+}
+
+h3.order__menu-title {
+    font-size: 16px;
+    margin-bottom: 2px;
+    margin-top: 7px;
+}
+
+.d-inline-b {
+  display: inline-block;
+}
+
+.order__menu-cnt-wrap {
+    text-align: left;
+}
+
+.order__menu-price-wrap {
+    text-align: right;
+}
+
+.order__menu-description {
+    width: calc(100% - 72px);
+}
+
+.order__menu-cnt-price-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 5px;
+    padding-bottom: 7px;
+}
+
+.price--name {}
+
+.d-flex {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+    margin-bottom: 5px;
+}
+
+.price > .d-flex:nth-child(4) {
+    margin-bottom: 15px;
+}
+
+.button--group {
+    margin: 0 15px;
+    display: flex;
+}
+
+.button--group .button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+section.price.card {
+    padding-bottom: 15px;
+}
+
+.payment__points {
+    padding: 15px;
+    position: relative;
+}
+
+.payment__points > input {
+    border: 1px solid #b7bfc8;
+    width: 100%;
+    font-size: 22px;
+    box-sizing: border-box;
+    padding: 4px 8px;
+    /* padding-right: 22px; */
+    margin-bottom: 6px;
+}
+
+.payment__points > div:before {
+    display: inline-block;
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #6c7580;
+    content: '';
+}
+
+.payment__poinrts > div {
+    position: relative;
+}
+
+div {}
+
+.payment__points > div {
+    position: relative;
+    padding-left: 11px;
+    font-size: 14px;
+}

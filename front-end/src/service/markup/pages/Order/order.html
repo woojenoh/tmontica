@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Order</title>
+    <link rel="stylesheet" href="../../common/index.css" />
+    <link rel="stylesheet" href="../../common/reset.css" />
+    <link rel="stylesheet" href="./order.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header__container">
+        <img
+          src="../../common/tmon-logo.png"
+          alt="Tmontica Logo"
+          class="header__logo"
+        />
+        <ul class="header__items">
+          <li class="header__item">
+            <div class="header__user">user</div>
+          </li>
+          <li class="header__item">
+            <div class="header__cart">cart</div>
+          </li>
+          <li class="header__item">
+            <div class="header__hamburg">hamburg</div>
+          </li>
+        </ul>
+      </div>
+    </header>
+    <main class="main">
+      <section class="order card">
+        <div class="order__top">
+          <h2 class="order__title plr15">주문상품정보</h2>
+        </div>
+        <div class="order__main">
+          <ul class="order__menus">
+            <li class="order__menu">
+              <div class="order__menu-img">
+                <img src="../../common/coffee-sample.png" alt="아메리카노" />
+              </div>
+              <div class="order__menu-description">
+                  <div class="order__menu-title-wrap">
+                    <h3 class="order__menu-title">아메리카노</h3>
+                    <div class="order__menu-options">HOT / 샷추가(1개) / 시럽추가(1개) / 사이즈업</div>
+                  </div>
+                  <div class="order__menu-cnt-price-wrap">
+                    <div class="order__menu-cnt-wrap d-inline-b">
+                      <span class="order__menu-cnt">1</span>개
+                    </div>
+                    <div class="order__menu-price-wrap d-inline-b">
+                      <span class="order__menu-price">3,000</span>원
+                    </div>
+                  </div>
+              </div>
+            </li>
+            <li class="order__menu">
+              <div class="order__menu-img">
+                <img src="../../common/coffee-sample.png" alt="아메리카노" />
+              </div>
+              <div class="order__menu-description">
+                  <div class="order__menu-title-wrap">
+                    <h3 class="order__menu-title">아메리카노</h3>
+                    <div class="order__menu-options">HOT / 샷추가(1개) / 시럽추가(1개) / 사이즈업</div>
+                  </div>
+                  <div class="order__menu-cnt-price-wrap">
+                    <div class="order__menu-cnt-wrap d-inline-b">
+                      <span class="order__menu-cnt">1</span>개
+                    </div>
+                    <div class="order__menu-price-wrap d-inline-b">
+                      <span class="order__menu-price">3,000</span>원
+                    </div>
+                  </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <section class="payment card">
+        <div class="payment__top">
+          <h2 class="payment__title plr15">결제방법</h2>
+        </div>
+        <div class="payment__methods">
+          <div class="button button--green payment__method">현장결제</div>
+          <div class="button button--green payment__method">카드</div>
+        </div>
+        <div class="payment__points">
+          <input type="text" name="point" />
+          <div>사용가능한 포인트: <span>10</span>P</div>
+        </div>
+      </section>
+
+      <section class="price card">
+        <div class="d-flex">
+          <div class="price--name">주문금액</div>
+          <div class="price--value">6,000원</div>
+        </div>
+        <div class="d-flex">
+          <div class="price--name">할인금액</div>
+          <div class="price--value">1,000원</div>
+        </div>
+        <hr />
+        <div class="d-flex">
+          <div class="price--name">최종 결제금액</div>
+          <div class="price--value">5,000원</div>
+        </div>
+        <div class="button--group">
+            <div class="button--cancle button button--green">취소</div>
+            <div class="button--pay button button--green">결제하기</div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="footer__container"></div>
+    </footer>
+  </body>
+</html>

@@ -98,3 +98,12 @@ html > body {
   background-color: #f27835;
   color: white;
 }
+
+.button--green {
+  background-color: #19BC9B;
+  color: white;
+}
+
+.button--border-black {
+  border: 1px solid #343a40;
+}
