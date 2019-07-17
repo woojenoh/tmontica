@@ -19,7 +19,7 @@ public class OptionDaoTest {
     @Test
     public void insertOption() {
         Option option = new Option("name", "type", 500);
-        optionDao.insertOption(option);
+        optionDao.addOption(option);
     }
 
     @Test
