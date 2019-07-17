@@ -9,7 +9,10 @@ import java.util.List;
 //@Repository
 @Mapper
 public interface OptionDao {
-    public int insertOption(Option option);
-    public Option getOption(int id);
-    public List<Option> getAllOptions();
+    int addOption(Option option);
+    Option getOptionById(int id);
+    List<Option> getAllOptions();
+    void updateOption(Option option);
+    void deleteOption(int id);
+
 }
