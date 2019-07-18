@@ -19,24 +19,40 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
   };
 
   handleNavOpen = (): void => {
+    const body = document.querySelector("body");
+    if (body) {
+      body.style.overflow = "hidden";
+    }
     this.setState({
       isNavOpen: true
     });
   };
 
   handleNavClose = (): void => {
+    const body = document.querySelector("body");
+    if (body) {
+      body.style.overflow = "auto";
+    }
     this.setState({
       isNavOpen: false
     });
   };
 
   handleCartOpen = (): void => {
+    const body = document.querySelector("body");
+    if (body) {
+      body.style.overflow = "hidden";
+    }
     this.setState({
       isCartOpen: true
     });
   };
 
   handleCartClose = (): void => {
+    const body = document.querySelector("body");
+    if (body) {
+      body.style.overflow = "auto";
+    }
     this.setState({
       isCartOpen: false
     });

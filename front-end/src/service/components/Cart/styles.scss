@@ -12,7 +12,7 @@
     pointer-events: none;
   }
   .cart__dim {
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
@@ -20,6 +20,7 @@
     background-color: black;
     opacity: 0.1;
     transition: 0.5s opacity ease;
+    z-index: 1;
     &.cart__dim--close {
       opacity: 0;
     }
