@@ -28,6 +28,10 @@
     display: flex;
     justify-content: space-between;
     .button.signup__button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
       width: 45%;
       margin-top: 12px;
     }

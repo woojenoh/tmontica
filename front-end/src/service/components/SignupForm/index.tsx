@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 import "./styles.scss";
 
 export interface ISignupFormProps {}
@@ -84,7 +85,9 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           />
         </div>
         <div className="signup__button-container">
-          <button className="button signup__button">로그인</button>
+          <Link to="/signin" className="button signup__button">
+            로그인
+          </Link>
           <button type="submit" className="button button--orange signup__button">
             회원가입
           </button>
