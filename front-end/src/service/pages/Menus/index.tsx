@@ -1,34 +1,11 @@
 import * as React from "react";
 import "./styles.scss";
+import Header from "../../components/Header";
 import { Link } from "react-router-dom";
 import { identifier } from "@babel/types";
 // import MenuItems from "../../components/MenuItems";
 
 export interface IMenusProps {}
-
-// 임시 헤더
-const Header = () => (
-  <header className="header">
-    <div className="header__container">
-      <img
-        src={require("../../../assets/img/tmon-logo.png")}
-        alt="Tmontica Logo"
-        className="header__logo"
-      />
-      <ul className="header__items">
-        <li className="header__item">
-          <div className="header__user">user</div>
-        </li>
-        <li className="header__item">
-          <div className="header__cart">cart</div>
-        </li>
-        <li className="header__item">
-          <div className="header__hamburg">hamburg</div>
-        </li>
-      </ul>
-    </div>
-  </header>
-);
 
 type Menu = {
   id: number;
@@ -74,7 +51,7 @@ class MenuItem extends React.Component<IMenuItemProps> {
         <div className="menu__content">
           <span className="menu__name">아메리카노</span>
           <span className="menu__buy">구매</span>
-          <img src={""} alt="Menu Image" className="menu__img" />
+          <img src={menu.img} alt="Menu Image" className="menu__img" />
         </div>
       </li>
     );
@@ -90,22 +67,22 @@ export default class Menus extends React.Component<IMenusProps> {
           {
             id: 1,
             name: "아메리카노",
-            img: "../../../assets/img/coffee-sample.png"
+            img: "/img/coffee-sample.png"
           },
           {
             id: 2,
             name: "아메리카노",
-            img: "../../../assets/img/coffee-sample.png"
+            img: "/img/coffee-sample.png"
           },
           {
             id: 3,
             name: "갈릭퐁당브래드",
-            img: "../../../assets/img/coffee-sample.png"
+            img: "/img/coffee-sample.png"
           },
           {
             id: 4,
             name: "갈릭퐁당브래드",
-            img: "../../../assets/img/coffee-sample.png"
+            img: "/img/coffee-sample.png"
           }
         ]
       },

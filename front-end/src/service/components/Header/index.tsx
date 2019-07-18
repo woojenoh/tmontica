@@ -35,11 +35,7 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
       <>
         <header className="header">
           <div className="header__container">
-            <img
-              src={require("../../../assets/img/tmon-logo.png")}
-              alt="Tmontica Logo"
-              className="header__logo"
-            />
+            <img src="/img/tmon-logo.png" alt="Tmontica Logo" className="header__logo" />
             <ul className="header__items">
               <li className="header__item">
                 <FontAwesomeIcon icon={faUser} size="2x" />
