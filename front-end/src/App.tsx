@@ -25,7 +25,7 @@ class App extends React.Component {
 
     const PublicRoutes = (
       <Switch>
-        <Route exact path="/categories/:category" component={Menus} />
+        <Route exact path="/menus/:categoryEng" component={Menus} />
         <Route exact path="/signin" />
         <Route exact path="/signup" />
         <Route exact path="/" component={Menus} />
