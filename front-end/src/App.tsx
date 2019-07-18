@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Switch, Route } from "react-router-dom";
+import Menus from "./service/pages/Menus";
 
 class App extends React.Component {
   public render() {
@@ -24,10 +25,10 @@ class App extends React.Component {
 
     const PublicRoutes = (
       <Switch>
-        <Route exact path="/categories/:category" />
+        <Route exact path="/categories/:category" component={Menus} />
         <Route exact path="/signin" />
         <Route exact path="/signup" />
-        <Route path="/" />
+        <Route exact path="/" component={Menus} />
       </Switch>
     );
 
