@@ -59,7 +59,6 @@ export default class Menus extends React.Component<IMenusProps> {
   render() {
     return (
       <>
-        <Header />
         <main className="main">
           <section className="banner">
             {<img src="" alt="Banner" className="banner__img" />}
