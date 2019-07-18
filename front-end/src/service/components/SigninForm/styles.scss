@@ -1,0 +1,23 @@
+.signin__form {
+  margin: 40px 0;
+  .input.signin__input {
+    margin-bottom: 10px;
+  }
+  .signin__find {
+    display: block;
+    text-align: right;
+    font-size: 14px;
+    margin: 10px 0;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .signin__button-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .button.signin__button {
+      width: 45%;
+      margin-top: 12px;
+    }
+  }
+}
