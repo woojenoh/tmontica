@@ -1,6 +1,7 @@
 import * as React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faShoppingCart, faBars } from "@fortawesome/free-solid-svg-icons";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 import Nav from "../Nav";
 import Cart from "../Cart";
 import "./styles.scss";
@@ -12,7 +13,15 @@ export interface IHeaderState {
   isCartOpen: boolean;
 }
 
-class Header extends React.Component<IHeaderProps, IHeaderState> {
+class Header extends React.Component<RouteComponentProps, IHeaderProps, IHeaderState> {
+  componentDidUpdate(prevProps: any, prevState: any) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.setState({
+        isNavOpen: false
+      });
+    }
+  }
+
   state = {
     isNavOpen: false,
     isCartOpen: false
@@ -87,4 +96,4 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
   }
 }
 
-export default Header;
+export default withRouter(Header);
