@@ -1,6 +1,5 @@
-package com.internship.tmontica.repository;
+package com.internship.tmontica.point;
 
-import com.internship.tmontica.dto.Point;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

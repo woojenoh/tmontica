@@ -1,5 +1,6 @@
-package com.internship.tmontica.dto;
+package com.internship.tmontica.user;
 
+import com.internship.tmontica.user.model.request.UserSignUpReqDTO;
 import lombok.Data;
 import org.apache.ibatis.type.Alias;
 

@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.internship.tmontica.repository.UserDao">
-    <!-- int addUser(User user);-->
+<mapper namespace="com.internship.tmontica.user.UserDao">
+    <!-- int addUser(UserSignUpReqDTO userSignUpReqDTO);-->
     <insert id="addUser">
-        INSERT INTO users (id ,name ,email, birth_date, password, role, created_date)
-        VALUES(#{id}, #{name}, #{email}, #{birthDate}, #{password}, #{role}, #{createdDate})
+        INSERT INTO users (id ,name ,email, birth_date, password, role)
+        VALUES(#{id}, #{name}, #{email}, #{birthDate}, #{password}, #{role})
     </insert>
 
     <!--User getUserByUserId(String id) -->

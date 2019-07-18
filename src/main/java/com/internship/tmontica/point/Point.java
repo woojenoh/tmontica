@@ -1,4 +1,4 @@
-package com.internship.tmontica.dto;
+package com.internship.tmontica.point;
 
 import lombok.Data;
 import org.apache.ibatis.type.Alias;

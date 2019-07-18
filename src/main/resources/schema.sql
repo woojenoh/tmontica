@@ -38,7 +38,8 @@ DROP TABLE IF EXISTS `tmontica`.`menus` ;
 CREATE TABLE IF NOT EXISTS `tmontica`.`menus` (
   `name_eng` VARCHAR(45) NOT NULL,
   `product_price` INT NOT NULL,
-  `category` VARCHAR(45) NOT NULL,
+  `category_ko` VARCHAR(45) NOT NULL,
+  `category_eng` VARCHAR(45) NOT NULL,
   `monthly_menu` TINYINT(1) NOT NULL,
   `usable` TINYINT(1) NOT NULL,
   `img` VARCHAR(255) NOT NULL,
@@ -48,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `tmontica`.`menus` (
   `created_date` DATETIME NOT NULL,
   `updated_date` DATETIME NULL,
   `creator_id` VARCHAR(45) NOT NULL,
-  `updator_id` VARCHAR(45) NULL,
+  `updater_id` VARCHAR(45) NULL,
   `stock` INT NOT NULL,
   `name_ko` VARCHAR(45) NOT NULL,
   `id` INT NOT NULL AUTO_INCREMENT,

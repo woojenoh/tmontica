@@ -5,7 +5,7 @@
 <mapper namespace="com.internship.tmontica.repository.OptionDao">
     <!-- getOptionById  : 전체 옵션 가져오기 -->
     <select id="getAllOptions" resultType="option">
-		select * from options
+		SELECT * FROM options
 	</select>
 
     <!-- Option getOptionById(int id); -->
