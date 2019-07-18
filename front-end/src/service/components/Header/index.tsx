@@ -2,34 +2,65 @@ import * as React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faShoppingCart, faBars } from "@fortawesome/free-solid-svg-icons";
 import Nav from "../Nav";
+import Cart from "../Cart";
 import "./styles.scss";
 
 export interface IHeaderProps {}
 
 export interface IHeaderState {
   isNavOpen: boolean;
+  isCartOpen: boolean;
 }
 
 class Header extends React.Component<IHeaderProps, IHeaderState> {
   state = {
-    isNavOpen: false
+    isNavOpen: false,
+    isCartOpen: false
   };
 
   handleNavOpen = (): void => {
+    const body = document.querySelector("body");
+    if (body) {
+      body.style.overflow = "hidden";
+    }
     this.setState({
       isNavOpen: true
     });
   };
 
   handleNavClose = (): void => {
+    const body = document.querySelector("body");
+    if (body) {
+      body.style.overflow = "auto";
+    }
     this.setState({
       isNavOpen: false
     });
   };
 
+  handleCartOpen = (): void => {
+    const body = document.querySelector("body");
+    if (body) {
+      body.style.overflow = "hidden";
+    }
+    this.setState({
+      isCartOpen: true
+    });
+  };
+
+  handleCartClose = (): void => {
+    const body = document.querySelector("body");
+    if (body) {
+      body.style.overflow = "auto";
+    }
+    this.setState({
+      isCartOpen: false
+    });
+  };
+
   render() {
-    const { isNavOpen } = this.state;
-    const { handleNavOpen, handleNavClose } = this;
+    const { isNavOpen, isCartOpen } = this.state;
+    const { handleNavOpen, handleNavClose, handleCartOpen, handleCartClose } = this;
 
     return (
       <>
@@ -40,7 +71,7 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
               <li className="header__item">
                 <FontAwesomeIcon icon={faUser} size="2x" />
               </li>
-              <li className="header__item">
+              <li className="header__item" onClick={() => handleCartOpen()}>
                 <FontAwesomeIcon icon={faShoppingCart} size="2x" />
               </li>
               <li className="header__item" onClick={() => handleNavOpen()}>
@@ -50,6 +81,7 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
           </div>
         </header>
         <Nav isNavOpen={isNavOpen} handleNavClose={handleNavClose} />
+        <Cart isCartOpen={isCartOpen} handleCartClose={handleCartClose} />
       </>
     );
   }
