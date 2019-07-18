@@ -11,7 +11,7 @@ class App extends React.Component {
         <Route exact path="/admin/users" />
         <Route exact path="/admin/banners" />
         <Route exact path="/admin/statistics" />
-        <Route path="/" />
+        <Route exact path="/" />
       </Switch>
     );
 
