@@ -1,111 +1,62 @@
 import * as React from "react";
 import "./styles.scss";
 import Header from "../../components/Header";
-import { Link } from "react-router-dom";
-import { identifier } from "@babel/types";
-// import MenuItems from "../../components/MenuItems";
+import { RouteComponentProps } from "react-router-dom";
+import { MenuItems } from "../../components/MenuItems";
+import { IMenuItemsProps } from "../../components/MenuItems";
+import { Menu } from "../../../tyeps";
 
-export interface IMenusProps {}
+interface MatchParams {
+  categoryEng: string;
+}
 
-type Menu = {
-  id: number;
-  nameKo: string;
-  nameEng: string;
-  imgUrl: string;
-};
+interface IMenusProps extends RouteComponentProps<MatchParams> {}
 
-interface IMenuItemsProps {
+interface IMenusState {
+  all: Array<any>;
   categoryKo: string;
   categoryEng: string;
   menus: Array<Menu>;
 }
 
-interface IMenuItemProps {
-  menu: Menu;
-}
-
-class MenuItems extends React.Component<IMenuItemsProps> {
-  render() {
-    const { categoryKo, categoryEng, menus } = this.props;
-    return (
-      <section className="menu">
-        <div className="menu__top">
-          <h1 className="menu__title">{categoryKo}</h1>
-          <Link to={`menus/${categoryEng}`}>
-            <span className="menu__more">+</span>
-          </Link>
-        </div>
-        <ul className="menu__items">
-          {menus.map(menu => {
-            return <MenuItem menu={menu} />;
-          })}
-        </ul>
-      </section>
-    );
-  }
-}
-
-class MenuItem extends React.Component<IMenuItemProps> {
-  render() {
-    const { id, nameEng, nameKo, imgUrl } = this.props.menu;
-
-    return (
-      <li className="menu__item">
-        <div className="menu__content">
-          <span className="menu__name">{nameKo}</span>
-          <span className="menu__buy">구매</span>
-          <img src={imgUrl} alt="Menu Image" className="menu__img" />
-        </div>
-      </li>
-    );
-  }
-}
+const api = "https://my-json-server.typicode.com/yeolsa/tmontica-json";
 
 export default class Menus extends React.Component<IMenusProps> {
-  public render() {
-    const data = [
-      {
-        categoryKo: "이달의 메뉴",
-        categoryEng: "monthly",
-        menus: [
-          {
-            id: 1,
-            nameKo: "아메리카노",
-            nameEng: "americano",
-            imgUrl: "/img/coffee-sample.png"
-          },
-          {
-            id: 2,
-            nameKo: "아메리카노",
-            nameEng: "americano",
-            imgUrl: "/img/coffee-sample.png"
-          },
-          {
-            id: 3,
-            nameKo: "갈릭퐁당브래드",
-            nameEng: "americano",
-            imgUrl: "/img/coffee-sample.png"
-          },
-          {
-            id: 4,
-            nameKo: "갈릭퐁당브래드",
-            nameEng: "americano",
-            imgUrl: "/img/coffee-sample.png"
-          }
-        ]
-      },
-      {
-        categoryKo: "커피/에스프레소",
-        categoryEng: "coffee",
-        menus: []
-      },
-      {
-        categoryKo: "디저트",
-        categoryEng: "dessert",
-        menus: []
-      }
-    ];
+  state = {
+    all: [],
+    categoryKo: "",
+    categoryEng: "",
+    menus: []
+  };
 
+  getMenus(categoryEng?: string) {
+    return fetch(`${api}/${categoryEng}`, {
+      headers: {
+        Accept: "application/json"
+      }
+    }).then(res => res.json());
+  }
+
+  componentDidMount() {
+    const { categoryEng } = this.props.match.params;
+    const requestUrl = categoryEng ? categoryEng : "menuAll";
+
+    this.getMenus(requestUrl).then(res => {
+      if (requestUrl === "menuAll") {
+        this.setState({
+          all: res
+        });
+      } else {
+        this.setState({
+          categoryKo: "음료",
+          categoryEng,
+          menus: res.menus
+        });
+      }
+    });
+  }
+
+  render() {
     return (
       <>
         <Header />
@@ -113,21 +64,22 @@ export default class Menus extends React.Component<IMenusProps> {
           <section className="banner">
             {<img src="" alt="Banner" className="banner__img" />}
           </section>
-          <MenuItems
-            categoryKo={data[0].categoryKo}
-            categoryEng={data[0].categoryEng}
-            menus={data[0].menus}
-          />
-          <MenuItems
-            categoryKo={data[1].categoryKo}
-            categoryEng={data[1].categoryEng}
-            menus={data[1].menus}
-          />
-          <MenuItems
-            categoryKo={data[2].categoryKo}
-            categoryEng={data[1].categoryEng}
-            menus={data[2].menus}
-          />
+          {this.state.all ? (
+            this.state.all.map((menu: IMenuItemsProps, i: number) => (
+              <MenuItems
+                key={i}
+                categoryKo={menu.categoryKo}
+                categoryEng={menu.categoryEng}
+                menus={menu.menus}
+              />
+            ))
+          ) : (
+            <MenuItems
+              categoryKo={this.state.categoryKo}
+              categoryEng={this.state.categoryEng}
+              menus={this.state.menus}
+            />
+          )}
         </main>
         <footer className="footer">
           <div className="footer__container" />
