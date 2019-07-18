@@ -3,26 +3,29 @@ import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import { MenuItems } from "../../components/MenuItems";
 import { IMenuItemsProps } from "../../components/MenuItems";
+import { Menu } from "../../../tyeps";
 
 interface MatchParams {
   categoryEng: string;
 }
 
-interface IMenusProps extends RouteComponentProps<MatchParams> {}
+interface IMenusSubProps extends RouteComponentProps<MatchParams> {
+  categoryKo: string;
+}
 
-interface IMenusState {
-  menuAll: Object;
+interface IMenusSubState {
+  menus: Array<Menu>;
 }
 
 const api = "https://my-json-server.typicode.com/yeolsa/tmontica-json";
 
-export default class Menus extends React.Component<IMenusProps, IMenusState> {
+export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubState> {
   state = {
-    menuAll: []
+    menus: []
   };
 
-  getMenuAll() {
-    return fetch(`${api}/menuAll`, {
+  getMenus(categoryEng: string) {
+    return fetch(`${api}/${categoryEng}`, {
       headers: {
         Accept: "application/json"
       }
@@ -30,14 +33,16 @@ export default class Menus extends React.Component<IMenusProps, IMenusState> {
   }
 
   componentDidMount() {
-    this.getMenuAll().then(menuAll => {
+    this.getMenus(this.props.match.params.categoryEng).then(ret => {
       this.setState({
-        menuAll
+        menus: ret.menus
       });
     });
   }
 
   render() {
+    const { categoryKo } = this.props;
+
     return (
       <>
         <main className="main">
@@ -45,16 +50,11 @@ export default class Menus extends React.Component<IMenusProps, IMenusState> {
             {<img src="" alt="Banner" className="banner__img" />}
           </section>
 
-          {this.state.menuAll
-            ? Array.from(this.state.menuAll).map((menu: IMenuItemsProps, i: number) => (
-                <MenuItems
-                  key={i}
-                  categoryKo={menu.categoryKo}
-                  categoryEng={menu.categoryEng}
-                  menus={menu.menus}
-                />
-              ))
-            : "Loading..."}
+          {this.state.menus ? (
+            <MenuItems categoryKo={categoryKo} menus={this.state.menus} />
+          ) : (
+            "Loading..."
+          )}
         </main>
         <footer className="footer">
           <div className="footer__container" />

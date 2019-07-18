@@ -2,6 +2,7 @@ import * as React from "react";
 import { Switch, Route, Redirect, withRouter, RouteComponentProps } from "react-router-dom";
 import Header from "./service/components/Header";
 import Menus from "./service/pages/Menus";
+import MenusSub from "./service/pages/MenusSub";
 
 class App extends React.Component<RouteComponentProps> {
   // 임시로 만든 로그인 정보
@@ -79,7 +80,7 @@ class App extends React.Component<RouteComponentProps> {
           <PrivateRoute exact path="/payment" component={Menus} />
           <PrivateRoute exact path="/orders" component={Menus} />
           <PrivateRoute exact path="/user" component={Menus} />
-          <Route exact path="/menus/:categoryEng" component={Menus} />
+          <Route exact path="/menus/:categoryEng" component={MenusSub} />
           <Route exact path="/admin/signin" component={Menus} />
           <Route exact path="/signin" component={Menus} />
           <Route exact path="/signup" component={Menus} />

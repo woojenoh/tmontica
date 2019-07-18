@@ -5,7 +5,7 @@ import { Menu } from "../../../tyeps";
 
 export interface IMenuItemsProps {
   categoryKo: string;
-  categoryEng: string;
+  categoryEng?: string;
   menus: Array<Menu>;
 }
 
@@ -16,14 +16,20 @@ export class MenuItems extends React.Component<IMenuItemsProps> {
       <section className="menu">
         <div className="menu__top">
           <h1 className="menu__title">{categoryKo}</h1>
-          <Link to={`/menus/${categoryEng}`}>
-            <span className="menu__more">+</span>
-          </Link>
+          {categoryEng ? (
+            <Link to={`/menus/${categoryEng}`}>
+              <span className="menu__more">+</span>
+            </Link>
+          ) : (
+            ""
+          )}
         </div>
         <ul className="menu__items">
-          {menus.map(menu => {
-            return <MenuItem menu={menu} />;
-          })}
+          {menus
+            ? menus.map(menu => {
+                return <MenuItem key={menu.id} menu={menu} />;
+              })
+            : ""}
         </ul>
       </section>
     );
