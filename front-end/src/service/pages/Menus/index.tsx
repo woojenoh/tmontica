@@ -9,13 +9,14 @@ export interface IMenusProps {}
 
 type Menu = {
   id: number;
-  name: string;
-  img: string;
-  category?: string;
+  nameKo: string;
+  nameEng: string;
+  imgUrl: string;
 };
 
 interface IMenuItemsProps {
-  category: string;
+  categoryKo: string;
+  categoryEng: string;
   menus: Array<Menu>;
 }
 
@@ -25,12 +26,14 @@ interface IMenuItemProps {
 
 class MenuItems extends React.Component<IMenuItemsProps> {
   render() {
-    const { category, menus } = this.props;
+    const { categoryKo, categoryEng, menus } = this.props;
     return (
       <section className="menu">
         <div className="menu__top">
-          <h1 className="menu__title">{category}</h1>
-          <span className="menu__more">+</span>
+          <h1 className="menu__title">{categoryKo}</h1>
+          <Link to={`menus/${categoryEng}`}>
+            <span className="menu__more">+</span>
+          </Link>
         </div>
         <ul className="menu__items">
           {menus.map(menu => {
@@ -44,14 +47,14 @@ class MenuItems extends React.Component<IMenuItemsProps> {
 
 class MenuItem extends React.Component<IMenuItemProps> {
   render() {
-    const { menu } = this.props;
+    const { id, nameEng, nameKo, imgUrl } = this.props.menu;
 
     return (
       <li className="menu__item">
         <div className="menu__content">
-          <span className="menu__name">아메리카노</span>
+          <span className="menu__name">{nameKo}</span>
           <span className="menu__buy">구매</span>
-          <img src={menu.img} alt="Menu Image" className="menu__img" />
+          <img src={imgUrl} alt="Menu Image" className="menu__img" />
         </div>
       </li>
     );
@@ -62,55 +65,74 @@ export default class Menus extends React.Component<IMenusProps> {
   public render() {
     const data = [
       {
-        category: "이달의 메뉴",
+        categoryKo: "이달의 메뉴",
+        categoryEng: "monthly",
         menus: [
           {
             id: 1,
-            name: "아메리카노",
-            img: "/img/coffee-sample.png"
+            nameKo: "아메리카노",
+            nameEng: "americano",
+            imgUrl: "/img/coffee-sample.png"
           },
           {
             id: 2,
-            name: "아메리카노",
-            img: "/img/coffee-sample.png"
+            nameKo: "아메리카노",
+            nameEng: "americano",
+            imgUrl: "/img/coffee-sample.png"
           },
           {
             id: 3,
-            name: "갈릭퐁당브래드",
-            img: "/img/coffee-sample.png"
+            nameKo: "갈릭퐁당브래드",
+            nameEng: "americano",
+            imgUrl: "/img/coffee-sample.png"
           },
           {
             id: 4,
-            name: "갈릭퐁당브래드",
-            img: "/img/coffee-sample.png"
+            nameKo: "갈릭퐁당브래드",
+            nameEng: "americano",
+            imgUrl: "/img/coffee-sample.png"
           }
         ]
       },
       {
-        category: "음료",
+        categoryKo: "커피/에스프레소",
+        categoryEng: "coffee",
         menus: []
       },
       {
-        category: "이달의 메뉴",
+        categoryKo: "디저트",
+        categoryEng: "dessert",
         menus: []
       }
     ];
 
     return (
-      <div>
+      <>
         <Header />
         <main className="main">
           <section className="banner">
             {<img src="" alt="Banner" className="banner__img" />}
           </section>
-          <MenuItems category={data[0].category} menus={data[0].menus} />
-          <MenuItems category={data[1].category} menus={data[1].menus} />
-          <MenuItems category={data[2].category} menus={data[2].menus} />
+          <MenuItems
+            categoryKo={data[0].categoryKo}
+            categoryEng={data[0].categoryEng}
+            menus={data[0].menus}
+          />
+          <MenuItems
+            categoryKo={data[1].categoryKo}
+            categoryEng={data[1].categoryEng}
+            menus={data[1].menus}
+          />
+          <MenuItems
+            categoryKo={data[2].categoryKo}
+            categoryEng={data[1].categoryEng}
+            menus={data[2].menus}
+          />
         </main>
         <footer className="footer">
           <div className="footer__container" />
         </footer>
-      </div>
+      </>
     );
   }
 }
