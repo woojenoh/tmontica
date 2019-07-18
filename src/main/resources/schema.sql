@@ -19,9 +19,9 @@ CREATE TABLE IF NOT EXISTS `tmontica`.`users` (
   `email` VARCHAR(255) NOT NULL,
   `birth_date` DATETIME NOT NULL,
   `password` VARCHAR(100) NOT NULL,
-  `role` CHAR(10) NOT NULL,
-  `created_date` DATETIME NOT NULL,
-  `point` INT NOT NULL,
+  `role` CHAR(10) NOT NULL DEFAULT "user",
+  `created_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `point` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -179,6 +179,7 @@ CREATE TABLE IF NOT EXISTS `tmontica`.`points` (
   `type` CHAR(10) NOT NULL,
   `date` DATETIME NOT NULL,
   `amount` INT NOT NULL,
+  `description` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_point_user1`
     FOREIGN KEY (`user_id`)
