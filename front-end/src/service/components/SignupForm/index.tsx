@@ -3,10 +3,34 @@ import "./styles.scss";
 
 export interface ISignupFormProps {}
 
-export interface ISignupFormState {}
+export interface ISignupFormState {
+  id: string;
+  password: string;
+  passwordConfirm: string;
+  name: string;
+  email: string;
+  birthday: string;
+}
 
 class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
+  state = {
+    id: "",
+    password: "",
+    passwordConfirm: "",
+    name: "",
+    email: "",
+    birthday: ""
+  };
+
+  handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
+    this.setState({
+      [e.currentTarget.name]: e.currentTarget.value
+    } as { [K in keyof ISignupFormState]: ISignupFormState[K] });
+  };
+
   render() {
+    const { handleInputChange } = this;
+
     return (
       <form className="signup__form">
         <input
@@ -14,6 +38,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           name="id"
           className="input signup__input"
           placeholder="아이디"
+          onChange={e => handleInputChange(e)}
           required
         />
         <input
@@ -21,13 +46,15 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           name="password"
           className="input signup__input"
           placeholder="비밀번호"
+          onChange={e => handleInputChange(e)}
           required
         />
         <input
           type="password"
-          name="password-confirm"
+          name="passwordConfirm"
           className="input signup__input"
           placeholder="비밀번호 확인"
+          onChange={e => handleInputChange(e)}
           required
         />
         <input
@@ -35,6 +62,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           name="name"
           className="input signup__input"
           placeholder="이름"
+          onChange={e => handleInputChange(e)}
           required
         />
         <input
@@ -42,6 +70,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           name="email"
           className="input signup__input"
           placeholder="이메일"
+          onChange={e => handleInputChange(e)}
           required
         />
         <div className="signup__birthday">
@@ -50,6 +79,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
             type="date"
             name="birthday"
             className="input signup__input signup__birthday-input"
+            onChange={e => handleInputChange(e)}
             required
           />
         </div>
