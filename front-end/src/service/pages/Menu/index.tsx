@@ -1,25 +1,37 @@
 import React, { Component } from "react";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
-import MenuItems from "../../components/MenuItems";
-import { IMenuItemsProps } from "../../components/MenuItems";
+import { MenuAPI } from "../../../API";
 
 interface MatchParams {
   categoryEng: string;
+  menuId: string;
 }
 
 interface IMenuProps extends RouteComponentProps<MatchParams> {}
 
 interface IMenuState {
-  menuAll: Object;
+  menu: Object;
 }
-
-const api = "https://my-json-server.typicode.com/yeolsa/tmontica-json";
 
 export default class Menu extends Component<IMenuProps, IMenuState> {
   state = {
-    menuAll: []
+    menu: {}
   };
+
+  async getMenu() {
+    const { categoryEng, menuId } = this.props.match.params;
+
+    const menu = await MenuAPI.getMenuById(categoryEng, parseInt(menuId));
+
+    this.setState({
+      menu
+    });
+  }
+
+  componentDidMount() {
+    this.getMenu();
+  }
 
   render() {
     return (
