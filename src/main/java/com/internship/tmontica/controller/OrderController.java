@@ -30,7 +30,11 @@ public class OrderController {
     /** 주문 받기(결제하기) */
     @PostMapping
     public int addOrder(@RequestBody @Valid OrderReq orderReq){
+        System.out.println("결제 컨트롤러 ");
+        System.out.println(orderReq);
         // TODO: 주문테이블에 추가
+        // 주문번호 생성
+
         // TODO: 주문상세테이블에 추가
         // TODO: 주문상태로그테이블에 추가
         // TODO: 장바구니에서 주문할때는 장바구니에서는 삭제처리 -> 어디서 해줄지?
@@ -48,8 +52,8 @@ public class OrderController {
         // 컬럼을 지우는게 아니라 status를 주문취소로 수정하는것임
         // orders 테이블에서 status 수정
         orderService.deleteOrder(orderId);
-        // order_status_log 테이블에도 로그 추가
-        // TODO: 사용자 아이디 가져오기 해야함
+        // order_status_log 테이블에도 주문취소 로그 추가
+        // TODO: 토큰에서? 사용자 아이디 가져오기 해야함
         OrderStatusLog orderStatusLog = new OrderStatusLog("주문취소","사용자id", orderId);
         orderService.addOrderStatusLog(orderStatusLog);
     }
@@ -65,12 +69,12 @@ public class OrderController {
         //메뉴 옵션 "1__1/4__2" => "HOT / 샷추가(2개)" 로 바꾸는 작업
         for (int i = 0; i < menus.size(); i++) {
             String option = menus.get(i).getOption();
-            String convert = "";
+            String convert = ""; // 변환할 문자열
             String[] arrOption = option.split("/");
             for (int j = 0; j < arrOption.length; j++){
                String[] oneOption = arrOption[j].split("__");
                Option tmpOption = optionService.getOptionById(Integer.valueOf(oneOption[0]));
-               if(j != 0 ){ convert += " / "; }
+               if(j != 0 ){ convert += "/"; }
                if(tmpOption.getType().equals("Temperature")){
                    convert += tmpOption.getName();
                }else{
@@ -115,7 +119,6 @@ public class OrderController {
 
         Map<String, List> map = new HashMap<>();
 
-        //map.put("orders", orderService.getOrderByUserId(user_id));
         map.put("orders", orderListResps);
 
         return map;
