@@ -67,7 +67,7 @@ public class MenuController {
         List<Menu> adeMenus = menuService.getMenusByCategory(CategoryName.CATEGORY_ADE);
 
         // Menu --> MenuSimpleResp
-        List<MenuSimpleResp> adeMenuList = modelMapper.map(menuAde, listType);
+        List<MenuSimpleResp> adeMenuList = modelMapper.map(adeMenus, listType);
         menuAde.setMenus(adeMenuList);
 
         allMenus.add(menuAde);
