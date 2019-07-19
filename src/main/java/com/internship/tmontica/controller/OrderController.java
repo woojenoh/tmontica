@@ -55,16 +55,28 @@ public class OrderController {
     public OrderResp getOrderByOrderId(@PathVariable("orderId")int orderId){
         // TODO: menus에 들어갈 객체 필요, menu select 기능 필요
         // TODO: 주문번호로 주문정보와 주문 상세정보를 객체에 담아 리턴시키
-        Order order = orderService.getOrderByOrderId(orderId);
-        List<MenusResp> menus = orderService.getOrderDetailByOrderId(orderId);
-        OrderResp orderResp = new OrderResp(order.getPayment(), order.getStatus(), order.getTotalPrice(), order.getRealPrice(),
-                order.getUsedPoint(), order.getOrderDate(), menus);
+//        Order order = orderService.getOrderByOrderId(orderId);
+//        List<MenusResp> menus = orderService.getOrderDetailByOrderId(orderId);
+//
+//        //메뉴 옵션 "4__2" => "샷추가(2개)" 로 바꾸는 작업
+//        for (int i = 0; i < menus.size(); i++) {
+//            String option = menus.get(i).getOption();
+//            String[] arrOption = option.split("/");
+//            for (int j = 0; j < arrOption.length; j++){
+//                 = arrOption[j].split("__");
+//            }
+//        }
+//
+//        OrderResp orderResp = new OrderResp(order.getPayment(), order.getStatus(), order.getTotalPrice(),
+//                                            order.getRealPrice(), order.getUsedPoint(), order.getOrderDate(), menus);
+
+
         // 더미 데이터
-//        List<MenusResp> menus = new ArrayList<>();
-//        menus.add(new MenusResp(1, "americano", "HOT / 샷추가(1개) / SIZE UP", 3, 3800));
-//        menus.add(new MenusResp(2, "caffelatte", "ICE / 샷추가(1개) / SIZE UP", 1, 2300));
-//        OrderResp orderResp = new OrderResp("현장결제","미결제",6100,4000,2100,
-//                Date.valueOf("2019-07-19") ,menus);
+        List<MenusResp> menus = new ArrayList<>();
+        menus.add(new MenusResp(1, "americano", "HOT / 샷추가(1개) / SIZE UP", 3, 3800));
+        menus.add(new MenusResp(2, "caffelatte", "ICE / 샷추가(1개) / SIZE UP", 1, 2300));
+        OrderResp orderResp = new OrderResp("현장결제","미결제",6100,4000,2100,
+                Date.valueOf("2019-07-19") ,menus);
 
         return orderResp;
     }

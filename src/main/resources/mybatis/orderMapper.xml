@@ -24,7 +24,7 @@
         where A.order_id = #{orderId};
     </select>
 
-    <!-- List<String> getMenuNamesByOrderId(int orderId) 주문에서 메뉴 이름들만 가져오기 -->
+    <!-- List<String> getMenuNamesByOrderId(int orderId) 주문상세의 메뉴 이름들만 가져오기 -->
     <select id="getMenuNamesByOrderId" parameterType="int" resultType="String">
         select name_ko
         from menus inner join order_details
