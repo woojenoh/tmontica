@@ -3,32 +3,32 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.internship.tmontica.repository.OptionDao">
-    <!-- getOptionById  : 전체 옵션 가져오기 -->
-    <select id="getAllOptions" resultType="option">
-		select * from options
-	</select>
+<!--    &lt;!&ndash; getOptionById  : 전체 옵션 가져오기 &ndash;&gt;-->
+<!--    <select id="getAllOptions" resultType="option">-->
+<!--		select * from options-->
+<!--	</select>-->
 
-    <!-- Option getOptionById(int id); -->
-    <select id="getOptionById" parameterType="int" resultType="option">
-        SELECT * FROM options WHERE id = #{id}
-    </select>
+<!--    &lt;!&ndash; Option getOptionById(int id); &ndash;&gt;-->
+<!--    <select id="getOptionById" parameterType="int" resultType="option">-->
+<!--        SELECT * FROM options WHERE id = #{id}-->
+<!--    </select>-->
 
-    <!-- int addOption(Option option);-->
-    <insert id="addOption" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO options (name ,price ,type)
-        VALUES(#{name}, #{price}, #{type})
-    </insert>
+<!--    &lt;!&ndash; int addOption(Option option);&ndash;&gt;-->
+<!--    <insert id="addOption" useGeneratedKeys="true" keyProperty="id">-->
+<!--        INSERT INTO options (name ,price ,type)-->
+<!--        VALUES(#{name}, #{price}, #{type})-->
+<!--    </insert>-->
 
-    <!-- void updateOption(Option option); -->
-    <update id="updateOption" parameterType="option">
-        UPDATE options
-        SET name = #{name} , price = #{price} , type = #{type}
-        WHERE id = #{id}
-    </update>
+<!--    &lt;!&ndash; void updateOption(Option option); &ndash;&gt;-->
+<!--    <update id="updateOption" parameterType="option">-->
+<!--        UPDATE options-->
+<!--        SET name = #{name} , price = #{price} , type = #{type}-->
+<!--        WHERE id = #{id}-->
+<!--    </update>-->
 
-    <!-- deleteOption(int id); -->
-    <delete id ="deleteOption" parameterType="int">
-        DELETE FROM options WHERE id = #{id}
-    </delete>
+<!--    &lt;!&ndash; deleteOption(int id); &ndash;&gt;-->
+<!--    <delete id ="deleteOption" parameterType="int">-->
+<!--        DELETE FROM options WHERE id = #{id}-->
+<!--    </delete>-->
 
 </mapper>
