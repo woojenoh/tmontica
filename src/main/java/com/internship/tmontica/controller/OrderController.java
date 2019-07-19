@@ -1,11 +1,13 @@
 package com.internship.tmontica.controller;
 
+import com.internship.tmontica.dto.Option;
 import com.internship.tmontica.dto.Order;
 import com.internship.tmontica.dto.OrderStatusLog;
 import com.internship.tmontica.dto.request.OrderReq;
 import com.internship.tmontica.dto.response.MenusResp;
 import com.internship.tmontica.dto.response.OrderListResp;
 import com.internship.tmontica.dto.response.OrderResp;
+import com.internship.tmontica.service.OptionService;
 import com.internship.tmontica.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,8 @@ import java.util.Map;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private OptionService optionService;
 
     /** 주문 받기(결제하기) */
     @PostMapping
@@ -55,28 +59,37 @@ public class OrderController {
     public OrderResp getOrderByOrderId(@PathVariable("orderId")int orderId){
         // TODO: menus에 들어갈 객체 필요, menu select 기능 필요
         // TODO: 주문번호로 주문정보와 주문 상세정보를 객체에 담아 리턴시키
-//        Order order = orderService.getOrderByOrderId(orderId);
-//        List<MenusResp> menus = orderService.getOrderDetailByOrderId(orderId);
-//
-//        //메뉴 옵션 "4__2" => "샷추가(2개)" 로 바꾸는 작업
-//        for (int i = 0; i < menus.size(); i++) {
-//            String option = menus.get(i).getOption();
-//            String[] arrOption = option.split("/");
-//            for (int j = 0; j < arrOption.length; j++){
-//                 = arrOption[j].split("__");
-//            }
-//        }
-//
-//        OrderResp orderResp = new OrderResp(order.getPayment(), order.getStatus(), order.getTotalPrice(),
-//                                            order.getRealPrice(), order.getUsedPoint(), order.getOrderDate(), menus);
+        Order order = orderService.getOrderByOrderId(orderId);
+        List<MenusResp> menus = orderService.getOrderDetailByOrderId(orderId);
+
+        //메뉴 옵션 "1__1/4__2" => "HOT / 샷추가(2개)" 로 바꾸는 작업
+        for (int i = 0; i < menus.size(); i++) {
+            String option = menus.get(i).getOption();
+            String convert = "";
+            String[] arrOption = option.split("/");
+            for (int j = 0; j < arrOption.length; j++){
+               String[] oneOption = arrOption[j].split("__");
+               Option tmpOption = optionService.getOptionById(Integer.valueOf(oneOption[0]));
+               if(j != 0 ){ convert += " / "; }
+               if(tmpOption.getType().equals("Temperature")){
+                   convert += tmpOption.getName();
+               }else{
+                   convert += tmpOption.getName()+"("+oneOption[1]+"개)";
+               }
+            }
+            menus.get(i).setOption(convert);
+        }
+
+        OrderResp orderResp = new OrderResp(order.getPayment(), order.getStatus(), order.getTotalPrice(),
+                                            order.getRealPrice(), order.getUsedPoint(), order.getOrderDate(), menus);
 
 
         // 더미 데이터
-        List<MenusResp> menus = new ArrayList<>();
-        menus.add(new MenusResp(1, "americano", "HOT / 샷추가(1개) / SIZE UP", 3, 3800));
-        menus.add(new MenusResp(2, "caffelatte", "ICE / 샷추가(1개) / SIZE UP", 1, 2300));
-        OrderResp orderResp = new OrderResp("현장결제","미결제",6100,4000,2100,
-                Date.valueOf("2019-07-19") ,menus);
+//        List<MenusResp> menus = new ArrayList<>();
+//        menus.add(new MenusResp(1, "americano", "HOT / 샷추가(1개) / SIZE UP", 3, 3800));
+//        menus.add(new MenusResp(2, "caffelatte", "ICE / 샷추가(1개) / SIZE UP", 1, 2300));
+//        OrderResp orderResp = new OrderResp("현장결제","미결제",6100,4000,2100,
+//                Date.valueOf("2019-07-19") ,menus);
 
         return orderResp;
     }
