@@ -29,6 +29,7 @@
       width: 100%;
       margin-bottom: 5px;
       line-height: 1.25em;
+      color: $light-black;
       @include mobile {
         font-size: 12px;
       }
@@ -40,12 +41,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    .cart__item-quantity-input {
-      width: 35px;
-      height: 35px;
+    .cart__item-quantity-select {
+      width: 40px;
+      height: 40px;
       text-align: center;
-      font-size: 15px;
+      font-size: 14px;
       border: 1px solid $light-black;
+      background-color: white;
+      appearance: none;
+      border-radius: 0px;
+      text-align-last: center;
       &:focus {
         outline: none;
       }
@@ -55,8 +60,9 @@
         margin: 0;
       }
       @include mobile {
-        width: 30px;
-        height: 30px;
+        font-size: 12px;
+        width: 35px;
+        height: 35px;
       }
     }
   }
