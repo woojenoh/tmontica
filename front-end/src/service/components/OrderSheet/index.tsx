@@ -1,5 +1,6 @@
 import * as React from "react";
 import OrderSheetItem from "../OrderSheetItem";
+import { numberCommaRegex } from "../../../utils";
 import "./styles.scss";
 
 export interface IOrderSheetProps {}
@@ -50,12 +51,8 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     4: "픽업완료"
   } as { [key: number]: string };
 
-  numberCommaRegex = (number: number): string => {
-    return String(number).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
   public render() {
-    const { tempData, statusCode, fromStatusCode, numberCommaRegex } = this;
+    const { tempData, statusCode, fromStatusCode } = this;
 
     // 현재 상태와 5가지 상태를 비교해 색상 배열 생성
     const statusArray = [];
