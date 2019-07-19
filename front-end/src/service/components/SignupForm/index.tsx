@@ -11,6 +11,18 @@ export interface ISignupFormState {
   name: string;
   email: string;
   birthday: string;
+  isIdOk: boolean;
+  isPasswordOk: boolean;
+  isPasswordSame: boolean;
+}
+
+export interface InputState {
+  id: string;
+  password: string;
+  passwordConfirm: string;
+  name: string;
+  email: string;
+  birthday: string;
 }
 
 class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
@@ -20,16 +32,56 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
     passwordConfirm: "",
     name: "",
     email: "",
-    birthday: ""
+    birthday: "",
+    isIdOk: false,
+    isPasswordOk: false,
+    isPasswordSame: false
   };
 
   handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
-    this.setState({
-      [e.currentTarget.name]: e.currentTarget.value
-    } as { [K in keyof ISignupFormState]: ISignupFormState[K] });
+    this.setState(
+      {
+        [e.currentTarget.name]: e.currentTarget.value
+      } as { [K in keyof InputState]: InputState[K] },
+      () => {
+        const { id, password, passwordConfirm } = this.state;
+
+        // 아이디 정규식 검사
+        if (/^[a-z0-9]{6,19}$/.test(id)) {
+          this.setState({
+            isIdOk: true
+          });
+        } else {
+          this.setState({
+            isIdOk: false
+          });
+        }
+
+        // 패스워드 정규식, 일치 검사
+        if (/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,19}/.test(password)) {
+          this.setState({
+            isPasswordOk: true
+          });
+          if (password === passwordConfirm) {
+            this.setState({
+              isPasswordSame: true
+            });
+          } else {
+            this.setState({
+              isPasswordSame: false
+            });
+          }
+        } else {
+          this.setState({
+            isPasswordOk: false
+          });
+        }
+      }
+    );
   };
 
   render() {
+    const { isIdOk, isPasswordOk, isPasswordSame } = this.state;
     const { handleInputChange } = this;
 
     return (
@@ -40,8 +92,12 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           className="input signup__input"
           placeholder="아이디"
           onChange={e => handleInputChange(e)}
+          autoComplete="off"
           required
         />
+        <span className={isIdOk ? "signup__label signup__label--green" : "signup__label"}>
+          {isIdOk ? "사용 가능한 아이디입니다." : "6자 이상의 영문, 숫자만 사용 가능합니다."}
+        </span>
         <input
           type="password"
           name="password"
@@ -58,6 +114,17 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           onChange={e => handleInputChange(e)}
           required
         />
+        <span
+          className={
+            isPasswordOk && isPasswordSame ? "signup__label signup__label--green" : "signup__label"
+          }
+        >
+          {isPasswordOk
+            ? isPasswordSame
+              ? "사용 가능한 비밀번호입니다."
+              : "비밀번호가 일치하지 않습니다."
+            : "6자 이상의 영문, 숫자, 특수문자를 사용하세요."}
+        </span>
         <input
           type="text"
           name="name"
