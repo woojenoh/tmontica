@@ -7,10 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserDao {
 
     //CRUD
-    public int addUser(UserSignUpReqDTO userSignUpReqDTO);
-    public User getUserByUserId(String id);
-    public String getPasswordByUserId(String id);
-    public int updateUserPassword(User user);
-    public int deleteUser(String id);
+    int addUser(UserSignUpReqDTO userSignUpReqDTO);
+    User getUserByUserId(String id);
+    String getPasswordByUserId(String id);
+    int updateUserPassword(User user);
+    int deleteUser(String id);
 
 }

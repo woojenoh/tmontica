@@ -22,7 +22,7 @@ public class DataAccessConfig {
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setMapperLocations(
                 new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/*.xml"));
-        sessionFactory.setTypeAliasesPackage("com.internship.tmontica.dto");
+        sessionFactory.setTypeAliasesPackage("com.internship.tmontica.user");
         // camel case 설정 : https://github.com/mybatis/spring-boot-starter/issues/78 참고
         org.apache.ibatis.session.Configuration ibatisConfiguration = new org.apache.ibatis.session.Configuration();
         ibatisConfiguration.setMapUnderscoreToCamelCase(true);

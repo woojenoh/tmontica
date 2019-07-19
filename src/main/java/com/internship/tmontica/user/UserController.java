@@ -1,19 +1,17 @@
 package com.internship.tmontica.user;
 
 import com.internship.tmontica.user.model.request.UserSignUpReqDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
 @RestController
 @RequestMapping("/api/user")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @PostMapping
     public ResponseEntity<String> signUp(@RequestBody UserSignUpReqDTO userSignUpReqDTO){
@@ -23,8 +21,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public User getUser(@PathVariable("userId")String id){
-        User user = userService.getUserByUserId(id);
-        return user;
+        return userService.getUserByUserId(id);
     }
 
     /*@GetMapping("/idDuplicateCheck")
@@ -32,6 +29,4 @@ public class UserController {
         return new ResponseEntity<>(userService.isDuplicate(), HttpStatus.OK);
     }
 */
-
-
 }
