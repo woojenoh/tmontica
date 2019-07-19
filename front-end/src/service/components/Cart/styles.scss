@@ -73,66 +73,6 @@
     .cart__items {
       height: calc(100% - 255px);
       overflow-y: auto;
-      .cart__item {
-        height: 100px;
-        border-bottom: 1px solid $border-gray;
-        display: flex;
-        .cart__item-img {
-          width: 100px;
-          padding: 10px;
-        }
-        .cart__item-info {
-          display: flex;
-          flex-wrap: wrap;
-          flex-direction: column;
-          justify-content: center;
-          width: calc(100% - 180px);
-          .cart__item-name {
-            width: 100%;
-            font-weight: bold;
-            margin-bottom: 5px;
-            line-height: 1.25em;
-            @include mobile {
-              font-size: 14px;
-            }
-          }
-          .cart__item-option {
-            font-size: 14px;
-            width: 100%;
-            margin-bottom: 5px;
-            line-height: 1.25em;
-            @include mobile {
-              font-size: 12px;
-            }
-          }
-        }
-        .cart__item-quantity {
-          width: 80px;
-          padding: 10px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          .cart__item-quantity-input {
-            width: 35px;
-            height: 35px;
-            text-align: center;
-            font-size: 15px;
-            border: 1px solid $light-black;
-            &:focus {
-              outline: none;
-            }
-            &::-webkit-outer-spin-button,
-            &::-webkit-inner-spin-button {
-              -webkit-appearance: none;
-              margin: 0;
-            }
-            @include mobile {
-              width: 30px;
-              height: 30px;
-            }
-          }
-        }
-      }
     }
     .cart__bottom {
       width: 100%;
