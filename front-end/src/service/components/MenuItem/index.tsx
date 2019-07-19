@@ -1,12 +1,13 @@
 import * as React from "react";
-import { Menu } from "../../../tyeps";
+import { Menu } from "../../../types";
 import "./styles.scss";
+import { RouteComponentProps, withRouter } from "react-router";
 
-interface IMenuItemProps {
+interface IMenuItemProps extends RouteComponentProps {
   categoryEng: string | undefined;
   menu: Menu;
 }
-export class MenuItem extends React.Component<IMenuItemProps> {
+class MenuItem extends React.Component<IMenuItemProps> {
   render() {
     const { id, nameKo, imgUrl } = this.props.menu;
 
@@ -14,7 +15,7 @@ export class MenuItem extends React.Component<IMenuItemProps> {
       <li
         className="menu__item"
         data-id={id}
-        onClick={() => (window.location.href = `/menus/${this.props.categoryEng}/${id}`)}
+        onClick={() => this.props.history.push(`/menus/${this.props.categoryEng}/${id}`)}
       >
         <div className="menu__content">
           <span className="menu__name">{nameKo}</span>
@@ -25,3 +26,5 @@ export class MenuItem extends React.Component<IMenuItemProps> {
     );
   }
 }
+
+export default withRouter(MenuItem);
