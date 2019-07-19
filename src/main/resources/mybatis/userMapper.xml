@@ -3,6 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.internship.tmontica.user.UserDao">
+    com.internship.tmontica.user.model.response.UserInfoRespDTO
     <!-- int addUser(UserSignUpReqDTO userSignUpReqDTO);-->
     <insert id="addUser">
         INSERT INTO users (id ,name ,email, birth_date, password, role)
@@ -12,11 +13,6 @@
     <!--User getUserByUserId(String id) -->
     <select id="getUserByUserId" parameterType="String" resultType="user">
 		SELECT * FROM users WHERE id = #{id}
-	</select>
-
-    <!--String getPasswordByUserId(String id) -->
-    <select id="getPasswordByUserId" parameterType="String" resultType="String">
-		SELECT password FROM users WHERE id = #{id}
 	</select>
 
     <!-- int updateUserPassword(User user) -->
@@ -31,4 +27,8 @@
         DELETE FROM users WHERE id = #{id}
     </delete>
 
+    <!--UserInfoRespDto getUserInfoByUserId(String id) -->
+    <select id="getUserInfoByUserId" parameterType="String" resultType="UserInfoRespDto">
+		SELECT * FROM users WHERE id = #{id}
+	</select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.internship.tmontica.user.model.request;
 
+import com.internship.tmontica.user.model.UserDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class UserLoginReqDTO {
+public class UserPasswordCheckReqDTO implements UserDTO{
 
     @NotNull
     private String id;
