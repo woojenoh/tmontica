@@ -12,6 +12,7 @@ export interface ISignupFormState {
   email: string;
   birthday: string;
   isIdOk: boolean;
+  isIdNotSame: boolean;
   isPasswordOk: boolean;
   isPasswordSame: boolean;
 }
@@ -34,6 +35,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
     email: "",
     birthday: "",
     isIdOk: false,
+    isIdNotSame: false,
     isPasswordOk: false,
     isPasswordSame: false
   };
@@ -53,7 +55,8 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           });
         } else {
           this.setState({
-            isIdOk: false
+            isIdOk: false,
+            isIdNotSame: false
           });
         }
 
@@ -86,17 +89,20 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
 
     return (
       <form className="signup__form">
-        <input
-          type="text"
-          name="id"
-          className="input signup__input"
-          placeholder="아이디"
-          onChange={e => handleInputChange(e)}
-          autoComplete="off"
-          required
-        />
+        <div className="signup__id-container">
+          <input
+            type="text"
+            name="id"
+            className="input signup__input signup__id-input"
+            placeholder="아이디"
+            onChange={e => handleInputChange(e)}
+            autoComplete="off"
+            required
+          />
+          <button className="button signup__id-button">중복확인</button>
+        </div>
         <span className={isIdOk ? "signup__label signup__label--green" : "signup__label"}>
-          {isIdOk ? "사용 가능한 아이디입니다." : "6자 이상의 영문, 숫자만 사용 가능합니다."}
+          {isIdOk ? "사용 가능한 아이디입니다." : "6~20자의 영문, 숫자만 사용 가능합니다."}
         </span>
         <input
           type="password"
@@ -123,7 +129,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
             ? isPasswordSame
               ? "사용 가능한 비밀번호입니다."
               : "비밀번호가 일치하지 않습니다."
-            : "6자 이상의 영문, 숫자, 특수문자를 사용하세요."}
+            : "6~20자의 영문, 숫자, 특수문자를 사용하세요."}
         </span>
         <input
           type="text"
@@ -141,7 +147,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           onChange={e => handleInputChange(e)}
           required
         />
-        <div className="signup__birthday">
+        <div className="signup__birthday-container">
           <span className="signup__birthday-label">생일</span>
           <input
             type="date"
