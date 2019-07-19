@@ -12,10 +12,10 @@ import org.apache.ibatis.type.Alias;
 public class MenusResp {
     private int menuId;
     private String nameEng;
+    private String nameKo;
     private String option;
     private int quantity;
     private int price;
-    //api 명세 키값 바꾸도록 요청하기
 }
 
 
