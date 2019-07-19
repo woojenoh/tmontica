@@ -1,15 +1,14 @@
 package com.internship.tmontica.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class MenuSimpleResp {
     private int id;
     private String nameEng;
     private String nameKo;
-    private String imgUrl;
+    private String img;
+    private int stock;
 }

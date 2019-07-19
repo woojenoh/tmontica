@@ -1,9 +1,6 @@
 package com.internship.tmontica.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.apache.ibatis.type.Alias;
 
 import javax.validation.constraints.Min;
@@ -11,18 +8,20 @@ import javax.validation.constraints.NotNull;
 
 @Alias("option")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Option {
-    private int id;
     @NotNull
     private String name;
-    @NotNull
-    private String type;
     @Min(0)
     private int price;
+    @NotNull
+    private String type;
+    private int id;
 
-    public Option(String name , String type, int price){
+    public Option(String name , int price, String type){
         this.name = name;
-        this.type = type;
         this.price = price;
+        this.type = type;
     }
 }
