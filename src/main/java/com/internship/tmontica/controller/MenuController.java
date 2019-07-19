@@ -97,16 +97,11 @@ public class MenuController {
     }
 
     /** 상세 메뉴 정보 가져오기 **/
-    @GetMapping("/{categoryEng}/{menuId}")
-    public ResponseEntity<MenuDetailResp> getMenuDetail(@PathVariable("categoryEng")String categoryEng, @PathVariable("menuId")int menuId){
+    @GetMapping("/{menuId}")
+    public ResponseEntity<MenuDetailResp> getMenuDetail( @PathVariable("menuId")int menuId){
         MenuDetailResp menuDetailResp = new MenuDetailResp();
 
         Menu menu = menuService.getMenuById(menuId);
-
-        // 카테고리가 다르면 정보를 보내주지 않는다.
-        // TODO : 어떤 상태코드 보내줄지..
-        if(!menu.getCategoryEng().equals(categoryEng))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         List<Option> options = menuService.getOptionsById(menuId);
         modelMapper.map(menu , menuDetailResp);
