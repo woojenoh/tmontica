@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.internship.tmontica.repository.OrderDao">
+
+    <!-- List<Order> getOrderByUserId(String userId); 한명 주문정보 가져오기 -->
+    <select id="getOrderByUserId" parameterType="String" resultType="order">
+        select * from orders
+        where user_id = #{userId}
+    </select>
+
+    <!-- List<Order> getOrderByOrderId(int orderId); orderId로 주문정보 가져오기-->
+    <select id="getOrderByOrderId" parameterType="int" resultType="order">
+        select * from orders
+        where id = #{orderId}
+    </select>
+
+    <!-- List<MenusResp> getOrderDetailByOrderId(int orderId); 주문 상세정보 가져오기 (메뉴이름 추가)_-->
+    <select id="getOrderDetailByOrderId" parameterType="int" resultType="menusResp">
+        select A.menu_id, B.name_eng, A.option, A.quantity, A.price
+        from order_details as A inner join menus as B
+            on A.menu_id = B.id
+        where A.order_id = #{orderId};
+    </select>
+
+    <!-- List<String> getMenuNamesByOrderId(int orderId) 주문상세의 메뉴 이름들만 가져오기 -->
+    <select id="getMenuNamesByOrderId" parameterType="int" resultType="String">
+        select name_ko
+        from menus inner join order_details
+          on menus.id=order_details.menu_id
+        where order_details.order_id = #{orderId}
+    </select>
+
+    <!-- void deleteOrder(int orderId) 주문 상태를 주문취소로 바꾸기 -->
+    <update id="deleteOrder" parameterType="int">
+        update orders set status="주문취소" where id=#{orderId};
+    </update>
+
+    <!-- int addOrderStatusLog(OrderStatusLog orderStatusLog); 주문 상태 로그 추가-->
+    <insert id="addOrderStatusLog" parameterType="orderStatusLog" useGeneratedKeys="true" keyProperty="id">
+        insert into order_status_logs
+        values(0, #{statusType}, #{editorID}, #{orderId}, sysdate())
+    </insert>
+
+    <!-- int addOrder(Order order); 주문 추가하기 -->
+    <insert id="addOrder" parameterType="order">
+        insert into orders
+        values(#{id}, sysdate(), #{payment}, #{totalPrice}, #{usedPoint}, #{realPrice}, #{status}, #{userId}, #{userAgent});
+    </insert>
+
+</mapper>
