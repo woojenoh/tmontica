@@ -1,6 +1,7 @@
 package com.internship.tmontica.controller;
 
 import com.internship.tmontica.dto.Menu;
+import com.internship.tmontica.dto.Option;
 import com.internship.tmontica.dto.response.*;
 import com.internship.tmontica.service.MenuService;
 import com.internship.tmontica.util.CategoryName;
@@ -9,10 +10,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -28,45 +26,45 @@ public class MenuController {
 
     /** 전체 메뉴 (메인 화면 ) **/
     @GetMapping
-    public ResponseEntity<List<MenuCategoryResp>> getAllMenus(){
-        List<MenuCategoryResp> allMenus = new ArrayList<>();
+    public ResponseEntity<List<MenuMainResp>> getAllMenus(){
+        List<MenuMainResp> allMenus = new ArrayList<>();
 
-        // 이달의 메뉴
-        MenuCategoryResp menuMonthly = new MenuCategoryResp();
+        //1. 이달의 메뉴
+        MenuMainResp menuMonthly = new MenuMainResp();
         menuMonthly.setCategoryKo("이달의 메뉴");
-        menuMonthly.setCategoryEng("monthly menu");
-        // DB에서 이달의 메뉴 정보를 가져옴
+        menuMonthly.setCategoryEng("monthlymenu");
+        // 1-1. DB에서 이달의 메뉴 정보를 가져옴
         List<Menu> montlyMenus = menuService.getMonthlyMenus();
-        // Menu --> MenuSimpleResp
+        // 1-2. Menu --> MenuSimpleResp
         Type listType = new TypeToken<List<MenuSimpleResp>>(){}.getType();
         List<MenuSimpleResp> monthlyMenuList = modelMapper.map(montlyMenus, listType);
         menuMonthly.setMenus(monthlyMenuList);
 
         allMenus.add(menuMonthly);
 
-        // 카테고리 : coffee
-        MenuCategoryResp menuCoffee = new MenuCategoryResp();
+        //2. 카테고리 : coffee
+        MenuMainResp menuCoffee = new MenuMainResp();
         menuCoffee.setCategoryKo(CategoryName.CATEGORY_COFFEE_KO);
         menuCoffee.setCategoryEng(CategoryName.CATEGORY_COFFEE);
 
-        // DB에서 커피 카테고리 메뉴 정보를 가져옴
-        List<Menu> coffeeMenus = menuService.getMenusByCategory(CategoryName.CATEGORY_COFFEE);
+        // 2-1. DB에서 커피 카테고리 메뉴 정보를 가져옴
+        List<Menu> coffeeMenus = menuService.getMenusByCategory(CategoryName.CATEGORY_COFFEE, 1, 8);
 
-        // Menu --> MenuSimpleResp
+        // 2-2. Menu --> MenuSimpleResp
         List<MenuSimpleResp> coffeeMenuList = modelMapper.map(coffeeMenus, listType);
         menuCoffee.setMenus(coffeeMenuList);
 
         allMenus.add(menuCoffee);
 
-        // 카테고리 : ade
-        MenuCategoryResp menuAde = new MenuCategoryResp();
+        //3. 카테고리 : ade
+        MenuMainResp menuAde = new MenuMainResp();
         menuAde.setCategoryKo(CategoryName.CATEGORY_ADE_KO);
         menuAde.setCategoryEng(CategoryName.CATEGORY_ADE);
 
-        //  DB에서 에이드 카테고리의 메뉴 정보를 가져옴
-        List<Menu> adeMenus = menuService.getMenusByCategory(CategoryName.CATEGORY_ADE);
+        // 3-1. DB에서 에이드 카테고리의 메뉴 정보를 가져옴
+        List<Menu> adeMenus = menuService.getMenusByCategory(CategoryName.CATEGORY_ADE, 1, 8);
 
-        // Menu --> MenuSimpleResp
+        // 3-2. Menu --> MenuSimpleResp
         List<MenuSimpleResp> adeMenuList = modelMapper.map(adeMenus, listType);
         menuAde.setMenus(adeMenuList);
 
@@ -77,28 +75,44 @@ public class MenuController {
 
     /** 카테고리 별 메뉴 가져오기 **/
     @GetMapping("/{category}")
-    public ResponseEntity<MenuCateResp> getMenusByCategory(@PathVariable("category")String category){
-        // mock 데이터
-        MenuCateResp menuResp = new MenuCateResp();
-        menuResp.setSize(2);
-        List<MenuSimpleResp> menus = new ArrayList<>();
-        menus.add(new MenuSimpleResp(1, "americano", "아메리카노" , "/img/coffee/americano"));
-        menus.add(new MenuSimpleResp(2, "americano", "아메리카노" , "/img/coffee/americano"));
-        menuResp.setMenus(menus);
-        return new ResponseEntity<>(menuResp, HttpStatus.OK);
+    public ResponseEntity<MenuCategoryResp> getMenusByCategory(@PathVariable("category")String category,
+                                                           @RequestParam("page")int page,
+                                                           @RequestParam("size")int size){
+
+        MenuCategoryResp menucategoryResp = new MenuCategoryResp();
+        menucategoryResp.setSize(size);
+        menucategoryResp.setPage(page);
+        menucategoryResp.setCategoryEng(category);
+        menucategoryResp.setCategoryKo(CategoryName.categoryEngToKo(category));
+
+        List<Menu> menus = menuService.getMenusByCategory(category , page, size);
+        // TODO : 상태코드 어떻게 할지..
+        if(menus == null)
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        Type listType = new TypeToken<List<MenuSimpleResp>>(){}.getType();
+        List<MenuSimpleResp> categoryMenus = modelMapper.map(menus, listType);
+        menucategoryResp.setMenus(categoryMenus);
+        return new ResponseEntity<>(menucategoryResp, HttpStatus.OK);
     }
 
     /** 상세 메뉴 정보 가져오기 **/
     @GetMapping("/{categoryEng}/{menuId}")
-    public MenuDetailResp getMenuDetail(@PathVariable("categoryEng")String categoryEng, @PathVariable("menuId")int menuId){
-        //더미 데이터
-        List options = new ArrayList<>();
-        options.add(new OptionsResp(1,"Temperature","HOT",0));
-        options.add(new OptionsResp(3,"Size","SizeUp",500));
-        options.add(new OptionsResp(4,"Shot","AddShot",300));
-        MenuDetailResp menuDetailResp =
-                new MenuDetailResp(1,"americano","아메리카노","산미가 풍부한 아메리카노","asdfad",1000,10,"coffee","커피",100,false,options);
-        return menuDetailResp;
+    public ResponseEntity<MenuDetailResp> getMenuDetail(@PathVariable("categoryEng")String categoryEng, @PathVariable("menuId")int menuId){
+        MenuDetailResp menuDetailResp = new MenuDetailResp();
+
+        Menu menu = menuService.getMenuById(menuId);
+
+        // 카테고리가 다르면 정보를 보내주지 않는다.
+        // TODO : 어떤 상태코드 보내줄지..
+        if(!menu.getCategoryEng().equals(categoryEng))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        List<Option> options = menuService.getOptionsById(menuId);
+        modelMapper.map(menu , menuDetailResp);
+        menuDetailResp.setOptions(options);
+
+        return new ResponseEntity<>(menuDetailResp, HttpStatus.OK);
     }
 
 }

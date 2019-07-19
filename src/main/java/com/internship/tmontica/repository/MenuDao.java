@@ -26,8 +26,8 @@ public interface MenuDao {
     @Select("SELECT * FROM menus")
     List<Menu> getAllMenus();
 
-    @Select("SELECT * FROM menus WHERE category_eng = #{category}")
-    List<Menu> getMenusByCategory(String category);
+    @Select("SELECT * FROM menus WHERE category_eng = #{category} LIMIT #{limit} OFFSET #{offset}")
+    List<Menu> getMenusByCategory(String category, int limit, int offset);
 
     @Select("SELECT * FROM menus WHERE monthly_menu = 1 order by created_date desc Limit 4")
     List<Menu> getMonthlyMenus();

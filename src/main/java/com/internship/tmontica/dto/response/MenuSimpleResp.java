@@ -10,4 +10,5 @@ public class MenuSimpleResp {
     private String nameEng;
     private String nameKo;
     private String img;
+    private int stock;
 }

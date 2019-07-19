@@ -2,11 +2,9 @@ package com.internship.tmontica.repository;
 
 import com.internship.tmontica.dto.Option;
 import org.apache.ibatis.annotations.*;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-//@Repository
 @Mapper
 public interface OptionDao {
     @Insert("INSERT INTO options (name ,price ,type) VALUES(#{name}, #{price}, #{type})")

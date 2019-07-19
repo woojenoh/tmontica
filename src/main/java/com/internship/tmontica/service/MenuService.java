@@ -4,11 +4,13 @@ import com.internship.tmontica.dto.Menu;
 import com.internship.tmontica.dto.Option;
 import com.internship.tmontica.repository.MenuDao;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MenuService {
@@ -51,8 +53,11 @@ public class MenuService {
 
     // 카테고리 별 메뉴 정보 가져오기
     @Transactional(readOnly = true)
-    public List<Menu> getMenusByCategory(String category){
-        return menuDao.getMenusByCategory(category);
+    public List<Menu> getMenusByCategory(String category, int page, int size){
+        int offset = (page - 1) * size;
+        List<Menu> menus = menuDao.getMenusByCategory(category, size, offset);
+        log.info("count : {}", menus.size());
+        return menus;
     }
 
     // 이달의 메뉴 정보 가져오기
