@@ -1,7 +1,8 @@
 import * as React from "react";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
-import { MenuItems } from "../../components/MenuItems";
+import { MenuAPI } from "../../../API";
+import MenuItems from "../../components/MenuItems";
 import { IMenuItemsProps } from "../../components/MenuItems";
 
 interface MatchParams {
@@ -14,27 +15,21 @@ interface IMenusState {
   menuAll: Object;
 }
 
-const api = "https://my-json-server.typicode.com/yeolsa/tmontica-json";
-
 export default class Menus extends React.Component<IMenusProps, IMenusState> {
   state = {
     menuAll: []
   };
 
-  getMenuAll() {
-    return fetch(`${api}/menuAll`, {
-      headers: {
-        Accept: "application/json"
-      }
-    }).then(res => (res.ok ? res.json() : new Error()));
+  async getMenuAll() {
+    const menuAll = MenuAPI.getMenuAll();
+
+    this.setState({
+      menuAll
+    });
   }
 
   componentDidMount() {
-    this.getMenuAll().then(menuAll => {
-      this.setState({
-        menuAll
-      });
-    });
+    this.getMenuAll();
   }
 
   render() {

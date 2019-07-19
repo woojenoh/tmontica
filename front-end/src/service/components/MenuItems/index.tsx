@@ -1,15 +1,16 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import { MenuItem } from "../MenuItem";
-import { Menu } from "../../../tyeps";
+import MenuItem from "../MenuItem";
+import { Menu } from "../../../types";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
-export interface IMenuItemsProps {
+export interface IMenuItemsProps extends RouteComponentProps {
   categoryKo: string;
   categoryEng?: string;
   menus: Array<Menu>;
 }
 
-export class MenuItems extends React.Component<IMenuItemsProps> {
+class MenuItems extends React.Component<IMenuItemsProps> {
   render() {
     const { categoryKo, categoryEng, menus } = this.props;
     return (
@@ -35,3 +36,5 @@ export class MenuItems extends React.Component<IMenuItemsProps> {
     );
   }
 }
+
+export default withRouter(MenuItems);
