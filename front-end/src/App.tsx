@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Switch, Route, Redirect, withRouter, RouteComponentProps } from "react-router-dom";
 import Header from "./service/components/Header";
+import Menu from "./service/pages/Menu";
 import Menus from "./service/pages/Menus";
 import MenusSub from "./service/pages/MenusSub";
 
@@ -80,6 +81,7 @@ class App extends React.Component<RouteComponentProps> {
           <PrivateRoute exact path="/payment" component={Menus} />
           <PrivateRoute exact path="/orders" component={Menus} />
           <PrivateRoute exact path="/user" component={Menus} />
+          <Route exact path="/menus/:categoryEng/:menuId" component={Menu} />
           <Route exact path="/menus/:categoryEng" component={MenusSub} />
           <Route exact path="/admin/signin" component={Menus} />
           <Route exact path="/signin" component={Menus} />

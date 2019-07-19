@@ -27,7 +27,7 @@ export class MenuItems extends React.Component<IMenuItemsProps> {
         <ul className="menu__items">
           {menus
             ? menus.map(menu => {
-                return <MenuItem key={menu.id} menu={menu} />;
+                return <MenuItem key={menu.id} categoryEng={categoryEng} menu={menu} />;
               })
             : ""}
         </ul>
