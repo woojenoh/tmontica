@@ -18,7 +18,7 @@
 
     <!-- List<MenusResp> getOrderDetailByOrderId(int orderId); 주문 상세정보 가져오기 (메뉴이름 추가)_-->
     <select id="getOrderDetailByOrderId" parameterType="int" resultType="menusResp">
-        select A.menu_id, B.name_eng, A.option, A.quantity, A.price
+        select A.menu_id, B.name_eng, B.name_ko, A.option, A.quantity, A.price
         from order_details as A inner join menus as B
             on A.menu_id = B.id
         where A.order_id = #{orderId};
