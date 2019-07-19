@@ -1,7 +1,7 @@
 import * as React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faShoppingCart, faBars } from "@fortawesome/free-solid-svg-icons";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { withRouter, RouteComponentProps, Link } from "react-router-dom";
 import Nav from "../Nav";
 import Cart from "../Cart";
 import "./styles.scss";
@@ -75,11 +75,13 @@ class Header extends React.Component<RouteComponentProps, IHeaderProps, IHeaderS
       <>
         <header className="header">
           <div className="header__container">
-            <img src="/img/tmon-logo.png" alt="Tmontica Logo" className="header__logo" />
+            <Link to="/">
+              <img src="/img/tmon-logo.png" alt="Tmontica Logo" className="header__logo" />
+            </Link>
             <ul className="header__items">
-              <li className="header__item">
+              <Link to="/signin" className="header__item">
                 <FontAwesomeIcon icon={faUser} size="2x" />
-              </li>
+              </Link>
               <li className="header__item" onClick={() => handleCartOpen()}>
                 <FontAwesomeIcon icon={faShoppingCart} size="2x" />
               </li>
