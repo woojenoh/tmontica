@@ -1,16 +1,23 @@
 import * as React from "react";
 import "./styles.scss";
 
-export interface IOrderSheetItemProps {}
+export interface IOrderSheetItemProps {
+  name: string;
+  price: number;
+  options: string;
+  quantity: number;
+}
 
 function OrderSheetItem(props: IOrderSheetItemProps) {
+  const { name, price, options, quantity } = props;
+
   return (
     <li className="orders__item">
       <div className="orders__item-info">
-        <h2 className="orders__item-name">아메리카노 - 1,000원</h2>
-        <span className="orders__item-options">HOT/샷추가(1개)/시럽추가(1개)/사이즈추가</span>
+        <h2 className="orders__item-name">{`${name} - ${price}`}</h2>
+        <span className="orders__item-options">{options ? options : "옵션이 없습니다."}</span>
       </div>
-      <span className="orders__item-quantity">1개</span>
+      <span className="orders__item-quantity">{quantity}개</span>
     </li>
   );
 }

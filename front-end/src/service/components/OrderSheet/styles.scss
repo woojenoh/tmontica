@@ -22,7 +22,7 @@
       padding: 5px 10px;
       border-radius: 10px;
       position: relative;
-      z-index: 10;
+      z-index: 0;
       &::after {
         content: "";
         position: absolute;
@@ -42,8 +42,12 @@
       &.orders__status--green {
         background-color: $light-green;
         border: none;
-        z-index: 10;
         color: white;
+      }
+      &.orders__status--gray {
+        background-color: $border-gray;
+        border: none;
+        color: black;
       }
       @include mobile {
         text-align: center;
@@ -57,11 +61,12 @@
   .orders__total {
     text-align: right;
     line-height: 1.2em;
-    padding: 0 20px;
     .orders__total-price {
       margin-bottom: 5px;
+      padding: 0 20px;
     }
     .orders__total-discount {
+      padding: 0 20px;
       padding-bottom: 20px;
       margin-bottom: 20px;
       border-bottom: 1px solid $border-gray;
@@ -69,6 +74,7 @@
     .orders__total-result {
       color: $light-red;
       font-weight: bold;
+      padding: 0 20px;
     }
   }
 }
