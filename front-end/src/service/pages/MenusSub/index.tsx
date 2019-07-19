@@ -1,9 +1,9 @@
 import * as React from "react";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
-import { MenuItems } from "../../components/MenuItems";
+import MenuItems from "../../components/MenuItems";
 import { IMenuItemsProps } from "../../components/MenuItems";
-import { Menu } from "../../../tyeps";
+import { Menu } from "../../../types";
 
 interface MatchParams {
   categoryEng: string;
