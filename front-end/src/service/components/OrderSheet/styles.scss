@@ -1,6 +1,27 @@
 @import "../../../assets/scss/mediaQuery.scss";
 @import "../../../assets/scss/colors.scss";
 
+.orders__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  .orders__top-title {
+    font-size: 25px;
+  }
+  .orders__top-cancel {
+    padding: 7px 10px;
+    border: 1px solid $light-red;
+    color: $light-red;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+      background-color: $light-red;
+      color: white;
+    }
+  }
+}
+
 .orders__content {
   width: 100%;
   min-height: 300px;

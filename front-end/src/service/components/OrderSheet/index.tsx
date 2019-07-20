@@ -9,6 +9,7 @@ export interface IOrderSheetState {}
 
 class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
   tempData = {
+    orderId: 10,
     payment: "현장결제",
     status: "결제완료",
     totalPrice: 3000,
@@ -67,55 +68,61 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     }
 
     return (
-      <div className="orders__content">
-        <ul className="orders__status-container">
-          {statusArray.map((s, index) => {
-            if (s === 0) {
+      <>
+        <div className="orders__top">
+          <h1 className="orders__top-title">주문서({tempData.orderId})</h1>
+          <span className="orders__top-cancel">주문취소</span>
+        </div>
+        <div className="orders__content">
+          <ul className="orders__status-container">
+            {statusArray.map((s, index) => {
+              if (s === 0) {
+                return (
+                  <li key={index} className="orders__status orders__status--gray">
+                    {fromStatusCode[index]}
+                  </li>
+                );
+              } else if (s === 1) {
+                return (
+                  <li key={index} className="orders__status orders__status--green">
+                    {fromStatusCode[index]}
+                  </li>
+                );
+              } else {
+                return (
+                  <li key={index} className="orders__status">
+                    {fromStatusCode[index]}
+                  </li>
+                );
+              }
+            })}
+          </ul>
+          <ul className="orders__items">
+            {tempData.menus.map(m => {
               return (
-                <li key={index} className="orders__status orders__status--gray">
-                  {fromStatusCode[index]}
-                </li>
+                <OrderSheetItem
+                  key={m.menuId}
+                  name={m.NameKo}
+                  price={m.price}
+                  options={m.option}
+                  quantity={m.quantity}
+                />
               );
-            } else if (s === 1) {
-              return (
-                <li key={index} className="orders__status orders__status--green">
-                  {fromStatusCode[index]}
-                </li>
-              );
-            } else {
-              return (
-                <li key={index} className="orders__status">
-                  {fromStatusCode[index]}
-                </li>
-              );
-            }
-          })}
-        </ul>
-        <ul className="orders__items">
-          {tempData.menus.map(m => {
-            return (
-              <OrderSheetItem
-                key={m.menuId}
-                name={m.NameKo}
-                price={m.price}
-                options={m.option}
-                quantity={m.quantity}
-              />
-            );
-          })}
-        </ul>
-        <div className="orders__total">
-          <div className="orders__total-price">
-            주문금액 - {numberCommaRegex(tempData.realPrice)}원
-          </div>
-          <div className="orders__total-discount">
-            할인금액 - {numberCommaRegex(tempData.usedPoint)}원
-          </div>
-          <div className="orders__total-result">
-            최종금액 - {numberCommaRegex(tempData.totalPrice)}원
+            })}
+          </ul>
+          <div className="orders__total">
+            <div className="orders__total-price">
+              주문금액 - {numberCommaRegex(tempData.totalPrice)}원
+            </div>
+            <div className="orders__total-discount">
+              할인금액 - {numberCommaRegex(tempData.usedPoint)}원
+            </div>
+            <div className="orders__total-result">
+              최종금액 - {numberCommaRegex(tempData.realPrice)}원
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 }

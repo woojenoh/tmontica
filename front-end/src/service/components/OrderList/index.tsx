@@ -40,21 +40,24 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
     const { tempData } = this;
 
     return (
-      <div className="orders-list__content">
-        <ul className="orders-list__items">
-          {tempData.orders.map(o => {
-            return (
-              <OrderListItem
-                key={o.orderId}
-                orderId={o.orderId}
-                name={`${o.menuNames[0]} 외 ${o.menuNames.length - 1}개`}
-                date={o.orderDate}
-                status={o.status}
-              />
-            );
-          })}
-        </ul>
-      </div>
+      <>
+        <h1 className="orders-list__title">주문내역({tempData.orders.length})</h1>
+        <div className="orders-list__content">
+          <ul className="orders-list__items">
+            {tempData.orders.map(o => {
+              return (
+                <OrderListItem
+                  key={o.orderId}
+                  orderId={o.orderId}
+                  name={`${o.menuNames[0]} 외 ${o.menuNames.length - 1}개`}
+                  date={o.orderDate}
+                  status={o.status}
+                />
+              );
+            })}
+          </ul>
+        </div>
+      </>
     );
   }
 }
