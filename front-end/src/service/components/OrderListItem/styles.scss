@@ -1,4 +1,5 @@
 @import "../../../assets/scss/colors.scss";
+@import "../../../assets/scss/mediaQuery.scss";
 
 .orders-list__item {
   display: flex;
@@ -8,6 +9,9 @@
   border-top: 1px solid $border-gray;
   font-size: 15px;
   cursor: pointer;
+  @include mobile {
+    font-size: 14px;
+  }
   &:first-child {
     border-top: none;
   }

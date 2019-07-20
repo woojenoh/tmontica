@@ -14,11 +14,14 @@ function OrderSheetItem(props: IOrderSheetItemProps) {
 
   return (
     <li className="orders__item">
+      <img src="/img/coffee-sample.png" alt="Coffee Sample" className="orders__item-img" />
       <div className="orders__item-info">
         <h2 className="orders__item-name">{`${name} - ${numberCommaRegex(price)}원`}</h2>
         <span className="orders__item-options">{options ? options : "옵션이 없습니다."}</span>
       </div>
-      <span className="orders__item-quantity">{quantity}개</span>
+      <div className="orders__item-quantity-wrapper">
+        <span className="orders__item-quantity">{quantity}개</span>
+      </div>
     </li>
   );
 }

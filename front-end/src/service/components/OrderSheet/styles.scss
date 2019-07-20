@@ -82,6 +82,9 @@
   .orders__total {
     text-align: right;
     line-height: 1.2em;
+    @include mobile {
+      font-size: 15px;
+    }
     .orders__total-price {
       margin-bottom: 5px;
       padding: 0 20px;
