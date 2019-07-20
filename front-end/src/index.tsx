@@ -5,6 +5,7 @@ import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter } from "react-router-dom";
 import "./assets/scss/service.scss";
 import "./assets/scss/reset.scss";
+import _ from "underscore";
 
 ReactDOM.render(
   <BrowserRouter>
