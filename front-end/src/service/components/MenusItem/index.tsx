@@ -1,11 +1,11 @@
 import * as React from "react";
-import { Menu } from "../../../types";
+import { TMenusItem } from "../../../types";
 import "./styles.scss";
 import { RouteComponentProps, withRouter } from "react-router";
 
 interface IMenuItemProps extends RouteComponentProps {
   categoryEng: string | undefined;
-  menu: Menu;
+  menu: TMenusItem;
 }
 class MenuItem extends React.Component<IMenuItemProps> {
   render() {
