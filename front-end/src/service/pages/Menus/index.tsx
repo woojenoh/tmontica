@@ -2,8 +2,8 @@ import * as React from "react";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import { MenuAPI } from "../../../API";
-import MenuItems from "../../components/MenuItems";
-import { IMenuItemsProps } from "../../components/MenuItems";
+import MenuItems from "../../components/MenusItems";
+import { IMenuItemsProps } from "../../components/MenusItems";
 
 interface MatchParams {
   categoryEng: string;

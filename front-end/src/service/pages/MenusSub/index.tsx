@@ -1,7 +1,7 @@
 import * as React from "react";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
-import MenuItems from "../../components/MenuItems";
+import MenuItems from "../../components/MenusItems";
 import { MenuAPI } from "../../../API";
 import { Menu } from "../../../types";
 
