@@ -8,6 +8,9 @@
   .cart__item-img {
     width: 100px;
     padding: 10px;
+    @include mobile {
+      display: none;
+    }
   }
   .cart__item-info {
     display: flex;
@@ -15,23 +18,26 @@
     flex-direction: column;
     justify-content: center;
     width: calc(100% - 180px);
+    @include mobile {
+      width: calc(100% - 80px);
+      padding-left: 20px;
+    }
     .cart__item-name {
       width: 100%;
       font-weight: bold;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
       line-height: 1.25em;
       @include mobile {
-        font-size: 14px;
+        font-size: 15px;
       }
     }
     .cart__item-option {
       font-size: 14px;
       width: 100%;
-      margin-bottom: 5px;
       line-height: 1.25em;
       color: $light-black;
       @include mobile {
-        font-size: 12px;
+        font-size: 13px;
       }
     }
   }
