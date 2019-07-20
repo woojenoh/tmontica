@@ -15,7 +15,7 @@ class MenuItem extends React.Component<IMenuItemProps> {
       <li
         className="menu__item"
         data-id={id}
-        onClick={() => this.props.history.push(`/menus/${this.props.categoryEng}/${id}`)}
+        onClick={() => this.props.history.push(`/menus/${id}`)}
       >
         <div className="menu__content">
           <span className="menu__name">{nameKo}</span>

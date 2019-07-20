@@ -4,7 +4,6 @@ import { RouteComponentProps } from "react-router-dom";
 import { MenuAPI } from "../../../API";
 
 interface MatchParams {
-  categoryEng: string;
   menuId: string;
 }
 
@@ -20,9 +19,9 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
   };
 
   async getMenu() {
-    const { categoryEng, menuId } = this.props.match.params;
+    const { menuId } = this.props.match.params;
 
-    const menu = await MenuAPI.getMenuById(categoryEng, parseInt(menuId));
+    const menu = await MenuAPI.getMenuById(parseInt(menuId));
 
     this.setState({
       menu
