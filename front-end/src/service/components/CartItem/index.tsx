@@ -5,8 +5,9 @@ import "./styles.scss";
 export interface ICartItemProps {
   name: string;
   price: number;
-  option: string;
+  option: string | Object;
   quantity: number;
+  imgUrl: string;
 }
 
 export interface ICartItemState {
@@ -42,12 +43,12 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
 
   render() {
     const { quantity } = this.state;
-    const { name, price, option } = this.props;
+    const { name, price, option, imgUrl } = this.props;
     const { buildSelectOptions, handleQuantityChange } = this;
 
     return (
       <li className="cart__item">
-        <img src="/img/coffee-sample.png" alt="Coffee Sample" className="cart__item-img" />
+        <img src={imgUrl} alt="Coffee Sample" className="cart__item-img" />
         <div className="cart__item-info">
           <span className="cart__item-name">
             {name} - {numberCommaRegex(price)}원

@@ -60,6 +60,8 @@
     .cart__top {
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      height: 60px;
       padding: 20px;
       border-bottom: 1px solid $border-gray;
       .cart__edit {
@@ -71,8 +73,15 @@
       }
     }
     .cart__items {
-      height: calc(100% - 255px);
+      height: calc(100% - 260px);
       overflow-y: auto;
+      .cart__empty {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 18px;
+      }
     }
     .cart__bottom {
       width: 100%;
