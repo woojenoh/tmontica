@@ -3,6 +3,26 @@ import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import { MenuAPI } from "../../../API";
 
+type TMenuOption = {
+  id: number;
+  type: string;
+  name: string;
+  price: number;
+};
+
+type TMenu = {
+  id: number;
+  nameEng: string;
+  nameKo: string;
+  description: string;
+  imgUrl: string;
+  sellPrice: number;
+  discountRate: number;
+  category: string;
+  stock: number;
+  monthlyMenu: boolean;
+  options: Array<TMenuOption>;
+};
 interface MatchParams {
   menuId: string;
 }
@@ -10,12 +30,12 @@ interface MatchParams {
 interface IMenuProps extends RouteComponentProps<MatchParams> {}
 
 interface IMenuState {
-  menu: Object;
+  menu: TMenu;
 }
 
 export default class Menu extends Component<IMenuProps, IMenuState> {
   state = {
-    menu: {}
+    menu: {} as TMenu
   };
 
   async getMenu() {
