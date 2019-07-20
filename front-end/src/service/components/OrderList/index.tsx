@@ -26,6 +26,12 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
         orderDate: "2019-07-19 11:12:40",
         status: "픽업완료",
         menuNames: ["카페모카", "카페라떼", "소보로빵"]
+      },
+      {
+        orderId: 9,
+        orderDate: "2019-07-19 11:12:40",
+        status: "주문취소",
+        menuNames: ["카페모카", "카페라떼", "소보로빵"]
       }
     ]
   };
