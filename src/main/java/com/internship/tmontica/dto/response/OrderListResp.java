@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderListResp {
-    private int orderID;
+    private String orderID;
     private Date orderDate;
     private String status;
     private List<String> menuNames;

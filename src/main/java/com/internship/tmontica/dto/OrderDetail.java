@@ -1,17 +1,18 @@
 package com.internship.tmontica.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
 import javax.validation.constraints.NotNull;
 
-@Alias("orderDetail")
 @Data
+@NoArgsConstructor
 public class OrderDetail {
 
     private int id;
     @NotNull
-    private int orderId;
+    private String orderId;
 
     private String option;
     @NotNull
@@ -21,4 +22,12 @@ public class OrderDetail {
     @NotNull
     private int menuId;
 
+    public OrderDetail(int id, @NotNull String orderId, String option, @NotNull int price, @NotNull int quantity, @NotNull int menuId) {
+        this.id = id;
+        this.orderId = orderId;
+        this.option = option;
+        this.price = price;
+        this.quantity = quantity;
+        this.menuId = menuId;
+    }
 }

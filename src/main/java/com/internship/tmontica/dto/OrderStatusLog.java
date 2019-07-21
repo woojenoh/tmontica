@@ -2,12 +2,10 @@ package com.internship.tmontica.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.type.Alias;
 
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
 
-@Alias("orderStatusLog")
 @Data
 @NoArgsConstructor
 public class OrderStatusLog {
@@ -17,11 +15,11 @@ public class OrderStatusLog {
     @NotNull
     private String editorId;
     @NotNull
-    private int orderId;
+    private String orderId;
     @NotNull
     private Date modifiedDate;
 
-    public OrderStatusLog(@NotNull String statusType, @NotNull String editorId, @NotNull int orderId) {
+    public OrderStatusLog(@NotNull String statusType, @NotNull String editorId, @NotNull String orderId) {
         this.statusType = statusType;
         this.editorId = editorId;
         this.orderId = orderId;

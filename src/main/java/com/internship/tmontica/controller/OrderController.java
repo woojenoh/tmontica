@@ -1,19 +1,21 @@
 package com.internship.tmontica.controller;
 
-import com.internship.tmontica.dto.Option;
-import com.internship.tmontica.dto.Order;
-import com.internship.tmontica.dto.OrderStatusLog;
+import com.internship.tmontica.dto.*;
+import com.internship.tmontica.dto.request.MenusReq;
 import com.internship.tmontica.dto.request.OrderReq;
 import com.internship.tmontica.dto.response.MenusResp;
 import com.internship.tmontica.dto.response.OrderListResp;
 import com.internship.tmontica.dto.response.OrderResp;
+import com.internship.tmontica.service.CartMenuService;
 import com.internship.tmontica.service.OptionService;
 import com.internship.tmontica.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,29 +28,59 @@ public class OrderController {
     private OrderService orderService;
     @Autowired
     private OptionService optionService;
+    @Autowired
+    private CartMenuService cartMenuService;
 
-    /** 주문 받기(결제하기) */
+    /** 주문 받기(결제하기) - 카트에서 주문하기 */
     @PostMapping
-    public int addOrder(@RequestBody @Valid OrderReq orderReq){
+    public Map<String, String> addOrderFromCart(@RequestBody @Valid OrderReq orderReq){
         System.out.println("결제 컨트롤러 ");
         System.out.println(orderReq);
+
+        // 사용자 아이디 받아오기
+        String userId = "testid"; //임시
+
+        // 주문번호 생성 : 날짜 + 시분초 + 아이디
+        SimpleDateFormat format  = new SimpleDateFormat("yyMMddHHmmss");
+        String orderId = format.format(System.currentTimeMillis()) + userId;
+        System.out.println(orderId);
         // TODO: 주문테이블에 추가
-        // 주문번호 생성
-
+        Order order = new Order(orderId,orderReq.getPayment(),orderReq.getTotalPrice(),orderReq.getUsedPoint(),
+                orderReq.getTotalPrice()-orderReq.getUsedPoint(), "미결제", orderReq.getUserId());
+        orderService.addOrder(order);
         // TODO: 주문상세테이블에 추가
-        // TODO: 주문상태로그테이블에 추가
-        // TODO: 장바구니에서 주문할때는 장바구니에서는 삭제처리 -> 어디서 해줄지?
+        // menus에서 카트 아이디로 정보를 가져와서 order_details 에 추가
+        List<MenusReq> menus = orderReq.getMenus();
+        for (MenusReq menu: menus) {
+            OrderDetail orderDetail = cartMenuService.getCartMenuForOrderDetail(menu.getCartId());
+            orderDetail.setOrderId(orderId);
+//            System.out.println(orderDetail);
+            // 주문 상세 페이지에 추가
+            orderService.addOrderDetail(orderDetail);
 
-        // TODO: menus에 들어갈 객체 만들어서 구현해야 함
-        // TODO: 주문번호 생성해서 리턴해주기
-        // TODO: 주문받을때 menus 안에 quantity필요할듯
+            // TODO: 장바구니에서 주문할때는 장바구니에서는 삭제처리 -> 바로주문한 애는 장바구니에 넣었다 빼기
+            cartMenuService.deleteCartMenu(menu.getCartId());
+        }
 
-        return 1;
+        // TODO: 주문상태로그테이블에 "미결제" 상태로 추가
+        orderService.addOrderStatusLog(new OrderStatusLog("미결제", userId, orderId));
+
+        Map<String, String> map = new HashMap<>();
+        map.put("orderId", orderId);
+        return map;
     }
+
+//    /** 주문 받기(결제하기) - 바로주문하기 */
+//    @PostMapping("/direct")
+//    public Map<String, String> addOrderDirect(@RequestBody @Valid ){
+//        // TODO: 카트에 추가하고
+//        // TODO: 카트에서 추가하기 메서드를 부르기
+//
+//    }
 
     /** 주문 취소 */
     @DeleteMapping("/{orderId}")
-    public void deleteOrder(@PathVariable("orderId") int orderId){
+    public void deleteOrder(@PathVariable("orderId") String orderId){
         // 컬럼을 지우는게 아니라 status를 주문취소로 수정하는것임
         // orders 테이블에서 status 수정
         orderService.deleteOrder(orderId);
@@ -60,13 +92,13 @@ public class OrderController {
 
     /** 주문정보 한개 가져오기(상세내역 포함) */
     @GetMapping("/{orderId}")
-    public OrderResp getOrderByOrderId(@PathVariable("orderId")int orderId){
+    public OrderResp getOrderByOrderId(@PathVariable("orderId")String orderId){
         // TODO: menus에 들어갈 객체 필요, menu select 기능 필요
         // TODO: 주문번호로 주문정보와 주문 상세정보를 객체에 담아 리턴시키
         Order order = orderService.getOrderByOrderId(orderId);
         List<MenusResp> menus = orderService.getOrderDetailByOrderId(orderId);
 
-        //메뉴 옵션 "1__1/4__2" => "HOT / 샷추가(2개)" 로 바꾸는 작업
+        //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
         for (int i = 0; i < menus.size(); i++) {
             String option = menus.get(i).getOption();
             String convert = ""; // 변환할 문자열
@@ -115,7 +147,7 @@ public class OrderController {
 
             orderListResps.add(orderListResp);
         }
-        System.out.println(orderListResps);
+        //System.out.println(orderListResps);
 
         Map<String, List> map = new HashMap<>();
 
