@@ -27,8 +27,16 @@
       font-weight: bold;
       margin-bottom: 10px;
       line-height: 1.25em;
+      display: flex;
+      align-items: center;
       @include mobile {
         font-size: 15px;
+      }
+      .cart__item-delete {
+        font-size: 20px;
+        margin-left: 10px;
+        cursor: pointer;
+        color: $light-red;
       }
     }
     .cart__item-option {

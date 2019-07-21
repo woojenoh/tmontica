@@ -5,23 +5,25 @@ export type Menu = {
   imgUrl: string;
 };
 
-export interface CartObject {
+export interface CartType {
   size: number;
   totalPrice: number;
-  menus: {
-    cartId?: number;
-    stock?: number;
-    menuId: number;
-    menuNameEng: string;
-    menuNameKo: string;
-    imgUrl: string;
-    option: string;
-    quantity: number;
-    price: number;
-  }[];
+  menus: CartMenuType[];
 }
 
-export interface OptionObject {
+export interface CartMenuType {
+  cartId?: number;
+  stock?: number;
+  menuId: number;
+  menuNameEng: string;
+  menuNameKo: string;
+  imgUrl: string;
+  option: string;
+  quantity: number;
+  price: number;
+}
+
+export interface CartMenuOptionType {
   Temperature?: {
     name: string;
     price: number;

@@ -1,7 +1,8 @@
 import * as React from "react";
+import _ from "underscore";
 import CartItem from "../CartItem";
 import { numberCommaRegex } from "../../../utils";
-import { CartObject } from "../../../types";
+import { CartType, CartMenuType } from "../../../types";
 import "./styles.scss";
 
 export interface ICartProps {
@@ -10,12 +11,12 @@ export interface ICartProps {
 }
 
 export interface ICartState {
-  cart: CartObject | null;
+  cart: CartType | null;
 }
 
 class Cart extends React.Component<ICartProps, ICartState> {
   // 더미 데이터
-  isSignin = true;
+  isSignin = false;
   tempData = {
     size: 2,
     totalPrice: 3100,
@@ -41,6 +42,17 @@ class Cart extends React.Component<ICartProps, ICartState> {
         quantity: 1,
         price: 1800,
         stock: 50
+      },
+      {
+        cartId: 11,
+        menuId: 3,
+        menuNameEng: "caffelatte",
+        menuNameKo: "카페라떼",
+        imgUrl: "/img/coffee-sample.png",
+        option: "HOT/사이즈업",
+        quantity: 1,
+        price: 1500,
+        stock: 50
       }
     ]
   };
@@ -58,7 +70,7 @@ class Cart extends React.Component<ICartProps, ICartState> {
   }
 
   setCart = (): void => {
-    const { isSignin, tempData, initializeLocalCart } = this;
+    const { isSignin, tempData, initializeLocalCart, addCartItem } = this;
     if (isSignin) {
       this.setState({
         cart: tempData
@@ -91,13 +103,42 @@ class Cart extends React.Component<ICartProps, ICartState> {
     localStorage.setItem("LocalCart", JSON.stringify(initCart));
   };
 
-  addCartItem = (): void => {};
-  removeCartItem = (): void => {};
+  removeLocalCartItem = (id: number): void => {
+    const { cart } = this.state;
+    if (cart) {
+      const newCart = _(cart).clone() as CartType;
+      newCart.menus = cart.menus.filter((m, index) => {
+        if (index !== id) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      localStorage.setItem("LocalCart", JSON.stringify(newCart));
+      this.setState({
+        cart: newCart
+      });
+    }
+  };
+
+  addCartItem = (item: CartMenuType): void => {
+    const { cart } = this.state;
+    if (cart) {
+      const newCart = _(cart).clone() as CartType;
+      newCart.menus = newCart.menus.concat(item);
+      localStorage.setItem("LocalCart", JSON.stringify(newCart));
+      this.setState({
+        cart: newCart
+      });
+    }
+  };
+
   changeCartItemQuantity = (): void => {};
 
   render() {
     const { cart } = this.state;
     const { isCartOpen, handleCartClose } = this.props;
+    const { removeLocalCartItem } = this;
 
     return (
       <section className={isCartOpen ? "cart" : "cart cart--close"}>
@@ -110,10 +151,10 @@ class Cart extends React.Component<ICartProps, ICartState> {
           <span className="cart__close" onClick={() => handleCartClose()}>
             &times;
           </span>
-          <ul className="cart__top">
+          {/* <ul className="cart__top">
             <span className="cart__edit">선택</span>
             <span className="cart__delete">삭제</span>
-          </ul>
+          </ul> */}
           <ul className="cart__items">
             {cart ? (
               cart.menus.length ? (
@@ -121,11 +162,13 @@ class Cart extends React.Component<ICartProps, ICartState> {
                   return (
                     <CartItem
                       key={index}
+                      id={index}
                       name={m.menuNameKo}
                       price={m.price}
                       option={m.option}
                       quantity={m.quantity}
                       imgUrl={m.imgUrl}
+                      removeLocalCartItem={removeLocalCartItem}
                     />
                   );
                 })
@@ -138,9 +181,16 @@ class Cart extends React.Component<ICartProps, ICartState> {
           </ul>
           <div className="cart__bottom">
             <div className="cart__total">
-              <span className="cart__total-quantity">총 {cart ? cart.size : "0"}개</span>
+              <span className="cart__total-quantity">총 {cart ? cart.menus.length : "0"}개</span>
               <span className="cart__total-price">
-                {numberCommaRegex(cart ? cart.totalPrice : "0")}원
+                {numberCommaRegex(
+                  cart
+                    ? cart.menus.reduce((prev, cur) => {
+                        return prev + cur.price;
+                      }, 0)
+                    : "0"
+                )}
+                원
               </span>
             </div>
             <button className="button cart__button">결제 및 주문하기</button>

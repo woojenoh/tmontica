@@ -3,11 +3,13 @@ import { numberCommaRegex } from "../../../utils";
 import "./styles.scss";
 
 export interface ICartItemProps {
+  id: number;
   name: string;
   price: number;
   option: string | Object;
   quantity: number;
   imgUrl: string;
+  removeLocalCartItem(id: number): void;
 }
 
 export interface ICartItemState {
@@ -43,7 +45,7 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
 
   render() {
     const { quantity } = this.state;
-    const { name, price, option, imgUrl } = this.props;
+    const { id, name, price, option, imgUrl, removeLocalCartItem } = this.props;
     const { buildSelectOptions, handleQuantityChange } = this;
 
     return (
@@ -52,6 +54,14 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
         <div className="cart__item-info">
           <span className="cart__item-name">
             {name} - {numberCommaRegex(price)}원
+            <span
+              className="cart__item-delete"
+              onClick={() => {
+                removeLocalCartItem(id);
+              }}
+            >
+              &times;
+            </span>
           </span>
           <span className="cart__item-option">{option}</span>
         </div>
