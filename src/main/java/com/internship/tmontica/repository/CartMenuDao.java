@@ -3,6 +3,7 @@ package com.internship.tmontica.repository;
 import com.internship.tmontica.dto.CartMenu;
 import com.internship.tmontica.dto.OrderDetail;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -22,4 +23,8 @@ public interface CartMenuDao {
     // 카트에서 삭제하기
     @Delete("delete from cart_menus where id = #{cartId}")
     void deleteCartMenu(int cartId);
+
+    // 카트에 추가하기
+    @Insert("insert into cart_menus values(#{quantity}, #{option}, 0, #{userId}, #{optionPrice}, #{menuId}")
+    int addCartMenu(CartMenu cartMenu);
 }

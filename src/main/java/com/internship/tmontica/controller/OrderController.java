@@ -1,8 +1,7 @@
 package com.internship.tmontica.controller;
 
 import com.internship.tmontica.dto.*;
-import com.internship.tmontica.dto.request.MenusReq;
-import com.internship.tmontica.dto.request.OrderReq;
+import com.internship.tmontica.dto.request.*;
 import com.internship.tmontica.dto.response.MenusResp;
 import com.internship.tmontica.dto.response.OrderListResp;
 import com.internship.tmontica.dto.response.OrderResp;
@@ -13,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,8 +47,8 @@ public class OrderController {
         orderService.addOrder(order);
         // TODO: 주문상세테이블에 추가
         // menus에서 카트 아이디로 정보를 가져와서 order_details 에 추가
-        List<MenusReq> menus = orderReq.getMenus();
-        for (MenusReq menu: menus) {
+        List<Menus> menus = orderReq.getMenus();
+        for (Menus menu: menus) {
             OrderDetail orderDetail = cartMenuService.getCartMenuForOrderDetail(menu.getCartId());
             orderDetail.setOrderId(orderId);
 //            System.out.println(orderDetail);
@@ -70,13 +67,45 @@ public class OrderController {
         return map;
     }
 
-//    /** 주문 받기(결제하기) - 바로주문하기 */
-//    @PostMapping("/direct")
-//    public Map<String, String> addOrderDirect(@RequestBody @Valid ){
-//        // TODO: 카트에 추가하고
-//        // TODO: 카트에서 추가하기 메서드를 부르기
-//
-//    }
+    /** 주문 받기(결제하기) - 바로주문하기 */
+    /*@PostMapping("/direct")
+    public Map<String, String> addOrderDirect(@RequestBody @Valid CartReq cartReq){
+        // TODO: 카트에 추가하고
+        // options 안의 옵션 정보들을 "1__1/3__2"(id__갯수) 형태의 문자열로 만들기
+        String optionStr = ""; // 옵션 문자열
+        int optionPrice = 0; // 옵션의 총 가격을 저장할 변수
+        Options options = cartReq.getOptions();
+        Temperature temperature = options.getTemperature();
+        int opId = optionService.getOptionIdByName(temperature.getName());
+        optionStr += opId+"__1";
+        if(options.getSize() != null){
+            Size size = options.getSize();
+            opId = optionService.getOptionIdByName(size.getName());
+            optionStr += "/"+opId+"__1";
+            optionPrice += size.getPrice();
+        }
+        if(options.getShot() != null){
+            Shot shot = options.getShot();
+            opId = optionService.getOptionIdByName(shot.getName());
+            optionStr += "/"+opId+"__"+shot.getAmount();
+            optionPrice += (shot.getPrice() * shot.getAmount());
+        }
+        if(options.getSyrup() != null){
+            Syrup syrup = options.getSyrup();
+            opId = optionService.getOptionIdByName(syrup.getName());
+            optionStr += "/"+opId+"__"+syrup.getAmount();
+            optionPrice += (syrup.getPrice() * syrup.getAmount());
+        }
+
+        // 사용자 아이디 받아오기
+        String userId = "testid"; //임시
+
+        // 주문번호 생성 : 날짜 + 시분초 + 아이디
+        SimpleDateFormat format  = new SimpleDateFormat("yyMMddHHmmss");
+        String orderId = format.format(System.currentTimeMillis()) + userId;
+        System.out.println(orderId);
+
+    }*/
 
     /** 주문 취소 */
     @DeleteMapping("/{orderId}")

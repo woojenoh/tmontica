@@ -20,4 +20,7 @@ public class CartMenuService {
 
     // 카트에서 삭제하기
     public void deleteCartMenu(int cartId){ cartMenuDao.deleteCartMenu(cartId); }
+
+    // 카트에 추가하기
+    public int addCartMenu(CartMenu cartMenu){ return cartMenuDao.addCartMenu(cartMenu); }
 }

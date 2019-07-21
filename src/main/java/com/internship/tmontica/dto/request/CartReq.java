@@ -5,11 +5,13 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class MenusReq {
+public class CartReq {
     @NotNull
-    private int cartId;
+    private String userId;
     @NotNull
-    private String nameEng;
+    private int menuId;
+    @NotNull
+    private int quantity;
 
-    private String option;
+    private Options options;
 }

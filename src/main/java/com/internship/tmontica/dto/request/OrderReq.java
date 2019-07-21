@@ -10,7 +10,7 @@ public class OrderReq {
     @NotNull
     private String userId;
     @NotNull
-    private List<MenusReq> menus;
+    private List<Menus> menus;
     private int usedPoint;
     @NotNull
     private int totalPrice;
