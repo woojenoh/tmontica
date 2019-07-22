@@ -23,20 +23,20 @@ public class OrderService {
     }
 
     // orderId로 주문 정보 가져오기
-    public Order getOrderByOrderId(String orderId){ return orderDao.getOrderByOrderId(orderId); }
+    public Order getOrderByOrderId(int orderId){ return orderDao.getOrderByOrderId(orderId); }
 
     // orderId로 주문상세 정보 가져오기 (메뉴 이름 추가)
-    public List<MenusResp> getOrderDetailByOrderId(String orderId){
+    public List<MenusResp> getOrderDetailByOrderId(int orderId){
         return orderDao.getOrderDetailByOrderId(orderId);
     }
 
     // order_id로 주문의 메뉴 이름들만 가져오기
-    public List<String> getMenuNamesByOrderId(String orderId){
+    public List<String> getMenuNamesByOrderId(int orderId){
         return orderDao.getMenuNamesByOrderId(orderId);
     }
 
     // order_id로 주문 삭제하기
-    public void deleteOrder(String orderId){
+    public void deleteOrder(int orderId){
         orderDao.deleteOrder(orderId);
     }
 

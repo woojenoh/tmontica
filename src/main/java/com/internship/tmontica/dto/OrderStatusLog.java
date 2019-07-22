@@ -15,11 +15,11 @@ public class OrderStatusLog {
     @NotNull
     private String editorId;
     @NotNull
-    private String orderId;
+    private int orderId;
     @NotNull
     private Date modifiedDate;
 
-    public OrderStatusLog(@NotNull String statusType, @NotNull String editorId, @NotNull String orderId) {
+    public OrderStatusLog(@NotNull String statusType, @NotNull String editorId, @NotNull int orderId) {
         this.statusType = statusType;
         this.editorId = editorId;
         this.orderId = orderId;

@@ -30,7 +30,7 @@ public class OrderController {
 
     /** 주문 받기(결제하기) - 카트에서 주문하기 */
     @PostMapping
-    public Map<String, String> addOrderFromCart(@RequestBody @Valid OrderReq orderReq){
+    public Map<String, Integer> addOrderFromCart(@RequestBody @Valid OrderReq orderReq){
         System.out.println("결제 컨트롤러 ");
         System.out.println(orderReq);
 
@@ -38,13 +38,15 @@ public class OrderController {
         String userId = "testid"; //임시
 
         // 주문번호 생성 : 날짜 + 시분초 + 아이디
-        SimpleDateFormat format  = new SimpleDateFormat("yyMMddHHmmss");
-        String orderId = format.format(System.currentTimeMillis()) + userId;
-        System.out.println(orderId);
+//        SimpleDateFormat format  = new SimpleDateFormat("yyMMddHHmmss");
+//        String orderId = format.format(System.currentTimeMillis()) + userId;
+//        System.out.println(orderId);
+
         // TODO: 주문테이블에 추가
-        Order order = new Order(orderId,orderReq.getPayment(),orderReq.getTotalPrice(),orderReq.getUsedPoint(),
+        Order order = new Order(0,orderReq.getPayment(),orderReq.getTotalPrice(),orderReq.getUsedPoint(),
                 orderReq.getTotalPrice()-orderReq.getUsedPoint(), "미결제", orderReq.getUserId());
         orderService.addOrder(order);
+        int orderId = order.getId();
         // TODO: 주문상세테이블에 추가
         // menus에서 카트 아이디로 정보를 가져와서 order_details 에 추가
         List<Menus> menus = orderReq.getMenus();
@@ -62,7 +64,7 @@ public class OrderController {
         // TODO: 주문상태로그테이블에 "미결제" 상태로 추가
         orderService.addOrderStatusLog(new OrderStatusLog("미결제", userId, orderId));
 
-        Map<String, String> map = new HashMap<>();
+        Map<String, Integer> map = new HashMap<>();
         map.put("orderId", orderId);
         return map;
     }
@@ -109,7 +111,7 @@ public class OrderController {
 
     /** 주문 취소 */
     @DeleteMapping("/{orderId}")
-    public void deleteOrder(@PathVariable("orderId") String orderId){
+    public void deleteOrder(@PathVariable("orderId") int orderId){
         // 컬럼을 지우는게 아니라 status를 주문취소로 수정하는것임
         // orders 테이블에서 status 수정
         orderService.deleteOrder(orderId);
@@ -121,7 +123,7 @@ public class OrderController {
 
     /** 주문정보 한개 가져오기(상세내역 포함) */
     @GetMapping("/{orderId}")
-    public OrderResp getOrderByOrderId(@PathVariable("orderId")String orderId){
+    public OrderResp getOrderByOrderId(@PathVariable("orderId")int orderId){
         // TODO: menus에 들어갈 객체 필요, menu select 기능 필요
         // TODO: 주문번호로 주문정보와 주문 상세정보를 객체에 담아 리턴시키
         Order order = orderService.getOrderByOrderId(orderId);

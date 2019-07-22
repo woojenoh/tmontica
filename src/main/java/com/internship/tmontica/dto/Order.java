@@ -10,7 +10,7 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 public class Order {
-    private String id;            // 주문번호(서버생성)
+    private int id;            // 주문번호
     @NotNull
     private Date orderDate;    // 주문날짜
     @NotNull
@@ -28,7 +28,7 @@ public class Order {
 
     private String userAgent;  // 주문자의 기기환경?(모바일/웹)
 
-    public Order(String id, @NotNull String payment, @NotNull int totalPrice, int usedPoint, @NotNull int realPrice, @NotNull String status, @NotNull String userId) {
+    public Order(int id, @NotNull String payment, @NotNull int totalPrice, int usedPoint, @NotNull int realPrice, @NotNull String status, @NotNull String userId) {
         this.id = id;
         this.payment = payment;
         this.totalPrice = totalPrice;

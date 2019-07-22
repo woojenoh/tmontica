@@ -12,7 +12,7 @@ public class OrderDetail {
 
     private int id;
     @NotNull
-    private String orderId;
+    private int orderId;
 
     private String option;
     @NotNull
@@ -22,7 +22,7 @@ public class OrderDetail {
     @NotNull
     private int menuId;
 
-    public OrderDetail(int id, @NotNull String orderId, String option, @NotNull int price, @NotNull int quantity, @NotNull int menuId) {
+    public OrderDetail(int id, @NotNull int orderId, String option, @NotNull int price, @NotNull int quantity, @NotNull int menuId) {
         this.id = id;
         this.orderId = orderId;
         this.option = option;
