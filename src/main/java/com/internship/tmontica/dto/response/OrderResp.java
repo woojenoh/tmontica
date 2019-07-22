@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderResp {
 
+    private int orderId;
     private String payment;
     private String status;
     private int totalPrice;

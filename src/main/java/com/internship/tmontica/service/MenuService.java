@@ -20,10 +20,10 @@ public class MenuService {
 
     // 메뉴 추가
     @Transactional
-    public int addMenu(Menu menu){
+    public int addMenu(Menu menu, List<Integer>optionIds){
         int menuId =  menuDao.addMenu(menu);
-        for(Option option : menu.getOptions())
-            menuDao.addMenuOption(menuId , option.getId());
+        for(int optionId : optionIds)
+            menuDao.addMenuOption(menuId, optionId);
         return menuId;
     }
 
@@ -55,9 +55,7 @@ public class MenuService {
     @Transactional(readOnly = true)
     public List<Menu> getMenusByCategory(String category, int page, int size){
         int offset = (page - 1) * size;
-        List<Menu> menus = menuDao.getMenusByCategory(category, size, offset);
-        log.info("count : {}", menus.size());
-        return menus;
+        return menuDao.getMenusByCategory(category, size, offset);
     }
 
     // 이달의 메뉴 정보 가져오기
@@ -77,4 +75,8 @@ public class MenuService {
     public void deleteMenu(int id){
         menuDao.deleteMenu(id);
     }
+
+    // 수량 수정하기
+    @Transactional
+    public void updateMenuStock(int id, int stock){ menuDao.updateMenuStock(id, stock);}
 }

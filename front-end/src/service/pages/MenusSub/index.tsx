@@ -1,9 +1,9 @@
 import * as React from "react";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
-import MenuItems from "../../components/MenuItems";
-import { IMenuItemsProps } from "../../components/MenuItems";
-import { Menu } from "../../../types";
+import MenuItems from "../../components/MenusItems";
+import { MenuAPI } from "../../../API";
+import { TMenusItem } from "../../../types";
 
 interface MatchParams {
   categoryEng: string;
@@ -14,30 +14,27 @@ interface IMenusSubProps extends RouteComponentProps<MatchParams> {
 }
 
 interface IMenusSubState {
-  menus: Array<Menu>;
+  categoryKo: string;
+  menus: Array<TMenusItem>;
 }
-
-const api = "https://my-json-server.typicode.com/yeolsa/tmontica-json";
 
 export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubState> {
   state = {
+    categoryKo: "",
     menus: []
   };
 
-  getMenus(categoryEng: string) {
-    return fetch(`${api}/${categoryEng}`, {
-      headers: {
-        Accept: "application/json"
-      }
-    }).then(res => (res.ok ? res.json() : new Error()));
+  async getMenuByCateory(categoryEng?: string) {
+    const categoryMenus = await MenuAPI.getMenuByCateory(this.props.match.params.categoryEng);
+    const { categoryKo, menus } = categoryMenus;
+    this.setState({
+      categoryKo,
+      menus
+    });
   }
 
   componentDidMount() {
-    this.getMenus(this.props.match.params.categoryEng).then(ret => {
-      this.setState({
-        menus: ret.menus
-      });
-    });
+    this.getMenuByCateory();
   }
 
   render() {
@@ -51,7 +48,7 @@ export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubS
           </section>
 
           {this.state.menus ? (
-            <MenuItems categoryKo={categoryKo} menus={this.state.menus} />
+            <MenuItems categoryKo={this.state.categoryKo} menus={this.state.menus} />
           ) : (
             "Loading..."
           )}
