@@ -1,0 +1,64 @@
+@import "../../../assets/scss/colors.scss";
+@import "../../../assets/scss/mediaQuery.scss";
+
+.orders__item {
+  height: 100px;
+  border-top: 1px solid $border-gray;
+  display: flex;
+  align-items: center;
+  &:last-child {
+    border-bottom: 1px solid $border-gray;
+  }
+  .orders__item-img {
+    width: 100px;
+    padding: 10px;
+    @include mobile {
+      display: none;
+    }
+  }
+  .orders__item-info {
+    width: calc(100% - 180px);
+    line-height: 1.2em;
+    @include mobile {
+      width: calc(100% - 80px);
+      padding-left: 20px;
+    }
+    .orders__item-name {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      @include mobile {
+        font-size: 15px;
+      }
+    }
+    .orders__item-options {
+      display: block;
+      font-size: 14px;
+      color: $light-black;
+      @include mobile {
+        font-size: 13px;
+      }
+    }
+  }
+  .orders__item-quantity-wrapper {
+    width: 80px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .orders__item-quantity {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      font-size: 14px;
+      border: 1px solid $light-black;
+      @include mobile {
+        width: 35px;
+        height: 35px;
+        font-size: 13px;
+      }
+    }
+  }
+}

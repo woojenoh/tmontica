@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS `tmontica`.`banners` ;
+DROP TABLE IF EXISTS `tmontica`.`order_status_logs` ;
+DROP TABLE IF EXISTS `tmontica`.`menu_options` ;
+DROP TABLE IF EXISTS `tmontica`.`points` ;
+DROP TABLE IF EXISTS `tmontica`.`order_details` ;
+DROP TABLE IF EXISTS `tmontica`.`options` ;
+DROP TABLE IF EXISTS `tmontica`.`orders` ;
+DROP TABLE IF EXISTS `tmontica`.`cart_menus` ;
+DROP TABLE IF EXISTS `tmontica`.`menus` ;
+DROP TABLE IF EXISTS `tmontica`.`users` ;

@@ -5,6 +5,13 @@
   border: 1px solid #ebebeb;
   margin: 0 auto;
   background-color: white;
+
+  .detail__sell-price {
+    padding: 0 10% 20px;
+    width: 100%;
+    text-align: right;
+    display: inline-block;
+  }
 }
 
 .detail__left {
@@ -193,6 +200,10 @@ input[type="number"].counter__number::-webkit-inner-spin-button {
   display: flex;
   margin-top: 20px;
   justify-content: center;
+
+  .button {
+    width: 40%;
+  }
 }
 
 .detail__button {
@@ -202,6 +213,20 @@ input[type="number"].counter__number::-webkit-inner-spin-button {
 
 .detail__button:first-child {
   margin-right: 20px;
+}
+
+.detail__prices {
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  border-top: 1px solid black;
+  padding: 20px 10% 0;
+  margin-top: 20px;
+
+  .total {
+    display: inline-block;
+    text-align: right;
+  }
 }
 
 @media (max-width: 1020px) {

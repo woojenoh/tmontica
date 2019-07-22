@@ -1,7 +1,10 @@
 package com.internship.tmontica.repository;
+
 import com.internship.tmontica.dto.Option;
 import org.apache.ibatis.annotations.*;
+
 import java.util.List;
+
 @Mapper
 public interface OptionDao {
     @Insert("INSERT INTO options (name ,price ,type) VALUES(#{name}, #{price}, #{type})")
