@@ -16,12 +16,16 @@
     display: flex;
     justify-content: space-between;
     .button.signin__button {
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
       text-decoration: none;
-      width: 45%;
       margin-top: 12px;
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 0;
+      }
     }
   }
 }
