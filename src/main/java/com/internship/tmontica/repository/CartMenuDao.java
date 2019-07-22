@@ -25,4 +25,8 @@ public interface CartMenuDao {
     @Insert("insert into cart_menus values(#{quantity}, #{option}, 0, #{userId}, #{optionPrice}, #{menuId}, #{direct})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addCartMenu(CartMenu cartMenu);
+
+    // direct = true 인 카트메뉴 삭제하기
+    @Delete("delete from cart_menus where direct = true")
+    void deleteDirectCartMenu();
 }

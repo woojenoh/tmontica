@@ -28,4 +28,10 @@ public class CartMenuService {
     // 카트에 추가하기
     @Transactional
     public int addCartMenu(CartMenu cartMenu){ return cartMenuDao.addCartMenu(cartMenu); }
+
+    // direct = true 인 카트메뉴 삭제하기
+    @Transactional
+    public void deleteDirectCartMenu(){
+        cartMenuDao.deleteDirectCartMenu();
+    }
 }

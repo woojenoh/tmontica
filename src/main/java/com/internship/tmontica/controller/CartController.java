@@ -30,6 +30,11 @@ public class CartController {
     /** 카트에 추가하기 */
     @PostMapping
     public ResponseEntity<Map<String, Integer>> addCart(@RequestBody @Valid CartReq cartReq){
+        // direct : true 이면 카트에서 direct = true 인 것을 삭제하기
+        if(cartReq.isDirect() == true){
+            cartMenuService.deleteDirectCartMenu();
+        }
+
         List<Cart_OptionReq> option = cartReq.getOption();
         String optionStr = "";
         int optionPrice = 0;
