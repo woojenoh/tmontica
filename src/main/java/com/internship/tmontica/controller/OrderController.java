@@ -150,7 +150,6 @@ public class OrderController {
         OrderResp orderResp = new OrderResp(order.getPayment(), order.getStatus(), order.getTotalPrice(),
                                             order.getRealPrice(), order.getUsedPoint(), order.getOrderDate(), menus);
 
-
         // 더미 데이터
 //        List<MenusResp> menus = new ArrayList<>();
 //        menus.add(new MenusResp(1, "americano", "HOT / 샷추가(1개) / SIZE UP", 3, 3800));
