@@ -1,5 +1,6 @@
 package com.internship.tmontica.user;
 
+import com.internship.tmontica.repository.UserDao;
 import com.internship.tmontica.user.exception.EmailMismatchException;
 import com.internship.tmontica.user.exception.PasswordMismatchException;
 import com.internship.tmontica.user.exception.UserIdDuplicatedException;
