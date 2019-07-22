@@ -1,9 +1,6 @@
 package com.internship.tmontica.user;
 
-import com.internship.tmontica.user.model.request.UserInfoReqDTO;
-import com.internship.tmontica.user.model.request.UserSignUpReqDTO;
 import org.apache.ibatis.annotations.*;
-import org.springframework.transaction.annotation.Transactional;
 
 @Mapper
 public interface UserDao {
@@ -18,6 +15,7 @@ public interface UserDao {
     int updateUserPassword(User user);
     @Delete("DELETE FROM users WHERE id = #{id}")
     int deleteUser(String id);
-
-
+    // 가입시 User Mail 중복검사 안해서 메일이 중복되는경우 문제생길수 있음.
+    @Select("SELECT * FROM users WHERE email = #{email}")
+    User getUserByEmail(String email);
 }

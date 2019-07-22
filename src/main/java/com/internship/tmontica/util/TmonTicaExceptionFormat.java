@@ -1,14 +1,14 @@
-package com.internship.tmontica.user.exception.handler;
+package com.internship.tmontica.util;
 
 import lombok.Getter;
 
 @Getter
-public class TmonTicaException {
+public class TmonTicaExceptionFormat {
 
     private String field;
     private String exceptionMessage;
 
-    public TmonTicaException(String field, String exceptionMessage) {
+    public TmonTicaExceptionFormat(String field, String exceptionMessage) {
         this.field = field;
         this.exceptionMessage = exceptionMessage;
     }

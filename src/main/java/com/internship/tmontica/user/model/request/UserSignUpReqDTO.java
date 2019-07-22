@@ -1,7 +1,5 @@
 package com.internship.tmontica.user.model.request;
 
-import com.internship.tmontica.user.model.UserDTO;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +8,7 @@ import java.sql.Date;
 
 @Getter
 @Setter
-public class UserSignUpReqDTO implements UserDTO {
+public class UserSignUpReqDTO{
 
     @NotNull
     private String id;

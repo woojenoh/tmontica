@@ -6,7 +6,6 @@ import org.apache.ibatis.type.Alias;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
 
-@Alias("user")
 @Data
 public class User {
 

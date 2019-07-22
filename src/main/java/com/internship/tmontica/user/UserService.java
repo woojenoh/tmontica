@@ -1,17 +1,21 @@
 package com.internship.tmontica.user;
 
-import com.internship.tmontica.user.exception.InvalidUserIdException;
+import com.internship.tmontica.user.exception.EmailMismatchException;
 import com.internship.tmontica.user.exception.PasswordMismatchException;
+import com.internship.tmontica.user.exception.UserIdDuplicatedException;
 import com.internship.tmontica.user.exception.UserIdNotFoundException;
-import com.internship.tmontica.user.model.UserDTO;
-import com.internship.tmontica.user.model.request.UserInfoReqDTO;
-import com.internship.tmontica.user.model.request.UserPasswordCheckReqDTO;
-import com.internship.tmontica.user.model.request.UserSignInReqDTO;
-import com.internship.tmontica.user.model.request.UserSignUpReqDTO;
+import com.internship.tmontica.user.model.request.*;
+import com.internship.tmontica.user.model.response.UserInfoRespDTO;
+import com.internship.tmontica.security.AuthenticationKey;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.mail.MailSendException;
+import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.mail.SimpleMailMessage;
+
+import javax.servlet.http.HttpSession;
 
 @Service
 @RequiredArgsConstructor
@@ -20,58 +24,162 @@ public class UserService { //implements UserDetail
     private final UserDao userDao;
     //private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+    private final MailSender sender;
 
-    @Transactional(readOnly = true)
-    public boolean isDuplicate(String id){
-        User user = userDao.getUserByUserId(id);
+    private enum MailOption {
 
-        return !(user == null);
+        findId, findPassword
     }
+
     @Transactional
-    public void signUp(UserSignUpReqDTO userSignUpReqDTO){
+    public boolean signUp(UserSignUpReqDTO userSignUpReqDTO){
         //userSignUpReqDTO.setPassword(passwordEncoder.encode(user.getPassword())); need passwordEnconding
-        if(isDuplicate(userSignUpReqDTO.getId())){
-            throw new InvalidUserIdException();
-        }
-
+        checkUserIdDuplicatedException(userSignUpReqDTO.getId());
         User user = modelMapper.map(userSignUpReqDTO, User.class);
-
-        System.out.println(user.toString());
-       int resultValue = userDao.addUser(user);
+        return userDao.addUser(user) > 0;
     }
 
     @Transactional(readOnly = true)
     public void signIn(UserSignInReqDTO userSignInReqDTO) {
-        User user = userDao.getUserByUserId(userSignInReqDTO.getId());
 
-        if(!isExistUser(userSignInReqDTO, user)){
-            throw new UserIdNotFoundException();
+        checkUserIdNotFoundException(userSignInReqDTO.getId());
+        checkPasswordMismatchException(userSignInReqDTO.getPassword(),
+                userDao.getUserByUserId(userSignInReqDTO.getId()).getPassword());
+    }
+
+    // front와 협의 필요
+    @Transactional(readOnly = true)
+    public void checkPassword(UserCheckPasswordReqDTO userCheckPasswordReqDTO){
+
+        checkUserIdNotFoundException(userCheckPasswordReqDTO.getId());
+        checkPasswordMismatchException(userCheckPasswordReqDTO.getPassword(),
+                userDao.getUserByUserId(userCheckPasswordReqDTO.getId()).getPassword());
+    }
+
+    @Transactional(readOnly = true)
+    public UserInfoRespDTO getUserInfo(String id){
+
+        checkUserIdNotFoundException(id);
+        return modelMapper.map(userDao.getUserByUserId(id), UserInfoRespDTO.class);
+    }
+
+    @Transactional
+    public boolean changePassword(UserChangePasswordReqDTO userChangePasswordReqDTO){
+
+        checkUserIdNotFoundException(userChangePasswordReqDTO.getId());
+        checkPasswordMismatchException(userChangePasswordReqDTO.getPassword(), userChangePasswordReqDTO.getNewPassword());
+        User user = modelMapper.map(userChangePasswordReqDTO, User.class);
+        return userDao.updateUserPassword(user) > 0;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean idDuplicateCheck(String id){
+        return isDuplicate(id);
+    }
+
+    @Transactional
+    public boolean withDrawUser(String id){
+
+        checkUserIdNotFoundException(id);
+        return userDao.deleteUser(id) > 0;
+    }
+
+
+    @Transactional(readOnly = true)
+    public boolean sendUserId(String email, HttpSession httpSession) throws MailSendException{
+        User user = userDao.getUserByEmail(email);
+        checkUserIdNotFoundException(user.getId());
+        AuthenticationKey authenticationKey = new AuthenticationKey();
+        sender.send(sendMail(user, MailOption.findId, authenticationKey.getAuthenticationKey()));
+        httpSession.setAttribute("key", authenticationKey);
+        return true;
+    }
+
+    // 비밀번호 어떤식으로 줄지?
+    @Transactional
+    public boolean sendUserPassword(String id, String email) throws MailSendException{
+        User user = userDao.getUserByUserId(id);
+        checkEmailMismatchException(user.getEmail(), email);
+        sender.send(sendMail(user, MailOption.findPassword));
+        return true;
+    }
+
+    public User makeTokenUserWithRole(String id, String role){
+
+        User user = new User();
+        user.setId(id);
+        user.setRole(role);
+        return user;
+    }
+
+    private SimpleMailMessage sendMail(User user, MailOption mailOption, String... strings) {
+
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setFrom("tmontica701@gmail.com");
+        msg.setTo(user.getEmail());
+
+        switch(mailOption){
+            case findId:
+                msg.setSubject("[TMONG CAFFE]"+user.getName()+"님 아이디 찾기 메일입니다.");
+                msg.setText("인증키는 "+strings[0]+"입니다. 본인과 관련없는 메일이라면 무시하시면 됩니다.");
+                break;
+            case findPassword:
+                msg.setSubject("[TMONG CAFFE]"+user.getName()+"님 비밀번호 찾기 메일입니다.");
+                msg.setText("찾으시는 비밀번호는 "+user.getPassword()+"입니다. 본인과 관련없는 메일이라면 무시하시면 됩니다.");
+                break;
         }
 
-        if(!isSamePassword(userSignInReqDTO, user)){
+        return msg;
+    }
+
+    private boolean isDuplicate(String id){
+        User user = userDao.getUserByUserId(id);
+
+        return !(user == null);
+    }
+
+    private void checkUserIdDuplicatedException(String id){
+
+        if(isDuplicate(id)){
+            throw new UserIdDuplicatedException();
+        }
+    }
+
+    private boolean isSamePassword(String password, String comparePassword){
+
+        return password.equals(comparePassword);
+    }
+
+    private void checkPasswordMismatchException(String password, String comparePassword){
+
+        if(!isSamePassword(password, comparePassword)){
             throw new PasswordMismatchException();
         }
     }
 
-    @Transactional(readOnly = true)
-    public boolean checkPassword(UserPasswordCheckReqDTO userPasswordCheckReqDTO){
-        User user = userDao.getUserByUserId(userPasswordCheckReqDTO.getId());
+    private boolean isExistUser(String id){
 
-        return isSamePassword(userPasswordCheckReqDTO, user);
+        return userDao.getUserByUserId(id)!=null;
     }
 
-    //public User getUserInfo(UserInfoReqDTO)
+    private void checkUserIdNotFoundException(String id){
 
-    private boolean isSamePassword(UserDTO userDTO, User user){
-
-        return userDTO.getPassword().equals(user.getPassword());
+        if(!isExistUser(id)){
+            throw new UserIdNotFoundException();
+        }
     }
 
-    private boolean isExistUser(UserDTO userDTO, User user){
+    private boolean isCorrectEmail(String email, String compareEmail){
 
-        return userDTO.getId().equals(user.getId());
+        return email.equals(compareEmail);
     }
 
+    private void checkEmailMismatchException(String email, String compareEmail){
+
+        if(!isCorrectEmail(email, compareEmail)){
+            throw new EmailMismatchException();
+        }
+    }
 //    @Override
 //    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 //
