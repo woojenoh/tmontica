@@ -1,0 +1,15 @@
+@import "../../../assets/scss/colors.scss";
+
+.orders-list__title {
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+.orders-list__content {
+  width: 100%;
+  min-height: 80px;
+  border: 1px solid $border-gray;
+  background-color: white;
+  .orders-list__items {
+  }
+}

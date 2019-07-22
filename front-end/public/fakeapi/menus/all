@@ -1,0 +1,68 @@
+[
+      {
+        "categoryKo": "이달의 메뉴",
+        "categoryEng": "monthly",
+        "menus": [
+          {
+            "id": 1,
+            "nameKo": "아메리카노",
+            "nameEng": "americano",
+            "imgUrl": "/img/coffee-sample.png"
+          },
+          {
+            "id": 2,
+            "nameKo": "카페라떼",
+            "nameEng": "cafelatte",
+            "imgUrl": "/img/coffee-sample.png"
+          },
+          {
+            "id": 3,
+            "nameKo": "갈릭퐁당브래드",
+            "nameEng": "galicbread",
+            "imgUrl": "/img/bread-sample.jpg"
+          },
+          {
+            "id": 4,
+            "nameKo": "갈릭퐁당브래드",
+            "nameEng": "galicbread",
+            "imgUrl": "/img/bread-sample.jpg"
+          }
+        ]
+      },
+      {
+        "categoryKo": "커피/에스프레소",
+        "categoryEng": "coffee",
+        "menus": [
+          {
+            "id": 1,
+            "nameKo": "아메리카노",
+            "nameEng": "americano",
+            "imgUrl": "/img/coffee-sample.png"
+          },
+          {
+            "id": 2,
+            "nameKo": "아메리카노",
+            "nameEng": "americano",
+            "imgUrl": "/img/coffee-sample.png"
+          }
+        ]
+      },
+      {
+        "categoryKo": "빵",
+        "categoryEng": "bread",
+        "menus": [
+          {
+            "id": 3,
+            "nameKo": "갈릭퐁당브래드",
+            "nameEng": "bread",
+            "imgUrl": "/img/bread-sample.jpg"
+          },
+          {
+            "id": 4,
+            "nameKo": "갈릭퐁당브래드",
+            "nameEng": "bread",
+            "imgUrl": "/img/bread-sample.jpg"
+          }
+        ]
+      }
+    ]

@@ -1,0 +1,18 @@
+{
+  "categoryKo": "빵",
+  "size": 2,
+  "menus": [
+    {
+      "id": 3,
+      "nameKo": "갈릭퐁당브래드",
+      "nameEng": "galicbread",
+      "imgUrl": "/img/bread-sample.jpg"
+    },
+    {
+      "id": 4,
+      "nameKo": "갈릭퐁당브래드",
+      "nameEng": "galicbread",
+      "imgUrl": "/img/bread-sample.jpg"
+    }
+  ]
+}

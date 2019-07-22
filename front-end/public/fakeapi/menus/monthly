@@ -1,0 +1,30 @@
+{
+  "categoryKo": "이달의 메뉴",
+  "size": 4,
+  "menus": [
+    {
+      "id": 1,
+      "nameKo": "아메리카노",
+      "nameEng": "americano",
+      "imgUrl": "/img/coffee-sample.png"
+    },
+    {
+      "id": 2,
+      "nameKo": "아메리카노",
+      "nameEng": "americano",
+      "imgUrl": "/img/coffee-sample.png"
+    },
+    {
+      "id": 3,
+      "nameKo": "갈릭퐁당브래드",
+      "nameEng": "americano",
+      "imgUrl": "/img/bread-sample.jpg"
+    },
+    {
+      "id": 4,
+      "nameKo": "갈릭퐁당브래드",
+      "nameEng": "americano",
+      "imgUrl": "/img/bread-sample.jpg"
+    }
+  ]
+}
