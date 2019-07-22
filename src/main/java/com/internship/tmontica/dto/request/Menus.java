@@ -8,8 +8,5 @@ import javax.validation.constraints.NotNull;
 public class Menus {
     @NotNull
     private int cartId;
-    @NotNull
-    private String nameEng;
 
-    private String option;
 }

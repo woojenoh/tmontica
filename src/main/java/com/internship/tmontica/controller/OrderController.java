@@ -28,7 +28,7 @@ public class OrderController {
     @Autowired
     private CartMenuService cartMenuService;
 
-    /** 주문 받기(결제하기) - 카트에서 주문하기 */
+    /** 주문 받기(결제하기) */
     @PostMapping
     public Map<String, Integer> addOrderFromCart(@RequestBody @Valid OrderReq orderReq){
         System.out.println("결제 컨트롤러 ");
