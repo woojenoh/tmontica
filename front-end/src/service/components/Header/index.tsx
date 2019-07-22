@@ -16,6 +16,10 @@ export interface IHeaderState {
 class Header extends React.Component<RouteComponentProps, IHeaderProps, IHeaderState> {
   componentDidUpdate(prevProps: any, prevState: any) {
     if (prevProps.location.pathname !== this.props.location.pathname) {
+      const body = document.querySelector("body");
+      if (body) {
+        body.style.overflow = "auto";
+      }
       this.setState({
         isNavOpen: false
       });

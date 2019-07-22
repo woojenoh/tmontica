@@ -3,17 +3,35 @@
   .input.signup__input {
     margin-bottom: 10px;
   }
+  .signup__id-container {
+    display: flex;
+    margin-bottom: 10px;
+    .signup__id-input {
+      margin-bottom: 0;
+      height: 40px;
+      margin-right: 10px;
+    }
+    .signup__id-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 14px;
+      padding: 5px 10px;
+      width: 100px;
+      height: 40px;
+    }
+  }
   .signup__label {
     display: block;
     text-align: left;
     margin-bottom: 10px;
-    font-size: 12px;
+    font-size: 13px;
     color: red;
     &.signup__label--green {
       color: green;
     }
   }
-  .signup__birthday {
+  .signup__birthday-container {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
@@ -38,12 +56,16 @@
     display: flex;
     justify-content: space-between;
     .button.signup__button {
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
       text-decoration: none;
-      width: 45%;
       margin-top: 12px;
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 0;
+      }
     }
   }
 }
