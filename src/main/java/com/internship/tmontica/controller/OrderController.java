@@ -10,6 +10,8 @@ import com.internship.tmontica.service.MenuService;
 import com.internship.tmontica.service.OptionService;
 import com.internship.tmontica.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,7 +35,7 @@ public class OrderController {
 
     /** 주문 받기(결제하기) */
     @PostMapping
-    public Map<String, Integer> addOrder(@RequestBody @Valid OrderReq orderReq){
+    public ResponseEntity<Map<String, Integer>> addOrder(@RequestBody @Valid OrderReq orderReq){
         System.out.println("결제 컨트롤러 ");
         System.out.println(orderReq);
 
@@ -52,21 +54,19 @@ public class OrderController {
         for (Menus menu: menus) {
             OrderDetail orderDetail = cartMenuService.getCartMenuForOrderDetail(menu.getCartId());
 
-            // TODO: 주문하는 메뉴의 재고 차감
             int stock = menuService.getMenuById(orderDetail.getMenuId()).getStock(); // 메뉴의 현재 재고량
             int quantity = orderDetail.getQuantity(); // 차감할 메뉴의 수량
-            if(stock-quantity <= 0){ // 재고가 모자랄 경우
-                // TODO: 재고 없을 경우 반환값 정하기, 위에 insert 다시 다 되돌려야 함..
-                map.put("stock", -1);
-                return map;
+            if(stock-quantity < 0){ // 재고가 모자랄 경우
+                // 재고 없을 경우 400 Bad Request
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }else {                 // 재고가 남아있는 경우
-                // 재고 수량 업데이트
+                // 재고 수량 차감
                 menuService.updateMenuStock(orderDetail.getMenuId(), stock-quantity);
                 // 주문테이블에 추가
                 orderService.addOrder(order);
                 orderId = order.getId();
-                orderDetail.setOrderId(orderId); // 주문번호 set
                 // 주문 상세 테이블에 추가
+                orderDetail.setOrderId(orderId); // 주문번호 set
                 orderService.addOrderDetail(orderDetail);
                 // 장바구니에서는 삭제
                 cartMenuService.deleteCartMenu(menu.getCartId());
@@ -77,7 +77,7 @@ public class OrderController {
         orderService.addOrderStatusLog(new OrderStatusLog("미결제", userId, orderId));
 
         map.put("orderId", orderId);
-        return map;
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     /** 주문 받기(결제하기) - 바로주문하기 */
