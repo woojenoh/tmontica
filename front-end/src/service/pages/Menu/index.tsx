@@ -3,12 +3,14 @@ import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import { MenuAPI } from "../../../API";
 import _ from "underscore";
+import { number } from "prop-types";
 
 type TMenuOption = {
   id: number;
   type: string;
   name: string;
   price: number;
+  quantity?: number;
 };
 
 type TMenu = {
@@ -32,6 +34,15 @@ interface IMenuProps extends RouteComponentProps<MatchParams> {}
 
 interface IMenuState {
   menu: TMenu;
+  totalPrice: number;
+  quantity: number;
+  selectedOptions: Array<TMenuOption>;
+}
+
+class MenuOption extends Component {
+  render() {
+    return "";
+  }
 }
 
 function getOptionComponent(id: number) {
@@ -69,7 +80,10 @@ function getOptionComponent(id: number) {
 
 export default class Menu extends Component<IMenuProps, IMenuState> {
   state = {
-    menu: {} as TMenu
+    menu: {} as TMenu,
+    totalPrice: 0,
+    quantity: 1,
+    selectedOptions: []
   };
 
   async getMenu() {
@@ -78,7 +92,8 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
     const menu = await MenuAPI.getMenuById(parseInt(menuId));
 
     this.setState({
-      menu
+      menu,
+      totalPrice: menu.sellPrice
     });
   }
 
@@ -110,6 +125,9 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
             </div>
             <div className="detail__right">
               <h1 className="detail__title">{menu.nameKo}</h1>
+              <div className="detail__sell-price">
+                <span className="price-style">{Number(menu.sellPrice).toLocaleString()}</span>원
+              </div>
               <ul className="detail__options">
                 {temperatureOption.length > 0 ? (
                   <li className="detail__option">{temperatureOption}</li>
@@ -128,6 +146,15 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
                 {syrupOption.length > 0 ? <li className="detail__option">{syrupOption}</li> : ""}
                 {sizeOption.length > 0 ? <li className="detail__option">{sizeOption}</li> : ""}
               </ul>
+              <div className="detail__prices">
+                <span>총 상품금액</span>
+                <span className="total-price-view">
+                  <span className="total-price">
+                    {Number(this.state.totalPrice).toLocaleString()}
+                  </span>
+                  원
+                </span>
+              </div>
               <div className="detail__buttons">
                 <button className="button detail__button">장바구니</button>
                 <button className="button button--orange detail__button">구매하기</button>
