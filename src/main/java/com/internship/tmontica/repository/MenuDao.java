@@ -37,8 +37,11 @@ public interface MenuDao {
             "category_ko = #{categoryKo}, category_eng = #{categoryEng}, monthly_menu = #{monthlyMenu} , usable = #{usable} ," +
             "img = #{img}, description = #{description}, sell_price = #{sellPrice}," +
             "discount_rate = #{discountRate}, stock = #{stock}, updated_date = #{updatedDate}," +
-            "updater_id = #{updaterId}")
+            "updater_id = #{updaterId} WHERE id = #{id}")
     void updateMenu(Menu menu);
+
+    @Update("UPDATE menus SET stock = #{stock} WHERE id = #{id}")
+    void updateMenuStock(int id, int stock);
 
     @Delete("DELETE FROM menus WHERE id = #{id}")
     void deleteMenu(int id);
@@ -69,7 +72,9 @@ public interface MenuDao {
 //    List<Menu> getAllMenus();
 
 
-    @Select("SELECT options.name, options.price, options.type, options.id FROM options INNER JOIN menu_options " +
+    @Select("SELECT * FROM options INNER JOIN menu_options " +
             "ON menu_options.menu_id = #{id} WHERE menu_options.option_id = options.id")
     List<Option> getOptionsById(int id);
+
+
 }
