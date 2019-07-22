@@ -1,10 +1,9 @@
 package com.internship.tmontica.user;
 
 import lombok.Data;
-import org.apache.ibatis.type.Alias;
 
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
+import java.util.Date;
 
 @Data
 public class User {
