@@ -9,7 +9,7 @@ import org.apache.ibatis.type.Alias;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenusResp {
+public class Order_MenusResp {
     private int menuId;
     private String nameEng;
     private String nameKo;

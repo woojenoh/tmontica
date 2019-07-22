@@ -19,5 +19,5 @@ public class OrderResp {
     private int realPrice;
     private int usedPoint;
     private Date orderDate;
-    private List<MenusResp> menus;
+    private List<Order_MenusResp> menus;
 }

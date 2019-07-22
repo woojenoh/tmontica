@@ -1,10 +1,14 @@
 package com.internship.tmontica.controller;
 
-import com.internship.tmontica.dto.*;
-import com.internship.tmontica.dto.request.*;
-import com.internship.tmontica.dto.response.MenusResp;
+import com.internship.tmontica.dto.Option;
+import com.internship.tmontica.dto.Order;
+import com.internship.tmontica.dto.OrderDetail;
+import com.internship.tmontica.dto.OrderStatusLog;
+import com.internship.tmontica.dto.request.Menus;
+import com.internship.tmontica.dto.request.OrderReq;
 import com.internship.tmontica.dto.response.OrderListResp;
 import com.internship.tmontica.dto.response.OrderResp;
+import com.internship.tmontica.dto.response.Order_MenusResp;
 import com.internship.tmontica.service.CartMenuService;
 import com.internship.tmontica.service.MenuService;
 import com.internship.tmontica.service.OptionService;
@@ -15,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -99,7 +102,7 @@ public class OrderController {
         // TODO: menus에 들어갈 객체 필요, menu select 기능 필요
         // TODO: 주문번호로 주문정보와 주문 상세정보를 객체에 담아 리턴시키
         Order order = orderService.getOrderByOrderId(orderId);
-        List<MenusResp> menus = orderService.getOrderDetailByOrderId(orderId);
+        List<Order_MenusResp> menus = orderService.getOrderDetailByOrderId(orderId);
 
         //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
         for (int i = 0; i < menus.size(); i++) {
