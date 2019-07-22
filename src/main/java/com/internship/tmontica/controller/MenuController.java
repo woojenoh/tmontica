@@ -8,6 +8,7 @@ import com.internship.tmontica.dto.response.*;
 import com.internship.tmontica.service.MenuService;
 import com.internship.tmontica.util.CategoryName;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Update;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +36,6 @@ public class MenuController {
     private MenuService menuService;
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     /** 전체 메뉴 (메인 화면 ) **/
     @GetMapping
@@ -126,21 +125,15 @@ public class MenuController {
 
     /** 메뉴 추가하기 **/
     @PostMapping(consumes = { "multipart/form-data" })
-    public ResponseEntity addMenu(@ModelAttribute MenuReq menuReq) throws Exception{
-        //BindingResult bindingResult
-//    public ResponseEntity addMenu(@RequestParam String menuReqStr,
-//                                  @RequestParam(value = "file", required = false) MultipartFile file) throws Exception{
+    public ResponseEntity addMenu(@ModelAttribute @Valid MenuReq menuReq, BindingResult bindingResult){
+
         //TODO : 로그인 유저 아이디 가져오기
         //TODO : 예외 처리..
-//        if(bindingResult.hasErrors())
-//            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        if(bindingResult.hasErrors())
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
-        log.info("menu 추가하기");
+        log.info("[menu api] 메뉴 추가하기");
         log.info("menuReq : {}", menuReq.toString());
-        log.info("file : {}", menuReq.getImgFile().getContentType());
-//        log.info("menuReq : {}", menuReqStr);
-//        log.info("file : {}", file.getName());
-        //MenuReq menuReq = objectMapper.readValue(menuReqStr, MenuReq.class);
 
         Menu menu = new Menu();
         menu.setCreatedDate(new Date());
@@ -157,7 +150,6 @@ public class MenuController {
     }
 
     /** 메뉴 수정하기 **/
-
 
     /** 메뉴 삭제하기 **/
     @DeleteMapping("/{menuId}")

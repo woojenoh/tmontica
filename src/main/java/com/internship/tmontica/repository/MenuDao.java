@@ -15,6 +15,7 @@ public interface MenuDao {
                                 "img_url, description, sell_price, discount_rate, created_date, creator_id, stock)"+
             "VALUES (#{nameKo},#{nameEng}, #{productPrice}, #{categoryKo}, #{categoryEng}, #{monthlyMenu} , #{usable} ,"+
                     "#{imgUrl}, #{description}, #{sellPrice}, #{discountRate}, #{createdDate},  #{creatorId}, #{stock})")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn = "id")   // 아이디 리턴..
     int addMenu(Menu menu);
 
     @Insert("INSERT INTO menu_options(menu_id, option_id) VALUES (#{menuId}, #{optionId})")

@@ -8,6 +8,7 @@ import java.util.List;
 @Mapper
 public interface OptionDao {
     @Insert("INSERT INTO options (name ,price ,type) VALUES(#{name}, #{price}, #{type})")
+    @Options(useGeneratedKeys=true, keyProperty="id")
     int addOption(Option option);
     @Select("SELECT * FROM options WHERE id = #{id}")
     Option getOptionById(int id);
