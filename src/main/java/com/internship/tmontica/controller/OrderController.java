@@ -6,9 +6,12 @@ import com.internship.tmontica.dto.response.MenusResp;
 import com.internship.tmontica.dto.response.OrderListResp;
 import com.internship.tmontica.dto.response.OrderResp;
 import com.internship.tmontica.service.CartMenuService;
+import com.internship.tmontica.service.MenuService;
 import com.internship.tmontica.service.OptionService;
 import com.internship.tmontica.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,46 +30,54 @@ public class OrderController {
     private OptionService optionService;
     @Autowired
     private CartMenuService cartMenuService;
+    @Autowired
+    private MenuService menuService;
 
     /** 주문 받기(결제하기) */
     @PostMapping
-    public Map<String, Integer> addOrderFromCart(@RequestBody @Valid OrderReq orderReq){
+    public ResponseEntity<Map<String, Integer>> addOrder(@RequestBody @Valid OrderReq orderReq){
         System.out.println("결제 컨트롤러 ");
         System.out.println(orderReq);
 
         // 사용자 아이디 받아오기
         String userId = "testid"; //임시
 
-        // 주문번호 생성 : 날짜 + 시분초 + 아이디
-//        SimpleDateFormat format  = new SimpleDateFormat("yyMMddHHmmss");
-//        String orderId = format.format(System.currentTimeMillis()) + userId;
-//        System.out.println(orderId);
+        Map<String, Integer> map = new HashMap<>(); // 리턴할 객체
 
-        // TODO: 주문테이블에 추가
         Order order = new Order(0,orderReq.getPayment(),orderReq.getTotalPrice(),orderReq.getUsedPoint(),
                 orderReq.getTotalPrice()-orderReq.getUsedPoint(), "미결제", orderReq.getUserId());
-        orderService.addOrder(order);
-        int orderId = order.getId();
-        // TODO: 주문상세테이블에 추가
+        int orderId = 0;
+
+        // 주문상세테이블에 추가
         // menus에서 카트 아이디로 정보를 가져와서 order_details 에 추가
         List<Menus> menus = orderReq.getMenus();
         for (Menus menu: menus) {
             OrderDetail orderDetail = cartMenuService.getCartMenuForOrderDetail(menu.getCartId());
-            orderDetail.setOrderId(orderId);
-//            System.out.println(orderDetail);
-            // 주문 상세 페이지에 추가
-            orderService.addOrderDetail(orderDetail);
 
-            // TODO: 장바구니에서 주문할때는 장바구니에서는 삭제처리 -> 바로주문한 애는 장바구니에 넣었다 빼기
-            cartMenuService.deleteCartMenu(menu.getCartId());
+            int stock = menuService.getMenuById(orderDetail.getMenuId()).getStock(); // 메뉴의 현재 재고량
+            int quantity = orderDetail.getQuantity(); // 차감할 메뉴의 수량
+            if(stock-quantity < 0){ // 재고가 모자랄 경우
+                // 재고 없을 경우 400 Bad Request
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }else {                 // 재고가 남아있는 경우
+                // 재고 수량 차감
+                menuService.updateMenuStock(orderDetail.getMenuId(), stock-quantity);
+                // 주문테이블에 추가
+                orderService.addOrder(order);
+                orderId = order.getId();
+                // 주문 상세 테이블에 추가
+                orderDetail.setOrderId(orderId); // 주문번호 set
+                orderService.addOrderDetail(orderDetail);
+                // 장바구니에서는 삭제
+                cartMenuService.deleteCartMenu(menu.getCartId());
+            }
         }
 
-        // TODO: 주문상태로그테이블에 "미결제" 상태로 추가
+        // 주문상태로그테이블에 "미결제" 상태로 추가
         orderService.addOrderStatusLog(new OrderStatusLog("미결제", userId, orderId));
 
-        Map<String, Integer> map = new HashMap<>();
         map.put("orderId", orderId);
-        return map;
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     /** 주문 받기(결제하기) - 바로주문하기 */
