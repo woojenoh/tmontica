@@ -45,4 +45,8 @@ public class OptionService {
         optionDao.deleteOption(id);
     }
 
+    // 옵션 이름으로 아이디 가져오기
+    @Transactional(readOnly = true)
+    public int getOptionIdByName(String name){ return optionDao.getOptionIdByName(name);}
+
 }

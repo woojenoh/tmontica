@@ -10,7 +10,5 @@ import javax.validation.constraints.NotNull;
 public class UserCheckPasswordReqDTO{
 
     @NotNull
-    private String id;
-    @NotNull
     private String password;
 }

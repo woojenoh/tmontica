@@ -2,12 +2,10 @@ package com.internship.tmontica.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.type.Alias;
 
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
+import java.util.Date;
 
-@Alias("orderStatusLog")
 @Data
 @NoArgsConstructor
 public class OrderStatusLog {

@@ -63,7 +63,21 @@ public class UserExceptionControllerAdvice {
         @ResponseStatus(HttpStatus.NOT_FOUND)
         public TmonTicaExceptionFormat handleEmailSendException(){
             log.info("fail to send email");
-            return new TmonTicaExceptionFormat("email sending", "이메일 전송 실패");
+            return new TmonTicaExceptionFormat("email sending", "이메일 전송 실패.");
         }
+
+    @ExceptionHandler(InvalidUserRoleException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public TmonTicaExceptionFormat handleInvalidUserRoleException(){
+        log.info("invalid User Role");
+        return new TmonTicaExceptionFormat("user role", "부적절한 유저 권한 입니다.");
+    }
+
+    @ExceptionHandler(MissingSessionUserIdException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public TmonTicaExceptionFormat handleMissingSessionUserIdException(){
+        log.info("Session Id Gone");
+        return new TmonTicaExceptionFormat("session userId", "세션 오류입니다.");
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.internship.tmontica.service;
 
+import com.internship.tmontica.dto.CartMenu;
 import com.internship.tmontica.dto.Order;
 import com.internship.tmontica.dto.OrderDetail;
 import com.internship.tmontica.dto.OrderStatusLog;
@@ -22,9 +23,7 @@ public class OrderService {
     }
 
     // orderId로 주문 정보 가져오기
-    public Order getOrderByOrderId(int orderId){
-        return orderDao.getOrderByOrderId(orderId);
-    }
+    public Order getOrderByOrderId(int orderId){ return orderDao.getOrderByOrderId(orderId); }
 
     // orderId로 주문상세 정보 가져오기 (메뉴 이름 추가)
     public List<MenusResp> getOrderDetailByOrderId(int orderId){
@@ -50,5 +49,8 @@ public class OrderService {
     public int addOrder(Order order){
         return orderDao.addOrder(order);
     }
+
+    // 주문 상세 테이블에 추가
+    public int addOrderDetail(OrderDetail orderDetail){ return orderDao.addOrderDetail(orderDetail); }
 
 }

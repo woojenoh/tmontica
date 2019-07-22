@@ -17,5 +17,6 @@ public interface OptionDao {
     void updateOption(Option option);
     @Delete("DELETE FROM options WHERE id = #{id}")
     void deleteOption(int id);
-
+    @Select("select id from options where name = #{name}")
+    int getOptionIdByName(String name);
 }

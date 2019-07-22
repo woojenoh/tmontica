@@ -1,15 +1,16 @@
 package com.internship.tmontica.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
+import java.util.Date;
 
-@Alias("order")
 @Data
+@NoArgsConstructor
 public class Order {
-    private int id;            // 주문번호(서버생성)
+    private int id;            // 주문번호
     @NotNull
     private Date orderDate;    // 주문날짜
     @NotNull
@@ -24,8 +25,16 @@ public class Order {
     private String status;     // 주문상태(코드)
     @NotNull
     private String userId;     // 주문한 유저의 아이디
-    @NotNull
+
     private String userAgent;  // 주문자의 기기환경?(모바일/웹)
 
-
+    public Order(int id, @NotNull String payment, @NotNull int totalPrice, int usedPoint, @NotNull int realPrice, @NotNull String status, @NotNull String userId) {
+        this.id = id;
+        this.payment = payment;
+        this.totalPrice = totalPrice;
+        this.usedPoint = usedPoint;
+        this.realPrice = realPrice;
+        this.status = status;
+        this.userId = userId;
+    }
 }
