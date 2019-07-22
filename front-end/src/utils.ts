@@ -1,4 +1,4 @@
-import { CartMenuOptionType } from "./types";
+import { ICartMenuOption } from "./types";
 
 // 숫자를 천 단위로 콤마 찍어주는 함수.
 export const numberCommaRegex = (number: number | string): string => {
@@ -6,7 +6,7 @@ export const numberCommaRegex = (number: number | string): string => {
 };
 
 // 객체 상태의 옵션을 정해진 스트링 형식으로 바꾸는 함수.
-export const optionToString = (option: CartMenuOptionType): string => {
+export const optionToString = (option: ICartMenuOption): string => {
   let stringArray = [];
   option.Temperature && stringArray.push(`${option.Temperature.name}`);
   option.Shot && stringArray.push(`샷추가(${option.Shot.amount}개)`);

@@ -2,7 +2,7 @@ import * as React from "react";
 import _ from "underscore";
 import CartItem from "../CartItem";
 import { numberCommaRegex } from "../../../utils";
-import { CartType, CartMenuType } from "../../../types";
+import { ICart, ICartMenu } from "../../../types";
 import "./styles.scss";
 
 export interface ICartProps {
@@ -11,7 +11,7 @@ export interface ICartProps {
 }
 
 export interface ICartState {
-  cart: CartType | null;
+  cart: ICart | null;
 }
 
 class Cart extends React.Component<ICartProps, ICartState> {
@@ -106,7 +106,7 @@ class Cart extends React.Component<ICartProps, ICartState> {
   removeLocalCartItem = (id: number): void => {
     const { cart } = this.state;
     if (cart) {
-      const newCart = _(cart).clone() as CartType;
+      const newCart = _(cart).clone() as ICart;
       newCart.menus = cart.menus.filter((m, index) => {
         if (index !== id) {
           return true;
@@ -121,10 +121,10 @@ class Cart extends React.Component<ICartProps, ICartState> {
     }
   };
 
-  addCartItem = (item: CartMenuType): void => {
+  addCartItem = (item: ICartMenu): void => {
     const { cart } = this.state;
     if (cart) {
-      const newCart = _(cart).clone() as CartType;
+      const newCart = _(cart).clone() as ICart;
       newCart.menus = newCart.menus.concat(item);
       localStorage.setItem("LocalCart", JSON.stringify(newCart));
       this.setState({

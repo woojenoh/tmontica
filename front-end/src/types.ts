@@ -5,13 +5,13 @@ export type TMenusItem = {
   imgUrl: string;
 };
 
-export interface CartType {
+export interface ICart {
   size: number;
   totalPrice: number;
-  menus: CartMenuType[];
+  menus: ICartMenu[];
 }
 
-export interface CartMenuType {
+export interface ICartMenu {
   cartId?: number;
   stock?: number;
   menuId: number;
@@ -23,7 +23,7 @@ export interface CartMenuType {
   price: number;
 }
 
-export interface CartMenuOptionType {
+export interface ICartMenuOption {
   Temperature?: {
     name: string;
     price: number;

@@ -1,5 +1,12 @@
 import * as React from "react";
-import { Switch, Route, Redirect, withRouter, RouteComponentProps } from "react-router-dom";
+import {
+  Switch,
+  Route,
+  Redirect,
+  withRouter,
+  RouteComponentProps,
+  RouteProps
+} from "react-router-dom";
 import Header from "./service/components/Header";
 import Menu from "./service/pages/Menu";
 import Menus from "./service/pages/Menus";
@@ -15,7 +22,7 @@ class App extends React.Component<RouteComponentProps> {
     isAdmin: true
   };
 
-  AdminRoute = ({ component: Component, ...rest }: any) => {
+  AdminRoute = ({ component: Component, ...rest }: RouteProps) => {
     const { isSignin, isAdmin } = this.state;
 
     if (Component) {
@@ -41,7 +48,7 @@ class App extends React.Component<RouteComponentProps> {
     }
   };
 
-  PrivateRoute = ({ component: Component, ...rest }: any) => {
+  PrivateRoute = ({ component: Component, ...rest }: RouteProps) => {
     const { isSignin } = this.state;
 
     if (Component) {

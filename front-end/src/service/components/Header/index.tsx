@@ -14,7 +14,7 @@ export interface IHeaderState {
 }
 
 class Header extends React.Component<RouteComponentProps, IHeaderProps, IHeaderState> {
-  componentDidUpdate(prevProps: any, prevState: any) {
+  componentDidUpdate(prevProps: RouteComponentProps) {
     if (prevProps.location.pathname !== this.props.location.pathname) {
       const body = document.querySelector("body");
       if (body) {
