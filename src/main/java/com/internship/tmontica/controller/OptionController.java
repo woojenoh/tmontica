@@ -3,6 +3,8 @@ package com.internship.tmontica.controller;
 import com.internship.tmontica.dto.Option;
 import com.internship.tmontica.service.OptionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,14 +17,14 @@ public class OptionController {
     private OptionService optionService;
 
     @GetMapping("/{optionId}")
-    public Option getOption(@PathVariable("optionId")int id){
+    public ResponseEntity<Option> getOption(@PathVariable("optionId")int id){
         Option option = optionService.getOptionById(id);
-        return option;
+        return new ResponseEntity<>(option, HttpStatus.OK);
     }
 
     @GetMapping
-    public List<Option> getOptions(){
-        return optionService.getAllOptions();
+    public ResponseEntity<List<Option>> getOptions(){
+        return new ResponseEntity<>(optionService.getAllOptions(), HttpStatus.OK);
     }
 
     @PostMapping

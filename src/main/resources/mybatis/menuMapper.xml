@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.internship.tmontica.repository.MenuDao">
+
+<!--    <resultMap id="menuResult" type="Menu">-->
+<!--        <id property="id" column="id"/>-->
+<!--        <result property="nameEng" column="name_eng" />-->
+<!--        <result property="productPrice" column="product_price"/>-->
+<!--        <result property="categoryKo" column="category_ko"/>-->
+<!--        <result property="categoryEng" column="category_eng"/>-->
+<!--        <result property="monthlyMenu" column="monthly_menu" />-->
+<!--        <result property="usable" column="usable" />-->
+<!--        <result property="img" column="img"/>-->
+<!--        <result property="description" column="description"/>-->
+<!--        <result property="sellPrice" column="sell_price"/>-->
+<!--        <result property="discountRate" column="discount_rate"/>-->
+<!--        <result property="createdDate" column="created_date"/>-->
+<!--        <result property="updatedDate" column="updated_date"/>-->
+<!--        <result property="creatorId" column="creator_id"/>-->
+<!--        <result property="updaterId" column="updater_id"/>-->
+<!--        <result property="stock" column="stock"/>-->
+<!--        <result property="nameKo" column="name_ko" />-->
+<!--        <collection property="options" column="id" ofType="Option" select="getOptionsById"></collection>-->
+<!--    </resultMap>-->
+
+
+<!--    &lt;!&ndash;    int addMenu(Menu menu);&ndash;&gt;-->
+<!--    <insert id="addMenu" useGeneratedKeys="true" keyProperty="id">-->
+<!--        INSERT INTO menus-->
+<!--            (name_ko, name_eng, product_price, category_ko, category_eng, monthly_menu, usable,-->
+<!--             img, description, sell_price, discount_rate, created_date, creator_id, stock)-->
+<!--        VALUES (#{nameKo},#{nameEng}, #{productPrice}, #{categoryKo}, #{categoryEng}, #{monthlyMenu} , #{usable} ,-->
+<!--                #{img}, #{description}, #{sellPrice}, #{discountRate}, #{createdDate},  #{creatorId}, #{stock})-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash; int addMenuOption(@Param("menuId")int menuId, @Param("optionId")int optionId); &ndash;&gt;-->
+<!--    <insert id="addMenuOption">-->
+<!--        INSERT INTO menu_options(menu_id, option_id) VALUES (#{menuId}, #{optionId})-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash;    Menu getMenuById(int id);&ndash;&gt;-->
+<!--    <select id="getMenuById" resultType="menu">-->
+<!--        SELECT * FROM menus WHERE id = #{id}-->
+<!--    </select>-->
+
+<!--    <select id="getOptionsById" parameterType="int" resultType="option">-->
+<!--        SELECT options.name, options.price, options.type, options.id-->
+<!--        FROM options INNER JOIN menu_options ON menu_options.menu_id = #{id}-->
+<!--        WHERE menu_options.option_id = options.id-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;    List<Menu> getMenusByCategory(String category); &ndash;&gt;-->
+<!--    <select id="getMenusByCategory" resultMap="menuResult">-->
+<!--        SELECT * FROM menus WHERE category = #{category}-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;    List<Menu> getMonthlyMenus();   &ndash;&gt;-->
+<!--    <select id="getMonthlyMenus" resultType="menu">-->
+<!--        SELECT * FROM menus WHERE monthly_menu = TRUE-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;    List<Menu> getAllMenus();&ndash;&gt;-->
+<!--    <select id="getAllMenus" resultMap="menuResult">-->
+<!--        SELECT * FROM menus-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash;    void updateMenu(Menu menu);&ndash;&gt;-->
+<!--    <update id="updateMenu" parameterType="menu">-->
+<!--        UPDATE menus-->
+<!--        SET name_ko = #{nameKo}, name_eng = #{nameEng}, product_price = #{productPrice},-->
+<!--            category_ko = #{categoryKo}, category_eng = #{categoryEng}, monthly_menu = #{monthlyMenu} , usable = #{usable} ,-->
+<!--            img = #{img}, description = #{description}, sell_price = #{sellPrice},-->
+<!--            discount_rate = #{discountRate}, stock = #{stock}, updated_date = #{updatedDate},-->
+<!--            updator_id = #{updatorId}-->
+<!--        WHERE id = #{id}-->
+<!--    </update>-->
+
+<!--    &lt;!&ndash;    void deleteMenu(int id);&ndash;&gt;-->
+<!--    <delete id="deleteMenu">-->
+<!--        DELETE FROM menus WHERE id = #{id}-->
+<!--    </delete>-->
+
+</mapper>
