@@ -14,6 +14,7 @@ public class MenusResp {
     private String nameEng;
     private String nameKo;
     private String option;
+    private String imgUrl;
     private int quantity;
     private int price;
 }

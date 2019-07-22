@@ -1,4 +1,5 @@
 package com.internship.tmontica.dto.response;
+import com.internship.tmontica.dto.Option;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,12 +12,12 @@ public class MenuDetailResp {
     private String nameEng;
     private String nameKo;
     private String description;
-    private String imgUrl;
+    private String img;
     private int sellPrice;
     private int discountRate;
     private String categoryEng;
     private String categoryKo;
     private int stock;
     private boolean monthlyMenu;
-    private List options;
+    private List<Option> option;
 }

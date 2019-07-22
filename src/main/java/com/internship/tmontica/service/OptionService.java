@@ -12,8 +12,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OptionService {
-
-
     private final OptionDao optionDao;
 
 
@@ -46,5 +44,9 @@ public class OptionService {
     public void deleteOption(int id){
         optionDao.deleteOption(id);
     }
+
+    // 옵션 이름으로 아이디 가져오기
+    @Transactional(readOnly = true)
+    public int getOptionIdByName(String name){ return optionDao.getOptionIdByName(name);}
 
 }

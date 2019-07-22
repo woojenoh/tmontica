@@ -48,12 +48,12 @@ public class  Menu {
     private String nameKo;
 
     // 메뉴의 옵션
-    private List<Option> options;
-
-    public void addOption(Option option){
-        if(options == null)
-            options = new ArrayList<>();
-        options.add(option);
-    }
+//    private List<Option> options;
+//
+//    public void addOption(Option option){
+//        if(options == null)
+//            options = new ArrayList<>();
+//        options.add(option);
+//    }
 
 }
