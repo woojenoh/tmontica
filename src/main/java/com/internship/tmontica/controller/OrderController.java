@@ -57,7 +57,7 @@ public class OrderController {
             int stock = menuService.getMenuById(orderDetail.getMenuId()).getStock(); // 메뉴의 현재 재고량
             int quantity = orderDetail.getQuantity(); // 차감할 메뉴의 수량
             if(stock-quantity < 0){ // 재고가 모자랄 경우
-                // 재고 없을 경우 400 Bad Request
+                // 재고 없을 경우 400 Bad Request return
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }else {                 // 재고가 남아있는 경우
                 // 재고 수량 차감
@@ -70,55 +70,16 @@ public class OrderController {
                 orderService.addOrderDetail(orderDetail);
                 // 장바구니에서는 삭제
                 cartMenuService.deleteCartMenu(menu.getCartId());
+                // 주문상태로그테이블에 "미결제" 상태로 추가
+                orderService.addOrderStatusLog(new OrderStatusLog("미결제", userId, orderId));
             }
         }
 
-        // 주문상태로그테이블에 "미결제" 상태로 추가
-        orderService.addOrderStatusLog(new OrderStatusLog("미결제", userId, orderId));
-
-        map.put("orderId", orderId);
+        map.put("orderId", orderId); // 반환값 orderId
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    /** 주문 받기(결제하기) - 바로주문하기 */
-    /*@PostMapping("/direct")
-    public Map<String, String> addOrderDirect(@RequestBody @Valid CartReq cartReq){
-        // TODO: 카트에 추가하고
-        // options 안의 옵션 정보들을 "1__1/3__2"(id__갯수) 형태의 문자열로 만들기
-        String optionStr = ""; // 옵션 문자열
-        int optionPrice = 0; // 옵션의 총 가격을 저장할 변수
-        Options options = cartReq.getOptions();
-        Temperature temperature = options.getTemperature();
-        int opId = optionService.getOptionIdByName(temperature.getName());
-        optionStr += opId+"__1";
-        if(options.getSize() != null){
-            Size size = options.getSize();
-            opId = optionService.getOptionIdByName(size.getName());
-            optionStr += "/"+opId+"__1";
-            optionPrice += size.getPrice();
-        }
-        if(options.getShot() != null){
-            Shot shot = options.getShot();
-            opId = optionService.getOptionIdByName(shot.getName());
-            optionStr += "/"+opId+"__"+shot.getAmount();
-            optionPrice += (shot.getPrice() * shot.getAmount());
-        }
-        if(options.getSyrup() != null){
-            Syrup syrup = options.getSyrup();
-            opId = optionService.getOptionIdByName(syrup.getName());
-            optionStr += "/"+opId+"__"+syrup.getAmount();
-            optionPrice += (syrup.getPrice() * syrup.getAmount());
-        }
 
-        // 사용자 아이디 받아오기
-        String userId = "testid"; //임시
-
-        // 주문번호 생성 : 날짜 + 시분초 + 아이디
-        SimpleDateFormat format  = new SimpleDateFormat("yyMMddHHmmss");
-        String orderId = format.format(System.currentTimeMillis()) + userId;
-        System.out.println(orderId);
-
-    }*/
 
     /** 주문 취소 */
     @DeleteMapping("/{orderId}")

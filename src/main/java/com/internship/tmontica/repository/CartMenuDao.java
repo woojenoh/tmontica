@@ -2,10 +2,7 @@ package com.internship.tmontica.repository;
 
 import com.internship.tmontica.dto.CartMenu;
 import com.internship.tmontica.dto.OrderDetail;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface CartMenuDao {
@@ -25,6 +22,7 @@ public interface CartMenuDao {
     void deleteCartMenu(int cartId);
 
     // 카트에 추가하기
-    @Insert("insert into cart_menus values(#{quantity}, #{option}, 0, #{userId}, #{optionPrice}, #{menuId}")
+    @Insert("insert into cart_menus values(#{quantity}, #{option}, 0, #{userId}, #{optionPrice}, #{menuId}, #{direct})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     int addCartMenu(CartMenu cartMenu);
 }
