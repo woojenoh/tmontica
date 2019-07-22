@@ -168,7 +168,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
             type="text"
             name="id"
             className="input signup__input signup__id-input"
-            placeholder="아이디"
+            placeholder="아이디 *"
             onChange={e => handleIdInputChange(e)}
             autoComplete="off"
             required
@@ -196,7 +196,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           type="password"
           name="password"
           className="input signup__input"
-          placeholder="비밀번호"
+          placeholder="비밀번호 *"
           onChange={e => handleInputChange(e)}
           required
         />
@@ -204,7 +204,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           type="password"
           name="passwordCheck"
           className="input signup__input"
-          placeholder="비밀번호 확인"
+          placeholder="비밀번호 확인 *"
           onChange={e => handleInputChange(e)}
           required
         />
@@ -223,7 +223,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           type="text"
           name="name"
           className="input signup__input"
-          placeholder="이름"
+          placeholder="이름 *"
           onChange={e => handleInputChange(e)}
           maxLength={6}
           required
@@ -232,12 +232,12 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           type="text"
           name="email"
           className="input signup__input"
-          placeholder="이메일 - 인증에 사용됩니다."
+          placeholder="이메일 *"
           onChange={e => handleInputChange(e)}
           required
         />
         <div className="signup__birthday-container">
-          <span className="signup__birthday-label">생일</span>
+          <span className="signup__birthday-label">생일 *</span>
           <input
             type="date"
             name="birthDate"
