@@ -1,0 +1,18 @@
+{
+  "categoryKo": "커피",
+  "size": 2,
+  "menus": [
+    {
+      "id": 1,
+      "nameKo": "아메리카노",
+      "nameEng": "americano",
+      "imgUrl": "/img/coffee-sample.png"
+    },
+    {
+      "id": 2,
+      "nameKo": "카페라떼",
+      "nameEng": "cafelatte",
+      "imgUrl": "/img/coffee-sample.png"
+    }
+  ]
+}

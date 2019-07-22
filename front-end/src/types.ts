@@ -1,4 +1,4 @@
-export type Menu = {
+export type TMenusItem = {
   id: number;
   nameKo: string;
   nameEng: string;
