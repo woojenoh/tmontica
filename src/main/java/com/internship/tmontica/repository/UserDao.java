@@ -1,5 +1,6 @@
-package com.internship.tmontica.user;
+package com.internship.tmontica.repository;
 
+import com.internship.tmontica.user.User;
 import org.apache.ibatis.annotations.*;
 
 @Mapper

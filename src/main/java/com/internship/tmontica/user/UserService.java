@@ -1,9 +1,9 @@
 package com.internship.tmontica.user;
 
-import com.internship.tmontica.user.exception.EmailMismatchException;
-import com.internship.tmontica.user.exception.PasswordMismatchException;
-import com.internship.tmontica.user.exception.UserIdDuplicatedException;
-import com.internship.tmontica.user.exception.UserIdNotFoundException;
+import com.internship.tmontica.repository.UserDao;
+import com.internship.tmontica.security.JwtInterceptor;
+import com.internship.tmontica.security.JwtService;
+import com.internship.tmontica.user.exception.*;
 import com.internship.tmontica.user.model.request.*;
 import com.internship.tmontica.user.model.response.UserInfoRespDTO;
 import com.internship.tmontica.security.AuthenticationKey;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.mail.SimpleMailMessage;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Service
@@ -25,9 +26,10 @@ public class UserService { //implements UserDetail
     //private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final MailSender sender;
+    private final JwtService jwtService;
+    private static final String SESSION_USER_ID = "userId";
 
     private enum MailOption {
-
         findId, findPassword
     }
 
@@ -35,25 +37,70 @@ public class UserService { //implements UserDetail
     public boolean signUp(UserSignUpReqDTO userSignUpReqDTO){
         //userSignUpReqDTO.setPassword(passwordEncoder.encode(user.getPassword())); need passwordEnconding
         checkUserIdDuplicatedException(userSignUpReqDTO.getId());
+        setRole(userSignUpReqDTO);
         User user = modelMapper.map(userSignUpReqDTO, User.class);
         return userDao.addUser(user) > 0;
     }
 
+    private void setRole(UserSignUpReqDTO userSignUpReqDTO){
+        String role = userSignUpReqDTO.getRole();
+        if(role == null || role.equals(UserRole.USER.toString())){
+            userSignUpReqDTO.setRole("USER");
+        } else if (role.equals(UserRole.ADMIN.toString())){
+            userSignUpReqDTO.setRole("ADMIN");
+        } else {
+            throw new InvalidUserRoleException();
+        }
+    }
+
     @Transactional(readOnly = true)
-    public void signIn(UserSignInReqDTO userSignInReqDTO) {
+    public boolean idDuplicateCheck(String id){
+        return !isDuplicate(id);
+    }
+
+    private boolean isDuplicate(String id){
+        User user = userDao.getUserByUserId(id);
+
+        return !(user == null);
+    }
+
+    @Transactional(readOnly = true)
+    public void signIn(UserSignInReqDTO userSignInReqDTO, HttpSession session) {
 
         checkUserIdNotFoundException(userSignInReqDTO.getId());
         checkPasswordMismatchException(userSignInReqDTO.getPassword(),
                 userDao.getUserByUserId(userSignInReqDTO.getId()).getPassword());
+        session.setAttribute(SESSION_USER_ID, userSignInReqDTO.getId());
     }
 
-    // front와 협의 필요
-    @Transactional(readOnly = true)
-    public void checkPassword(UserCheckPasswordReqDTO userCheckPasswordReqDTO){
+     public void makeJwtToken(UserSignInReqDTO userSignInReqDTO, HttpServletResponse response){
+        response.setHeader(JwtInterceptor.HEADER_AUTH,
+                jwtService.getToken(makeTokenUserWithRole(userSignInReqDTO.getId(),
+                        userSignInReqDTO.getRole())));
+    }
 
-        checkUserIdNotFoundException(userCheckPasswordReqDTO.getId());
+    private User makeTokenUserWithRole(String id, String role){
+
+        User user = new User();
+        user.setId(id);
+        user.setRole(role);
+        return user;
+    }
+
+    @Transactional(readOnly = true)
+    public void checkPassword(UserCheckPasswordReqDTO userCheckPasswordReqDTO, HttpSession session){
+
+        String userId = session.getAttribute(SESSION_USER_ID).toString();
+        checkMissingSessionUserIdException(userId);
         checkPasswordMismatchException(userCheckPasswordReqDTO.getPassword(),
-                userDao.getUserByUserId(userCheckPasswordReqDTO.getId()).getPassword());
+                userDao.getUserByUserId(userId).getPassword());
+    }
+
+    private void checkMissingSessionUserIdException(String userId){
+
+        if(userId == null){
+            throw new MissingSessionUserIdException();
+        }
     }
 
     @Transactional(readOnly = true)
@@ -63,6 +110,7 @@ public class UserService { //implements UserDetail
         return modelMapper.map(userDao.getUserByUserId(id), UserInfoRespDTO.class);
     }
 
+    // newPassword / newPasswordCheck / id세션처리
     @Transactional
     public boolean changePassword(UserChangePasswordReqDTO userChangePasswordReqDTO){
 
@@ -70,11 +118,6 @@ public class UserService { //implements UserDetail
         checkPasswordMismatchException(userChangePasswordReqDTO.getPassword(), userChangePasswordReqDTO.getNewPassword());
         User user = modelMapper.map(userChangePasswordReqDTO, User.class);
         return userDao.updateUserPassword(user) > 0;
-    }
-
-    @Transactional(readOnly = true)
-    public boolean idDuplicateCheck(String id){
-        return isDuplicate(id);
     }
 
     @Transactional
@@ -104,14 +147,6 @@ public class UserService { //implements UserDetail
         return true;
     }
 
-    public User makeTokenUserWithRole(String id, String role){
-
-        User user = new User();
-        user.setId(id);
-        user.setRole(role);
-        return user;
-    }
-
     private SimpleMailMessage sendMail(User user, MailOption mailOption, String... strings) {
 
         SimpleMailMessage msg = new SimpleMailMessage();
@@ -130,12 +165,6 @@ public class UserService { //implements UserDetail
         }
 
         return msg;
-    }
-
-    private boolean isDuplicate(String id){
-        User user = userDao.getUserByUserId(id);
-
-        return !(user == null);
     }
 
     private void checkUserIdDuplicatedException(String id){

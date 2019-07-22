@@ -15,14 +15,13 @@ import javax.validation.Valid;
 
 @RestController
 
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-    private final JwtService jwtService;
 
-    @PostMapping("/sing-up")
+    @PostMapping("/signup")
     public ResponseEntity<String> signUp(@RequestBody @Valid UserSignUpReqDTO userSignUpReqDTO) {
 
         if(userService.signUp(userSignUpReqDTO)){
@@ -31,15 +30,27 @@ public class UserController {
         return new ResponseEntity<>("Sign up Fail", HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/sign-in")
-    public ResponseEntity<String> signIn(@RequestBody @Valid UserSignInReqDTO userSignInReqDTO, HttpServletResponse response) {
-        userService.signIn(userSignInReqDTO);
-        response.setHeader(JwtInterceptor.HEADER_AUTH,
-                jwtService.getToken(userService.makeTokenUserWithRole(userSignInReqDTO.getId(),
-                        userSignInReqDTO.getRole())));
+    @GetMapping("/duplicate/{userId}")
+    public ResponseEntity<Boolean> idDuplicateCheck(@PathVariable("userId") String id) {
+
+        if(userService.idDuplicateCheck(id)){
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(false, HttpStatus.CONFLICT);
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<String> signIn(@RequestBody @Valid UserSignInReqDTO userSignInReqDTO, HttpServletResponse response, HttpSession session) {
+        userService.signIn(userSignInReqDTO, session);
+        userService.makeJwtToken(userSignInReqDTO, response);
         return new ResponseEntity<>("Sign in Success", HttpStatus.OK);
     }
 
+    @PostMapping("/checkpw")
+    public ResponseEntity<String> checkPassword(@RequestBody @Valid UserCheckPasswordReqDTO userCheckPasswordReqDTO, HttpSession session) {
+        userService.checkPassword(userCheckPasswordReqDTO, session);
+        return new ResponseEntity<>("Correct password", HttpStatus.OK);
+    }
     @GetMapping("/help/find-id")
     public ResponseEntity<String> findUserId(@RequestParam String email, HttpSession httpSession) {
 
@@ -57,27 +68,10 @@ public class UserController {
         }
         return new ResponseEntity<>("Send email Fail", HttpStatus.BAD_REQUEST);
     }
-//    @PostMapping("/check-email-confirm")
-//    public ResponseEntity<Boolean> checkEmailConfirm() {
-//        //미구현
-//        return new ResponseEntity<>(true, HttpStatus.OK);
-//    }
-//
+
     @GetMapping("/{userId}")
     public ResponseEntity<UserInfoRespDTO> getUserInfo(@PathVariable("userId") String id) {
         return new ResponseEntity<>(userService.getUserInfo(id), HttpStatus.OK);
-    }
-
-    @GetMapping("/id-duplicate-check/{userId}")
-    public ResponseEntity<Boolean> idDuplicateCheck(@PathVariable("userId") String id) {
-
-        return new ResponseEntity<>(userService.idDuplicateCheck(id), HttpStatus.OK);
-    }
-
-    @PostMapping("/check-password")
-    public ResponseEntity<String> checkPassword(@RequestBody @Valid UserCheckPasswordReqDTO userCheckPasswordReqDTO) {
-        userService.checkPassword(userCheckPasswordReqDTO);
-        return new ResponseEntity<>("Correct password", HttpStatus.OK);
     }
 
     @PutMapping
@@ -96,4 +90,10 @@ public class UserController {
         return new ResponseEntity<>("Delete User Fail", HttpStatus.NOT_FOUND);
     }
 
+    //    @PostMapping("/check-email-confirm")
+//    public ResponseEntity<Boolean> checkEmailConfirm() {
+//        //미구현
+//        return new ResponseEntity<>(true, HttpStatus.OK);
+//    }
+//
 }
