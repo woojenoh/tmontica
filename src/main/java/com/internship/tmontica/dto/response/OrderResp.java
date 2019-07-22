@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderResp {
 
+    private int orderId;
     private String payment;
     private String status;
     private int totalPrice;

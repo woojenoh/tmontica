@@ -21,7 +21,7 @@ public interface OrderDao {
     Order getOrderByOrderId(int orderId);
 
     // orderId로 주문상세 정보 가져오기 (메뉴 이름 추가)
-    @Select("select A.menu_id, B.name_eng, B.name_ko, A.option, A.quantity, A.price " +
+    @Select("select A.menu_id, B.name_eng, B.name_ko, A.option, B.img_url, A.quantity, A.price " +
             "from order_details as A inner join menus as B " +
             "   on A.menu_id = B.id " +
             "where A.order_id = #{orderId}")

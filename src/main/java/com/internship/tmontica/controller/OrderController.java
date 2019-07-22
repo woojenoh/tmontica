@@ -147,7 +147,7 @@ public class OrderController {
             menus.get(i).setOption(convert);
         }
 
-        OrderResp orderResp = new OrderResp(order.getPayment(), order.getStatus(), order.getTotalPrice(),
+        OrderResp orderResp = new OrderResp(orderId, order.getPayment(), order.getStatus(), order.getTotalPrice(),
                                             order.getRealPrice(), order.getUsedPoint(), order.getOrderDate(), menus);
 
         // 더미 데이터
