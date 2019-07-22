@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Type;
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -126,7 +126,7 @@ public class MenuController {
 
     /** 메뉴 추가하기 **/
     @PostMapping(consumes = { "multipart/form-data" })
-    public ResponseEntity addMenu(@RequestPart MenuReq menuReq, @RequestPart MultipartFile file) throws Exception{
+    public ResponseEntity addMenu(@ModelAttribute MenuReq menuReq) throws Exception{
         //BindingResult bindingResult
 //    public ResponseEntity addMenu(@RequestParam String menuReqStr,
 //                                  @RequestParam(value = "file", required = false) MultipartFile file) throws Exception{
@@ -137,18 +137,19 @@ public class MenuController {
 
         log.info("menu 추가하기");
         log.info("menuReq : {}", menuReq.toString());
+        log.info("file : {}", menuReq.getImgFile().getContentType());
 //        log.info("menuReq : {}", menuReqStr);
 //        log.info("file : {}", file.getName());
         //MenuReq menuReq = objectMapper.readValue(menuReqStr, MenuReq.class);
 
         Menu menu = new Menu();
-        menu.setCreatedDate(new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+        menu.setCreatedDate(new Date());
         modelMapper.map(menuReq, menu);
         menu.setCreatorId(menuReq.getCreator());
 
         // 이미지 파일 저장
-        String img = saveImg(file, menuReq.getCategoryEng(), menuReq.getNameEng());
-        menu.setImg(img);
+        String img = saveImg(menuReq.getImgFile(), menuReq.getCategoryEng(), menuReq.getNameEng());
+        menu.setImgUrl(img);
         // 메뉴 저장
         menuService.addMenu(menu, menuReq.getOptionIds());
         return new ResponseEntity(HttpStatus.OK);
@@ -175,7 +176,10 @@ public class MenuController {
         dirFile.mkdirs(); // 디렉토리가 없을 경우 만든다.
         dir += name;
 
-        log.info("img type : {}", imgFile.getContentType());
+        String extension = imgFile.getOriginalFilename().split("\\.")[1];
+        dir += "." + extension;
+
+        log.info("img type : {}", extension);
 
         try(FileOutputStream fos = new FileOutputStream(dir);
             InputStream in = imgFile.getInputStream()

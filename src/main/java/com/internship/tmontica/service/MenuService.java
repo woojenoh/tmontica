@@ -22,6 +22,7 @@ public class MenuService {
     @Transactional
     public int addMenu(Menu menu, List<Integer>optionIds){
         int menuId =  menuDao.addMenu(menu);
+        System.out.println(menuId);
         for(int optionId : optionIds)
             menuDao.addMenuOption(menuId, optionId);
         return menuId;
