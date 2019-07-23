@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class Menus {
+public class Order_MenusReq {
     @NotNull
     private int cartId;
 

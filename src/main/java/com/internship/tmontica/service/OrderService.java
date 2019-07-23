@@ -1,10 +1,9 @@
 package com.internship.tmontica.service;
 
-import com.internship.tmontica.dto.CartMenu;
 import com.internship.tmontica.dto.Order;
 import com.internship.tmontica.dto.OrderDetail;
 import com.internship.tmontica.dto.OrderStatusLog;
-import com.internship.tmontica.dto.response.MenusResp;
+import com.internship.tmontica.dto.response.Order_MenusResp;
 import com.internship.tmontica.repository.OrderDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,7 @@ public class OrderService {
 
     // orderId로 주문상세 정보 가져오기 (메뉴 이름 추가)
     @Transactional(readOnly = true)
-    public List<MenusResp> getOrderDetailByOrderId(int orderId){
+    public List<Order_MenusResp> getOrderDetailByOrderId(int orderId){
         return orderDao.getOrderDetailByOrderId(orderId);
     }
 
