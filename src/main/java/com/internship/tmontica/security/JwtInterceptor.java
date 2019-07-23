@@ -12,12 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 @RequiredArgsConstructor
 public class JwtInterceptor implements HandlerInterceptor {
 
-    public static final String HEADER_AUTH = "Authorization";
     private final JwtService jwtService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
-        final String token = request.getHeader(HEADER_AUTH);
+        final String token = request.getHeader("Authorization");
 
         if(token != null && jwtService.isUsable(token)){
             return true;
