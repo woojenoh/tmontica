@@ -23,6 +23,12 @@ export interface IUserSignupInfo {
   birthDate: string;
 }
 
+export interface IUserSigninInfo {
+  id: string; // 유저의 아이디
+  password: string;
+  role?: "USER" | "ADMIN";
+}
+
 export interface IFetchSignup {
   type: typeof userActionTypes.FETCH_SIGNUP;
   payload: IUserSignupInfo;
@@ -37,4 +43,29 @@ export interface IFetchSignupRejected {
   error: AxiosError;
 }
 
-export type TUserAction = IFetchSignup | IFetchSignupFulfilled | IFetchSignupRejected;
+export interface IFetchSignin {
+  type: typeof userActionTypes.FETCH_SIGNIN;
+  payload: IUserSigninInfo;
+}
+
+export interface IFetchSigninFulfilled {
+  type: typeof userActionTypes.FETCH_SIGNIN_FULFILLED;
+}
+
+export interface IFetchSigninRejected {
+  type: typeof userActionTypes.FETCH_SIGNIN_REJECTED;
+  error: AxiosError;
+}
+
+export interface ISignout {
+  type: typeof userActionTypes.SIGNOUT;
+}
+
+export type TUserAction =
+  | IFetchSignup
+  | IFetchSignupFulfilled
+  | IFetchSignupRejected
+  | IFetchSignin
+  | IFetchSigninFulfilled
+  | IFetchSigninRejected
+  | ISignout;

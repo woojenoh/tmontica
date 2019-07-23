@@ -17,6 +17,18 @@ function* fetchSignupSagas(action: userTypes.IFetchSignup) {
   }
 }
 
+function* fetchSigninSagas(action: userTypes.IFetchSignin) {
+  try {
+    yield alert("환영합니다!");
+    yield put(userActionCreators.fetchSigninFulfilled());
+    yield history.push("/");
+  } catch (error) {
+    yield alert("아이디와 비밀번호를 다시 확인해주세요.");
+    yield put(userActionCreators.fetchSigninRejected(error.response));
+  }
+}
+
 export default function* userSagas() {
   yield takeEvery(userActionTypes.FETCH_SIGNUP, fetchSignupSagas);
+  yield takeEvery(userActionTypes.FETCH_SIGNIN, fetchSigninSagas);
 }

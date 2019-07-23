@@ -17,6 +17,24 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
         ...state,
         error: action.error
       };
+    case actionTypes.FETCH_SIGNIN:
+      return state;
+    case actionTypes.FETCH_SIGNIN_FULFILLED:
+      return {
+        ...state,
+        isSignin: true
+      };
+    case actionTypes.FETCH_SIGNIN_REJECTED:
+      return {
+        ...state,
+        error: action.error
+      };
+    case actionTypes.SIGNOUT:
+      localStorage.removeItem("JWT");
+      return {
+        ...state,
+        isSignin: false
+      };
     default:
       return state;
   }

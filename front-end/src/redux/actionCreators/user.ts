@@ -21,3 +21,29 @@ export function fetchSignupRejected(error: AxiosError) {
     error
   };
 }
+
+export function fetchSignin(payload: userTypes.IUserSigninInfo) {
+  return {
+    type: actionTypes.FETCH_SIGNIN,
+    payload
+  };
+}
+
+export function fetchSigninFulfilled() {
+  return {
+    type: actionTypes.FETCH_SIGNIN_FULFILLED
+  };
+}
+
+export function fetchSigninRejected(error: AxiosError) {
+  return {
+    type: actionTypes.FETCH_SIGNIN_FULFILLED,
+    error
+  };
+}
+
+export function signout() {
+  return {
+    type: actionTypes.SIGNOUT
+  };
+}
