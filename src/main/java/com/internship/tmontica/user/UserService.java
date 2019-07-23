@@ -1,10 +1,15 @@
 package com.internship.tmontica.user;
 
+<<<<<<< HEAD
+=======
+import com.internship.tmontica.security.JwtInterceptor;
+>>>>>>> feature/be-user
 import com.internship.tmontica.security.JwtServiceImpl;
 import com.internship.tmontica.user.exception.*;
 import com.internship.tmontica.user.model.request.*;
 import com.internship.tmontica.user.model.response.UserInfoRespDTO;
 import com.internship.tmontica.security.AuthenticationKey;
+import com.internship.tmontica.util.UserConfigValueName;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.MailSendException;
@@ -72,7 +77,11 @@ public class UserService { //implements UserDetail
 
     // USER 값 선택하게 수정
      public void makeJwtToken(UserSignInReqDTO userSignInReqDTO, HttpServletResponse response){
+<<<<<<< HEAD
         response.setHeader("Authorization",
+=======
+        response.setHeader(UserConfigValueName.JWT_TOKEN_HEADER_KEY,
+>>>>>>> feature/be-user
                 jwtService.getToken(makeTokenUserWithRole(userSignInReqDTO.getId(),
                         "USER")));
     }
