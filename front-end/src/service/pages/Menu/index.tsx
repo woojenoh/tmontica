@@ -1,15 +1,19 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent, MouseEvent } from "react";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import { MenuAPI } from "../../../API";
 import _ from "underscore";
-import { number } from "prop-types";
+import { mapProps } from "recompose";
+
+const getOptionById = (options: Array<TMenuOption>, id: number) => {
+  return _.filter(options, option => option.id === id);
+};
 
 type TMenuOption = {
   id: number;
-  type: string;
-  name: string;
-  price: number;
+  type?: string;
+  name?: string;
+  price: number | 0;
   quantity?: number;
 };
 
@@ -24,7 +28,7 @@ type TMenu = {
   category: string;
   stock: number;
   monthlyMenu: boolean;
-  options: Array<TMenuOption>;
+  option: Array<TMenuOption>;
 };
 interface MatchParams {
   menuId: string;
@@ -36,45 +40,114 @@ interface IMenuState {
   menu: TMenu;
   totalPrice: number;
   quantity: number;
-  selectedOptions: Array<TMenuOption>;
+  option: Array<TMenuOption>;
 }
 
-class MenuOption extends Component {
-  render() {
-    return "";
+interface IMenuOptionProps {
+  option: Array<TMenuOption>;
+  handleSelectableOption(
+    event: MouseEvent<HTMLDivElement>,
+    id: number,
+    commonClassName?: string
+  ): void;
+}
+
+interface IMenuOptionState {
+  id: number;
+  name: string;
+  price: number;
+  amount: number;
+}
+
+interface ISelectableOptionProps {
+  id: number;
+  isSelected: boolean;
+  handleSelectableOption: Function;
+}
+
+// class SelectableOption extends PureComponent<ISelectableOptionProps> {
+//   render() {
+//     const { handleSelectableOption } = this.props;
+
+//     return (
+//       <div className="detail__hot" onClick={e => handleSelectableOption(e)}>
+//         HOT
+//       </div>
+//     );
+//   }
+// }
+
+class MenuOption extends PureComponent<IMenuOptionProps, IMenuOptionState> {
+  getOptionComponent(id: number, price: number) {
+    switch (id) {
+      case 1:
+        return (
+          <div
+            className="detail__hot temperature"
+            onClick={e => {
+              this.props.handleSelectableOption(e, id, "temperature");
+            }}
+          >
+            HOT
+          </div>
+        );
+      case 2:
+        return (
+          <div
+            className="detail__ice temperature"
+            onClick={e => {
+              this.props.handleSelectableOption(e, id, "temperature");
+            }}
+          >
+            ICE
+          </div>
+        );
+      case 3:
+        return (
+          <div
+            className="option__size"
+            onClick={e => {
+              this.props.handleSelectableOption(e, id);
+            }}
+          >
+            사이즈 추가
+          </div>
+        );
+      case 4:
+        return (
+          <>
+            <span className="option__title">샷 추가</span>
+            <div className="option__counter">
+              <div className="counter__minus">-</div>
+              <input type="number" name="shot" className="counter__number" value="0" />
+              <div className="counter__plus">+</div>
+            </div>
+          </>
+        );
+      case 5:
+        return (
+          <>
+            <span className="option__title">시럽 추가</span>
+            <div className="option__counter">
+              <div className="counter__minus">-</div>
+              <input type="number" name="syrup" className="counter__number" value="0" />
+              <div className="counter__plus">+</div>
+            </div>
+          </>
+        );
+    }
   }
-}
 
-function getOptionComponent(id: number) {
-  switch (id) {
-    case 1:
-      return <div className="detail__hot detail__hot--active">HOT</div>;
-    case 2:
-      return <div className="detail__ice">ICE</div>;
-    case 3:
-      return <div className="option__size">사이즈 추가</div>;
-    case 4:
-      return (
-        <>
-          <span className="option__title">샷 추가</span>
-          <div className="option__counter">
-            <div className="counter__minus">-</div>
-            <input type="number" name="shot" className="counter__number" value="0" />
-            <div className="counter__plus">+</div>
-          </div>
-        </>
-      );
-    case 5:
-      return (
-        <>
-          <span className="option__title">시럽 추가</span>
-          <div className="option__counter">
-            <div className="counter__minus">-</div>
-            <input type="number" name="syrup" className="counter__number" value="0" />
-            <div className="counter__plus">+</div>
-          </div>
-        </>
-      );
+  render() {
+    const option = this.props.option;
+
+    return (
+      <li className="detail__option">
+        {_.chain(option)
+          .map(option => this.getOptionComponent(option.id, option.price))
+          .value()}
+      </li>
+    );
   }
 }
 
@@ -83,8 +156,66 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
     menu: {} as TMenu,
     totalPrice: 0,
     quantity: 1,
-    selectedOptions: []
+    option: []
   };
+
+  getTotalPrice(quantity: number) {
+    const { sellPrice } = this.state.menu;
+
+    const optionPrice =
+      this.state.option.length > 0
+        ? this.state.option.reduce((prev: number, cur: TMenuOption) => {
+            return cur.quantity !== undefined ? cur.price * cur.quantity + prev : prev;
+          }, 0)
+        : 0;
+
+    return sellPrice * quantity + optionPrice;
+  }
+
+  // getTotalPrice() {
+  //   const price = this.calcTotalPrice();
+  //   this.setState({
+  //     totalPrice: price
+  //   });
+  // }
+
+  handleQuantity(isPlus: boolean) {
+    let { quantity } = this.state;
+    if (isPlus) {
+      quantity = quantity + 1;
+    } else if (quantity > 1) {
+      quantity = quantity - 1;
+    } else {
+      return;
+    }
+
+    let totalPrice = this.getTotalPrice(quantity);
+    this.setState({
+      totalPrice,
+      quantity
+    });
+  }
+
+  handleSelectableOption(e: MouseEvent, id: number, commonClassName?: string) {
+    if (e.currentTarget.classList.contains("active") && typeof commonClassName === "undefined") {
+      e.currentTarget.classList.remove("active");
+      return;
+    }
+
+    const detailOptionEle = e.currentTarget.closest(`.detail__option`);
+    if (detailOptionEle === null) {
+      return;
+    }
+    const activatedEle = detailOptionEle.querySelector(`.${commonClassName}.active`);
+
+    if (activatedEle !== null) {
+      activatedEle.classList.remove("active");
+    }
+    e.currentTarget.classList.add("active");
+    debugger;
+
+    // this.getOptionById(id);
+  }
 
   async getMenu() {
     const { menuId } = this.props.match.params;
@@ -101,20 +232,26 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
     this.getMenu();
   }
 
-  getOptionFilteredBy(filterType: string, options: Array<TMenuOption>) {
-    return _.chain(options)
+  getOptionFilteredBy(filterType: string, option: Array<TMenuOption>) {
+    return _.chain(option)
       .filter((option: TMenuOption) => option.type === filterType)
-      .map(option => getOptionComponent(option.id))
+      .map(option => option)
       .value();
+  }
+
+  // 옵션 리스트를 그린다.
+  renderDetailOptions(typeName: string, option: Array<TMenuOption>) {
+    const filteredOptions = this.getOptionFilteredBy(typeName, option);
+
+    return filteredOptions.length > 0 ? (
+      <MenuOption option={filteredOptions} handleSelectableOption={this.handleSelectableOption} />
+    ) : (
+      ""
+    );
   }
 
   render() {
     const menu = this.state.menu;
-
-    const temperatureOption = this.getOptionFilteredBy("Temperature", menu.options);
-    const sizeOption = this.getOptionFilteredBy("Size", menu.options);
-    const shotOption = this.getOptionFilteredBy("Shot", menu.options);
-    const syrupOption = this.getOptionFilteredBy("Syrup", menu.options);
 
     return (
       <>
@@ -129,22 +266,27 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
                 <span className="price-style">{Number(menu.sellPrice).toLocaleString()}</span>원
               </div>
               <ul className="detail__options">
-                {temperatureOption.length > 0 ? (
-                  <li className="detail__option">{temperatureOption}</li>
-                ) : (
-                  ""
-                )}
+                {this.renderDetailOptions("Temperature", menu.option)}
                 <li className="detail__option">
                   <span className="option__title">수량</span>
                   <div className="option__counter">
-                    <div className="counter__minus">-</div>
-                    <input type="number" name="quantity" className="counter__number" value="1" />
-                    <div className="counter__plus">+</div>
+                    <div className="counter__minus" onClick={e => this.handleQuantity(false)}>
+                      -
+                    </div>
+                    <input
+                      type="number"
+                      name="quantity"
+                      className="counter__number"
+                      value={this.state.quantity}
+                    />
+                    <div className="counter__plus" onClick={e => this.handleQuantity(true)}>
+                      +
+                    </div>
                   </div>
                 </li>
-                {shotOption.length > 0 ? <li className="detail__option">{shotOption}</li> : ""}
-                {syrupOption.length > 0 ? <li className="detail__option">{syrupOption}</li> : ""}
-                {sizeOption.length > 0 ? <li className="detail__option">{sizeOption}</li> : ""}
+                {this.renderDetailOptions("Shot", menu.option)}
+                {this.renderDetailOptions("Syrup", menu.option)}
+                {this.renderDetailOptions("Size", menu.option)}
               </ul>
               <div className="detail__prices">
                 <span>총 상품금액</span>
