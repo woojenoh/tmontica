@@ -188,7 +188,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
 
     if (isPlus) {
       option.quantity = option.quantity + 1;
-    } else if (option.quantity > 1) {
+    } else if (option.quantity > 0) {
       option.quantity = option.quantity - 1;
     } else {
       return;
