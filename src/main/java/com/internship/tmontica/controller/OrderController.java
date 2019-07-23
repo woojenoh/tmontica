@@ -1,11 +1,8 @@
 package com.internship.tmontica.controller;
 
-import com.internship.tmontica.dto.Option;
-import com.internship.tmontica.dto.Order;
-import com.internship.tmontica.dto.OrderDetail;
-import com.internship.tmontica.dto.OrderStatusLog;
-import com.internship.tmontica.dto.request.Menus;
+import com.internship.tmontica.dto.*;
 import com.internship.tmontica.dto.request.OrderReq;
+import com.internship.tmontica.dto.request.Order_MenusReq;
 import com.internship.tmontica.dto.response.OrderListResp;
 import com.internship.tmontica.dto.response.OrderResp;
 import com.internship.tmontica.dto.response.Order_MenusResp;
@@ -52,10 +49,12 @@ public class OrderController {
         int orderId = 0;
 
         // 주문상세테이블에 추가
-        // menus에서 카트 아이디로 정보를 가져와서 order_details 에 추가
-        List<Menus> menus = orderReq.getMenus();
-        for (Menus menu: menus) {
-            OrderDetail orderDetail = cartMenuService.getCartMenuForOrderDetail(menu.getCartId());
+        // 카트 아이디로 정보를 가져와서 order_details 에 추가
+        List<Order_MenusReq> menus = orderReq.getMenus();
+        for (Order_MenusReq menu: menus) {
+            CartMenu cartMenu = cartMenuService.getCartMenuByCartId(menu.getCartId());
+            OrderDetail orderDetail = new OrderDetail(0, orderId, cartMenu.getOption(), cartMenu.getPrice(),
+                                                                cartMenu.getQuantity(),cartMenu.getMenuId());
 
             int stock = menuService.getMenuById(orderDetail.getMenuId()).getStock(); // 메뉴의 현재 재고량
             int quantity = orderDetail.getQuantity(); // 차감할 메뉴의 수량
