@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-@Service
 public class JwtServiceImpl implements JwtService{
 
     private static final Logger log = LoggerFactory.getLogger(JwtServiceImpl.class);
