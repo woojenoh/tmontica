@@ -5,6 +5,29 @@ export type TMenusItem = {
   imgUrl: string;
 };
 
+export type TMenuOption = {
+  id: number;
+  type: string;
+  name?: string;
+  price: number | 0;
+  quantity: number;
+};
+
+export type TMenu = {
+  id: number;
+  nameEng: string;
+  nameKo: string;
+  description: string;
+  imgUrl: string;
+  sellPrice: number;
+  discountRate: number;
+  category: string;
+  stock: number;
+  monthlyMenu: boolean;
+  option: Array<TMenuOption>;
+  getOptionById(id: number): TMenuOption;
+};
+
 export interface ICart {
   size: number;
   totalPrice: number;

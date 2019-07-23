@@ -1,10 +1,9 @@
 package com.internship.tmontica.repository;
 
-import com.internship.tmontica.dto.CartMenu;
 import com.internship.tmontica.dto.Order;
 import com.internship.tmontica.dto.OrderDetail;
 import com.internship.tmontica.dto.OrderStatusLog;
-import com.internship.tmontica.dto.response.MenusResp;
+import com.internship.tmontica.dto.response.Order_MenusResp;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public interface OrderDao {
             "from order_details as A inner join menus as B " +
             "   on A.menu_id = B.id " +
             "where A.order_id = #{orderId}")
-    List<MenusResp> getOrderDetailByOrderId(int orderId);
+    List<Order_MenusResp> getOrderDetailByOrderId(int orderId);
 
     // orderId로 주문의 메뉴 이름들만 가져오기
     @Select("select name_ko " +

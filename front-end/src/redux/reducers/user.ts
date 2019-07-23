@@ -1,9 +1,11 @@
+import history from "../../history";
 import * as actionTypes from "../actionTypes/user";
 import * as userTypes from "../types/user";
 
 const INITIAL_STATE = {
+  isSignin: localStorage.getItem("JWT") ? true : false,
   user: null,
-  isSignin: false
+  token: localStorage.getItem("JWT")
 } as userTypes.IUserState;
 
 export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
@@ -31,6 +33,7 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
       };
     case actionTypes.SIGNOUT:
       localStorage.removeItem("JWT");
+      history.push("/");
       return {
         ...state,
         isSignin: false

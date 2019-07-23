@@ -2,6 +2,7 @@ package com.internship.tmontica.user;
 
 import com.internship.tmontica.user.model.request.*;
 import com.internship.tmontica.user.model.response.UserInfoRespDTO;
+import com.internship.tmontica.user.model.response.UserSignInRespDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,10 +39,10 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<String> signIn(@RequestBody @Valid UserSignInReqDTO userSignInReqDTO, HttpServletResponse response) {
+    public ResponseEntity<UserSignInRespDTO> signIn(@RequestBody @Valid UserSignInReqDTO userSignInReqDTO) {
         userService.signIn(userSignInReqDTO);
-        userService.makeJwtToken(userSignInReqDTO, response);
-        return new ResponseEntity<>("Sign in Success", HttpStatus.OK);
+        UserSignInRespDTO userSignInRespDTO = userService.makeJwtToken(userSignInReqDTO);
+        return new ResponseEntity<>(userSignInRespDTO, HttpStatus.OK);
     }
 
     @PostMapping("/checkpw")

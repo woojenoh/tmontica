@@ -1,6 +1,7 @@
 package com.internship.tmontica.security;
 
 import com.internship.tmontica.security.exception.UnauthorizedException;
+import com.internship.tmontica.util.UserConfigValueName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -16,12 +17,14 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
-        final String token = request.getHeader("Authorization");
+
+        final String token = request.getHeader(UserConfigValueName.JWT_TOKEN_HEADER_KEY);
 
         if(token != null && jwtService.isUsable(token)){
             return true;
         }
 
         throw new UnauthorizedException();
+
     }
 }

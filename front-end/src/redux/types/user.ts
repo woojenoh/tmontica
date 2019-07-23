@@ -4,6 +4,7 @@ import { AxiosError } from "axios";
 export interface IUserState {
   user: IUser | null;
   isSignin: boolean;
+  token: string | null;
 }
 
 export interface IUser {

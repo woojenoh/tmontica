@@ -129,7 +129,7 @@ public class MenuController {
         //TODO : 로그인 유저 아이디 가져오기
         //TODO : 예외 처리..
         if(bindingResult.hasErrors())
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("binding error",HttpStatus.BAD_REQUEST);
 
         log.info("[menu api] 메뉴 추가하기");
         log.info("menuReq : {}", menuReq.toString());
@@ -139,9 +139,12 @@ public class MenuController {
         modelMapper.map(menuReq, menu);
         menu.setCreatorId(menuReq.getCreator());
 
+        // 판매가가 올바른 값인지 검사
+        int sellPrice = menuReq.getProductPrice() * (100 - menuReq.getDiscountRate())/100;
+        if(sellPrice != menuReq.getSellPrice())
+            return new ResponseEntity("sell price값이 틀렸습니다.", HttpStatus.BAD_REQUEST);
+
         // 이미지 파일 저장
-        if(menuReq.getImgFile() == null)
-            return new ResponseEntity("메뉴 이미지는 필수 입니다.", HttpStatus.BAD_REQUEST);
         String img = saveImg(menuReq.getImgFile(), menuReq.getCategoryEng(), menuReq.getNameEng());
         menu.setImgUrl(img);
         // 메뉴 저장
@@ -185,6 +188,9 @@ public class MenuController {
     /** 메뉴 삭제하기 **/
     @DeleteMapping("/{menuId}")
     public ResponseEntity deleteMenu(@PathVariable("menuId")int menuId ){
+        log.info("[menu api] 메뉴 삭제하기");
+        log.info("menuId : {}", menuId);
+
         menuService.deleteMenu(menuId);
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -192,7 +198,7 @@ public class MenuController {
 
     // 이미지 파일 저장
     private String saveImg(MultipartFile imgFile, String category, String name){
-        // file url : imagefile/카테고리명/메뉴명
+        // file url : imagefile/년/월/일/파일이름
         String dir = "imagefile/";
         Calendar calendar = Calendar.getInstance();
         dir = dir + calendar.get(Calendar.YEAR);
