@@ -21,9 +21,9 @@ public class WebConfig implements WebMvcConfigurer {
         // 모든 uri에 대해 http://localhost:18080, http://localhost:8180 도메인은 접근을 허용한다.
         registry.addMapping("/**")
                 .allowedOrigins("*") //http://localhost:3000
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowedHeaders(UserConfigValueName.JWT_TOKEN_HEADER_KEY);
+                .allowedMethods("GET", "POST", "PUT", "DELETE");
     }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new JwtInterceptor(jwtService))
