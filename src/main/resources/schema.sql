@@ -91,9 +91,9 @@ CREATE TABLE IF NOT EXISTS `tmontica`.`cart_menus` (
   `option` VARCHAR(255) NULL DEFAULT NULL,
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` VARCHAR(45) NOT NULL,
-  `option_price` INT(11) NOT NULL,
+  `price` INT(11) NOT NULL,
   `menu_id` INT(11) NOT NULL,
-  `isDirect` TINYINT(1),
+  `direct` TINYINT(1),
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_Cart_item_User`
     FOREIGN KEY (`user_id`)
