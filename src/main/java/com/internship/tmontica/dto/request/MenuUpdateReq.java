@@ -1,7 +1,6 @@
 package com.internship.tmontica.dto.request;
 
 import lombok.Data;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
@@ -11,14 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class MenuReq {
+public class MenuUpdateReq {
     //TODO : validation..
+    @NotNull
+    private int menuId;
     @NotEmpty
     private String nameEng;
     @NotEmpty
     private String nameKo;
     private String description;
-    @NotNull(message = "이미지 파일은 필수입니다.")
     private MultipartFile imgFile;
     @Min(0)
     private int productPrice;
