@@ -1,4 +1,5 @@
 import * as cartActionTypes from "../redux/actionTypes/cart";
+import cart from "../redux/reducers/cart";
 
 export interface ICart {
   size: number;
@@ -35,7 +36,17 @@ export interface IInitializeLocalCart {
 
 export interface IAddLocalCart {
   type: typeof cartActionTypes.ADD_LOCAL_CART;
+  payload: ICartMenu;
+}
+
+export interface IAddLocalCartFulfilled {
+  type: typeof cartActionTypes.ADD_LOCAL_CART_FULFILLED;
   payload: ICart;
+}
+
+export interface IAddLocalCartRejected {
+  type: typeof cartActionTypes.ADD_LOCAL_CART_REJECTED;
+  error: Error;
 }
 
 export interface IRemoveLocalCart {
@@ -43,4 +54,21 @@ export interface IRemoveLocalCart {
   payload: number;
 }
 
-export type TCartAction = IInitializeLocalCart | IAddLocalCart | IRemoveLocalCart;
+export interface IRemoveLocalCartFulfilled {
+  type: typeof cartActionTypes.REMOVE_LOCAL_CART_FULFILLED;
+  payload: ICart;
+}
+
+export interface IRemoveLocalCartRejected {
+  type: typeof cartActionTypes.REMOVE_LOCAL_CART_REJECTED;
+  error: Error;
+}
+
+export type TCartAction =
+  | IInitializeLocalCart
+  | IAddLocalCart
+  | IAddLocalCartFulfilled
+  | IAddLocalCartRejected
+  | IRemoveLocalCart
+  | IRemoveLocalCartFulfilled
+  | IRemoveLocalCartRejected;
