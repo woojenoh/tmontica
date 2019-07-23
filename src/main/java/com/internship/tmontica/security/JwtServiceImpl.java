@@ -2,6 +2,7 @@ package com.internship.tmontica.security;
 
 import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.User;
+import com.internship.tmontica.util.UserConfigValueName;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,7 @@ public class JwtServiceImpl implements JwtService{
     public String getUserInfo(String key){
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String jwtToken = request.getHeader(JwtInterceptor.HEADER_AUTH);
+        String jwtToken = request.getHeader(UserConfigValueName.JWT_TOKEN_HEADER_KEY);
 
         Jws<Claims> jws = Jwts.parser()
                 .setSigningKey(KEY)
