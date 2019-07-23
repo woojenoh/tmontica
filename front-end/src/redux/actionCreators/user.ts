@@ -37,7 +37,7 @@ export function fetchSigninFulfilled() {
 
 export function fetchSigninRejected(error: AxiosError) {
   return {
-    type: actionTypes.FETCH_SIGNIN_FULFILLED,
+    type: actionTypes.FETCH_SIGNIN_REJECTED,
     error
   };
 }
