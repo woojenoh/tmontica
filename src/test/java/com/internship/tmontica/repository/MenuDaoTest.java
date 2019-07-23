@@ -1,18 +1,27 @@
 package com.internship.tmontica.repository;
 
+import com.internship.tmontica.config.DataAccessConfig;
+import com.internship.tmontica.config.DataSourceConfig;
 import com.internship.tmontica.dto.Menu;
 import com.internship.tmontica.dto.Option;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@MybatisTest
+@TestPropertySource("classpath:application_test.properties")
+@SpringBootTest
 public class MenuDaoTest {
     @Autowired
     MenuDao menuDao;
