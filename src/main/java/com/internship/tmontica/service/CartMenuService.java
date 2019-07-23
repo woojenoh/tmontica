@@ -42,4 +42,10 @@ public class CartMenuService {
     public List<CartMenu> getCartMenuByUserId(String userId){
        return cartMenuDao.getCartMenuByUserId(userId);
     }
+
+    // 카트에서 수량과 가격 수정하기
+    @Transactional
+    public int updateCartMenuQuantity(int id, int price, int quantity){
+        return cartMenuDao.updateCartMenuQuantity(id, price, quantity);
+    }
 }

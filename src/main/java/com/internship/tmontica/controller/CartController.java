@@ -4,6 +4,7 @@ import com.internship.tmontica.dto.CartMenu;
 import com.internship.tmontica.dto.Menu;
 import com.internship.tmontica.dto.Option;
 import com.internship.tmontica.dto.request.CartReq;
+import com.internship.tmontica.dto.request.CartUpdateReq;
 import com.internship.tmontica.dto.request.Cart_OptionReq;
 import com.internship.tmontica.dto.response.CartResp;
 import com.internship.tmontica.dto.response.Cart_MenusResp;
@@ -63,11 +64,13 @@ public class CartController {
         CartMenu cartMenu = new CartMenu(cartReq.getQuantity(), optionStr, cartReq.getUserId(),
                                             price, cartReq.getMenuId(), cartReq.isDirect());
         // 카트 테이블에 추가하기
-        cartMenuService.addCartMenu(cartMenu);
+        int result = cartMenuService.addCartMenu(cartMenu);
         int cartId = cartMenu.getId();
         Map<String, Integer> map = new HashMap<>(); // 반환값 cartId
         map.put("cartId", cartId);
-        return new ResponseEntity<>(map, HttpStatus.OK);
+
+        if(result > 0)return new ResponseEntity<>(map, HttpStatus.OK);
+        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 
@@ -115,4 +118,21 @@ public class CartController {
 
         return new ResponseEntity(cartResp,HttpStatus.OK);
     }
+
+
+    /** 카트 메뉴 수량, 가격 수정하기 */
+    @PutMapping("/{id}")
+    public ResponseEntity updateCartMenuQuantity(@PathVariable("id") int id,
+                                                 @RequestBody @Valid CartUpdateReq cartUpdateReq){
+        // 수량과 가격 모두 수정해야 함
+        CartMenu cartMenu = cartMenuService.getCartMenuByCartId(id);
+        int unitPrice = cartMenu.getPrice() / cartMenu.getQuantity(); // 해당 카트메뉴의 1개 가격
+        // 수량와 가격 업데이트
+        int result = cartMenuService.updateCartMenuQuantity(id, unitPrice * cartUpdateReq.getQuantity(), cartUpdateReq.getQuantity());
+
+        if(result > 0 ) return new ResponseEntity(HttpStatus.OK);
+        else return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
 }
+
