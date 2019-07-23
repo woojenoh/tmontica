@@ -37,7 +37,6 @@ public class UserController {
         return new ResponseEntity<>(false, HttpStatus.CONFLICT);
     }
 
-    @CrossOrigin(origins = "*", allowedHeaders = "Authorization")
     @PostMapping("/signin")
     public ResponseEntity<String> signIn(@RequestBody @Valid UserSignInReqDTO userSignInReqDTO, HttpServletResponse response) {
         userService.signIn(userSignInReqDTO);
