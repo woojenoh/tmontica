@@ -10,7 +10,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = "com.internship.tmontica.repository")
+@MapperScan(basePackages = "com.internship.tmontica")
 public class DataAccessConfig {
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {

@@ -1,7 +1,5 @@
 package com.internship.tmontica.user;
 
-import com.internship.tmontica.security.JwtInterceptor;
-import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.user.model.request.*;
 import com.internship.tmontica.user.model.response.UserInfoRespDTO;
 import lombok.RequiredArgsConstructor;
@@ -40,38 +38,16 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<String> signIn(@RequestBody @Valid UserSignInReqDTO userSignInReqDTO, HttpServletResponse response, HttpSession session) {
-        userService.signIn(userSignInReqDTO, session);
+    public ResponseEntity<String> signIn(@RequestBody @Valid UserSignInReqDTO userSignInReqDTO, HttpServletResponse response) {
+        userService.signIn(userSignInReqDTO);
         userService.makeJwtToken(userSignInReqDTO, response);
         return new ResponseEntity<>("Sign in Success", HttpStatus.OK);
     }
 
     @PostMapping("/checkpw")
-    public ResponseEntity<String> checkPassword(@RequestBody @Valid UserCheckPasswordReqDTO userCheckPasswordReqDTO, HttpSession session) {
-        userService.checkPassword(userCheckPasswordReqDTO, session);
+    public ResponseEntity<String> checkPassword(@RequestBody @Valid UserCheckPasswordReqDTO userCheckPasswordReqDTO) {
+        userService.checkPassword(userCheckPasswordReqDTO);
         return new ResponseEntity<>("Correct password", HttpStatus.OK);
-    }
-    @GetMapping("/help/find-id")
-    public ResponseEntity<String> findUserId(@RequestParam String email, HttpSession httpSession) {
-
-        if(userService.sendUserId(email, httpSession)){
-            return new ResponseEntity<>("Send email Success", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("등록되지 않은 사용자입니다.", HttpStatus.NOT_FOUND);
-    }
-
-    @GetMapping("/help/find-pw")
-    public ResponseEntity<String> findUserPassword(@RequestParam String id, @RequestParam String email){
-
-        if(userService.sendUserPassword(id, email)){
-            return new ResponseEntity<>("Send email Success", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Send email Fail", HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserInfoRespDTO> getUserInfo(@PathVariable("userId") String id) {
-        return new ResponseEntity<>(userService.getUserInfo(id), HttpStatus.OK);
     }
 
     @PutMapping
@@ -88,6 +64,39 @@ public class UserController {
             return new ResponseEntity<>("Delete User Success", HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>("Delete User Fail", HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/findid")
+    public ResponseEntity<String> findUserId(@RequestParam String email, HttpSession httpSession) {
+
+        if(userService.sendUserId(email, httpSession)){
+            return new ResponseEntity<>("Send email Success", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("등록되지 않은 사용자입니다.", HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/findpw")
+    public ResponseEntity<String> findUserPassword(@RequestParam String id, @RequestParam String email){
+
+        if(userService.sendUserPassword(id, email)){
+            return new ResponseEntity<>("Send email Success", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Send email Fail", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/findid/confirm")
+    public ResponseEntity<String> findIdConfirm(@RequestBody @Valid UserFindIdReqDTO userFindIdReqDTO, HttpSession session){
+
+        if(userService.checkAuthCode(userFindIdReqDTO, session)){
+            return new ResponseEntity<>("correct Authcode", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("incorrect Authcode", HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserInfoRespDTO> getUserInfo(@PathVariable("userId") String id) {
+        return new ResponseEntity<>(userService.getUserInfo(id), HttpStatus.OK);
     }
 
     //    @PostMapping("/check-email-confirm")
