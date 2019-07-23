@@ -10,10 +10,8 @@ import javax.validation.constraints.NotNull;
 public class UserChangePasswordReqDTO {
 
     @NotNull
-    private String id;
-    @NotNull
-    private String password;
-    @NotNull
     private String newPassword;
+    @NotNull
+    private String newPasswordCheck;
 
 }

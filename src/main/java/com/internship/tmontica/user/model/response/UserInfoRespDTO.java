@@ -11,4 +11,5 @@ public class UserInfoRespDTO {
     private String id;
     private String email;
     private String birthDate;
+    private int point;
 }

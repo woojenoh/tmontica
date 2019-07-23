@@ -39,7 +39,7 @@ DROP TABLE IF EXISTS `tmontica`.`users` ;
 
 CREATE TABLE IF NOT EXISTS `tmontica`.`users` (
   `name` VARCHAR(45) NOT NULL,
-  `id` VARCHAR(45) NOT NULL,
+  `user_id` VARCHAR(45) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `birth_date` DATETIME NOT NULL,
   `password` VARCHAR(100) NOT NULL,
