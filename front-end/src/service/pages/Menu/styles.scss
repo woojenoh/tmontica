@@ -66,6 +66,10 @@
   font-size: 15px;
 }
 
+.temperature:last-child {
+  margin-right: 0;
+}
+
 .detail__hot:hover {
   background-color: #fa5252;
   color: white;
