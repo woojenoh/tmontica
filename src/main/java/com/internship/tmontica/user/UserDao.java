@@ -1,6 +1,7 @@
 package com.internship.tmontica.user;
 
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Component;
 
 @Mapper
 public interface UserDao {
