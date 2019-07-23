@@ -10,10 +10,10 @@
       "stock": 10000,
       "monthlyMenu": false,
       "option": [
-        { "id": 1, "type": "Temperature", "name": "HOT", "price": 0 },
-        { "id": 2, "type": "Temperature", "name": "ICE", "price": 0 },
-        { "id": 3, "type": "Size", "name": "SizeUp", "price": 500 },
-        { "id": 4, "type": "Shot", "name": "AddShot", "price": 300 },
-        { "id": 5, "type": "Syrup", "name": "AddSyrup", "price": 300 }
+        { "id": 1, "type": "Temperature", "name": "HOT", "price": 0, "quantity": 0 },
+        { "id": 2, "type": "Temperature", "name": "ICE", "price": 0, "quantity": 0 },
+        { "id": 3, "type": "Size", "name": "SizeUp", "price": 500, "quantity": 0 },
+        { "id": 4, "type": "Shot", "name": "AddShot", "price": 300, "quantity": 0 },
+        { "id": 5, "type": "Syrup", "name": "AddSyrup", "price": 300, "quantity": 0 }
       ]
     }
