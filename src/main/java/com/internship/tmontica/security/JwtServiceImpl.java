@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+@RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService{
 
     private static final Logger log = LoggerFactory.getLogger(JwtServiceImpl.class);
@@ -59,4 +60,17 @@ public class JwtServiceImpl implements JwtService{
 
         return jws.getBody().get(key, String.class);
     }
+
+//    public static void main(String[] args) {
+//
+//        User user = new User();
+//        user.setId("samkko");
+//        user.setRole("USER");
+//        JwtServiceImpl jwt = new JwtServiceImpl();
+//        System.out.println();
+//        Jws<Claims> jws = Jwts.parser()
+//                .setSigningKey(KEY)
+//                .parseClaimsJws(jwt.getToken(user));
+//        System.out.println(jws.toString());
+//    }
 }
