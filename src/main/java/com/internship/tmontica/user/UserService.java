@@ -1,5 +1,8 @@
 package com.internship.tmontica.user;
 
+<<<<<<< HEAD
+=======
+>>>>>>> feature/be-user
 import com.internship.tmontica.security.JwtServiceImpl;
 import com.internship.tmontica.user.exception.*;
 import com.internship.tmontica.user.model.request.*;
@@ -72,7 +75,10 @@ public class UserService { //implements UserDetail
 
     // USER 값 선택하게 수정
      public void makeJwtToken(UserSignInReqDTO userSignInReqDTO, HttpServletResponse response){
+<<<<<<< HEAD
         response.setHeader("Authorization",
+=======
+>>>>>>> feature/be-user
                 jwtService.getToken(makeTokenUserWithRole(userSignInReqDTO.getId(),
                         "USER")));
     }
