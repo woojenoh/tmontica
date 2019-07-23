@@ -17,7 +17,7 @@ public class JwtServiceImpl implements JwtService{
 
     private static final Logger log = LoggerFactory.getLogger(JwtServiceImpl.class);
     private static final Long TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24L; // 1day
-    private SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
+    private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
     private static final String SALT = "TMONTICA";
     private static final byte[] KEY = SALT.getBytes(StandardCharsets.UTF_8);
 
