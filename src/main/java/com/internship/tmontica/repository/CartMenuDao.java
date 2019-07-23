@@ -22,7 +22,7 @@ public interface CartMenuDao {
     void deleteCartMenu(int cartId);
 
     // 카트에 추가하기
-    @Insert("insert into cart_menus values(#{quantity}, #{option}, 0, #{userId}, #{optionPrice}, #{menuId}, #{direct})")
+    @Insert("insert into cart_menus values(#{quantity}, #{option}, 0, #{userId}, #{price}, #{menuId}, #{direct})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addCartMenu(CartMenu cartMenu);
 

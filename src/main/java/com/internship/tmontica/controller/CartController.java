@@ -50,16 +50,17 @@ public class CartController {
             int amount = option.get(i).getAmount();
             optionStr += optionId + "__" + amount;
 
-            //TODO: 옵션, 수량 적용된 가격 계산하기
-            // 옵션들의 가격 계산하기
+            // 옵션들의 가격 계산
             Option tmpOption = optionService.getOptionById(optionId);
             optionPrice += (tmpOption.getPrice() * amount);
         }
 
-        optionPrice *= cartReq.getQuantity();
+        // 옵션, 수량 적용된 가격 계산하기
+        int price = optionPrice + menuService.getMenuById(cartReq.getMenuId()).getSellPrice();
+        price *= cartReq.getQuantity();
 
         CartMenu cartMenu = new CartMenu(cartReq.getQuantity(), optionStr, cartReq.getUserId(),
-                optionPrice, cartReq.getMenuId(), cartReq.isDirect());
+                                            price, cartReq.getMenuId(), cartReq.isDirect());
         // 카트 테이블에 추가하기
         cartMenuService.addCartMenu(cartMenu);
         int cartId = cartMenu.getId();
