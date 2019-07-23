@@ -3,7 +3,7 @@ import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import { MenuAPI } from "../../../API";
 import _ from "underscore";
-import { mapProps } from "recompose";
+import { TMenuOption, TMenu } from "../../../types";
 
 const getOptionById = (options: Array<TMenuOption>, id: number) => {
   return _.chain(options)
@@ -12,28 +12,6 @@ const getOptionById = (options: Array<TMenuOption>, id: number) => {
     .value();
 };
 
-type TMenuOption = {
-  id: number;
-  type: string;
-  name?: string;
-  price: number | 0;
-  quantity: number;
-};
-
-type TMenu = {
-  id: number;
-  nameEng: string;
-  nameKo: string;
-  description: string;
-  imgUrl: string;
-  sellPrice: number;
-  discountRate: number;
-  category: string;
-  stock: number;
-  monthlyMenu: boolean;
-  option: Array<TMenuOption>;
-  getOptionById(id: number): TMenuOption;
-};
 interface MatchParams {
   menuId: string;
 }
@@ -165,7 +143,6 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
     );
   }
 }
-
 export default class Menu extends Component<IMenuProps, IMenuState> {
   state = {
     menu: {} as TMenu,
@@ -187,13 +164,6 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
 
     return (sellPrice + optionPrice) * (quantity || this.state.quantity);
   }
-
-  // getTotalPrice() {
-  //   const price = this.calcTotalPrice();
-  //   this.setState({
-  //     totalPrice: price
-  //   });
-  // }
 
   handleQuantity(isPlus: boolean) {
     let { quantity } = this.state;
