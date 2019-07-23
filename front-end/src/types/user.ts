@@ -1,4 +1,4 @@
-import * as userActionTypes from "../actionTypes/user";
+import * as userActionTypes from "../redux/actionTypes/user";
 import { AxiosError } from "axios";
 
 export interface IUserState {
@@ -16,7 +16,7 @@ export interface IUser {
 }
 
 export interface IUserSignupInfo {
-  id: string; // 유저의 아이디
+  id: string;
   password: string;
   passwordCheck: string;
   name: string;
@@ -25,7 +25,7 @@ export interface IUserSignupInfo {
 }
 
 export interface IUserSigninInfo {
-  id: string; // 유저의 아이디
+  id: string;
   password: string;
   role?: "USER" | "ADMIN";
 }

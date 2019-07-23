@@ -2,7 +2,7 @@ import * as React from "react";
 import _ from "underscore";
 import CartItem from "../CartItem";
 import { numberCommaRegex } from "../../../utils";
-import { ICart, ICartMenu } from "../../../types";
+import * as cartTypes from "../../../types/cart";
 import "./styles.scss";
 
 export interface ICartProps {
@@ -11,7 +11,7 @@ export interface ICartProps {
 }
 
 export interface ICartState {
-  cart: ICart | null;
+  cart: cartTypes.ICart | null;
 }
 
 class Cart extends React.Component<ICartProps, ICartState> {
@@ -24,8 +24,8 @@ class Cart extends React.Component<ICartProps, ICartState> {
       {
         cartId: 10,
         menuId: 2,
-        menuNameEng: "americano",
-        menuNameKo: "아메리카노",
+        nameEng: "americano",
+        nameKo: "아메리카노",
         imgUrl: "/img/coffee-sample.png",
         option: "HOT/샷추가(1개)/사이즈업",
         quantity: 1,
@@ -35,8 +35,8 @@ class Cart extends React.Component<ICartProps, ICartState> {
       {
         cartId: 11,
         menuId: 3,
-        menuNameEng: "caffelatte",
-        menuNameKo: "카페라떼",
+        nameEng: "caffelatte",
+        nameKo: "카페라떼",
         imgUrl: "/img/coffee-sample.png",
         option: "HOT/샷추가(1개)/사이즈업",
         quantity: 1,
@@ -46,8 +46,8 @@ class Cart extends React.Component<ICartProps, ICartState> {
       {
         cartId: 11,
         menuId: 3,
-        menuNameEng: "caffelatte",
-        menuNameKo: "카페라떼",
+        nameEng: "caffelatte",
+        nameKo: "카페라떼",
         imgUrl: "/img/coffee-sample.png",
         option: "HOT/사이즈업",
         quantity: 1,
@@ -106,7 +106,7 @@ class Cart extends React.Component<ICartProps, ICartState> {
   removeLocalCartItem = (id: number): void => {
     const { cart } = this.state;
     if (cart) {
-      const newCart = _(cart).clone() as ICart;
+      const newCart = _(cart).clone() as cartTypes.ICart;
       newCart.menus = cart.menus.filter((m, index) => {
         if (index !== id) {
           return true;
@@ -121,10 +121,10 @@ class Cart extends React.Component<ICartProps, ICartState> {
     }
   };
 
-  addCartItem = (item: ICartMenu): void => {
+  addCartItem = (item: cartTypes.ICartMenu): void => {
     const { cart } = this.state;
     if (cart) {
-      const newCart = _(cart).clone() as ICart;
+      const newCart = _(cart).clone() as cartTypes.ICart;
       newCart.menus = newCart.menus.concat(item);
       localStorage.setItem("LocalCart", JSON.stringify(newCart));
       this.setState({
@@ -163,7 +163,7 @@ class Cart extends React.Component<ICartProps, ICartState> {
                     <CartItem
                       key={index}
                       id={index}
-                      name={m.menuNameKo}
+                      name={m.nameKo}
                       price={m.price}
                       option={m.option}
                       quantity={m.quantity}

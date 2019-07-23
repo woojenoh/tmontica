@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link, withRouter, RouteComponentProps } from "react-router-dom";
 import axios from "axios";
-import * as userTypes from "../../../redux/types/user";
+import * as userTypes from "../../../types/user";
 import "./styles.scss";
 
 export interface ISignupFormProps extends RouteComponentProps {

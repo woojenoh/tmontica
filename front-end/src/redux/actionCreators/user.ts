@@ -1,5 +1,5 @@
 import * as actionTypes from "../actionTypes/user";
-import * as userTypes from "../types/user";
+import * as userTypes from "../../types/user";
 import { AxiosError } from "axios";
 
 export function fetchSignup(payload: userTypes.IUserSignupInfo) {
