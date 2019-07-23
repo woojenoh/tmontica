@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     private final JwtService jwtService;
     private static final String[] EXCLUDE_PATH = {
-            "/api/users/signin", "/api/users/signup", "/api/users/duplicate/**",
+            "/api/menus/**", "/api/options/**", "/api/users/signin", "/api/users/signup", "/api/users/duplicate/**",
             "/api/users/findid/*", "/api/users/findpw","/swagger*/**", "/resources/**"
             , "/**/*.jpg", "/**/*.js", "/**/*.css", "/error/**"
     };
