@@ -10,15 +10,15 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = "com.internship.tmontica.repository")
+@MapperScan(basePackages = "com.internship.tmontica")
 public class DataAccessConfig {
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
-//        sessionFactory.setMapperLocations(
-//                new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/*.xml"));
-//        sessionFactory.setTypeAliasesPackage("com.internship.tmontica.dto");
+        sessionFactory.setMapperLocations(
+                new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/*.xml"));
+        sessionFactory.setTypeAliasesPackage("com.internship.tmontica.dto");
         // camel case 설정 : https://github.com/mybatis/spring-boot-starter/issues/78 참고
         org.apache.ibatis.session.Configuration ibatisConfiguration = new org.apache.ibatis.session.Configuration();
         ibatisConfiguration.setMapUnderscoreToCamelCase(true);

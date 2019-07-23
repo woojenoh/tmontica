@@ -39,7 +39,7 @@ public class CartController {
         if (cartReq.isDirect() == true) {
             cartMenuService.deleteDirectCartMenu();
         }
-        
+
         List<Cart_OptionReq> option = cartReq.getOption();
         String optionStr = "";
         int optionPrice = 0;
