@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 public class JwtInterceptor implements HandlerInterceptor {
 
     public static final String HEADER_AUTH = "Authorization";
-
     private final JwtService jwtService;
 
     @Override

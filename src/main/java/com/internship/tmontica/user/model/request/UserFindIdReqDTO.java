@@ -7,10 +7,8 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class UserSignInReqDTO{
+public class UserFindIdReqDTO {
 
     @NotNull
-    private String id;
-    @NotNull
-    private String password;
+    private String authCode;
 }

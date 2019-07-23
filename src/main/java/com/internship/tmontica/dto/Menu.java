@@ -8,7 +8,7 @@ import org.apache.ibatis.type.Alias;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class  Menu {
     private boolean monthlyMenu;
     private boolean usable;
     @NotEmpty
-    private String img;
+    private String imgUrl;
     private String description;
     @Min(0)
     private int sellPrice;
