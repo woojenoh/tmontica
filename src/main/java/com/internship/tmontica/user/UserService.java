@@ -1,15 +1,14 @@
 package com.internship.tmontica.user;
 
-import com.internship.tmontica.security.JwtInterceptor;
-import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.security.JwtServiceImpl;
 import com.internship.tmontica.user.exception.*;
 import com.internship.tmontica.user.model.request.*;
 import com.internship.tmontica.user.model.response.UserInfoRespDTO;
 import com.internship.tmontica.security.AuthenticationKey;
+import com.internship.tmontica.user.model.response.UserSignInRespDTO;
+import com.internship.tmontica.util.UserConfigValueName;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Service;
@@ -74,10 +73,13 @@ public class UserService { //implements UserDetail
     }
 
     // USER 값 선택하게 수정
-     public void makeJwtToken(UserSignInReqDTO userSignInReqDTO, HttpServletResponse response){
-        response.setHeader(JwtInterceptor.HEADER_AUTH,
-                jwtService.getToken(makeTokenUserWithRole(userSignInReqDTO.getId(),
-                        "USER")));
+     public UserSignInRespDTO makeJwtToken(UserSignInReqDTO userSignInReqDTO){
+
+        return new UserSignInRespDTO("true", jwtService.getToken(makeTokenUserWithRole(userSignInReqDTO.getId(),
+                "USER")));
+//        (UserConfigValueName.JWT_TOKEN_HEADER_KEY,
+//                jwtService.getToken(makeTokenUserWithRole(userSignInReqDTO.getId(),
+//                        "USER")));
     }
 
     private User makeTokenUserWithRole(String id, String role){

@@ -19,6 +19,8 @@ function* fetchSignupSagas(action: userTypes.IFetchSignup) {
 
 function* fetchSigninSagas(action: userTypes.IFetchSignin) {
   try {
+    const response = yield axios.post("http://localhost:8080/api/users/signin", action.payload);
+    localStorage.setItem("JWT", response.data.authorization);
     yield alert("환영합니다!");
     yield put(userActionCreators.fetchSigninFulfilled());
     yield history.push("/");

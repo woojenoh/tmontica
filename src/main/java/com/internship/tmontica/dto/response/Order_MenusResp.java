@@ -5,11 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
-@Alias("menusResp")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenusResp {
+public class Order_MenusResp {
     private int menuId;
     private String nameEng;
     private String nameKo;

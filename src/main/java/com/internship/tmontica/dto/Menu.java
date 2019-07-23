@@ -4,16 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.type.Alias;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 
-@Alias("menu")
 @Data
 @Builder
 @AllArgsConstructor
@@ -47,13 +43,5 @@ public class  Menu {
     @NotEmpty
     private String nameKo;
 
-    // 메뉴의 옵션
-//    private List<Option> options;
-//
-//    public void addOption(Option option){
-//        if(options == null)
-//            options = new ArrayList<>();
-//        options.add(option);
-//    }
 
 }

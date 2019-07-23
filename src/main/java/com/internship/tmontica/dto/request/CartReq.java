@@ -3,6 +3,7 @@ package com.internship.tmontica.dto.request;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 public class CartReq {
@@ -12,6 +13,7 @@ public class CartReq {
     private int menuId;
     @NotNull
     private int quantity;
-
-    private Options options;
+    private List<Cart_OptionReq> option;
+    @NotNull
+    private boolean direct;
 }
