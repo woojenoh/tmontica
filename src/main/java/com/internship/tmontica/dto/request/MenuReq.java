@@ -18,6 +18,7 @@ public class MenuReq {
     @NotEmpty
     private String nameKo;
     private String description;
+    @NotNull
     private MultipartFile imgFile;
     @Min(0)
     private int sellPrice;

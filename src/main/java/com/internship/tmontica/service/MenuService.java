@@ -21,10 +21,11 @@ public class MenuService {
     // 메뉴 추가
     @Transactional
     public int addMenu(Menu menu, List<Integer>optionIds){
-        int menuId =  menuDao.addMenu(menu);
+        menuDao.addMenu(menu);
+        log.info("addMenu id : {}", menu.getId());
         for(int optionId : optionIds)
-            menuDao.addMenuOption(menuId, optionId);
-        return menuId;
+            menuDao.addMenuOption(menu.getId(), optionId);
+        return menu.getId();
     }
 
     // 메뉴 옵션 추가

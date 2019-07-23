@@ -12,9 +12,10 @@ import java.util.List;
 public interface MenuDao {
 
     @Insert("INSERT INTO menus(name_ko, name_eng, product_price, category_ko, category_eng, monthly_menu, usable," +
-                                "img, description, sell_price, discount_rate, created_date, creator_id, stock)"+
+                                "img_url, description, sell_price, discount_rate, created_date, creator_id, stock)"+
             "VALUES (#{nameKo},#{nameEng}, #{productPrice}, #{categoryKo}, #{categoryEng}, #{monthlyMenu} , #{usable} ,"+
-                    "#{img}, #{description}, #{sellPrice}, #{discountRate}, #{createdDate},  #{creatorId}, #{stock})")
+                    "#{imgUrl}, #{description}, #{sellPrice}, #{discountRate}, #{createdDate},  #{creatorId}, #{stock})")
+    @Options(useGeneratedKeys=true, keyProperty="id", keyColumn = "id")   // 아이디 리턴..
     int addMenu(Menu menu);
 
     @Insert("INSERT INTO menu_options(menu_id, option_id) VALUES (#{menuId}, #{optionId})")
@@ -35,7 +36,7 @@ public interface MenuDao {
     @Update("UPDATE menus" +
             "SET name_ko = #{nameKo}, name_eng = #{nameEng}, product_price = #{productPrice}," +
             "category_ko = #{categoryKo}, category_eng = #{categoryEng}, monthly_menu = #{monthlyMenu} , usable = #{usable} ," +
-            "img = #{img}, description = #{description}, sell_price = #{sellPrice}," +
+            "img_url = #{imgUrl}, description = #{description}, sell_price = #{sellPrice}," +
             "discount_rate = #{discountRate}, stock = #{stock}, updated_date = #{updatedDate}," +
             "updater_id = #{updaterId} WHERE id = #{id}")
     void updateMenu(Menu menu);
