@@ -2,10 +2,10 @@ package com.internship.tmontica.security;
 
 import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.User;
+import com.internship.tmontica.util.UserConfigValueName;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-@Service
 public class JwtServiceImpl implements JwtService{
 
     private static final Logger log = LoggerFactory.getLogger(JwtServiceImpl.class);
@@ -50,7 +49,8 @@ public class JwtServiceImpl implements JwtService{
     public String getUserInfo(String key){
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String jwtToken = request.getHeader(JwtInterceptor.HEADER_AUTH);
+
+        String jwtToken = request.getHeader(UserConfigValueName.JWT_TOKEN_HEADER_KEY);
 
         Jws<Claims> jws = Jwts.parser()
                 .setSigningKey(KEY)
