@@ -49,7 +49,7 @@ public class JwtServiceImpl implements JwtService{
     public String getUserInfo(String key){
 
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String jwtToken = request.getHeader(JwtInterceptor.HEADER_AUTH);
+        String jwtToken = request.getHeader("Authorization");
 
         Jws<Claims> jws = Jwts.parser()
                 .setSigningKey(KEY)
