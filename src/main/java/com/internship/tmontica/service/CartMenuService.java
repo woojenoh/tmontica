@@ -25,7 +25,7 @@ public class CartMenuService {
 
     // 카트에서 삭제하기
     @Transactional
-    public void deleteCartMenu(int cartId){ cartMenuDao.deleteCartMenu(cartId); }
+    public int deleteCartMenu(int cartId){ return cartMenuDao.deleteCartMenu(cartId); }
 
     // 카트에 추가하기
     @Transactional

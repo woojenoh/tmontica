@@ -14,7 +14,7 @@ public interface CartMenuDao {
 
     // 카트에서 삭제하기
     @Delete("delete from cart_menus where id = #{cartId}")
-    void deleteCartMenu(int cartId);
+    int deleteCartMenu(int cartId);
 
     // 카트에 추가하기
     @Insert("insert into cart_menus values(#{quantity}, #{option}, 0, #{userId}, #{price}, #{menuId}, #{direct})")

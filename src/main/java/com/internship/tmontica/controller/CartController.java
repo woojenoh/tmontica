@@ -134,5 +134,14 @@ public class CartController {
         else return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
+    /** 카트 삭제하기 */
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteCartMenu(@PathVariable("id") int id){
+        //카트에 담긴 정보 삭제하기
+        int result = cartMenuService.deleteCartMenu(id);
+
+        if(result > 0) return new ResponseEntity(HttpStatus.OK);
+        else return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
 }
 
