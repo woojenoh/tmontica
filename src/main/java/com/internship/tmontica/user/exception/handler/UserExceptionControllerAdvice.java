@@ -73,11 +73,11 @@ public class UserExceptionControllerAdvice {
         return new TmonTicaExceptionFormat("user role", "부적절한 유저 권한 입니다.");
     }
 
-    @ExceptionHandler(MissingSessionUserIdException.class)
+    @ExceptionHandler(MissingSessionAttributeException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public TmonTicaExceptionFormat handleMissingSessionUserIdException(){
         log.info("Session Id Gone");
-        return new TmonTicaExceptionFormat("session userId", "세션 오류입니다.");
+        return new TmonTicaExceptionFormat("session attribute", "세션 어트리뷰트를 찾지 못했습니다.");
     }
 
 }

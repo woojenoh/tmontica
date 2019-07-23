@@ -6,7 +6,6 @@ import org.apache.ibatis.type.Alias;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-@Alias("option")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

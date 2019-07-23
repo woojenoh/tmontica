@@ -8,4 +8,5 @@ public interface JwtService {
 
     String getToken(User user);
     boolean isUsable(String jwt);
+    String getUserInfo(String key);
 }

@@ -33,9 +33,9 @@ public interface MenuDao {
     @Select("SELECT * FROM menus WHERE monthly_menu = 1 order by created_date desc Limit 4")
     List<Menu> getMonthlyMenus();
 
-    @Update("UPDATE menus" +
-            "SET name_ko = #{nameKo}, name_eng = #{nameEng}, product_price = #{productPrice}," +
-            "category_ko = #{categoryKo}, category_eng = #{categoryEng}, monthly_menu = #{monthlyMenu} , usable = #{usable} ," +
+    @Update("UPDATE menus " +
+            "SET name_ko = #{nameKo}, name_eng = #{nameEng}, product_price = #{productPrice}, " +
+            "category_ko = #{categoryKo}, category_eng = #{categoryEng}, monthly_menu = #{monthlyMenu}, usable = #{usable}, " +
             "img_url = #{imgUrl}, description = #{description}, sell_price = #{sellPrice}," +
             "discount_rate = #{discountRate}, stock = #{stock}, updated_date = #{updatedDate}," +
             "updater_id = #{updaterId} WHERE id = #{id}")
