@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,32 +73,46 @@ public class CartController {
 
     /** 카트 정보 가져오기 */
     @GetMapping
-    public ResponseEntity getCartMenu(@RequestParam String userId) {
-        CartMenu cartMenu = cartMenuService.getCartMenuByUserId(userId);
-        Menu menu = menuService.getMenuById(cartMenu.getMenuId());
+    public ResponseEntity<CartResp> getCartMenu(@RequestParam String userId) {
+        List<Cart_MenusResp> menus = new ArrayList<>(); // 반환할 객체 안의 menus에 들어갈 리스트
 
-        //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
-        String option = cartMenu.getOption();
-        String convert = ""; // 변환할 문자열
-        String[] arrOption = option.split("/");
-        for (int j = 0; j < arrOption.length; j++) {
-            String[] oneOption = arrOption[j].split("__");
-            Option tmpOption = optionService.getOptionById(Integer.valueOf(oneOption[0]));
-            if (j != 0) {
-                convert += "/";
+        // userId로 카트메뉴 정보 가져오기
+        List<CartMenu> cartMenus = cartMenuService.getCartMenuByUserId(userId);
+        int totalPrice = 0;
+        for (CartMenu cartMenu: cartMenus) {
+
+            //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
+            String option = cartMenu.getOption();
+            String convert = ""; // 변환할 문자열
+            String[] arrOption = option.split("/");
+            for (int j = 0; j < arrOption.length; j++) {
+                String[] oneOption = arrOption[j].split("__");
+                Option tmpOption = optionService.getOptionById(Integer.valueOf(oneOption[0]));
+                if (j != 0) {
+                    convert += "/";
+                }
+                if (tmpOption.getType().equals("Temperature")) {
+                    convert += tmpOption.getName();
+                } else {
+                    convert += tmpOption.getName() + "(" + oneOption[1] + "개)";
+                }
             }
-            if (tmpOption.getType().equals("Temperature")) {
-                convert += tmpOption.getName();
-            } else {
-                convert += tmpOption.getName() + "(" + oneOption[1] + "개)";
-            }
+
+            // 메뉴아이디로 메뉴정보 가져오기
+            Menu menu = menuService.getMenuById(cartMenu.getMenuId());
+
+            // List<Cart_MenusResp> 에 넣기
+            Cart_MenusResp cart_menusResp = new Cart_MenusResp(cartMenu.getId(), cartMenu.getMenuId(), menu.getNameEng(),
+                                                                menu.getNameKo(),menu.getImgUrl(), convert ,
+                                                                cartMenu.getQuantity(), cartMenu.getPrice(), menu.getStock());
+            menus.add(cart_menusResp);
+
+            // totalPrice 에 가격 누적
+            totalPrice += cartMenu.getPrice();
         }
 
+        CartResp cartResp = new CartResp(cartMenus.size(), totalPrice, menus); // 반환할 객체
 
-
-        Cart_MenusResp cart_menusResp = new Cart_MenusResp(cartMenu.getId(), cartMenu.getMenuId(), menu.getNameEng(), menu.getNameKo(),
-                                                            menu.getImgUrl(), convert , cartMenu.getQuantity(), cartMenu.getPrice(), menu.getStock());
-        CartResp cartResp = new CartResp();
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(cartResp,HttpStatus.OK);
     }
 }

@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CartMenuService {
@@ -37,7 +39,7 @@ public class CartMenuService {
 
     // userId로 cart_menus 조회하기
     @Transactional(readOnly = true)
-    public CartMenu getCartMenuByUserId(String userId){
+    public List<CartMenu> getCartMenuByUserId(String userId){
        return cartMenuDao.getCartMenuByUserId(userId);
     }
 }

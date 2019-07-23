@@ -4,6 +4,8 @@ import com.internship.tmontica.dto.CartMenu;
 import com.internship.tmontica.dto.OrderDetail;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 @Mapper
 public interface CartMenuDao {
     // 카트 아이디로 cart_menus 테이블에서 조회하기
@@ -32,7 +34,7 @@ public interface CartMenuDao {
 
     // userId로 cart_menus 조회하기
     @Select("select * from cart_menus where user_id = #{userId}")
-    CartMenu getCartMenuByUserId(String userId);
+    List<CartMenu> getCartMenuByUserId(String userId);
 
 
 }
