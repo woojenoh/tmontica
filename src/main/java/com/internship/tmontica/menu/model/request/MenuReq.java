@@ -1,7 +1,6 @@
 package com.internship.tmontica.menu.model.request;
 
 import lombok.Data;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Min;
@@ -18,7 +17,7 @@ public class MenuReq {
     @NotEmpty
     private String nameKo;
     private String description;
-    @NotNull(message = "이미지 파일은 필수입니다.")
+    @NotNull
     private MultipartFile imgFile;
     @Min(0)
     private int productPrice;

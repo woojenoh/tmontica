@@ -1,12 +1,9 @@
 package com.internship.tmontica.menu;
 
+import com.internship.tmontica.menu.model.response.*;
 import com.internship.tmontica.option.Option;
 import com.internship.tmontica.menu.model.request.MenuReq;
 import com.internship.tmontica.menu.model.request.MenuUpdateReq;
-import com.internship.tmontica.menu.model.response.MenuCategoryResp;
-import com.internship.tmontica.menu.model.response.MenuDetailResp;
-import com.internship.tmontica.menu.model.response.MenuMainResp;
-import com.internship.tmontica.menu.model.response.MenuSimpleResp;
 import com.internship.tmontica.util.CategoryName;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -115,10 +112,14 @@ public class MenuController {
         // 메뉴가 없으면 no content
         if(menu == null)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        modelMapper.map(menu, menuDetailResp);
         // 메뉴의 옵션 정보 가져오기
         List<Option> options = menuService.getOptionsById(menuId);
-        modelMapper.map(menu, menuDetailResp);
-        menuDetailResp.setOption(options);
+        Type listType = new TypeToken<List<MenuOptionResp>>(){}.getType();
+        List<MenuOptionResp> menuOptions = modelMapper.map(options, listType);
+
+        menuDetailResp.setOption(menuOptions);
 
         return new ResponseEntity<>(menuDetailResp, HttpStatus.OK);
     }

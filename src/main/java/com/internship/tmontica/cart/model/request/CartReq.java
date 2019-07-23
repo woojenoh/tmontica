@@ -1,5 +1,6 @@
 package com.internship.tmontica.cart.model.request;
 
+import com.internship.tmontica.cart.model.request.Cart_OptionReq;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;

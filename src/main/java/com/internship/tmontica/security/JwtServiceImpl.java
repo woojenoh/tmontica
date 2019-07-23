@@ -4,6 +4,7 @@ import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.User;
 import com.internship.tmontica.util.UserConfigValueName;
 import io.jsonwebtoken.*;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+@RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService{
 
     private static final Logger log = LoggerFactory.getLogger(JwtServiceImpl.class);

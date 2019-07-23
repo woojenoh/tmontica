@@ -1,5 +1,5 @@
 package com.internship.tmontica.menu.model.response;
-import com.internship.tmontica.option.Option;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,5 +19,5 @@ public class MenuDetailResp {
     private String categoryKo;
     private int stock;
     private boolean monthlyMenu;
-    private List<Option> option;
+    private List<MenuOptionResp> option;
 }
