@@ -31,5 +31,4 @@ public interface CartMenuDao {
     @Update("update cart_menus set quantity = #{quantity}, price = #{price} where id = #{id}")
     int updateCartMenuQuantity(int id, int price, int quantity);
 
-
 }

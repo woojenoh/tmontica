@@ -15,7 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
             "/api/orders/**", "/api/carts/**",
             "/api/users/signin", "/api/users/signup", "/api/users/duplicate/**",
             "/api/menus/**", "/api/options/**", "/api/users/signin", "/api/users/signup", "/api/users/duplicate/**",
-            "/api/users/findid/*", "/api/users/findpw","/swagger*/**", "/resources/**"
+            "/api/users/findid/*", "/api/users/findpw","/swagger*/**", "/resources/**" , "/images/**"
             , "/**/*.jpg", "/**/*.js", "/**/*.css", "/error/**"
     };
     @Override
