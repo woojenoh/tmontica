@@ -47,12 +47,12 @@ public class CartController {
                 optionStr += "/";
             }
             int optionId = option.get(i).getId();
-            int amount = option.get(i).getAmount();
-            optionStr += optionId + "__" + amount;
+            int opQuantity = option.get(i).getQuantity();
+            optionStr += optionId + "__" + opQuantity;
 
             // 옵션들의 가격 계산
             Option tmpOption = optionService.getOptionById(optionId);
-            optionPrice += (tmpOption.getPrice() * amount);
+            optionPrice += (tmpOption.getPrice() * opQuantity);
         }
 
         // 옵션, 수량 적용된 가격 계산하기

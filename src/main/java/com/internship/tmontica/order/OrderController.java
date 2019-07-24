@@ -36,9 +36,6 @@ public class OrderController {
     /** 주문 받기(결제하기) */
     @PostMapping
     public ResponseEntity<Map<String, Integer>> addOrder(@RequestBody @Valid OrderReq orderReq){
-        System.out.println("결제 컨트롤러 ");
-        System.out.println(orderReq);
-
         // 사용자 아이디 받아오기
         String userId = "testid"; //임시
 
@@ -46,7 +43,10 @@ public class OrderController {
 
         Order order = new Order(0,orderReq.getPayment(),orderReq.getTotalPrice(),orderReq.getUsedPoint(),
                 orderReq.getTotalPrice()-orderReq.getUsedPoint(), "미결제", orderReq.getUserId());
-        int orderId = 0;
+
+        // 주문테이블에 추가
+        orderService.addOrder(order);
+        int orderId = order.getId();
 
         // 주문상세테이블에 추가
         // 카트 아이디로 정보를 가져와서 order_details 에 추가
@@ -64,9 +64,6 @@ public class OrderController {
             }else {                 // 재고가 남아있는 경우
                 // 재고 수량 차감
                 menuService.updateMenuStock(orderDetail.getMenuId(), stock-quantity);
-                // 주문테이블에 추가
-                orderService.addOrder(order);
-                orderId = order.getId();
                 // 주문 상세 테이블에 추가
                 orderDetail.setOrderId(orderId); // 주문번호 set
                 orderService.addOrderDetail(orderDetail);
@@ -86,7 +83,6 @@ public class OrderController {
     /** 주문 취소 */
     @DeleteMapping("/{orderId}")
     public void deleteOrder(@PathVariable("orderId") int orderId){
-        // 컬럼을 지우는게 아니라 status를 주문취소로 수정하는것임
         // orders 테이블에서 status 수정
         orderService.deleteOrder(orderId);
         // order_status_log 테이블에도 주문취소 로그 추가
@@ -124,13 +120,6 @@ public class OrderController {
         OrderResp orderResp = new OrderResp(orderId, order.getPayment(), order.getStatus(), order.getTotalPrice(),
                                             order.getRealPrice(), order.getUsedPoint(), order.getOrderDate(), menus);
 
-        // 더미 데이터
-//        List<MenusResp> menus = new ArrayList<>();
-//        menus.add(new MenusResp(1, "americano", "HOT / 샷추가(1개) / SIZE UP", 3, 3800));
-//        menus.add(new MenusResp(2, "caffelatte", "ICE / 샷추가(1개) / SIZE UP", 1, 2300));
-//        OrderResp orderResp = new OrderResp("현장결제","미결제",6100,4000,2100,
-//                Date.valueOf("2019-07-19") ,menus);
-
         return orderResp;
     }
 
@@ -151,7 +140,6 @@ public class OrderController {
 
             orderListResps.add(orderListResp);
         }
-        //System.out.println(orderListResps);
 
         Map<String, List> map = new HashMap<>();
 
