@@ -116,9 +116,19 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
   }
 }
 
+function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
+  try {
+    // 유저 장바구니 디비에 추가하는 API 필요.
+    // 추가하고 Cart 상태에 추가한 요소 반영 필요.
+  } catch (error) {
+    yield put(cartActionCreators.fetchAddCartRejected(error.response));
+  }
+}
+
 export default function* userSagas() {
   yield takeEvery(cartActionTypes.ADD_LOCAL_CART, addLocalCartSagas);
   yield takeEvery(cartActionTypes.REMOVE_LOCAL_CART, removeLocalCartSagas);
   yield takeEvery(cartActionTypes.CHANGE_LOCAL_CART, changeLocalCartSagas);
   yield takeEvery(cartActionTypes.FETCH_SET_CART, fetchSetCartSagas);
+  yield takeEvery(cartActionTypes.FETCH_ADD_CART, fetchAddCartSagas);
 }

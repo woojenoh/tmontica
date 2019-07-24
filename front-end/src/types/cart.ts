@@ -95,6 +95,21 @@ export interface IFetchSetCartRejected {
   error: AxiosError;
 }
 
+export interface IFetchAddCart {
+  type: typeof cartActionTypes.FETCH_ADD_CART;
+  payload: ICartMenu;
+}
+
+export interface IFetchAddCartFulfilled {
+  type: typeof cartActionTypes.FETCH_ADD_CART_FULFILLED;
+  payload: ICart;
+}
+
+export interface IFetchAddCartRejected {
+  type: typeof cartActionTypes.FETCH_ADD_CART_REJECTED;
+  error: AxiosError;
+}
+
 export type TCartAction =
   | IInitializeLocalCart
   | IAddLocalCart
@@ -108,4 +123,7 @@ export type TCartAction =
   | IChangeLocalCartRejected
   | IFetchSetCart
   | IFetchSetCartFulfilled
-  | IFetchSetCartRejected;
+  | IFetchSetCartRejected
+  | IFetchAddCart
+  | IFetchAddCartFulfilled
+  | IFetchAddCartRejected;

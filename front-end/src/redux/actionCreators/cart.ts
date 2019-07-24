@@ -91,3 +91,24 @@ export function fetchSetCartRejected(error: AxiosError) {
     error
   };
 }
+
+export function fetchAddCart(payload: cartTypes.ICartMenu) {
+  return {
+    type: actionTypes.FETCH_ADD_CART,
+    payload
+  };
+}
+
+export function fetchAddCartFulfilled(payload: cartTypes.ICart) {
+  return {
+    type: actionTypes.FETCH_ADD_CART_FULFILLED,
+    payload
+  };
+}
+
+export function fetchAddCartRejected(error: AxiosError) {
+  return {
+    type: actionTypes.FETCH_ADD_CART_REJECTED,
+    error
+  };
+}
