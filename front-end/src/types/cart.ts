@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import * as cartActionTypes from "../redux/actionTypes/cart";
 
 export interface ICart {
@@ -17,6 +18,7 @@ export interface ICartMenu {
   optionArray?: ICartMenuOptionArrayItem[];
   cartId?: number;
   stock?: number;
+  direct?: boolean;
 }
 
 export interface ICartMenuOptionArrayItem {
@@ -79,6 +81,20 @@ export interface IChangeLocalCartRejected {
   error: Error;
 }
 
+export interface IFetchSetCart {
+  type: typeof cartActionTypes.FETCH_SET_CART;
+}
+
+export interface IFetchSetCartFulfilled {
+  type: typeof cartActionTypes.FETCH_SET_CART_FULFILLED;
+  payload: ICart;
+}
+
+export interface IFetchSetCartRejected {
+  type: typeof cartActionTypes.FETCH_SET_CART_REJECTED;
+  error: AxiosError;
+}
+
 export type TCartAction =
   | IInitializeLocalCart
   | IAddLocalCart
@@ -89,4 +105,7 @@ export type TCartAction =
   | IRemoveLocalCartRejected
   | IChangeLocalCart
   | IChangeLocalCartFulfilled
-  | IChangeLocalCartRejected;
+  | IChangeLocalCartRejected
+  | IFetchSetCart
+  | IFetchSetCartFulfilled
+  | IFetchSetCartRejected;

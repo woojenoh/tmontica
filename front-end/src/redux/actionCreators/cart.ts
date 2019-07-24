@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import * as actionTypes from "../actionTypes/cart";
 import * as cartTypes from "../../types/cart";
 
@@ -67,6 +68,26 @@ export function changeLocalCartFulfilled(payload: cartTypes.ICart) {
 export function changeLocalCartRejected(error: Error) {
   return {
     type: actionTypes.CHANGE_LOCAL_CART_REJECTED,
+    error
+  };
+}
+
+export function fetchSetCart() {
+  return {
+    type: actionTypes.FETCH_SET_CART
+  };
+}
+
+export function fetchSetCartFulfilled(payload: cartTypes.ICart) {
+  return {
+    type: actionTypes.FETCH_SET_CART_FULFILLED,
+    payload
+  };
+}
+
+export function fetchSetCartRejected(error: AxiosError) {
+  return {
+    type: actionTypes.FETCH_SET_CART_REJECTED,
     error
   };
 }
