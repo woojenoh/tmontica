@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RestController
-
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
