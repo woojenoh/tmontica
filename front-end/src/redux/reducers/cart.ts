@@ -60,6 +60,58 @@ export default function(state = INITIAL_STATE, action: cartTypes.TCartAction) {
         ...state,
         error: action.error
       };
+    // FETCH_SET_CART
+    case actionTypes.FETCH_SET_CART:
+      return state;
+    case actionTypes.FETCH_SET_CART_FULFILLED:
+      return {
+        ...state,
+        cart: action.payload
+      };
+    case actionTypes.FETCH_SET_CART_REJECTED:
+      return {
+        ...state,
+        error: action.error
+      };
+    // FETCH_ADD_CART
+    case actionTypes.FETCH_ADD_CART:
+      return state;
+    case actionTypes.FETCH_ADD_CART_FULFILLED:
+      return {
+        ...state,
+        cart: action.payload
+      };
+    case actionTypes.FETCH_ADD_CART_REJECTED:
+      return {
+        ...state,
+        error: action.error
+      };
+    // FETCH_REMOVE_CART
+    case actionTypes.FETCH_REMOVE_CART:
+      return state;
+    case actionTypes.FETCH_REMOVE_CART_FULFILLED:
+      return {
+        ...state,
+        cart: action.payload
+      };
+    case actionTypes.FETCH_REMOVE_CART_REJECTED:
+      return {
+        ...state,
+        error: action.error
+      };
+    // FETCH_CHANGE_CART
+    case actionTypes.FETCH_CHANGE_CART:
+      return state;
+    case actionTypes.FETCH_CHANGE_CART_FULFILLED:
+      return {
+        ...state,
+        cart: action.payload
+      };
+    case actionTypes.FETCH_CHANGE_CART_REJECTED:
+      return {
+        ...state,
+        error: action.error
+      };
     default:
       return state;
   }

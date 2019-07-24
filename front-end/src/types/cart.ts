@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import * as cartActionTypes from "../redux/actionTypes/cart";
 
 export interface ICart {
@@ -17,6 +18,7 @@ export interface ICartMenu {
   optionArray?: ICartMenuOptionArrayItem[];
   cartId?: number;
   stock?: number;
+  direct?: boolean;
 }
 
 export interface ICartMenuOptionArrayItem {
@@ -79,6 +81,66 @@ export interface IChangeLocalCartRejected {
   error: Error;
 }
 
+export interface IFetchSetCart {
+  type: typeof cartActionTypes.FETCH_SET_CART;
+}
+
+export interface IFetchSetCartFulfilled {
+  type: typeof cartActionTypes.FETCH_SET_CART_FULFILLED;
+  payload: ICart;
+}
+
+export interface IFetchSetCartRejected {
+  type: typeof cartActionTypes.FETCH_SET_CART_REJECTED;
+  error: AxiosError;
+}
+
+export interface IFetchAddCart {
+  type: typeof cartActionTypes.FETCH_ADD_CART;
+  payload: ICartMenu;
+}
+
+export interface IFetchAddCartFulfilled {
+  type: typeof cartActionTypes.FETCH_ADD_CART_FULFILLED;
+  payload: ICart;
+}
+
+export interface IFetchAddCartRejected {
+  type: typeof cartActionTypes.FETCH_ADD_CART_REJECTED;
+  error: AxiosError;
+}
+
+export interface IFetchRemoveCart {
+  type: typeof cartActionTypes.FETCH_REMOVE_CART;
+  payload: number;
+}
+
+export interface IFetchRemoveCartFulfilled {
+  type: typeof cartActionTypes.FETCH_REMOVE_CART_FULFILLED;
+  payload: ICart;
+}
+
+export interface IFetchRemoveCartRejected {
+  type: typeof cartActionTypes.FETCH_REMOVE_CART_REJECTED;
+  error: AxiosError;
+}
+
+export interface IFetchChangeCart {
+  type: typeof cartActionTypes.FETCH_CHANGE_CART;
+  id: number;
+  quantity: number;
+}
+
+export interface IFetchChangeCartFulfilled {
+  type: typeof cartActionTypes.FETCH_CHANGE_CART_FULFILLED;
+  payload: ICart;
+}
+
+export interface IFetchChangeCartRejected {
+  type: typeof cartActionTypes.FETCH_CHANGE_CART_REJECTED;
+  error: AxiosError;
+}
+
 export type TCartAction =
   | IInitializeLocalCart
   | IAddLocalCart
@@ -89,4 +151,16 @@ export type TCartAction =
   | IRemoveLocalCartRejected
   | IChangeLocalCart
   | IChangeLocalCartFulfilled
-  | IChangeLocalCartRejected;
+  | IChangeLocalCartRejected
+  | IFetchSetCart
+  | IFetchSetCartFulfilled
+  | IFetchSetCartRejected
+  | IFetchAddCart
+  | IFetchAddCartFulfilled
+  | IFetchAddCartRejected
+  | IFetchRemoveCart
+  | IFetchRemoveCartFulfilled
+  | IFetchRemoveCartRejected
+  | IFetchChangeCart
+  | IFetchChangeCartFulfilled
+  | IFetchChangeCartRejected;
