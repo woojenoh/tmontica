@@ -1,11 +1,9 @@
 package com.internship.tmontica.point;
 
 import lombok.Data;
-import org.apache.ibatis.type.Alias;
 
-import java.sql.Date;
+import java.util.Date;
 
-@Alias("point")
 @Data
 public class Point {
 

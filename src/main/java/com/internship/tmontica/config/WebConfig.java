@@ -14,8 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
     private static final String[] EXCLUDE_PATH = {
             "/api/orders/**", "/api/carts/**",
             "/api/users/signin", "/api/users/signup", "/api/users/duplicate/**",
-            "/api/menus/**", "/api/options/**", "/api/users/duplicate/**",
-            "/api/users/findid","/api/users/findid/confirm", "/api/users/findpw","/swagger*/**", "/resources/**"
+            "/api/menus/**", "/api/options/**", "/api/users/signin", "/api/users/signup", "/api/users/duplicate/**",
+            "/api/users/findid/*", "/api/users/findpw","/swagger*/**", "/resources/**" , "/images/**"
             , "/**/*.jpg", "/**/*.js", "/**/*.css", "/error/**"
     };
     @Override
