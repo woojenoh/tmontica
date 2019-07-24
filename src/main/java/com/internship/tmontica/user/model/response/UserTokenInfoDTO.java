@@ -54,6 +54,7 @@ public class UserTokenInfoDTO {
 
         if(isInt){
             stringBuilder.append("}");
+            return;
         }
         stringBuilder.append("\"}");
     }

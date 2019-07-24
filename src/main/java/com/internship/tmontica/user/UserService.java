@@ -1,6 +1,6 @@
 package com.internship.tmontica.user;
 
-import com.internship.tmontica.security.JwtServiceImpl;
+import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.exception.*;
 import com.internship.tmontica.user.model.request.*;
@@ -30,7 +30,7 @@ public class UserService { //implements UserDetail
     //private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
     private final MailSender sender;
-    private final JwtServiceImpl jwtService;
+    private final JwtService jwtService;
 
 
     private enum MailOption {
