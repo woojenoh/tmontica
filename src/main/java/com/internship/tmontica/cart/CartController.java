@@ -28,18 +28,13 @@ import java.util.Map;
 public class CartController {
     @Autowired
     private CartMenuService cartMenuService;
-    @Autowired
-    private OptionService optionService;
-    @Autowired
-    private MenuService menuService;
-
-
 
     /** 카트에 추가하기 */
     @PostMapping
     public ResponseEntity<List<CartIdResp>> addCart(@RequestBody @Valid List<CartReq> cartReqs) {
+
         List<CartIdResp> cartIds = cartMenuService.addCartApi(cartReqs);
-        return new ResponseEntity<List<CartIdResp>>(cartIds, HttpStatus.OK);
+        return new ResponseEntity(cartIds, HttpStatus.OK);
     }
 
 
@@ -48,9 +43,7 @@ public class CartController {
     public ResponseEntity<CartResp> getCartMenu() {
 
         CartResp cartResp = cartMenuService.getCartMenuApi();
-
         return new ResponseEntity(cartResp, HttpStatus.OK);
-
     }
 
 
