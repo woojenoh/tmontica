@@ -9,6 +9,8 @@ import com.internship.tmontica.cart.model.response.CartResp;
 import com.internship.tmontica.cart.model.response.Cart_MenusResp;
 import com.internship.tmontica.menu.MenuService;
 import com.internship.tmontica.option.OptionService;
+import com.internship.tmontica.security.JwtService;
+import com.internship.tmontica.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,8 @@ public class CartController {
     private OptionService optionService;
     @Autowired
     private MenuService menuService;
-
+    @Autowired
+    private JwtService jwtService;
     /** 카트에 추가하기 */
     @PostMapping
     public ResponseEntity<Map<String, Integer>> addCart(@RequestBody @Valid CartReq cartReq) {
@@ -58,8 +61,9 @@ public class CartController {
         // 옵션, 수량 적용된 가격 계산하기
         int price = optionPrice + menuService.getMenuById(cartReq.getMenuId()).getSellPrice();
         price *= cartReq.getQuantity();
-
-        CartMenu cartMenu = new CartMenu(cartReq.getQuantity(), optionStr, cartReq.getUserId(),
+        // 토큰에서 userId 가져오기
+        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
+        CartMenu cartMenu = new CartMenu(cartReq.getQuantity(), optionStr, userId,
                                             price, cartReq.getMenuId(), cartReq.isDirect());
         // 카트 테이블에 추가하기
         int result = cartMenuService.addCartMenu(cartMenu);
@@ -75,46 +79,17 @@ public class CartController {
     /** 카트 정보 가져오기 */
     @GetMapping
     public ResponseEntity<CartResp> getCartMenu(@RequestParam String userId) {
-        List<Cart_MenusResp> menus = new ArrayList<>(); // 반환할 객체 안의 menus에 들어갈 리스트
+        System.out.println(userId + " getCart controller in");
+        // 파라미터로 받은 userId와 토큰의 userId가 같은지 검사
+        String tokenUserId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id");
+        System.out.println(tokenUserId);
+        if(tokenUserId.equals(userId)){
+            CartResp cartResp = cartMenuService.getCartMenuApi(userId);
 
-        // userId로 카트메뉴 정보 가져오기
-        List<CartMenu> cartMenus = cartMenuService.getCartMenuByUserId(userId);
-        int totalPrice = 0;
-        for (CartMenu cartMenu: cartMenus) {
-
-            //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
-            String option = cartMenu.getOption();
-            String convert = ""; // 변환할 문자열
-            String[] arrOption = option.split("/");
-            for (int j = 0; j < arrOption.length; j++) {
-                String[] oneOption = arrOption[j].split("__");
-                Option tmpOption = optionService.getOptionById(Integer.valueOf(oneOption[0]));
-                if (j != 0) {
-                    convert += "/";
-                }
-                if (tmpOption.getType().equals("Temperature")) {
-                    convert += tmpOption.getName();
-                } else {
-                    convert += tmpOption.getName() + "(" + oneOption[1] + "개)";
-                }
-            }
-
-            // 메뉴아이디로 메뉴정보 가져오기
-            Menu menu = menuService.getMenuById(cartMenu.getMenuId());
-
-            // List<Cart_MenusResp> 에 넣기
-            Cart_MenusResp cart_menusResp = new Cart_MenusResp(cartMenu.getId(), cartMenu.getMenuId(), menu.getNameEng(),
-                                                                menu.getNameKo(),menu.getImgUrl(), convert ,
-                                                                cartMenu.getQuantity(), cartMenu.getPrice(), menu.getStock());
-            menus.add(cart_menusResp);
-
-            // totalPrice 에 가격 누적
-            totalPrice += cartMenu.getPrice();
+            return new ResponseEntity(cartResp,HttpStatus.OK);
         }
 
-        CartResp cartResp = new CartResp(cartMenus.size(), totalPrice, menus); // 반환할 객체
-
-        return new ResponseEntity(cartResp,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 

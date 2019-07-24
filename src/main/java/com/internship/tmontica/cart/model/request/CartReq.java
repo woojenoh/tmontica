@@ -8,8 +8,7 @@ import java.util.List;
 
 @Data
 public class CartReq {
-    @NotNull
-    private String userId;
+
     @NotNull
     private int menuId;
     @NotNull
