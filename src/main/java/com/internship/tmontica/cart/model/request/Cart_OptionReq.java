@@ -2,8 +2,11 @@ package com.internship.tmontica.cart.model.request;
 
 import lombok.Data;
 
+import javax.validation.constraints.Min;
+
 @Data
 public class Cart_OptionReq {
     private int id;
-    private int amount;
+    @Min(1)
+    private int quantity;
 }
