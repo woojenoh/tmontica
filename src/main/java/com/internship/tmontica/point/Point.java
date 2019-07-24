@@ -1,18 +1,23 @@
 package com.internship.tmontica.point;
 
 import lombok.Data;
-import org.apache.ibatis.type.Alias;
 
-import java.sql.Date;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
-@Alias("point")
 @Data
 public class Point {
 
+    @NotNull
     private String userId;
     private int id;
+    @NotNull
     private String type;
+    @NotNull
     private Date date;
+    @NotNull
+    @Min(0)
     private int amount;
     private String description;
 }

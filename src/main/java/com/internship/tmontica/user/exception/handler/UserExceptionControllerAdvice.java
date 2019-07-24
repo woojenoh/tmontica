@@ -5,6 +5,7 @@ import com.internship.tmontica.util.TmonTicaExceptionFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSendException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -15,48 +16,23 @@ public class UserExceptionControllerAdvice {
 
         private static final Logger log = LoggerFactory.getLogger(UserExceptionControllerAdvice.class);
 
-        @ExceptionHandler(InvalidUserIdException.class)
-        @ResponseStatus(HttpStatus.NOT_FOUND)
-        public TmonTicaExceptionFormat handleInvalidUserIdException(InvalidUserIdException e) {
+        @ExceptionHandler(UserException.class)
+        public ResponseEntity<TmonTicaExceptionFormat> handleUserException(UserException e) {
+            log.debug("UserExceptionMessage : {}", e.getErrorMessage());
+            switch (e.getUserExceptionType().getResponseType()) {
 
-            log.info("invalid UserId Exception");
-            return new TmonTicaExceptionFormat("userId", "사용 불가한 아이디 입니다.");
-        }
+                case BAD_REQUEST:
+                    return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), HttpStatus.BAD_REQUEST);
+                case NOT_FOUND:
+                    return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), HttpStatus.NOT_FOUND);
+                case CONFLICT:
+                    return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), HttpStatus.CONFLICT);
+                case UNAUTHORIZED:
+                    return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), HttpStatus.UNAUTHORIZED);
 
-        @ExceptionHandler(PasswordMismatchException.class)
-        @ResponseStatus(HttpStatus.BAD_REQUEST)
-        public TmonTicaExceptionFormat handlePasswordMisMatchException() {
-
-            log.info("password mismatch Exception");
-            return new TmonTicaExceptionFormat("password", "비밀번호가 일치하지 않습니다.");
-        }
-
-        @ExceptionHandler(UserIdNotFoundException.class)
-        @ResponseStatus(HttpStatus.NOT_FOUND)
-        public TmonTicaExceptionFormat handleUserIdNotFoundException() {
-            log.info("user id not found Exception");
-            return new TmonTicaExceptionFormat("userId", "존재하지 않는 아이디입니다.");
-        }
-
-        @ExceptionHandler(UserIdDuplicatedException.class)
-        @ResponseStatus(HttpStatus.CONFLICT)
-        public TmonTicaExceptionFormat handleUserIdDuplicatedException() {
-            log.info("user id duplicated");
-            return new TmonTicaExceptionFormat("userId", "중복된 아이디입니다.");
-        }
-
-        @ExceptionHandler(InvalidOptionException.class)
-        @ResponseStatus(HttpStatus.BAD_REQUEST)
-        public TmonTicaExceptionFormat handleInvalidOptionException() {
-            log.info("invalid option request");
-            return new TmonTicaExceptionFormat("option parameter", "구현되지 않은 옵션 파라미터 요청입니다.");
-        }
-
-        @ExceptionHandler(EmailMismatchException.class)
-        @ResponseStatus(HttpStatus.BAD_REQUEST)
-        public TmonTicaExceptionFormat handleEmailMismatchException() {
-            log.info("email address mismatch");
-            return new TmonTicaExceptionFormat("email info", "등록된 아이디의 이메일과 사용자가 입력한 이메일이 일치하지 않습니다.");
+                    default:
+                        return new ResponseEntity<>(new TmonTicaExceptionFormat("유저핸들러 케이스", "분류되지않은 케이스"), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         }
 
         @ExceptionHandler(MailSendException.class)
@@ -65,19 +41,4 @@ public class UserExceptionControllerAdvice {
             log.info("fail to send email");
             return new TmonTicaExceptionFormat("email sending", "이메일 전송 실패.");
         }
-
-    @ExceptionHandler(InvalidUserRoleException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public TmonTicaExceptionFormat handleInvalidUserRoleException(){
-        log.info("invalid User Role");
-        return new TmonTicaExceptionFormat("user role", "부적절한 유저 권한 입니다.");
-    }
-
-    @ExceptionHandler(MissingSessionAttributeException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public TmonTicaExceptionFormat handleMissingSessionUserIdException(){
-        log.info("Session Id Gone");
-        return new TmonTicaExceptionFormat("session attribute", "세션 어트리뷰트를 찾지 못했습니다.");
-    }
-
 }

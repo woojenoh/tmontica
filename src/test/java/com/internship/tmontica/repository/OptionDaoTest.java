@@ -1,6 +1,7 @@
 package com.internship.tmontica.repository;
 
-import com.internship.tmontica.dto.Option;
+import com.internship.tmontica.option.Option;
+import com.internship.tmontica.option.OptionDao;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
