@@ -173,7 +173,7 @@ public class MenuController {
         menu.setUpdatedDate(new Date());
         modelMapper.map(menuReq, menu);
 
-        // 이미지 파일 저장 ( 있으면 저장.. 없으면 기존 경로 저장.)
+        // 이미지 파일 저장 ( 있으면 저장.. 없으면 기존 경로 저장.) --> 서비스 로직에서 체크
         if(menuReq.getImgFile()!=null){
             String img = saveImg(menuReq.getImgFile(), menuReq.getCategoryEng(), menuReq.getNameEng());
             menu.setImgUrl(img);
