@@ -1,5 +1,6 @@
 package com.internship.tmontica.cart;
 
+import com.internship.tmontica.cart.model.response.CartIdResp;
 import com.internship.tmontica.menu.Menu;
 import com.internship.tmontica.option.Option;
 import com.internship.tmontica.cart.model.request.CartReq;
@@ -31,65 +32,25 @@ public class CartController {
     private OptionService optionService;
     @Autowired
     private MenuService menuService;
-    @Autowired
-    private JwtService jwtService;
+
+
+
     /** 카트에 추가하기 */
     @PostMapping
-    public ResponseEntity<Map<String, Integer>> addCart(@RequestBody @Valid CartReq cartReq) {
-        // direct : true 이면 카트에서 direct = true 인 것을 삭제하기
-        if (cartReq.isDirect() == true) {
-            cartMenuService.deleteDirectCartMenu();
-        }
-
-        List<Cart_OptionReq> option = cartReq.getOption();
-        String optionStr = "";
-        int optionPrice = 0;
-        for (int i = 0; i < option.size(); i++) {
-            // DB에 들어갈 옵션 문자열 만들기
-            if (i != 0) {
-                optionStr += "/";
-            }
-            int optionId = option.get(i).getId();
-            int opQuantity = option.get(i).getQuantity();
-            optionStr += optionId + "__" + opQuantity;
-
-            // 옵션들의 가격 계산
-            Option tmpOption = optionService.getOptionById(optionId);
-            optionPrice += (tmpOption.getPrice() * opQuantity);
-        }
-
-        // 옵션, 수량 적용된 가격 계산하기
-        int price = optionPrice + menuService.getMenuById(cartReq.getMenuId()).getSellPrice();
-        price *= cartReq.getQuantity();
-        // 토큰에서 userId 가져오기
-        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
-        CartMenu cartMenu = new CartMenu(cartReq.getQuantity(), optionStr, userId,
-                                            price, cartReq.getMenuId(), cartReq.isDirect());
-        // 카트 테이블에 추가하기
-        int result = cartMenuService.addCartMenu(cartMenu);
-        int cartId = cartMenu.getId();
-        Map<String, Integer> map = new HashMap<>(); // 반환값 cartId
-        map.put("cartId", cartId);
-
-        if(result > 0)return new ResponseEntity<>(map, HttpStatus.OK);
-        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<List<CartIdResp>> addCart(@RequestBody @Valid List<CartReq> cartReqs) {
+        List<CartIdResp> cartIds = cartMenuService.addCartApi(cartReqs);
+        return new ResponseEntity<List<CartIdResp>>(cartIds, HttpStatus.OK);
     }
 
 
     /** 카트 정보 가져오기 */
     @GetMapping
-    public ResponseEntity<CartResp> getCartMenu(@RequestParam String userId) {
-        System.out.println(userId + " getCart controller in");
-        // 파라미터로 받은 userId와 토큰의 userId가 같은지 검사
-        String tokenUserId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id");
-        System.out.println(tokenUserId);
-        if(tokenUserId.equals(userId)){
-            CartResp cartResp = cartMenuService.getCartMenuApi(userId);
+    public ResponseEntity<CartResp> getCartMenu() {
 
-            return new ResponseEntity(cartResp,HttpStatus.OK);
-        }
+        CartResp cartResp = cartMenuService.getCartMenuApi();
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(cartResp, HttpStatus.OK);
+
     }
 
 
@@ -112,7 +73,6 @@ public class CartController {
     public ResponseEntity deleteCartMenu(@PathVariable("id") int id){
         //카트에 담긴 정보 삭제하기
         int result = cartMenuService.deleteCartMenu(id);
-
         if(result > 0) return new ResponseEntity(HttpStatus.OK);
         else return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
