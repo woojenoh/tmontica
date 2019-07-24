@@ -4,7 +4,6 @@ import { AxiosError } from "axios";
 export interface IUserState {
   user: IUser | null;
   isSignin: boolean;
-  token: string | null;
 }
 
 export interface IUser {
@@ -28,6 +27,12 @@ export interface IUserSigninInfo {
   id: string;
   password: string;
   role?: "USER" | "ADMIN";
+}
+
+export interface IJwtToken {
+  sub: string;
+  exp: number;
+  userInfo: string;
 }
 
 export interface IFetchSignup {
@@ -62,6 +67,11 @@ export interface ISignout {
   type: typeof userActionTypes.SIGNOUT;
 }
 
+export interface ISetUser {
+  type: typeof userActionTypes.SET_USER;
+  payload: IUser;
+}
+
 export type TUserAction =
   | IFetchSignup
   | IFetchSignupFulfilled
@@ -69,4 +79,5 @@ export type TUserAction =
   | IFetchSignin
   | IFetchSigninFulfilled
   | IFetchSigninRejected
-  | ISignout;
+  | ISignout
+  | ISetUser;

@@ -1,16 +1,19 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
+import * as userTypes from "../../../types/user";
+import { numberCommaRegex } from "../../../utils";
 import "./styles.scss";
 
 export interface INavigationProps {
   isNavOpen: boolean;
   isSignin: boolean;
+  user: userTypes.IUser | null;
   handleNavClose(): void;
   signout(): void;
 }
 
 function Nav(props: INavigationProps) {
-  const { isNavOpen, handleNavClose, isSignin, signout } = props;
+  const { isNavOpen, handleNavClose, isSignin, signout, user } = props;
 
   return (
     <section className={isNavOpen ? "nav" : "nav nav--close"}>
@@ -21,7 +24,7 @@ function Nav(props: INavigationProps) {
       <div className={isNavOpen ? "nav__content" : "nav__content nav__content--close"}>
         <h1 className="nav__title">
           {isSignin ? (
-            "노우제님 안녕하세요!"
+            user && `${user.name}님 안녕하세요!`
           ) : (
             <>
               <Link to="/signin">로그인</Link>
@@ -33,7 +36,7 @@ function Nav(props: INavigationProps) {
         </span>
         {isSignin ? (
           <div className="nav__top">
-            <div className="nav__top-point">1,000P</div>
+            <div className="nav__top-point">{user && numberCommaRegex(user.point)}P</div>
             <div className="nav__top-logout" onClick={() => signout()}>
               로그아웃
             </div>

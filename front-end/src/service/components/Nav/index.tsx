@@ -5,7 +5,8 @@ import * as userActionCreators from "../../../redux/actionCreators/user";
 import * as rootTypes from "../../../types/index";
 
 const mapStateToProps = (state: rootTypes.IRootState) => ({
-  isSignin: state.user.isSignin
+  isSignin: state.user.isSignin,
+  user: state.user.user
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => {

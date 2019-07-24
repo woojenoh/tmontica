@@ -47,3 +47,10 @@ export function signout() {
     type: actionTypes.SIGNOUT
   };
 }
+
+export function setUser(payload: userTypes.IUser) {
+  return {
+    type: actionTypes.SET_USER,
+    payload
+  };
+}
