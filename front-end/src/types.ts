@@ -34,13 +34,12 @@ export type TMenu = {
 export type TBasicMenuOptionArray = Array<TBasicMenuOption>;
 export type TMenuOptionMap = Map<string, TMenuOption>;
 
-// export type T
-
 // 카트 추가 요청 타입
 export type TCartAddReq = {
   menuId: number;
   quantity: number;
   direct: boolean;
+  option: TBasicMenuOptionArray;
 };
 
 export interface ICart {
