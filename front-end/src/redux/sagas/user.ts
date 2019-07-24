@@ -7,7 +7,7 @@ import * as userTypes from "../../types/user";
 
 function* fetchSignupSagas(action: userTypes.IFetchSignup) {
   try {
-    yield axios.post("http://localhost:8080/api/users/signup", action.payload);
+    yield axios.post("http://tmontica-idev.tmon.co.kr/api/users/signup", action.payload);
     yield alert("가입이 완료되었습니다.");
     yield put(userActionCreators.fetchSignupFulfilled());
     yield history.push("/signin");
@@ -19,7 +19,10 @@ function* fetchSignupSagas(action: userTypes.IFetchSignup) {
 
 function* fetchSigninSagas(action: userTypes.IFetchSignin) {
   try {
-    const response = yield axios.post("http://localhost:8080/api/users/signin", action.payload);
+    const response = yield axios.post(
+      "http://tmontica-idev.tmon.co.kr/api/users/signin",
+      action.payload
+    );
     localStorage.setItem("JWT", response.data.authorization);
     yield alert("환영합니다!");
     yield put(userActionCreators.fetchSigninFulfilled());

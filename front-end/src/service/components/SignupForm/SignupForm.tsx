@@ -107,7 +107,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
 
     if (isIdOk) {
       axios
-        .get(`http://localhost:8080/api/users/duplicate/${id}`)
+        .get(`http://tmontica-idev.tmon.co.kr/api/users/duplicate/${id}`)
         .then(res => {
           this.setState({
             isIdNotSame: true
@@ -119,7 +119,6 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
             isIdNotSame: false
           });
           alert("사용 가능한 아이디가 아닙니다.");
-          console.log(error.response);
         });
     } else {
       alert("6~20자의 영문, 숫자만 사용 가능합니다.");
