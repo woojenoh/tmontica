@@ -1,6 +1,7 @@
 package com.internship.tmontica.user;
 
 import com.internship.tmontica.user.model.request.*;
+import com.internship.tmontica.user.model.response.UserFindIdRespDTO;
 import com.internship.tmontica.user.model.response.UserInfoRespDTO;
 import com.internship.tmontica.user.model.response.UserSignInRespDTO;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -73,7 +73,7 @@ public class UserController {
         if(userService.sendUserId(email, httpSession)){
             return new ResponseEntity<>("Send email Success", HttpStatus.OK);
         }
-        return new ResponseEntity<>("등록되지 않은 사용자입니다.", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("이메일 정보가 없어서 메일은 발송하지 않았습니다.", HttpStatus.OK);
     }
 
     @GetMapping("/findpw")
@@ -86,13 +86,14 @@ public class UserController {
     }
 
     @PostMapping("/findid/confirm")
-    public ResponseEntity<String> findIdConfirm(@RequestBody @Valid UserFindIdReqDTO userFindIdReqDTO, HttpSession session){
+    public ResponseEntity<UserFindIdRespDTO> findIdConfirm(@RequestBody @Valid UserFindIdReqDTO userFindIdReqDTO, HttpSession session){
 
-        if(userService.checkAuthCode(userFindIdReqDTO, session)){
-            return new ResponseEntity<>("correct Authcode", HttpStatus.OK);
+        UserFindIdRespDTO userFindIdRespDTO = userService.checkAuthCode(userFindIdReqDTO, session);
+        if(userFindIdRespDTO.isSuccess()){
+            return new ResponseEntity<>(userFindIdRespDTO, HttpStatus.OK);
         }
 
-        return new ResponseEntity<>("incorrect Authcode", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(userFindIdRespDTO, HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping("/{userId}")
