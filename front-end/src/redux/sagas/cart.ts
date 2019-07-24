@@ -1,5 +1,6 @@
 import { put, takeEvery, select } from "redux-saga/effects";
 import _ from "underscore";
+import axios from "axios";
 import * as cartActionTypes from "../actionTypes/cart";
 import * as cartActionCreators from "../actionCreators/cart";
 import * as cartTypes from "../../types/cart";
@@ -90,27 +91,13 @@ function* changeLocalCartSagas(action: cartTypes.IChangeLocalCart) {
 
 function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
   try {
-    // 유저 장바구니 불러오는 API 필요.
-    // 이건 임시 데이터.
-    yield put(
-      cartActionCreators.fetchSetCartFulfilled({
-        size: 1,
-        totalPrice: 1500,
-        menus: [
-          {
-            cartId: 10,
-            menuId: 2,
-            nameEng: "americano",
-            nameKo: "아메리카노",
-            imgUrl: "/img/coffee-sample.png",
-            option: "HOT/샷추가(1개)/사이즈업",
-            quantity: 1,
-            price: 1500,
-            stock: 100
-          }
-        ]
-      })
-    );
+    const jwtToken = localStorage.getItem("JWT");
+    const response = yield axios.get("http://tmontica-idev.tmon.co.kr/api/carts", {
+      headers: {
+        Authorization: jwtToken
+      }
+    });
+    yield put(cartActionCreators.fetchSetCartFulfilled(response.data));
   } catch (error) {
     yield put(cartActionCreators.fetchSetCartRejected(error.response));
   }
@@ -150,4 +137,5 @@ export default function* userSagas() {
   yield takeEvery(cartActionTypes.FETCH_SET_CART, fetchSetCartSagas);
   yield takeEvery(cartActionTypes.FETCH_ADD_CART, fetchAddCartSagas);
   yield takeEvery(cartActionTypes.FETCH_REMOVE_CART, fetchRemoveCartSagas);
+  yield takeEvery(cartActionCreators.fetchChangeCart, fetchChangeCartSagas);
 }
