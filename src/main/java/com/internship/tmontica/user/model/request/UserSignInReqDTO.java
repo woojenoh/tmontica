@@ -10,10 +10,8 @@ import javax.validation.constraints.Pattern;
 @Setter
 public class UserSignInReqDTO{
 
-    @Pattern(regexp="^[a-z0-9]{6,19}$")
     @NotNull
     private String id;
-    @Pattern(regexp="^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,19}")
     @NotNull
     private String password;
 }
