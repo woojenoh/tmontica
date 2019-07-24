@@ -4,7 +4,9 @@ import com.internship.tmontica.menu.model.response.*;
 import com.internship.tmontica.option.Option;
 import com.internship.tmontica.menu.model.request.MenuReq;
 import com.internship.tmontica.menu.model.request.MenuUpdateReq;
+import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.util.CategoryName;
+import com.internship.tmontica.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -30,6 +32,8 @@ public class MenuController {
     private MenuService menuService;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private JwtService jwtService;
 
     /** 전체 메뉴 (메인 화면 ) **/
     @GetMapping
@@ -137,20 +141,16 @@ public class MenuController {
         log.info("menuReq : {}", menuReq.toString());
 
         Menu menu = new Menu();
-        menu.setCreatedDate(new Date());
         modelMapper.map(menuReq, menu);
-        menu.setCreatorId(menuReq.getCreator());
+        menu.setCreatorId(JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id"));
 
         // 판매가가 올바른 값인지 검사
         int sellPrice = menuReq.getProductPrice() * (100 - menuReq.getDiscountRate())/100;
         if(sellPrice != menuReq.getSellPrice())
             return new ResponseEntity("sell price값이 틀렸습니다.", HttpStatus.BAD_REQUEST);
 
-        // 이미지 파일 저장
-        String img = saveImg(menuReq.getImgFile(), menuReq.getCategoryEng(), menuReq.getNameEng());
-        menu.setImgUrl(img);
         // 메뉴 저장
-        menuService.addMenu(menu, menuReq.getOptionIds());
+        menuService.addMenu(menu, menuReq.getOptionIds(), menuReq.getImgFile());
         return new ResponseEntity(HttpStatus.OK);
 
     }

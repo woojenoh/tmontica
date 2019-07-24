@@ -33,6 +33,7 @@ public class MenuReq {
     private int stock;
     @NotNull
     private boolean monthlyMenu;
+    private boolean usable = true;
     @NotEmpty
     private String creator;
     private List<Integer> optionIds = new ArrayList<>();
