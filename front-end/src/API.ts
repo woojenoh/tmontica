@@ -45,14 +45,14 @@ export const MenuAPI = (() => {
   };
 })();
 
-export const CartAPI = () => {
+export const CartAPI = (() => {
   function* addCart(cartAddReq: TCartAddReq) {
     try {
-      yield post(`${API_URL}/carts`, cartAddReq).then();
+      yield post(`${API_URL}/carts`, cartAddReq);
     } catch (error) {}
   }
 
   return {
     addCart
   };
-};
+})();

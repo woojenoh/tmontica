@@ -1,4 +1,4 @@
-import { ICartMenuOption } from "./types";
+import { ICartMenuOption, TBasicMenuOptionArray, TMenuOptionMap, TMenuOption } from "./types";
 
 // 숫자를 천 단위로 콤마 찍어주는 함수.
 export const numberCommaRegex = (number: number | string): string => {
@@ -17,4 +17,26 @@ export const optionToString = (option: ICartMenuOption): string => {
   } else {
     return stringArray.join("/");
   }
+};
+
+export const createCartAddReq = ({
+  menuId,
+  quantity,
+  option,
+  direct
+}: {
+  menuId: number;
+  quantity: number;
+  option: TMenuOptionMap;
+  direct: boolean;
+}) => {
+  const newOption = Array.from(option.values()).map(o => {
+    return { id: o.id, quantity: o.quantity };
+  });
+  return {
+    menuId,
+    quantity,
+    direct,
+    option: newOption
+  };
 };
