@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
-import * as userTypes from "../../../redux/types/user";
+import * as userTypes from "../../../types/user";
 import "./styles.scss";
 
 export interface ISigninFormProps {

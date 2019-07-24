@@ -3,7 +3,7 @@ import axios from "axios";
 import history from "../../history";
 import * as userActionTypes from "../actionTypes/user";
 import * as userActionCreators from "../actionCreators/user";
-import * as userTypes from "../types/user";
+import * as userTypes from "../../types/user";
 
 function* fetchSignupSagas(action: userTypes.IFetchSignup) {
   try {

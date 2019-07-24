@@ -1,6 +1,6 @@
 import history from "../../history";
 import * as actionTypes from "../actionTypes/user";
-import * as userTypes from "../types/user";
+import * as userTypes from "../../types/user";
 
 const INITIAL_STATE = {
   isSignin: localStorage.getItem("JWT") ? true : false,

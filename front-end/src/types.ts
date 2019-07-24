@@ -52,8 +52,8 @@ export interface ICartMenu {
   cartId?: number;
   stock?: number;
   menuId: number;
-  menuNameEng: string;
-  menuNameKo: string;
+  nameEng: string;
+  nameKo: string;
   imgUrl: string;
   option: string;
   quantity: number;
