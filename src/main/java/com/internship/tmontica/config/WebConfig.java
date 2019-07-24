@@ -14,8 +14,13 @@ public class WebConfig implements WebMvcConfigurer {
     private static final String[] EXCLUDE_PATH = {
             "/api/orders/**", "/api/carts/**",
             "/api/users/signin", "/api/users/signup", "/api/users/duplicate/**",
+<<<<<<< Updated upstream
             "/api/menus/**", "/api/options/**", "/api/users/duplicate/**",
             "/api/users/findid","/api/users/findid/confirm", "/api/users/findpw","/swagger*/**", "/resources/**"
+=======
+            "/api/menus/**", "/api/options/**",
+            "/api/users/findid/*", "/api/users/findpw","/swagger*/**", "/resources/**"
+>>>>>>> Stashed changes
             , "/**/*.jpg", "/**/*.js", "/**/*.css", "/error/**"
     };
     @Override

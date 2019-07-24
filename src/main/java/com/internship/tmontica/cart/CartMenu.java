@@ -16,15 +16,14 @@ public class CartMenu {
 
     @NotNull
     private String userId;
-
+    @NotNull
     private int price;  // 메뉴의 옵션, 수량이 모두 포함된 가격
-
     @NotNull
     private int menuId;
     @NotNull
     private boolean direct;
 
-    public CartMenu(@NotNull int quantity, String option, @NotNull String userId, int price, @NotNull int menuId, @NotNull boolean direct) {
+    public CartMenu(@NotNull int quantity, String option, @NotNull String userId, @NotNull int price, @NotNull int menuId, @NotNull boolean direct) {
         this.quantity = quantity;
         this.option = option;
         this.userId = userId;
