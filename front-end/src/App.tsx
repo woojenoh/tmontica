@@ -91,8 +91,8 @@ class App extends React.Component<RouteComponentProps> {
           <PrivateRoute exact path="/payment" component={Menus} />
           <PrivateRoute exact path="/orders" component={Orders} />
           <PrivateRoute exact path="/user" component={Menus} />
-          <Route exact path="/menus/:menuId([0-9])" component={Menu} />
-          <Route exact path="/menus/:categoryEng[a-zA-Z]" component={MenusSub} />
+          <Route exact path="/menus/:menuId([0-9]+)" component={Menu} />
+          <Route exact path="/menus/:categoryEng([a-zA-Z]+)" component={MenusSub} />
           <Route exact path="/admin/signin" component={Menus} />
           <Route exact path="/signin" component={Signin} />
           <Route exact path="/signup" component={Signup} />
