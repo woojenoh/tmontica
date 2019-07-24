@@ -125,10 +125,20 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
   }
 }
 
+function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
+  try {
+    // 유저 장바구니 디비에 요소 삭제하는 API 필요.
+    // 삭제하고 Cart 상태에도 요소 제거한거 반영 필요.
+  } catch (error) {
+    yield put(cartActionCreators.fetchRemoveCartRejected(error));
+  }
+}
+
 export default function* userSagas() {
   yield takeEvery(cartActionTypes.ADD_LOCAL_CART, addLocalCartSagas);
   yield takeEvery(cartActionTypes.REMOVE_LOCAL_CART, removeLocalCartSagas);
   yield takeEvery(cartActionTypes.CHANGE_LOCAL_CART, changeLocalCartSagas);
   yield takeEvery(cartActionTypes.FETCH_SET_CART, fetchSetCartSagas);
   yield takeEvery(cartActionTypes.FETCH_ADD_CART, fetchAddCartSagas);
+  yield takeEvery(cartActionTypes.FETCH_REMOVE_CART, fetchRemoveCartSagas);
 }

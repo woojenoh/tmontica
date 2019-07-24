@@ -112,3 +112,24 @@ export function fetchAddCartRejected(error: AxiosError) {
     error
   };
 }
+
+export function fetchRemoveCart(payload: number) {
+  return {
+    type: actionTypes.FETCH_REMOVE_CART,
+    payload
+  };
+}
+
+export function fetchRemoveCartFulfilled(payload: cartTypes.ICart) {
+  return {
+    type: actionTypes.FETCH_REMOVE_CART_FULFILLED,
+    payload
+  };
+}
+
+export function fetchRemoveCartRejected(error: AxiosError) {
+  return {
+    type: actionTypes.FETCH_REMOVE_CART_REJECTED,
+    error
+  };
+}
