@@ -18,11 +18,12 @@ interface MatchParams {
 
 interface IMenuProps extends RouteComponentProps<MatchParams> {}
 
+type TMenuOptionMap = Map<string, TMenuOption>;
 interface IMenuState {
   menu: TMenu;
   totalPrice: number;
   quantity: number;
-  option: Map<string, TMenuOption>;
+  option: TMenuOptionMap;
 }
 
 interface IMenuOptionProps {
@@ -37,14 +38,15 @@ interface IMenuOptionProps {
 }
 
 class MenuOption extends PureComponent<IMenuOptionProps> {
-  getOptionComponent(option: TMenuOption) {
+  getOptionComponent(option: TMenuOption, key: number) {
     const { id } = option;
+
     switch (id) {
       case 1:
         return (
           <div
-            key={id}
-            className="detail__hot temperature"
+            key={key}
+            className={`detail__hot temperature`}
             onClick={e => {
               this.props.handleSelectableOption(e, id, "temperature");
             }}
@@ -55,8 +57,8 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
       case 2:
         return (
           <div
-            key={id}
-            className="detail__ice temperature"
+            key={key}
+            className={`detail__ice temperature`}
             onClick={e => {
               this.props.handleSelectableOption(e, id, "temperature");
             }}
@@ -67,7 +69,7 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
       case 3:
         return (
           <div
-            key={id}
+            key={key}
             className="option__size"
             onClick={e => {
               this.props.handleSelectableOption(e, id);
@@ -137,7 +139,7 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
     return (
       <li key={this.props.typeName} className="detail__option">
         {_.chain(option)
-          .map(option => this.getOptionComponent(option))
+          .map((option, i) => this.getOptionComponent(option, i))
           .value()}
       </li>
     );
@@ -175,11 +177,12 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
       return;
     }
 
-    let totalPrice = this.getTotalPrice(quantity);
-    this.setState({
-      totalPrice,
-      quantity
-    });
+    this.setState(
+      {
+        quantity
+      },
+      this.updateTotalPrice
+    );
   }
 
   // 수량 조절가능한 옵션 클릭
@@ -194,15 +197,15 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
       return;
     }
     stateOption.set(option.type, option);
+    this.updateOptionAndTotalPrice(stateOption);
+  }
+
+  updateOptionAndTotalPrice(option: TMenuOptionMap) {
     this.setState(
       {
-        option: stateOption
+        option
       },
-      () => {
-        this.setState({
-          totalPrice: this.getTotalPrice() // 가격 재계산
-        });
-      }
+      this.updateTotalPrice
     );
   }
 
@@ -214,7 +217,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
       return;
     }
 
-    // 단일 선택 옵션(예: SizeUp)
+    // 단일 선택 옵션(예: SizeUp)인 경우는 선택 해제가 가능
     if (e.currentTarget.classList.contains("active") && typeof commonClassName === "undefined") {
       e.currentTarget.classList.remove("active");
 
@@ -225,27 +228,14 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
         {
           option: stateOption
         },
-        () => {
-          this.setState({
-            totalPrice: this.getTotalPrice() // 가격 재계산
-          });
-        }
+        this.updateTotalPrice
       );
       return;
     }
     // 아래는 여러 선택지가 있는 옵션
     // 옵션을 현재 선택한 옵션으로 대체
     stateOption.set(thisOption.type, thisOption);
-    this.setState(
-      {
-        option: stateOption
-      },
-      () => {
-        this.setState({
-          totalPrice: this.getTotalPrice() // 가격 재계산
-        });
-      }
-    );
+    this.updateOptionAndTotalPrice(stateOption);
 
     const detailOptionEle = e.currentTarget.closest(`.detail__option`);
     if (detailOptionEle === null) {
@@ -264,15 +254,34 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
 
     const menu = await MenuAPI.getMenuById(parseInt(menuId));
 
-    this.setState({
-      menu,
-      totalPrice: menu.sellPrice
-    });
+    this.setState(
+      {
+        menu
+      },
+      this.updateTotalPrice
+    );
+    return Promise.resolve();
   }
 
   componentDidMount() {
-    this.getMenu();
+    this.getMenu().then(() => {
+      // HOT/ICE 옵션 디폴트로 하나 선택
+      const defaultSelectedTemperatureOption = Array.from(
+        document.querySelectorAll(".temperature")
+      )[0] as HTMLElement;
+      if (typeof defaultSelectedTemperatureOption !== "undefined") {
+        defaultSelectedTemperatureOption.click();
+      }
+    });
   }
+
+  updateTotalPrice() {
+    this.setState({
+      totalPrice: this.getTotalPrice() // 가격 재계산
+    });
+  }
+
+  componentDidUpdate() {}
 
   getOptionFilteredBy(filterType: string, option: Array<TMenuOption>) {
     return _.chain(option)
