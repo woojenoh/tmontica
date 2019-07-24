@@ -25,7 +25,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("*") //http://localhost:3000
                 .allowedMethods("GET", "POST", "PUT", "DELETE");
     }
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new JwtInterceptor(jwtService))

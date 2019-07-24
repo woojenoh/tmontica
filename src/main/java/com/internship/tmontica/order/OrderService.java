@@ -9,6 +9,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderService {
 
     private final OrderDao orderDao;
@@ -36,25 +37,21 @@ public class OrderService {
     }
 
     // order_id로 주문 삭제하기(상태만 바꾸기)
-    @Transactional
     public void deleteOrder(int orderId){
         orderDao.deleteOrder(orderId);
     }
 
     // order_status_log 추가
-    @Transactional
     public int addOrderStatusLog(OrderStatusLog orderStatusLog){
         return orderDao.addOrderStatusLog(orderStatusLog);
     }
 
     // 주문테이블에 추가
-    @Transactional
     public int addOrder(Order order){
         return orderDao.addOrder(order);
     }
 
     // 주문 상세 테이블에 추가
-    @Transactional
     public int addOrderDetail(OrderDetail orderDetail){ return orderDao.addOrderDetail(orderDetail); }
 
 }
