@@ -5,13 +5,16 @@ export type TMenusItem = {
   imgUrl: string;
 };
 
-export type TMenuOption = {
+export interface TBasicMenuOption {
   id: number;
+  quantity: number;
+}
+
+export interface TMenuOption extends TBasicMenuOption {
   type: string;
   name?: string;
   price: number | 0;
-  quantity: number;
-};
+}
 
 export type TMenu = {
   id: number;
@@ -28,6 +31,17 @@ export type TMenu = {
   getOptionById(id: number): TMenuOption;
 };
 
+export type TBasicMenuOptionArray = Array<TBasicMenuOption>;
+export type TMenuOptionMap = Map<string, TMenuOption>;
+
+// 카트 추가 요청 타입
+export type TCartAddReq = {
+  menuId: number;
+  quantity: number;
+  direct: boolean;
+  option: TBasicMenuOptionArray;
+};
+
 export interface ICart {
   size: number;
   totalPrice: number;
@@ -38,8 +52,8 @@ export interface ICartMenu {
   cartId?: number;
   stock?: number;
   menuId: number;
-  menuNameEng: string;
-  menuNameKo: string;
+  nameEng: string;
+  nameKo: string;
   imgUrl: string;
   option: string;
   quantity: number;

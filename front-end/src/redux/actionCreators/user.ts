@@ -1,5 +1,5 @@
 import * as actionTypes from "../actionTypes/user";
-import * as userTypes from "../types/user";
+import * as userTypes from "../../types/user";
 import { AxiosError } from "axios";
 
 export function fetchSignup(payload: userTypes.IUserSignupInfo) {
@@ -45,5 +45,12 @@ export function fetchSigninRejected(error: AxiosError) {
 export function signout() {
   return {
     type: actionTypes.SIGNOUT
+  };
+}
+
+export function setUser(payload: userTypes.IUser) {
+  return {
+    type: actionTypes.SET_USER,
+    payload
   };
 }

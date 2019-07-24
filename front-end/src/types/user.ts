@@ -1,10 +1,9 @@
-import * as userActionTypes from "../actionTypes/user";
+import * as userActionTypes from "../redux/actionTypes/user";
 import { AxiosError } from "axios";
 
 export interface IUserState {
   user: IUser | null;
   isSignin: boolean;
-  token: string | null;
 }
 
 export interface IUser {
@@ -16,7 +15,7 @@ export interface IUser {
 }
 
 export interface IUserSignupInfo {
-  id: string; // 유저의 아이디
+  id: string;
   password: string;
   passwordCheck: string;
   name: string;
@@ -25,9 +24,15 @@ export interface IUserSignupInfo {
 }
 
 export interface IUserSigninInfo {
-  id: string; // 유저의 아이디
+  id: string;
   password: string;
   role?: "USER" | "ADMIN";
+}
+
+export interface IJwtToken {
+  sub: string;
+  exp: number;
+  userInfo: string;
 }
 
 export interface IFetchSignup {
@@ -62,6 +67,11 @@ export interface ISignout {
   type: typeof userActionTypes.SIGNOUT;
 }
 
+export interface ISetUser {
+  type: typeof userActionTypes.SET_USER;
+  payload: IUser;
+}
+
 export type TUserAction =
   | IFetchSignup
   | IFetchSignupFulfilled
@@ -69,4 +79,5 @@ export type TUserAction =
   | IFetchSignin
   | IFetchSigninFulfilled
   | IFetchSigninRejected
-  | ISignout;
+  | ISignout
+  | ISetUser;

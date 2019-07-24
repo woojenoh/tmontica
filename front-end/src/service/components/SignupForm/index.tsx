@@ -1,7 +1,7 @@
 import SignupForm from "./SignupForm";
 import { connect } from "react-redux";
 import * as userActionCreators from "../../../redux/actionCreators/user";
-import * as userTypes from "../../../redux/types/user";
+import * as userTypes from "../../../types/user";
 import { Dispatch } from "redux";
 
 const mapDispatchToProps = (dispatch: Dispatch) => {

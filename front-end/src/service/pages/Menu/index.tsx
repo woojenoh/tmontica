@@ -1,9 +1,10 @@
 import React, { Component, PureComponent, MouseEvent } from "react";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
-import { MenuAPI } from "../../../API";
+import { MenuAPI, CartAPI } from "../../../API";
 import _ from "underscore";
-import { TMenuOption, TMenu } from "../../../types";
+import { TMenuOption, TMenu, TMenuOptionMap } from "../../../types";
+import { createCartAddReq } from "../../../utils";
 
 const getOptionById = (options: Array<TMenuOption>, id: number) => {
   return _.chain(options)
@@ -18,7 +19,6 @@ interface MatchParams {
 
 interface IMenuProps extends RouteComponentProps<MatchParams> {}
 
-type TMenuOptionMap = Map<string, TMenuOption>;
 interface IMenuState {
   menu: TMenu;
   totalPrice: number;
@@ -165,6 +165,21 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
         : 0;
 
     return (sellPrice + optionPrice) * (quantity || this.state.quantity);
+  }
+
+  // 바로구매
+  handleDirectOrder() {
+    if (window.confirm("구매하시겠습니까?")) {
+      const cartAddReq = createCartAddReq({
+        menuId: this.state.menu.id,
+        quantity: this.state.quantity,
+        option: this.state.option,
+        direct: true
+      });
+      try {
+        CartAPI.addCart(cartAddReq).next();
+      } catch (error) {}
+    }
   }
 
   handleQuantity(isPlus: boolean) {
@@ -355,7 +370,15 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
               </div>
               <div className="detail__buttons">
                 <button className="button detail__button">장바구니</button>
-                <button className="button button--orange detail__button">구매하기</button>
+                <button
+                  className="button button--orange detail__button"
+                  onClick={e => {
+                    e.preventDefault();
+                    this.handleDirectOrder();
+                  }}
+                >
+                  구매하기
+                </button>
               </div>
             </div>
           </section>
