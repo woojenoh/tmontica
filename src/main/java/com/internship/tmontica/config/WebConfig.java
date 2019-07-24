@@ -12,8 +12,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
     private final JwtService jwtService;
     private static final String[] EXCLUDE_PATH = {
+            "/api/orders/**", "/api/carts/**",
             "/api/users/signin", "/api/users/signup", "/api/users/duplicate/**",
-            "/api/users/findid/*", "/api/users/findpw","/swagger*/**", "/resources/**"
+            "/api/menus/**", "/api/options/**", "/api/users/signin", "/api/users/signup", "/api/users/duplicate/**",
+            "/api/users/findid/*", "/api/users/findpw","/swagger*/**", "/resources/**" , "/images/**"
             , "/**/*.jpg", "/**/*.js", "/**/*.css", "/error/**"
     };
     @Override
@@ -23,7 +25,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("*") //http://localhost:3000
                 .allowedMethods("GET", "POST", "PUT", "DELETE");
     }
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new JwtInterceptor(jwtService))
