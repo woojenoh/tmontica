@@ -10,6 +10,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserSignInRespDTO {
 
-    private String result;
     private String authorization;
 }
