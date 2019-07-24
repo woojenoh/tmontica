@@ -54,7 +54,42 @@ function* removeLocalCart(action: cartTypes.IRemoveLocalCart) {
   }
 }
 
+function* changeLocalCart(action: cartTypes.IChangeLocalCart) {
+  try {
+    const state = yield select();
+    const { localCart } = yield state.cart;
+    // 언더스코어로 새로운 객체를 생성한 뒤 프로퍼티들 변경.
+    const newCart = yield _(localCart).clone();
+    const targetMenus = yield newCart.menus.map((m: cartTypes.ICartMenu, index: number) => {
+      if (index === action.id) {
+        const changeQuantity = m.quantity - action.quantity;
+        if (changeQuantity > 0) {
+          // 수량이 줄었을 경우.
+          newCart.size -= changeQuantity;
+          newCart.totalPrice -= m.price * changeQuantity;
+        } else {
+          // 수량이 늘었을 경우.
+          newCart.size += -changeQuantity;
+          newCart.totalPrice += m.price * -changeQuantity;
+        }
+        m.quantity = action.quantity;
+        return m;
+      } else {
+        return m;
+      }
+    });
+    newCart.menus = targetMenus;
+    // 완성된 객체를 로컬 스토리지와 상태에 저장.
+    yield localStorage.setItem("LocalCart", JSON.stringify(newCart));
+    yield put(cartActionCreators.changeLocalCartFulfilled(newCart));
+  } catch (error) {
+    yield alert("문제가 발생했습니다!");
+    yield put(cartActionCreators.changeLocalCartRejected(error));
+  }
+}
+
 export default function* userSagas() {
   yield takeEvery(cartActionTypes.ADD_LOCAL_CART, addLocalCart);
   yield takeEvery(cartActionTypes.REMOVE_LOCAL_CART, removeLocalCart);
+  yield takeEvery(cartActionTypes.CHANGE_LOCAL_CART, changeLocalCart);
 }

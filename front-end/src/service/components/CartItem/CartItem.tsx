@@ -9,7 +9,9 @@ export interface ICartItemProps {
   option: string | Object;
   quantity: number;
   imgUrl: string;
+  isSignin: boolean;
   removeLocalCart(payload: number): void;
+  changeLocalCart(id: number, quantity: number): void;
 }
 
 export interface ICartItemState {
@@ -34,12 +36,13 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
   };
 
   handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // DB에 수량 갱신도 필요.
-    // 갱신하고 장바구니 DB 다시 불러오는 것도 필요.
-    // 장바구니 DB 다시 불러오지 않으려면 Redux에 있는 Cart 데이터 수정하는 함수 필요할듯?
+    const { id, isSignin, changeLocalCart } = this.props;
+    if (isSignin) {
+    } else {
+      changeLocalCart(id, Number(e.currentTarget.value));
+    }
     this.setState({
       quantity: Number(e.currentTarget.value)
-      // option의 value가 string으로 들어가서 Number로 변환해줘야 하는듯.
     });
   };
 

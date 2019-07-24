@@ -48,3 +48,25 @@ export function removeLocalCartRejected(error: Error) {
     error
   };
 }
+
+export function changeLocalCart(id: number, quantity: number) {
+  return {
+    type: actionTypes.CHANGE_LOCAL_CART,
+    id,
+    quantity
+  };
+}
+
+export function changeLocalCartFulfilled(payload: cartTypes.ICart) {
+  return {
+    type: actionTypes.CHANGE_LOCAL_CART_FULFILLED,
+    payload
+  };
+}
+
+export function changeLocalCartRejected(error: Error) {
+  return {
+    type: actionTypes.CHANGE_LOCAL_CART_REJECTED,
+    error
+  };
+}
