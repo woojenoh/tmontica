@@ -1,9 +1,10 @@
 import { TCartAddReq } from "./types";
 import history from "./history";
 
-const API_URL = "http://localhost:3000/fakeapi";
+// const API_URL = "http://localhost:3000/fakeapi";
 // const API_URL = "https://my-json-server.typicode.com/yeolsa/tmontica-json";
 // const API_URL = "http://tmontica-idev.tmon.co.kr/api";
+export const API_URL = "http://localhost:8080/api";
 
 function fetchJSON(reqURL: string) {
   return fetch(reqURL, {
@@ -49,14 +50,14 @@ export const MenuAPI = (() => {
 })();
 
 export const CartAPI = (() => {
-  function* addCart(cartAddReq: TCartAddReq) {
+  function* addCart(cartAddReqs: Array<TCartAddReq>) {
     try {
-      // yield post(`${API_URL}/carts`, cartAddReq);
-      if (cartAddReq.direct) {
-        yield localStorage.setItem("isDirect", "Y");
-        yield history.push("/payment");
+      yield post(`${API_URL}/carts`, cartAddReqs);
+      if (cartAddReqs[0].direct) {
+        localStorage.setItem("isDirect", "Y");
+        history.push("/payment");
       } else {
-        yield localStorage.setItem("isDirect", "N");
+        localStorage.setItem("isDirect", "N");
       }
     } catch (error) {}
   }

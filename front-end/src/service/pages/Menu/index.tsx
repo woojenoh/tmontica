@@ -1,10 +1,11 @@
-import React, { Component, PureComponent, MouseEvent } from "react";
+import React, { Component, PureComponent, MouseEvent, Fragment } from "react";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import { MenuAPI, CartAPI } from "../../../API";
 import _ from "underscore";
 import { TMenuOption, TMenu, TMenuOptionMap } from "../../../types";
 import { createCartAddReq } from "../../../utils";
+import uuid from "uuid";
 
 const getOptionById = (options: Array<TMenuOption>, id: number) => {
   return _.chain(options)
@@ -38,14 +39,14 @@ interface IMenuOptionProps {
 }
 
 class MenuOption extends PureComponent<IMenuOptionProps> {
-  getOptionComponent(option: TMenuOption, key: number) {
+  getOptionComponent(option: TMenuOption) {
     const { id } = option;
 
     switch (id) {
       case 1:
         return (
           <div
-            key={key}
+            key={uuid.v4()}
             className={`detail__hot temperature`}
             onClick={e => {
               this.props.handleSelectableOption(e, id, "temperature");
@@ -57,7 +58,7 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
       case 2:
         return (
           <div
-            key={key}
+            key={uuid.v4()}
             className={`detail__ice temperature`}
             onClick={e => {
               this.props.handleSelectableOption(e, id, "temperature");
@@ -68,45 +69,7 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
         );
       case 3:
         return (
-          <div
-            key={key}
-            className="option__size"
-            onClick={e => {
-              this.props.handleSelectableOption(e, id);
-            }}
-          >
-            사이즈 추가
-          </div>
-        );
-      case 4:
-        return (
-          <>
-            <span className="option__title">샷 추가</span>
-            <div className="option__counter">
-              <div
-                className="counter__minus"
-                onClick={e => this.props.handleCountableOptionClick(false, option)}
-              >
-                -
-              </div>
-              <input
-                type="number"
-                name="shot"
-                className="counter__number"
-                value={option.quantity}
-              />
-              <div
-                className="counter__plus"
-                onClick={e => this.props.handleCountableOptionClick(true, option)}
-              >
-                +
-              </div>
-            </div>
-          </>
-        );
-      case 5:
-        return (
-          <>
+          <Fragment key={uuid.v4()}>
             <span className="option__title">시럽 추가</span>
             <div className="option__counter">
               <div
@@ -120,6 +83,7 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
                 name="syrup"
                 className="counter__number"
                 value={option.quantity}
+                readOnly
               />
               <div
                 className="counter__plus"
@@ -128,7 +92,46 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
                 +
               </div>
             </div>
-          </>
+          </Fragment>
+        );
+      case 4:
+        return (
+          <Fragment key={uuid.v4()}>
+            <span className="option__title">샷 추가</span>
+            <div className="option__counter">
+              <div
+                className="counter__minus"
+                onClick={e => this.props.handleCountableOptionClick(false, option)}
+              >
+                -
+              </div>
+              <input
+                type="number"
+                name="shot"
+                className="counter__number"
+                value={option.quantity}
+                readOnly
+              />
+              <div
+                className="counter__plus"
+                onClick={e => this.props.handleCountableOptionClick(true, option)}
+              >
+                +
+              </div>
+            </div>
+          </Fragment>
+        );
+      case 5:
+        return (
+          <div
+            key={uuid.v4()}
+            className="option__size"
+            onClick={e => {
+              this.props.handleSelectableOption(e, id);
+            }}
+          >
+            사이즈 추가
+          </div>
         );
     }
   }
@@ -137,9 +140,9 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
     const option = this.props.option;
 
     return (
-      <li key={this.props.typeName} className="detail__option">
+      <li key={uuid.v4()} className="detail__option">
         {_.chain(option)
-          .map((option, i) => this.getOptionComponent(option, i))
+          .map((option, i) => this.getOptionComponent(option))
           .value()}
       </li>
     );
@@ -177,7 +180,8 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
         direct: true
       });
       try {
-        CartAPI.addCart(cartAddReq).next();
+        const itr = CartAPI.addCart([cartAddReq]);
+        const value = itr.next().value;
       } catch (error) {}
     }
   }
@@ -338,7 +342,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
               </div>
               <ul className="detail__options">
                 {this.renderDetailOptions("Temperature", menu.option)}
-                <li key="quantity" className="detail__option">
+                <li key={uuid.v4()} className="detail__option">
                   <span className="option__title">수량</span>
                   <div className="option__counter">
                     <div className="counter__minus" onClick={e => this.handleQuantity(false)}>
@@ -349,6 +353,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
                       name="quantity"
                       className="counter__number"
                       value={this.state.quantity}
+                      readOnly
                     />
                     <div className="counter__plus" onClick={e => this.handleQuantity(true)}>
                       +

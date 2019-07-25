@@ -1,5 +1,7 @@
 front-end/.vscode/settings.json
 
+.java-version
+
 # eclipse
 .classpath
 .project
@@ -90,3 +92,6 @@ Temporary Items
 hs_err_pid*
 
 /.gitignore
+
+*.sql
+.factorypath

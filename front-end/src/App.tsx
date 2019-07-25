@@ -14,6 +14,7 @@ import MenusSub from "./service/pages/MenusSub";
 import Signin from "./service/pages/Signin";
 import Signup from "./service/pages/Signup";
 import Orders from "./service/pages/Orders";
+import Payment from "./service/pages/Payment";
 
 class App extends React.Component<RouteComponentProps> {
   // 임시로 만든 로그인 정보
@@ -88,7 +89,7 @@ class App extends React.Component<RouteComponentProps> {
           <AdminRoute exact path="/admin/banners" component={Menus} />
           <AdminRoute exact path="/admin/statistics" component={Menus} />
           <AdminRoute exact path="/admin" component={Menus} />
-          <PrivateRoute exact path="/payment" component={Menus} />
+          <PrivateRoute exact path="/payment" component={Payment} />
           <PrivateRoute exact path="/orders" component={Orders} />
           <PrivateRoute exact path="/user" component={Menus} />
           <Route exact path="/menus/:menuId([0-9]+)" component={Menu} />

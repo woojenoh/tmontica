@@ -6,10 +6,11 @@ import * as userActionTypes from "../actionTypes/user";
 import * as userActionCreators from "../actionCreators/user";
 import * as userTypes from "../../types/user";
 import * as cartActionCreators from "../actionCreators/cart";
+import { API_URL } from "../../API";
 
 function* fetchSignupSagas(action: userTypes.IFetchSignup) {
   try {
-    yield axios.post("http://tmontica-idev.tmon.co.kr/api/users/signup", action.payload);
+    yield axios.post(`${API_URL}/users/signup`, action.payload);
     yield put(userActionCreators.fetchSignupFulfilled());
     yield alert("가입이 완료되었습니다.");
     yield history.push("/signin");
@@ -21,10 +22,7 @@ function* fetchSignupSagas(action: userTypes.IFetchSignup) {
 
 function* fetchSigninSagas(action: userTypes.IFetchSignin) {
   try {
-    const response = yield axios.post(
-      "http://tmontica-idev.tmon.co.kr/api/users/signin",
-      action.payload
-    );
+    const response = yield axios.post(`${API_URL}/users/signin`, action.payload);
     // 토큰에서 유저 정보를 가져와 상태에 저장한다.
     const jwtToken = jwt(response.data.authorization) as userTypes.IJwtToken;
     const parsedUserInfo = JSON.parse(jwtToken.userInfo);
