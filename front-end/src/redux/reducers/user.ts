@@ -12,7 +12,8 @@ if (localJwt) {
 }
 
 const INITIAL_STATE = {
-  isSignin: localStorage.getItem("JWT") ? true : false,
+  isSignin: localJwt ? true : false,
+  isAdmin: parsedUserInfo ? parsedUserInfo.role === "ADMIN" : false,
   user: parsedUserInfo || null
 } as userTypes.IUserState;
 

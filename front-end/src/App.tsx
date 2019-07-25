@@ -7,6 +7,8 @@ import {
   RouteComponentProps,
   RouteProps
 } from "react-router-dom";
+import { connect } from "react-redux";
+import * as rootTypes from "./types/index";
 import Header from "./service/components/Header";
 import Menu from "./service/pages/Menu";
 import Menus from "./service/pages/Menus";
@@ -16,15 +18,14 @@ import Signup from "./service/pages/Signup";
 import Orders from "./service/pages/Orders";
 import Payment from "./service/pages/Payment";
 
-class App extends React.Component<RouteComponentProps> {
-  // 임시로 만든 로그인 정보
-  state = {
-    isSignin: true,
-    isAdmin: true
-  };
+export interface IAppProps extends RouteComponentProps {
+  isSignin: boolean;
+  isAdmin: boolean;
+}
 
+class App extends React.Component<IAppProps> {
   AdminRoute = ({ component: Component, ...rest }: RouteProps) => {
-    const { isSignin, isAdmin } = this.state;
+    const { isSignin, isAdmin } = this.props;
 
     if (Component) {
       return (
@@ -50,7 +51,7 @@ class App extends React.Component<RouteComponentProps> {
   };
 
   PrivateRoute = ({ component: Component, ...rest }: RouteProps) => {
-    const { isSignin } = this.state;
+    const { isSignin } = this.props;
 
     if (Component) {
       return (
@@ -105,4 +106,9 @@ class App extends React.Component<RouteComponentProps> {
   }
 }
 
-export default withRouter(App);
+const mapStateToProps = (state: rootTypes.IRootState) => ({
+  isSignin: state.user.isSignin,
+  isAdmin: state.user.isAdmin
+});
+
+export default connect(mapStateToProps)(withRouter(App));

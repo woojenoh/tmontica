@@ -5,6 +5,7 @@ import jwt from "jwt-decode";
 import * as userActionTypes from "../actionTypes/user";
 import * as userActionCreators from "../actionCreators/user";
 import * as userTypes from "../../types/user";
+import * as cartActionCreators from "../actionCreators/cart";
 import { API_URL } from "../../API";
 
 function* fetchSignupSagas(action: userTypes.IFetchSignup) {
@@ -28,8 +29,10 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
     yield put(userActionCreators.setUser(parsedUserInfo));
     // JWT를 로컬 스토리지에 저장한다.
     yield localStorage.setItem("JWT", response.data.authorization);
-    yield put(userActionCreators.fetchSigninFulfilled());
     yield alert("환영합니다!");
+    yield put(userActionCreators.fetchSigninFulfilled());
+    // 로그인 후 유저의 장바구니를 가져온다. 순서를 보장하기 위해 로그인 사가에.
+    yield put(cartActionCreators.fetchSetCart());
     yield history.push("/");
   } catch (error) {
     yield put(userActionCreators.fetchSigninRejected(error.response));
