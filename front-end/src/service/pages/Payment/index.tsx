@@ -1,6 +1,8 @@
 import * as React from "react";
 import "./styles.scss";
+import history from "../../../history";
 import { RouteComponentProps } from "react-router-dom";
+import { ICartMenu } from "../../../types/cart";
 
 interface MatchParams {
   categoryEng: string;
@@ -10,12 +12,61 @@ interface IPaymentProps extends RouteComponentProps<MatchParams> {}
 
 interface IPaymentState {}
 
+const OrderMenu = ({
+  nameKo,
+  imgUrl,
+  quantity,
+  price,
+  option
+}: {
+  nameKo: string;
+  imgUrl: string;
+  quantity: number;
+  price: number;
+  option: string;
+}) => {
+  return (
+    <li className="order__menu">
+      <div className="order__menu-img">
+        <img src={imgUrl} alt={nameKo} />
+      </div>
+      <div className="order__menu-description">
+        <div className="order__menu-title-wrap">
+          <h3 className="order__menu-title">{nameKo}</h3>
+          <div className="order__menu-options">{option}</div>
+        </div>
+        <div className="order__menu-cnt-price-wrap">
+          <div className="order__menu-cnt-wrap d-inline-b">
+            <span className="order__menu-cnt">{quantity}</span>개
+          </div>
+          <div className="order__menu-price-wrap d-inline-b">
+            <span className="order__menu-price">{Number(price).toLocaleString()}</span>원
+          </div>
+        </div>
+      </div>
+    </li>
+  );
+};
+
 export default class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
-  state = {};
+  state = {
+    totalPrice: 0,
+    usedPoint: 0,
+    usablePoint: 0
+  };
 
   componentDidMount() {}
 
   render() {
+    const orderCarts = JSON.parse(localStorage.getItem("orderCarts") || "[]");
+
+    if (!Array.isArray(orderCarts) || (Array.isArray(orderCarts) && orderCarts.length === 0)) {
+      alert("주문 정보가 존재하지 않습니다.");
+      history.push("/");
+      return;
+    }
+    const orderPrice = orderCarts.reduce((prev, cur: ICartMenu) => prev + cur.price, 0);
+
     return (
       <>
         <main className="main">
@@ -25,48 +76,18 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
             </div>
             <div className="order__main">
               <ul className="order__menus">
-                <li className="order__menu">
-                  <div className="order__menu-img">
-                    <img src="../../common/coffee-sample.png" alt="아메리카노" />
-                  </div>
-                  <div className="order__menu-description">
-                    <div className="order__menu-title-wrap">
-                      <h3 className="order__menu-title">아메리카노</h3>
-                      <div className="order__menu-options">
-                        HOT / 샷추가(1개) / 시럽추가(1개) / 사이즈업
-                      </div>
-                    </div>
-                    <div className="order__menu-cnt-price-wrap">
-                      <div className="order__menu-cnt-wrap d-inline-b">
-                        <span className="order__menu-cnt">1</span>개
-                      </div>
-                      <div className="order__menu-price-wrap d-inline-b">
-                        <span className="order__menu-price">3,000</span>원
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li className="order__menu">
-                  <div className="order__menu-img">
-                    <img src="../../common/coffee-sample.png" alt="아메리카노" />
-                  </div>
-                  <div className="order__menu-description">
-                    <div className="order__menu-title-wrap">
-                      <h3 className="order__menu-title">아메리카노</h3>
-                      <div className="order__menu-options">
-                        HOT / 샷추가(1개) / 시럽추가(1개) / 사이즈업
-                      </div>
-                    </div>
-                    <div className="order__menu-cnt-price-wrap">
-                      <div className="order__menu-cnt-wrap d-inline-b">
-                        <span className="order__menu-cnt">1</span>개
-                      </div>
-                      <div className="order__menu-price-wrap d-inline-b">
-                        <span className="order__menu-price">3,000</span>원
-                      </div>
-                    </div>
-                  </div>
-                </li>
+                {orderCarts.map((oc: ICartMenu) => {
+                  return (
+                    <OrderMenu
+                      key={oc.cartId}
+                      nameKo={oc.nameKo}
+                      quantity={oc.quantity}
+                      imgUrl={oc.imgUrl}
+                      price={oc.price}
+                      option={oc.option}
+                    />
+                  );
+                })}
               </ul>
             </div>
           </section>
@@ -75,13 +96,45 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
               <h2 className="payment__title plr15">결제방법</h2>
             </div>
             <div className="payment__methods button--group">
-              <div className="button button--green payment__method">현장결제</div>
+              <div className="button button--green payment__method active">현장결제</div>
               <div className="button button--green payment__method">카드</div>
             </div>
             <div className="payment__points">
-              <input type="text" name="point" />
+              <input
+                type="text"
+                name="point"
+                value={this.state.usedPoint}
+                onChange={e => {
+                  let willUsedPoint = parseInt(e.currentTarget.value) || 0;
+
+                  if (orderPrice - willUsedPoint < 0) {
+                    alert("주문금액 보다 많이 입력할 수 없습니다.");
+                    this.setState(
+                      {
+                        usedPoint: 0
+                      },
+                      () => {
+                        this.setState({
+                          totalPrice: orderPrice - this.state.usedPoint
+                        });
+                      }
+                    );
+                    return;
+                  }
+                  this.setState(
+                    {
+                      usedPoint: willUsedPoint
+                    },
+                    () => {
+                      this.setState({
+                        totalPrice: orderPrice - this.state.usedPoint
+                      });
+                    }
+                  );
+                }}
+              />
               <div>
-                사용가능한 포인트: <span>10</span>P
+                사용가능한 포인트: <span>0</span>P
               </div>
             </div>
           </section>
@@ -89,20 +142,34 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
           <section className="price card">
             <div className="d-flex">
               <div className="price--name">주문금액</div>
-              <div className="price--value">6,000원</div>
+              <div className="price--value">{orderPrice.toLocaleString()}원</div>
             </div>
             <div className="d-flex">
               <div className="price--name">할인금액</div>
-              <div className="price--value">1,000원</div>
+              <div className="price--value">{this.state.usedPoint.toLocaleString()}원</div>
             </div>
             <hr />
             <div className="d-flex">
               <div className="price--name">최종 결제금액</div>
-              <div className="price--value">5,000원</div>
+              <div className="price--value">
+                {(this.state.totalPrice && this.state.totalPrice.toLocaleString()) ||
+                  orderPrice.toLocaleString()}
+                원
+              </div>
             </div>
             <div className="button--group">
               <div className="button--cancle button button--green">취소</div>
-              <div className="button--pay button button--green">결제하기</div>
+              <div
+                className="button--pay button button--green"
+                onClick={() => {
+                  if (window.confirm("결제하시겠습니까?")) {
+                    // TODO: 결제하기 API 호출
+                    // 내 주문 페이지로 이동
+                  }
+                }}
+              >
+                결제하기
+              </div>
             </div>
           </section>
         </main>

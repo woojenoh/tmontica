@@ -43,6 +43,17 @@ h2 {
     justify-content: center;
     align-items: center;
   }
+
+  .payment__method:not(.active) {
+    background: transparent;
+    border: 1px solid #19bc9b;
+    color: #19bc9b;
+  }
+
+  .payment__method:not(.active):hover {
+    background-color: #19bc9b;
+    color: white;
+  }
 }
 
 .button {
@@ -166,6 +177,10 @@ h3.order__menu-title {
 
   .button:nth-child(1) {
     margin-right: 8px;
+  }
+
+  .button--cancle {
+    background: #f44336;
   }
 }
 
