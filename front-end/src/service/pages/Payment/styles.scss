@@ -24,29 +24,25 @@ h2 {
     sans-serif;
 }
 
-.main h2 {
-  letter-spacing: -0.06em;
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 18px;
-  margin-bottom: 21px;
-  color: #16181a;
-}
-
 .main {
   padding: 0;
+  h2 {
+    letter-spacing: -0.06em;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 18px;
+    margin-bottom: 21px;
+    color: #16181a;
+  }
 }
 
 .payment__methods {
-  display: flex;
-  padding: 0 1rem;
-}
-
-.payment__method {
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  .payment__method {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .button {
@@ -160,12 +156,17 @@ h3.order__menu-title {
 .button--group {
   margin: 0 15px;
   display: flex;
-}
+  .button {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+  }
 
-.button--group .button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  .button:nth-child(1) {
+    margin-right: 8px;
+  }
 }
 
 section.price.card {

@@ -74,7 +74,7 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
             <div className="payment__top">
               <h2 className="payment__title plr15">결제방법</h2>
             </div>
-            <div className="payment__methods">
+            <div className="payment__methods button--group">
               <div className="button button--green payment__method">현장결제</div>
               <div className="button button--green payment__method">카드</div>
             </div>
