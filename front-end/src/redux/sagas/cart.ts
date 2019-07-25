@@ -4,6 +4,7 @@ import axios from "axios";
 import * as cartActionTypes from "../actionTypes/cart";
 import * as cartActionCreators from "../actionCreators/cart";
 import * as cartTypes from "../../types/cart";
+import { CartAPI } from "../../API";
 
 function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
   try {
@@ -115,20 +116,23 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
       } as cartTypes.ICartReq;
     });
     // 만든 형태를 API로 전송하고, 응답으로 받은 카트 아이디들을 저장한다.
-    const jwtToken = localStorage.getItem("JWT");
-    const response = yield axios.post("http://tmontica-idev.tmon.co.kr/api/carts", cartReqs, {
-      headers: {
-        Authorization: jwtToken
-      }
-    });
+    // const jwtToken = localStorage.getItem("JWT");
+    // const response = yield axios.post("http://tmontica-idev.tmon.co.kr/api/carts", cartReqs, {
+    //   headers: {
+    //     Authorization: jwtToken
+    //   }
+    // });
+    const data = yield CartAPI.addCart(cartReqs);
+
     // 현재 카트 상태에 새로운 카트 메뉴들을 추가한다.
     const state = yield select();
+
     const newCart = _(state.cart.cart).clone() as cartTypes.ICart;
     const newCartMenus = cartMenus.map((m: cartTypes.ICartMenu, index: number) => {
       newCart.size += m.quantity;
       newCart.totalPrice += m.quantity * m.price;
       const newCartMenu: cartTypes.ICartMenu = m;
-      newCartMenu.cartId = response.data[index].cartId;
+      newCartMenu.cartId = data[index].cartId;
       return newCartMenu;
     });
     newCart.menus = newCart.menus.concat(newCartMenus);

@@ -223,19 +223,23 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
   }
 
   // 바로구매
-  orderDirect(cartAddReq: TCartAddReq) {
-    const itr = CartAPI.addCart([cartAddReq]);
-    const res = itr.next().value;
-    res.then(data => {
-      const orderPreparedCart = this.getOrderPreparedCart({
-        direct: true,
-        cartId: data[0].cartId
-      });
+  async orderDirect(cartAddReq: TCartAddReq) {
+    const data = await CartAPI.addCart([cartAddReq]);
 
-      localStorage.setItem("orderCarts", JSON.stringify([orderPreparedCart]));
-
+    if (cartAddReq.direct) {
+      localStorage.setItem("isDirect", "Y");
       history.push("/payment");
+    } else {
+      localStorage.setItem("isDirect", "N");
+    }
+    const orderPreparedCart = this.getOrderPreparedCart({
+      direct: true,
+      cartId: data[0].cartId
     });
+
+    localStorage.setItem("orderCarts", JSON.stringify([orderPreparedCart]));
+
+    history.push("/payment");
   }
 
   handleQuantity(isPlus: boolean) {
