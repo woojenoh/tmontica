@@ -22,6 +22,7 @@ function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
     newCart.menus = newCart.menus.concat(action.payload);
     // 완성된 객체를 로컬 스토리지와 상태에 저장.
     localStorage.setItem("LocalCart", JSON.stringify(newCart));
+    alert("상품이 담겼습니다.");
     yield put(cartActionCreators.addLocalCartFulfilled(newCart));
   } catch (error) {
     alert("문제가 발생했습니다!");
@@ -131,6 +132,7 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
       return newCartMenu;
     });
     newCart.menus = newCart.menus.concat(newCartMenus);
+    alert("상품이 담겼습니다.");
     yield put(cartActionCreators.fetchAddCartFulfilled(newCart));
   } catch (error) {
     yield put(cartActionCreators.fetchAddCartRejected(error.response));
