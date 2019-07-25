@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@TestPropertySource("classpath:application_test.properties")
+@TestPropertySource("classpath:application-test.properties")
 @SpringBootTest
 public class MenuDaoTest {
     @Autowired

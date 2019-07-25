@@ -1,50 +1,96 @@
 package com.internship.tmontica.menu;
 
+import com.internship.tmontica.menu.model.response.MenuDetailResp;
+import com.internship.tmontica.menu.model.response.MenuMainResp;
+import com.internship.tmontica.menu.model.response.MenuOptionResp;
+import com.internship.tmontica.menu.model.response.MenuSimpleResp;
 import com.internship.tmontica.option.Option;
 import com.internship.tmontica.user.UserDao;
+import com.internship.tmontica.util.CategoryName;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class MenuService {
     private final MenuDao menuDao;
-    private final UserDao userDao;
-
+    private final ModelMapper modelMapper;
+    @Value("${menu.imagepath}")
+    private String location;
     // TODO : 예외처리..
+    // 메인 화면에 나타나는 메뉴 정보
+    public List<MenuMainResp> getMainMenus(){
+        List<MenuMainResp> allMenus = new ArrayList<>();
 
+        allMenus.add(getMenuMain(CategoryName.CATEGORY_MONTHLY));
+        allMenus.add(getMenuMain(CategoryName.CATEGORY_COFFEE));
+        allMenus.add(getMenuMain(CategoryName.CATEGORY_ADE));
+        allMenus.add(getMenuMain(CategoryName.CATEGORY_BREAD));
+
+        return allMenus;
+    }
     // 메뉴 추가
     @Transactional
     public int addMenu(Menu menu, List<Integer>optionIds, MultipartFile imgFile){
-        // 1. 이미지 저장
         String imgUrl = saveImg(imgFile, menu.getNameEng());
         menu.setImgUrl(imgUrl);
-        // 2. creator  id 체크 (exception 으로 바꾸자)
-        if(userDao.getUserByUserId(menu.getCreatorId())== null)
-            return -1;
-        // 3. 메뉴 저장
+
         menu.setCreatedDate(new Date());
         menuDao.addMenu(menu);
-        // 4. 메뉴 옵션 저장
+
         for(int optionId : optionIds)
             menuDao.addMenuOption(menu.getId(), optionId);
-        // 5. 추가한 메뉴 아이디 리턴.
+
         log.info("created menu Id : {}", menu.getId());
         return menu.getId();
+    }
+
+    // 하나의 메뉴 상세 정보 가져오기
+    public MenuDetailResp getMenuDetailById(int id){
+        Menu menu = menuDao.getMenuById(id);
+
+        if(menu == null) return null;
+
+        List<Option> options = menuDao.getOptionsById(id);
+
+        MenuDetailResp menuDetailResp = modelMapper.map(menu, MenuDetailResp.class);
+        List<MenuOptionResp> menuOptions = modelMapper.map(options, new TypeToken<List<MenuOptionResp>>(){}.getType());
+
+        menuDetailResp.setOption(menuOptions);
+        menuDetailResp.setImgUrl(location.concat(menuDetailResp.getImgUrl()));
+
+        return menuDetailResp;
+    }
+
+    // 하나의 메뉴 정보 가져오기
+    public Menu getMenuById(int id){
+        return menuDao.getMenuById(id);
+    }
+
+
+    // 모든 메뉴 정보 가져오기
+    public List<Menu> getAllMenus(){
+        return menuDao.getAllMenus();
+    }
+
+    // 카테고리 별 메뉴 정보 가져오기
+    public List<Menu> getMenusByCategory(String category, int page, int size){
+        int offset = (page - 1) * size;
+        return menuDao.getMenusByCategory(category, size, offset);
     }
 
     // 메뉴 옵션 추가
@@ -52,52 +98,59 @@ public class MenuService {
         return menuDao.addMenuOption(menuId, optionId);
     }
 
-    // 하나의 메뉴 정보 가져오기
-    @Transactional(readOnly = true)
-    public Menu getMenuById(int id){
-        return menuDao.getMenuById(id);
-    }
-
-    // 메뉴의 옵션 정보 가져오기
-    @Transactional(readOnly = true)
-    public List<Option> getOptionsById(int id){
-        return menuDao.getOptionsById(id);
-    }
-
-    // 모든 메뉴 정보 가져오기
-    @Transactional(readOnly = true)
-    public List<Menu> getAllMenus(){
-        return menuDao.getAllMenus();
-    }
-
-    // 카테고리 별 메뉴 정보 가져오기
-    @Transactional(readOnly = true)
-    public List<Menu> getMenusByCategory(String category, int page, int size){
-        int offset = (page - 1) * size;
-        return menuDao.getMenusByCategory(category, size, offset);
-    }
-
-    // 이달의 메뉴 정보 가져오기
-    @Transactional(readOnly = true)
-    public List<Menu> getMonthlyMenus(){
-        return menuDao.getMonthlyMenus();
-    }
-
     // 메뉴 수정하기
-    @Transactional
-    public void updateMenu(Menu menu){
+    public void updateMenu(Menu menu, MultipartFile imgFile){
+        if(!existMenu(menu.getId()))
+            return;
+
+        if(imgFile!=null){
+            String img = saveImg(imgFile, menu.getNameEng());
+            menu.setImgUrl(img);
+        }else{
+            Menu beforeMenu = getMenuById(menu.getId());
+            menu.setImgUrl(beforeMenu.getImgUrl());
+        }
+        menu.setUpdatedDate(new Date());
         menuDao.updateMenu(menu);
     }
 
     // 메뉴 삭제하기
-    @Transactional
-    public void deleteMenu(int id){
+    public void deleteMenu(int id) {
         menuDao.deleteMenu(id);
     }
 
     // 수량 수정하기
-    @Transactional
-    public void updateMenuStock(int id, int stock){ menuDao.updateMenuStock(id, stock);}
+    public void updateMenuStock(int id, int stock){
+        menuDao.updateMenuStock(id, stock);
+    }
+
+    // 메뉴 존재하는지 확인
+    public boolean existMenu(int id){
+        return (menuDao.getMenuById(id) == null) ? false : true;
+    }
+
+    private MenuMainResp getMenuMain(String categoryEng){
+        MenuMainResp menuMainResp = new MenuMainResp();
+
+        menuMainResp.setCategoryEng(categoryEng);
+        menuMainResp.setCategoryKo(CategoryName.categoryEngToKo(categoryEng));
+        List<Menu> menus;
+
+        if(categoryEng.equals(CategoryName.CATEGORY_MONTHLY)){
+            menus = menuDao.getMonthlyMenus();
+        }else{
+            menus = menuDao.getMenusByCategory(categoryEng, 8, 0);
+        }
+
+        List<MenuSimpleResp> menuList = modelMapper.map(menus, new TypeToken<List<MenuSimpleResp>>(){}.getType());
+
+        for(MenuSimpleResp menu : menuList)
+            menu.setImgUrl(location.concat(menu.getImgUrl()));
+
+        menuMainResp.setMenus(menuList);
+
+        return menuMainResp;
+    }
 
     // 이미지 파일 저장
     private String saveImg(MultipartFile imgFile, String name){
@@ -110,8 +163,10 @@ public class MenuService {
         dir = dir + "/";
         dir = dir + calendar.get(Calendar.DAY_OF_MONTH);
         dir = dir + "/";
-        File dirFile = new File(dir);
+        // 실제 저장되는 path
+        File dirFile = new File(location + dir);
         dirFile.mkdirs(); // 디렉토리가 없을 경우 만든다.
+
         dir += name;
         dir = dir + "_" +  UUID.randomUUID().toString();  // 유일한 식별자
         // 확장자
@@ -120,7 +175,7 @@ public class MenuService {
 
         log.info("img type : {}", extension);
 
-        try(FileOutputStream fos = new FileOutputStream(dir);
+        try(FileOutputStream fos = new FileOutputStream(location + dir);
             InputStream in = imgFile.getInputStream()){
             byte[] buffer = new byte[1024];
             int readCount = 0;
@@ -133,4 +188,5 @@ public class MenuService {
 
         return dir;
     }
+
 }
