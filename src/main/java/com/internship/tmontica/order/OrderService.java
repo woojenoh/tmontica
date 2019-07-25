@@ -2,7 +2,6 @@ package com.internship.tmontica.order;
 
 import com.internship.tmontica.cart.CartMenu;
 import com.internship.tmontica.cart.CartMenuDao;
-import com.internship.tmontica.cart.CartMenuService;
 import com.internship.tmontica.menu.MenuDao;
 import com.internship.tmontica.option.Option;
 import com.internship.tmontica.option.OptionDao;
@@ -15,8 +14,6 @@ import com.internship.tmontica.order.model.response.Order_MenusResp;
 import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,12 +112,12 @@ public class OrderService {
     }
 
     // 주문 정보 1개 가져오기(상세내역 포함) api
-    public ResponseEntity getOneOrderApi(int orderId){
+    public OrderResp getOneOrderApi(int orderId){
         Order order = orderDao.getOrderByOrderId(orderId);
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         // 유저 아이디 검사
         if(!(userId.equals(order.getUserId()))){
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            //return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
 
         List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(orderId);
@@ -153,7 +150,6 @@ public class OrderService {
 
         OrderResp orderResp = new OrderResp(orderId, order.getPayment(), order.getStatus(), order.getTotalPrice(),
                 order.getRealPrice(), order.getUsedPoint(), order.getOrderDate(), menus);
-        System.out.println(orderResp);
-        return new ResponseEntity(orderResp, HttpStatus.OK);
+        return orderResp;
     }
 }

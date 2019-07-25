@@ -112,24 +112,22 @@ public class CartMenuService {
     }
 
     // 카트 수정하기 api
-    public ResponseEntity updateCartApi(int id, CartUpdateReq cartUpdateReq){
+    public int updateCartApi(int id, CartUpdateReq cartUpdateReq){
         int result = cartMenuDao.updateCartMenuQuantity(id, cartUpdateReq.getQuantity());
-        if(result < 0) return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity(HttpStatus.OK);
+        return result;
     }
 
     // 카트 삭제하기 api
-    public ResponseEntity deleteCartApi(int id){
+    public int deleteCartApi(int id){
         // 토큰의 아이디와 카트 테이블의 userId 비교
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         String cartUserId = cartMenuDao.getCartMenuByCartId(id).getUserId();
-        if(userId.equals(cartUserId)){
-            //카트에 담긴 정보 삭제하기
-            int result = cartMenuDao.deleteCartMenu(id);
-            if(result > 0) return new ResponseEntity(HttpStatus.OK);
-            else return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        if(!(userId.equals(cartUserId))){
+            // 아이디 일치하지 않ㅇ르 경우
         }
-        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        //카트에 담긴 정보 삭제하기
+        int result = cartMenuDao.deleteCartMenu(id);
+        return result;
     }
 
 

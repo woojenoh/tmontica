@@ -1,23 +1,13 @@
 package com.internship.tmontica.order;
 
-import com.internship.tmontica.cart.CartMenu;
-import com.internship.tmontica.cart.CartMenuService;
-import com.internship.tmontica.menu.MenuService;
-import com.internship.tmontica.option.Option;
-import com.internship.tmontica.option.OptionService;
 import com.internship.tmontica.order.model.request.OrderReq;
-import com.internship.tmontica.order.model.request.Order_MenusReq;
 import com.internship.tmontica.order.model.response.OrderResp;
-import com.internship.tmontica.order.model.response.Order_MenusResp;
-import com.internship.tmontica.security.JwtService;
-import com.internship.tmontica.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,8 +38,9 @@ public class OrderController {
 
     /** 주문정보 한개 가져오기(상세내역 포함) */
     @GetMapping("/{orderId}")
-    public ResponseEntity getOrderByOrderId(@PathVariable("orderId")int orderId){
-        return orderService.getOneOrderApi(orderId);
+    public ResponseEntity<OrderResp> getOrderByOrderId(@PathVariable("orderId")int orderId){
+        OrderResp orderResp  = orderService.getOneOrderApi(orderId);
+        return new ResponseEntity(orderResp, HttpStatus.OK);
     }
 
 

@@ -40,13 +40,17 @@ public class CartController {
     /** 카트 메뉴 수량, 가격 수정하기 */
     @PutMapping("/{id}")
     public ResponseEntity updateCartMenuQuantity(@PathVariable("id") int id, @RequestBody @Valid CartUpdateReq cartUpdateReq){
-        return cartMenuService.updateCartApi(id, cartUpdateReq);
+        int result = cartMenuService.updateCartApi(id, cartUpdateReq);
+        if(result < 0) return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     /** 카트 삭제하기 */
     @DeleteMapping("/{id}")
     public ResponseEntity deleteCartMenu(@PathVariable("id") int id){
-        return cartMenuService.deleteCartApi(id);
+        int result = cartMenuService.deleteCartApi(id);
+        if(result > 0) return new ResponseEntity(HttpStatus.OK);
+        else return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 }
 
