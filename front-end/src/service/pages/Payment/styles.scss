@@ -1,3 +1,5 @@
+@import "../../../assets/scss/colors.scss";
+
 .d-flex {
   display: flex;
   justify-content: space-between;
@@ -36,6 +38,10 @@ h2 {
   }
 }
 
+.order__container {
+  border: 1px solid $border-gray;
+}
+
 .payment__methods {
   .payment__method {
     text-align: center;
@@ -58,10 +64,6 @@ h2 {
 
 .button {
   border-color: #6c7580;
-}
-
-.button:nth-child(2n) {
-  border-left: 0;
 }
 
 .card {

@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap");
+@import "./colors.scss";
 
 * {
   box-sizing: border-box;
@@ -23,7 +24,7 @@ body,
 }
 
 .footer {
-  border-top: 1px solid #ebebeb;
+  border-top: 1px solid $border-gray;
   background-color: white;
 }
 
