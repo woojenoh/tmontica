@@ -1,4 +1,4 @@
-import React, { Component, PureComponent, MouseEvent, Fragment } from "react";
+import React, { Component, MouseEvent } from "react";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import { MenuAPI, CartAPI } from "../../../API";
@@ -13,7 +13,8 @@ import {
 } from "../../../utils";
 import history from "../../../history";
 import { ICartMenu } from "../../../types/cart";
-import cart from "../../../redux/reducers/cart";
+import MenuOption from "../MenuOptionList";
+
 const getOptionById = (options: Array<TMenuOption>, id: number) => {
   return _.chain(options)
     .filter(option => option.id === id)
@@ -36,128 +37,6 @@ interface IMenuState {
   totalPrice: number;
   quantity: number;
   option: TMenuOptionMap;
-}
-
-interface IMenuOptionProps {
-  typeName: string;
-  option: Array<TMenuOption>;
-  handleSelectableOption(
-    event: MouseEvent<HTMLDivElement>,
-    id: number,
-    commonClassName?: string
-  ): void;
-  handleCountableOptionClick(isPlus: boolean, option: TMenuOption): void;
-}
-
-class MenuOption extends PureComponent<IMenuOptionProps> {
-  getOptionComponent(option: TMenuOption) {
-    const { id } = option;
-
-    switch (id) {
-      case 1:
-        return (
-          <div
-            key={id}
-            className={`detail__hot temperature`}
-            onClick={e => {
-              this.props.handleSelectableOption(e, id, "temperature");
-            }}
-          >
-            HOT
-          </div>
-        );
-      case 2:
-        return (
-          <div
-            key={id}
-            className={`detail__ice temperature`}
-            onClick={e => {
-              this.props.handleSelectableOption(e, id, "temperature");
-            }}
-          >
-            ICE
-          </div>
-        );
-      case 3:
-        return (
-          <Fragment key={id}>
-            <span className="option__title">시럽 추가</span>
-            <div className="option__counter">
-              <div
-                className="counter__minus"
-                onClick={e => this.props.handleCountableOptionClick(false, option)}
-              >
-                -
-              </div>
-              <input
-                type="number"
-                name="syrup"
-                className="counter__number"
-                value={option.quantity}
-                readOnly
-              />
-              <div
-                className="counter__plus"
-                onClick={e => this.props.handleCountableOptionClick(true, option)}
-              >
-                +
-              </div>
-            </div>
-          </Fragment>
-        );
-      case 4:
-        return (
-          <Fragment key={id}>
-            <span className="option__title">샷 추가</span>
-            <div className="option__counter">
-              <div
-                className="counter__minus"
-                onClick={e => this.props.handleCountableOptionClick(false, option)}
-              >
-                -
-              </div>
-              <input
-                type="number"
-                name="shot"
-                className="counter__number"
-                value={option.quantity}
-                readOnly
-              />
-              <div
-                className="counter__plus"
-                onClick={e => this.props.handleCountableOptionClick(true, option)}
-              >
-                +
-              </div>
-            </div>
-          </Fragment>
-        );
-      case 5:
-        return (
-          <div
-            key={id}
-            className="option__size"
-            onClick={e => {
-              this.props.handleSelectableOption(e, id);
-            }}
-          >
-            사이즈 추가
-          </div>
-        );
-    }
-  }
-
-  render() {
-    const option = this.props.option;
-
-    return (
-      <li key={1} className="detail__option">
-        {_.chain(option)
-          .map((option, i) => this.getOptionComponent(option))
-          .value()}
-      </li>
-    );
-  }
 }
 
 export default class Menu extends Component<IMenuProps, IMenuState> {
@@ -383,7 +262,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
   }
 
   render() {
-    const { menu, quantity, option } = this.state;
+    const { menu } = this.state;
 
     return (
       <>

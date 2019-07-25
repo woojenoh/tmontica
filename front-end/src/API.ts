@@ -67,7 +67,7 @@ export const OrderAPI = (() => {
   async function order(data: TOrderReq) {
     const orderId = await postWithJWT(`${API_URL}/orders`, data);
 
-    history.push("/orders");
+    history.push(`/orders?orderId=${orderId}`);
   }
 
   return {
