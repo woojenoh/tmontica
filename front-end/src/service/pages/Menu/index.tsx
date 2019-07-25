@@ -1,5 +1,4 @@
 import "./styles.scss";
-import _ from "underscore";
 import { connect } from "react-redux";
 import * as rootTypes from "../../../types/index";
 import Menu from "../../components/Menu";

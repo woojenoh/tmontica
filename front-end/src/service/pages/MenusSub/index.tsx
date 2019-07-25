@@ -38,8 +38,6 @@ export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubS
   }
 
   render() {
-    const { categoryKo } = this.props;
-
     return (
       <>
         <main className="main">
