@@ -15,7 +15,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     addLocalCart: (payload: cartTypes.ICartMenu) =>
       dispatch(cartActionCreators.addLocalCart(payload)),
-    fetchSetCart: () => dispatch(cartActionCreators.fetchSetCart())
+    fetchSetCart: () => dispatch(cartActionCreators.fetchSetCart()),
+    fetchAddCart: (payload: cartTypes.ICartMenu[]) => {
+      dispatch(cartActionCreators.fetchAddCart(payload));
+    }
   };
 };
 
