@@ -1,4 +1,5 @@
 import { TCartAddReq } from "./types";
+import { ICartMenu } from "./types/cart";
 import history from "./history";
 
 // const API_URL = "http://localhost:3000/fakeapi";
