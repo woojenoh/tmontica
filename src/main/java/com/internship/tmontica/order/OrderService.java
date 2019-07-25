@@ -33,15 +33,15 @@ public class OrderService {
     private final OptionDao optionDao;
     private final JwtService jwtService;
 
-    // order_id로 주문 삭제하기(상태만 바꾸기)
-    public void deleteOrder(int orderId){
-        orderDao.deleteOrder(orderId);
-    }
-
-    // order_status_log 추가
-    public int addOrderStatusLog(OrderStatusLog orderStatusLog){
-        return orderDao.addOrderStatusLog(orderStatusLog);
-    }
+//    // order_id로 주문 삭제하기(상태만 바꾸기)
+//    public void deleteOrder(int orderId){
+//        orderDao.deleteOrder(orderId);
+//    }
+//
+//    // order_status_log 추가
+//    public int addOrderStatusLog(OrderStatusLog orderStatusLog){
+//        return orderDao.addOrderStatusLog(orderStatusLog);
+//    }
 
 
     // 주문내역 가져오기 api
@@ -116,7 +116,7 @@ public class OrderService {
         Order order = orderDao.getOrderByOrderId(orderId);
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         // 유저 아이디 검사
-        if(!(userId.equals(order.getUserId()))){
+        if(!userId.equals(order.getUserId())){
             //return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
 
@@ -151,5 +151,20 @@ public class OrderService {
         OrderResp orderResp = new OrderResp(orderId, order.getPayment(), order.getStatus(), order.getTotalPrice(),
                 order.getRealPrice(), order.getUsedPoint(), order.getOrderDate(), menus);
         return orderResp;
+    }
+
+    // 주문 취소 api
+    public void cancelOrderApi(int orderId){
+        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
+        String dbUserId = orderDao.getOrderByOrderId(orderId).getUserId();
+        if(!userId.equals(dbUserId)){
+            // 아이디 디비와 다를경우 예외처리
+        }
+        // orders 테이블에서 status 수정
+        orderDao.deleteOrder(orderId);
+        // order_status_log 테이블에도 주문취소 로그 추가
+        // TODO: 토큰에서? 사용자 아이디 가져오기 해야함
+        OrderStatusLog orderStatusLog = new OrderStatusLog("주문취소", userId, orderId);
+        orderDao.addOrderStatusLog(orderStatusLog);
     }
 }

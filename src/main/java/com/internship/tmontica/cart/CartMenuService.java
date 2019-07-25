@@ -91,10 +91,6 @@ public class CartMenuService {
                 optionPrice += ((optionDao.getOptionById(optionId).getPrice()) * opQuantity);
             }
 
-            // 옵션, 수량 적용된 가격 계산하기
-//            int price = optionPrice + menuDao.getMenuById(cartReq.getMenuId()).getSellPrice();
-//            price *= cartReq.getQuantity();
-
             // 토큰에서 userId 가져오기
             String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
 
@@ -113,6 +109,12 @@ public class CartMenuService {
 
     // 카트 수정하기 api
     public int updateCartApi(int id, CartUpdateReq cartUpdateReq){
+        // 토큰의 아이디와 카트 테이블의 userId 비교
+        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
+        String cartUserId = cartMenuDao.getCartMenuByCartId(id).getUserId();
+        if(!userId.equals(cartUserId)){
+            // 아이디 일치하지 않ㅇ르 경우
+        }
         int result = cartMenuDao.updateCartMenuQuantity(id, cartUpdateReq.getQuantity());
         return result;
     }
@@ -122,7 +124,7 @@ public class CartMenuService {
         // 토큰의 아이디와 카트 테이블의 userId 비교
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         String cartUserId = cartMenuDao.getCartMenuByCartId(id).getUserId();
-        if(!(userId.equals(cartUserId))){
+        if(!userId.equals(cartUserId)){
             // 아이디 일치하지 않ㅇ르 경우
         }
         //카트에 담긴 정보 삭제하기
@@ -133,6 +135,7 @@ public class CartMenuService {
 
     // DB의 옵션 문자열을 변환
     public String convertOptionStringToCli(String option){
+        // 맵으로 만들어서 함수의 파라미터로 던지기...
         //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
         //String option = cartMenu.getOption();
         String convert = ""; // 변환할 문자열
@@ -150,7 +153,7 @@ public class CartMenuService {
             } else if(tmpOption.getType().equals("Syrup")){
                 convert += "시럽추가" + "(" + oneOption[1] + "개)";
             } else if(tmpOption.getType().equals("Size")){
-                convert += "사이즈업" + "(" + oneOption[1] + "개)";
+                convert += "사이즈업";
             }
         }
         return convert;
