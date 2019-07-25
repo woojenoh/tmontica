@@ -5,7 +5,6 @@ import { MenuAPI, CartAPI } from "../../../API";
 import _ from "underscore";
 import { TMenuOption, TMenu, TMenuOptionMap } from "../../../types";
 import { createCartAddReq } from "../../../utils";
-import uuid from "uuid";
 
 const getOptionById = (options: Array<TMenuOption>, id: number) => {
   return _.chain(options)
@@ -46,7 +45,7 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
       case 1:
         return (
           <div
-            key={uuid.v4()}
+            key={id}
             className={`detail__hot temperature`}
             onClick={e => {
               this.props.handleSelectableOption(e, id, "temperature");
@@ -58,7 +57,7 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
       case 2:
         return (
           <div
-            key={uuid.v4()}
+            key={id}
             className={`detail__ice temperature`}
             onClick={e => {
               this.props.handleSelectableOption(e, id, "temperature");
@@ -69,7 +68,7 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
         );
       case 3:
         return (
-          <Fragment key={uuid.v4()}>
+          <Fragment key={id}>
             <span className="option__title">시럽 추가</span>
             <div className="option__counter">
               <div
@@ -96,7 +95,7 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
         );
       case 4:
         return (
-          <Fragment key={uuid.v4()}>
+          <Fragment key={id}>
             <span className="option__title">샷 추가</span>
             <div className="option__counter">
               <div
@@ -124,7 +123,7 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
       case 5:
         return (
           <div
-            key={uuid.v4()}
+            key={id}
             className="option__size"
             onClick={e => {
               this.props.handleSelectableOption(e, id);
@@ -140,7 +139,7 @@ class MenuOption extends PureComponent<IMenuOptionProps> {
     const option = this.props.option;
 
     return (
-      <li key={uuid.v4()} className="detail__option">
+      <li key={1} className="detail__option">
         {_.chain(option)
           .map((option, i) => this.getOptionComponent(option))
           .value()}
@@ -163,7 +162,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
     const optionPrice =
       option.size > 0
         ? Array.from(option.values()).reduce((prev: number, cur: TMenuOption) => {
-            return cur.price > 0 ? cur.price * (cur.quantity || 1) + prev : prev;
+            return cur.price > 0 ? cur.price * cur.quantity + prev : prev;
           }, 0)
         : 0;
 
@@ -211,8 +210,10 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
     if (isPlus) {
       option.quantity = option.quantity + 1;
     } else if (option.quantity > 0) {
+      debugger;
       option.quantity = option.quantity - 1;
     } else {
+      debugger;
       return;
     }
     stateOption.set(option.type, option);
@@ -253,6 +254,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
     }
     // 아래는 여러 선택지가 있는 옵션
     // 옵션을 현재 선택한 옵션으로 대체
+    thisOption.quantity = 1;
     stateOption.set(thisOption.type, thisOption);
     this.updateOptionAndTotalPrice(stateOption);
 
@@ -342,7 +344,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
               </div>
               <ul className="detail__options">
                 {this.renderDetailOptions("Temperature", menu.option)}
-                <li key={uuid.v4()} className="detail__option">
+                <li key={9999} className="detail__option">
                   <span className="option__title">수량</span>
                   <div className="option__counter">
                     <div className="counter__minus" onClick={e => this.handleQuantity(false)}>
