@@ -1,5 +1,6 @@
 import { TCartAddReq } from "./types/cart";
 import history from "./history";
+import { TOrderReq } from "./types/order";
 
 // const API_URL = "http://localhost:3000/fakeapi";
 // const API_URL = "https://my-json-server.typicode.com/yeolsa/tmontica-json";
@@ -67,5 +68,17 @@ export const CartAPI = (() => {
 
   return {
     addCart
+  };
+})();
+
+export const OrderAPI = (() => {
+  async function order(data: TOrderReq) {
+    const orderId = await postWithJWT(`${API_URL}/orders`, data);
+
+    history.push("/");
+  }
+
+  return {
+    order
   };
 })();

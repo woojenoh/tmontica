@@ -1,4 +1,5 @@
 import { TMenuOptionMap } from "./types/menu";
+import { ICartMenuOption } from "./types/cart";
 import history from "./history";
 
 export const goToSignin = (message = "로그인이 필요합니다.") => {
@@ -29,6 +30,12 @@ export const optionToString = (option: TMenuOptionMap): string => {
   }
 };
 
+export const convertOptionMapToArray = (oMap: TMenuOptionMap): ICartMenuOption[] => {
+  return Array.from(oMap.values()).map(o => {
+    return { id: o.id, quantity: o.quantity };
+  });
+};
+
 export const createCartAddReq = ({
   menuId,
   quantity,
@@ -40,9 +47,7 @@ export const createCartAddReq = ({
   option: TMenuOptionMap;
   direct: boolean;
 }) => {
-  const newOption = Array.from(option.values()).map(o => {
-    return { id: o.id, quantity: o.quantity };
-  });
+  const newOption = convertOptionMapToArray(option);
   return {
     menuId,
     quantity,

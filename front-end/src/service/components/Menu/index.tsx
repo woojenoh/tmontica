@@ -5,7 +5,12 @@ import { MenuAPI, CartAPI } from "../../../API";
 import _ from "underscore";
 import { TCartAddReq } from "../../../types/cart";
 import { TMenuOption, TMenu, TMenuOptionMap } from "../../../types/menu";
-import { createCartAddReq, goToSignin, optionToString } from "../../../utils";
+import {
+  createCartAddReq,
+  goToSignin,
+  optionToString,
+  convertOptionMapToArray
+} from "../../../utils";
 import history from "../../../history";
 import { ICartMenu } from "../../../types/cart";
 const getOptionById = (options: Array<TMenuOption>, id: number) => {
@@ -209,6 +214,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
         quantity,
         price: totalPrice,
         option: optionString,
+        optionArray: convertOptionMapToArray(option),
         cartId: data[0].cartId,
         direct: cartAddReq.direct
       } as ICartMenu;
