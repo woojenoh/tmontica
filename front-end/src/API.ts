@@ -38,8 +38,8 @@ export const MenuAPI = (() => {
     return fetchJSON(`${API_URL}/menus`);
   }
 
-  function getMenuByCateory(categoryEng: string) {
-    return fetchJSON(`${API_URL}/menus/${categoryEng}`);
+  function getMenuByCateory(categoryEng: string, page = 1, size = 4) {
+    return fetchJSON(`${API_URL}/menus/${categoryEng}?page=${page}&size=${size}`);
   }
 
   function getMenuById(menuId: number = 1) {
@@ -54,16 +54,8 @@ export const MenuAPI = (() => {
 })();
 
 export const CartAPI = (() => {
-  function* addCart(cartAddReqs: Array<TCartAddReq>) {
-    try {
-      yield postWithJWT(`${API_URL}/carts`, cartAddReqs);
-      if (cartAddReqs[0].direct) {
-        localStorage.setItem("isDirect", "Y");
-        history.push("/payment");
-      } else {
-        localStorage.setItem("isDirect", "N");
-      }
-    } catch (error) {}
+  function addCart(cartAddReqs: Array<TCartAddReq>) {
+    return postWithJWT(`${API_URL}/carts`, cartAddReqs);
   }
 
   return {
