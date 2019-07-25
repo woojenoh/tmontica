@@ -8,24 +8,23 @@ import * as cartTypes from "../../types/cart";
 function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
   try {
     const state = yield select();
-    const { localCart } = yield state.cart;
+    const { localCart } = state.cart;
     // 로컬 카트가 비어있으면 로컬 카트 생성.
     if (!localCart) {
       yield put(cartActionCreators.initializeLocalCart());
     }
     // 초기화 후의 로컬 카트를 불러오기 위해 다시 셀렉트.
     const newState = yield select();
-    const { localCart: newLocalCart } = yield newState.cart;
     // 언더스코어로 새로운 객체를 생성한 뒤 프로퍼티들 변경.
-    const newCart = yield _(newLocalCart).clone();
-    newCart.size += yield action.payload.quantity;
-    newCart.totalPrice += yield action.payload.price * action.payload.quantity;
-    newCart.menus = yield newCart.menus.concat(action.payload);
+    const newCart = _(newState.localCart).clone() as cartTypes.ICart;
+    newCart.size += action.payload.quantity;
+    newCart.totalPrice += action.payload.price * action.payload.quantity;
+    newCart.menus = newCart.menus.concat(action.payload);
     // 완성된 객체를 로컬 스토리지와 상태에 저장.
-    yield localStorage.setItem("LocalCart", JSON.stringify(newCart));
+    localStorage.setItem("LocalCart", JSON.stringify(newCart));
     yield put(cartActionCreators.addLocalCartFulfilled(newCart));
   } catch (error) {
-    yield alert("문제가 발생했습니다!");
+    alert("문제가 발생했습니다!");
     yield put(cartActionCreators.addLocalCartRejected(error));
   }
 }
@@ -33,10 +32,10 @@ function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
 function* removeLocalCartSagas(action: cartTypes.IRemoveLocalCart) {
   try {
     const state = yield select();
-    const { localCart } = yield state.cart;
+    const { localCart } = state.cart;
     // 언더스코어로 새로운 객체를 생성한 뒤 프로퍼티들 변경.
-    const newCart = yield _(localCart).clone();
-    const targetMenus = yield newCart.menus.filter((m: cartTypes.ICartMenu, index: number) => {
+    const newCart = _(localCart).clone() as cartTypes.ICart;
+    const targetMenus = newCart.menus.filter((m: cartTypes.ICartMenu, index: number) => {
       if (index !== action.payload) {
         return true;
       } else {
@@ -47,10 +46,10 @@ function* removeLocalCartSagas(action: cartTypes.IRemoveLocalCart) {
     });
     newCart.menus = targetMenus;
     // 완성된 객체를 로컬 스토리지와 상태에 저장.
-    yield localStorage.setItem("LocalCart", JSON.stringify(newCart));
+    localStorage.setItem("LocalCart", JSON.stringify(newCart));
     yield put(cartActionCreators.removeLocalCartFulfilled(newCart));
   } catch (error) {
-    yield alert("문제가 발생했습니다!");
+    alert("문제가 발생했습니다!");
     yield put(cartActionCreators.removeLocalCartRejected(error));
   }
 }
@@ -58,10 +57,9 @@ function* removeLocalCartSagas(action: cartTypes.IRemoveLocalCart) {
 function* changeLocalCartSagas(action: cartTypes.IChangeLocalCart) {
   try {
     const state = yield select();
-    const { localCart } = yield state.cart;
     // 언더스코어로 새로운 객체를 생성한 뒤 프로퍼티들 변경.
-    const newCart = yield _(localCart).clone();
-    const targetMenus = yield newCart.menus.map((m: cartTypes.ICartMenu, index: number) => {
+    const newCart = _(state.cart.localCart).clone() as cartTypes.ICart;
+    const targetMenus = newCart.menus.map((m: cartTypes.ICartMenu, index: number) => {
       if (index === action.id) {
         const changeQuantity = m.quantity - action.quantity;
         if (changeQuantity > 0) {
@@ -81,10 +79,10 @@ function* changeLocalCartSagas(action: cartTypes.IChangeLocalCart) {
     });
     newCart.menus = targetMenus;
     // 완성된 객체를 로컬 스토리지와 상태에 저장.
-    yield localStorage.setItem("LocalCart", JSON.stringify(newCart));
+    localStorage.setItem("LocalCart", JSON.stringify(newCart));
     yield put(cartActionCreators.changeLocalCartFulfilled(newCart));
   } catch (error) {
-    yield alert("문제가 발생했습니다!");
+    alert("문제가 발생했습니다!");
     yield put(cartActionCreators.changeLocalCartRejected(error));
   }
 }
@@ -143,7 +141,7 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
   try {
     // 카트 아이디로 디비에 있는 해당 메뉴를 삭제한다.
     const jwtToken = localStorage.getItem("JWT");
-    axios.delete(`http://tmontica-idev.tmon.co.kr/api/carts/${action.payload}`, {
+    yield axios.delete(`http://tmontica-idev.tmon.co.kr/api/carts/${action.payload}`, {
       headers: {
         Authorization: jwtToken
       }
