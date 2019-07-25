@@ -1,5 +1,4 @@
 import * as React from "react";
-import _ from "underscore";
 import CartItem from "../CartItem";
 import { numberCommaRegex } from "../../../utils";
 import * as cartTypes from "../../../types/cart";

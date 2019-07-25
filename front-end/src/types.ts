@@ -12,7 +12,7 @@ export interface TBasicMenuOption {
 
 export interface TMenuOption extends TBasicMenuOption {
   type: string;
-  name?: string;
+  name: string;
   price: number | 0;
 }
 
