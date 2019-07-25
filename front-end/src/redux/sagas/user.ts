@@ -6,6 +6,7 @@ import * as userActionTypes from "../actionTypes/user";
 import * as userActionCreators from "../actionCreators/user";
 import * as userTypes from "../../types/user";
 import * as cartActionCreators from "../actionCreators/cart";
+import * as cartTypes from "../../types/cart";
 import { API_URL } from "../../API";
 
 function* fetchSignupSagas(action: userTypes.IFetchSignup) {
@@ -31,6 +32,14 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
     localStorage.setItem("JWT", response.data.authorization);
     alert("환영합니다!");
     yield put(userActionCreators.fetchSigninFulfilled());
+    const localCart = localStorage.getItem("LocalCart");
+    if (localCart) {
+      const parsedLocalCart = JSON.parse(localCart) as cartTypes.ICart;
+      if (parsedLocalCart.size > 0) {
+        yield put(cartActionCreators.fetchAddCart(parsedLocalCart.menus));
+        yield put(cartActionCreators.initializeLocalCart());
+      }
+    }
     // 로그인 후 유저의 장바구니를 가져온다. 순서를 보장하기 위해 로그인 사가에.
     yield put(cartActionCreators.fetchSetCart());
     history.push("/");
