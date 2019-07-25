@@ -43,22 +43,25 @@ public class CartMenuService {
 
         // userId로 카트메뉴 정보 가져오기
         List<CartMenu> cartMenus = cartMenuDao.getCartMenuByUserId(userId);
+        int size = 0;
         int totalPrice = 0;
         for (CartMenu cartMenu: cartMenus) {
-
-            //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
+            // 메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
             String option = convertOptionStringToCli(cartMenu.getOption());
             // 메뉴아이디로 메뉴정보 가져오기
             Menu menu = menuDao.getMenuById(cartMenu.getMenuId());
+            int price = menu.getSellPrice()+cartMenu.getPrice(); // 메뉴가격 + 옵션가격
             // List<Cart_MenusResp> 에 넣기
             Cart_MenusResp cart_menusResp = new Cart_MenusResp(cartMenu.getId(), cartMenu.getMenuId(), menu.getNameEng(),
                                                                 menu.getNameKo(),menu.getImgUrl(), option ,
-                                                                cartMenu.getQuantity(), cartMenu.getPrice(), menu.getStock());
+                                                                cartMenu.getQuantity(), price, menu.getStock());
             menus.add(cart_menusResp);
             // totalPrice 에 가격 누적
-            totalPrice += cartMenu.getPrice();
+            totalPrice += (price *  cartMenu.getQuantity());
+            // size에 quantity 누적
+            size += cartMenu.getQuantity();
         }
-        return new CartResp(cartMenus.size(), totalPrice, menus); // 반환할 객체
+        return new CartResp(size, totalPrice, menus); // 반환할 객체
     }
 
 
@@ -68,7 +71,7 @@ public class CartMenuService {
 
         for (CartReq cartReq: cartReqs) {
             // direct : true 이면 카트에서 direct = true 인 것을 삭제하기
-            if (cartReq.isDirect() == true) {
+            if (cartReq.isDirect()) {
                 cartMenuDao.deleteDirectCartMenu();
             }
 
@@ -85,20 +88,19 @@ public class CartMenuService {
                 optionStr += optionId + "__" + opQuantity;
 
                 // 옵션들의 가격 계산
-                Option tmpOption = optionDao.getOptionById(optionId);
-                optionPrice += (tmpOption.getPrice() * opQuantity);
+                optionPrice += ((optionDao.getOptionById(optionId).getPrice()) * opQuantity);
             }
 
             // 옵션, 수량 적용된 가격 계산하기
-            int price = optionPrice + menuDao.getMenuById(cartReq.getMenuId()).getSellPrice();
-            price *= cartReq.getQuantity();
+//            int price = optionPrice + menuDao.getMenuById(cartReq.getMenuId()).getSellPrice();
+//            price *= cartReq.getQuantity();
 
             // 토큰에서 userId 가져오기
             String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
 
             // 카트 테이블에 추가하기
             CartMenu cartMenu = new CartMenu(cartReq.getQuantity(), optionStr, userId,
-                    price, cartReq.getMenuId(), cartReq.isDirect());
+                    optionPrice, cartReq.getMenuId(), cartReq.isDirect());
             int result = cartMenuDao.addCartMenu(cartMenu);
             int cartId = cartMenu.getId();
 
@@ -134,7 +136,6 @@ public class CartMenuService {
     }
 
 
-
     // DB의 옵션 문자열을 변환
     public String convertOptionStringToCli(String option){
         //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
@@ -149,8 +150,12 @@ public class CartMenuService {
             }
             if (tmpOption.getType().equals("Temperature")) {
                 convert += tmpOption.getName();
-            } else {
-                convert += tmpOption.getName() + "(" + oneOption[1] + "개)";
+            } else if(tmpOption.getType().equals("Shot")){
+                convert += "샷추가" + "(" + oneOption[1] + "개)";
+            } else if(tmpOption.getType().equals("Syrup")){
+                convert += "시럽추가" + "(" + oneOption[1] + "개)";
+            } else if(tmpOption.getType().equals("Size")){
+                convert += "사이즈업" + "(" + oneOption[1] + "개)";
             }
         }
         return convert;
