@@ -1,3 +1,4 @@
+import _ from "underscore";
 import * as actionTypes from "../actionTypes/cart";
 import * as cartTypes from "../../types/cart";
 

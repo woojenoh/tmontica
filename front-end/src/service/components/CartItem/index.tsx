@@ -12,7 +12,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     removeLocalCart: (payload: number) => dispatch(cartActionCreators.removeLocalCart(payload)),
     changeLocalCart: (id: number, quantity: number) =>
-      dispatch(cartActionCreators.changeLocalCart(id, quantity))
+      dispatch(cartActionCreators.changeLocalCart(id, quantity)),
+    fetchRemoveCart: (payload: number) => dispatch(cartActionCreators.fetchRemoveCart(payload)),
+    fetchChangeCart: (id: number, quantity: number) =>
+      dispatch(cartActionCreators.fetchChangeCart(id, quantity))
   };
 };
 

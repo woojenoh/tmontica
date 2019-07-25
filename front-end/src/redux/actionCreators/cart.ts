@@ -92,7 +92,7 @@ export function fetchSetCartRejected(error: AxiosError) {
   };
 }
 
-export function fetchAddCart(payload: cartTypes.ICartMenu) {
+export function fetchAddCart(payload: cartTypes.ICartMenu[]) {
   return {
     type: actionTypes.FETCH_ADD_CART,
     payload
