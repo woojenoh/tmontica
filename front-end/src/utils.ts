@@ -1,4 +1,4 @@
-import { TMenuOptionMap } from "./types";
+import { TMenuOptionMap } from "./types/menu";
 import history from "./history";
 
 export const goToSignin = (message = "로그인이 필요합니다.") => {
