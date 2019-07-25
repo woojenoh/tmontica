@@ -1,6 +1,7 @@
 package com.internship.tmontica.cart;
 
 import com.internship.tmontica.cart.model.request.CartReq;
+import com.internship.tmontica.cart.model.request.CartUpdateReq;
 import com.internship.tmontica.cart.model.request.Cart_OptionReq;
 import com.internship.tmontica.cart.model.response.CartIdResp;
 import com.internship.tmontica.cart.model.response.CartResp;
@@ -13,6 +14,8 @@ import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.security.JwtServiceImpl;
 import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,33 +33,6 @@ public class CartMenuService {
     private final OptionDao optionDao;
     private final MenuDao menuDao;
     private final JwtService jwtService;
-
-    // 카트 아이디로 cart_menus 테이블에서 조회하기
-    @Transactional(readOnly = true)
-    public CartMenu getCartMenuByCartId(int cartId){ return cartMenuDao.getCartMenuByCartId(cartId); }
-
-    // 카트에서 삭제하기
-    public int deleteCartMenu(int cartId){ return cartMenuDao.deleteCartMenu(cartId); }
-
-    // 카트에 추가하기
-    public int addCartMenu(CartMenu cartMenu){ return cartMenuDao.addCartMenu(cartMenu); }
-
-    // direct = true 인 카트메뉴 삭제하기
-    public void deleteDirectCartMenu(){
-        cartMenuDao.deleteDirectCartMenu();
-    }
-
-    // userId로 cart_menus 조회하기
-    @Transactional(readOnly = true)
-    public List<CartMenu> getCartMenuByUserId(String userId){
-       return cartMenuDao.getCartMenuByUserId(userId);
-    }
-
-    // 카트에서 수량과 가격 수정하기
-    public int updateCartMenuQuantity(int id, int price, int quantity){
-        return cartMenuDao.updateCartMenuQuantity(id, price, quantity);
-    }
-
 
     // 카트 정보 가져오기 api
     public CartResp getCartMenuApi(){
@@ -133,8 +109,33 @@ public class CartMenuService {
         return cartIds;
     }
 
+    // 카트 수정하기 api
+    public ResponseEntity updateCartApi(int id, CartUpdateReq cartUpdateReq){
+        CartMenu cartMenu = cartMenuDao.getCartMenuByCartId(id);
+        int unitPrice = cartMenu.getPrice() / cartMenu.getQuantity(); // 해당 카트메뉴의 1개 가격
+        // 수량과 가격 업데이트
+        int result = cartMenuDao.updateCartMenuQuantity(id, unitPrice * cartUpdateReq.getQuantity(), cartUpdateReq.getQuantity());
+        if(result < 0) return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    // 카트 삭제하기 api
+    public ResponseEntity deleteCartApi(int id){
+        // 토큰의 아이디와 카트 테이블의 userId 비교
+        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
+        String cartUserId = cartMenuDao.getCartMenuByCartId(id).getUserId();
+        if(userId.equals(cartUserId)){
+            //카트에 담긴 정보 삭제하기
+            int result = cartMenuDao.deleteCartMenu(id);
+            if(result > 0) return new ResponseEntity(HttpStatus.OK);
+            else return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+    }
 
 
+
+    // DB의 옵션 문자열을 변환
     public String convertOptionStringToCli(String option){
         //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
         //String option = cartMenu.getOption();
