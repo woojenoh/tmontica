@@ -13,6 +13,7 @@ import {
 } from "../../../utils";
 import history from "../../../history";
 import { ICartMenu } from "../../../types/cart";
+import cart from "../../../redux/reducers/cart";
 const getOptionById = (options: Array<TMenuOption>, id: number) => {
   return _.chain(options)
     .filter(option => option.id === id)
@@ -26,6 +27,8 @@ interface MatchParams {
 
 interface IMenuProps extends RouteComponentProps<MatchParams> {
   isSignin: boolean;
+  fetchAddCart(payload: ICartMenu[]): void;
+  addLocalCart(payload: ICartMenu): void;
 }
 
 interface IMenuState {
@@ -197,27 +200,37 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
     }
   }
 
+  getOrderPreparedCart({ direct, cartId }: { direct: boolean; cartId?: number }) {
+    const { menu, quantity, totalPrice, option } = this.state;
+
+    const optionString = optionToString(option);
+
+    const orderPreparedCart = {
+      menuId: menu.id,
+      nameEng: menu.nameEng,
+      nameKo: menu.nameKo,
+      imgUrl: menu.imgUrl,
+      quantity,
+      price: totalPrice,
+      option: optionString,
+      optionArray: convertOptionMapToArray(option),
+      direct
+    } as ICartMenu;
+    if (typeof cartId !== "undefined") {
+      orderPreparedCart["cartId"] = cartId;
+    }
+    return orderPreparedCart;
+  }
+
   // 바로구매
   orderDirect(cartAddReq: TCartAddReq) {
     const itr = CartAPI.addCart([cartAddReq]);
     const res = itr.next().value;
     res.then(data => {
-      const { menu, quantity, totalPrice, option } = this.state;
-
-      const optionString = optionToString(option);
-
-      const orderPreparedCart = {
-        menuId: cartAddReq.menuId,
-        nameEng: menu.nameEng,
-        nameKo: menu.nameKo,
-        imgUrl: menu.imgUrl,
-        quantity,
-        price: totalPrice,
-        option: optionString,
-        optionArray: convertOptionMapToArray(option),
-        cartId: data[0].cartId,
-        direct: cartAddReq.direct
-      } as ICartMenu;
+      const orderPreparedCart = this.getOrderPreparedCart({
+        direct: true,
+        cartId: data[0].cartId
+      });
 
       localStorage.setItem("orderCarts", JSON.stringify([orderPreparedCart]));
 
@@ -366,7 +379,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
   }
 
   render() {
-    const menu = this.state.menu;
+    const { menu, quantity, option } = this.state;
 
     return (
       <>
@@ -414,7 +427,24 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
                 </span>
               </div>
               <div className="detail__buttons">
-                <button className="button detail__button">장바구니</button>
+                <button
+                  className="button detail__button"
+                  onClick={e => {
+                    this.props.isSignin
+                      ? this.props.fetchAddCart([
+                          this.getOrderPreparedCart({
+                            direct: false
+                          })
+                        ])
+                      : this.props.addLocalCart(
+                          this.getOrderPreparedCart({
+                            direct: false
+                          })
+                        );
+                  }}
+                >
+                  장바구니
+                </button>
                 <button
                   className="button button--orange detail__button"
                   onClick={e => {
