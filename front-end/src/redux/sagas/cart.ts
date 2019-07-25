@@ -141,8 +141,25 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
 
 function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
   try {
-    // 유저 장바구니 디비에 요소 삭제하는 API 필요.
-    // 삭제하고 Cart 상태에도 요소 제거한거 반영 필요.
+    // 카트 아이디로 디비에 있는 해당 메뉴를 삭제한다.
+    const jwtToken = localStorage.getItem("JWT");
+    axios.delete(`http://tmontica-idev.tmon.co.kr/api/carts/${action.payload}`, {
+      headers: {
+        Authorization: jwtToken
+      }
+    });
+    // 현재 카트 상태에서 해당 카트 아이디를 가진 메뉴를 삭제한다.
+    const state = yield select();
+    const newCart = _(state.cart.cart).clone() as cartTypes.ICart;
+    const targetMenu = newCart.menus.filter(m => {
+      return m.cartId === action.payload;
+    })[0];
+    newCart.size -= targetMenu.quantity;
+    newCart.totalPrice -= targetMenu.quantity * targetMenu.price;
+    newCart.menus = newCart.menus.filter(m => {
+      return m.cartId !== action.payload;
+    });
+    yield put(cartActionCreators.fetchRemoveCartFulfilled(newCart));
   } catch (error) {
     yield put(cartActionCreators.fetchRemoveCartRejected(error));
   }
