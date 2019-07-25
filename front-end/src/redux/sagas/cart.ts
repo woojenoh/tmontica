@@ -16,7 +16,7 @@ function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
     // 초기화 후의 로컬 카트를 불러오기 위해 다시 셀렉트.
     const newState = yield select();
     // 언더스코어로 새로운 객체를 생성한 뒤 프로퍼티들 변경.
-    const newCart = _(newState.localCart).clone() as cartTypes.ICart;
+    const newCart = _(newState.cart.localCart).clone() as cartTypes.ICart;
     newCart.size += action.payload.quantity;
     newCart.totalPrice += action.payload.price * action.payload.quantity;
     newCart.menus = newCart.menus.concat(action.payload);
