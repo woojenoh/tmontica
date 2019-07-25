@@ -40,11 +40,11 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
   handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { id, isSignin, changeLocalCart, fetchChangeCart } = this.props;
     if (isSignin) {
-      if (id) {
+      if (id !== undefined) {
         fetchChangeCart(id, Number(e.currentTarget.value));
       }
     } else {
-      if (id) {
+      if (id !== undefined) {
         changeLocalCart(id, Number(e.currentTarget.value));
       }
     }
@@ -75,7 +75,11 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
             {name} - {numberCommaRegex(price)}원
             <span
               className="cart__item-delete"
-              onClick={() => (isSignin ? id && fetchRemoveCart(id) : id && removeLocalCart(id))}
+              onClick={() =>
+                isSignin
+                  ? id !== undefined && fetchRemoveCart(id)
+                  : id !== undefined && removeLocalCart(id)
+              }
             >
               &times;
             </span>
