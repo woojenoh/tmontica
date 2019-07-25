@@ -105,8 +105,35 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
 
 function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
   try {
-    // 유저 장바구니 디비에 추가하는 API 필요.
-    // 추가하고 Cart 상태에 추가한 요소 반영 필요.
+    // 저장하고자 하는 카트 메뉴들을 불러와 API에 전송할 형태로 만든다.
+    const cartMenus = action.payload;
+    const cartReqs = cartMenus.map((m: cartTypes.ICartMenu) => {
+      return {
+        direct: m.direct,
+        menuId: m.menuId,
+        option: m.optionArray,
+        quantity: m.quantity
+      } as cartTypes.ICartReq;
+    });
+    // 만든 형태를 API로 전송하고, 응답으로 받은 카트 아이디들을 저장한다.
+    const jwtToken = localStorage.getItem("JWT");
+    const response = yield axios.post("http://tmontica-idev.tmon.co.kr/api/carts", cartReqs, {
+      headers: {
+        Authorization: jwtToken
+      }
+    });
+    // 현재 카트 상태에 새로운 카트 메뉴들을 추가한다.
+    const state = yield select();
+    const newCart = _(state.cart.cart).clone() as cartTypes.ICart;
+    const newCartMenus = cartMenus.map((m: cartTypes.ICartMenu, index: number) => {
+      newCart.size += m.quantity;
+      newCart.totalPrice += m.quantity * m.price;
+      const newCartMenu: cartTypes.ICartMenu = m;
+      newCartMenu.cartId = response.data[index].cartId;
+      return newCartMenu;
+    });
+    newCart.menus = newCart.menus.concat(newCartMenus);
+    yield put(cartActionCreators.fetchAddCartFulfilled(newCart));
   } catch (error) {
     yield put(cartActionCreators.fetchAddCartRejected(error.response));
   }

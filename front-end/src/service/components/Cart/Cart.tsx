@@ -12,6 +12,7 @@ export interface ICartProps {
   handleCartClose(): void;
   addLocalCart(payload: cartTypes.ICartMenu): void;
   fetchSetCart(): void;
+  fetchAddCart(payload: cartTypes.ICartMenu[]): void;
 }
 
 export interface ICartState {
@@ -20,32 +21,60 @@ export interface ICartState {
 
 class Cart extends React.Component<ICartProps, ICartState> {
   componentDidMount() {
-    const { isSignin, addLocalCart, fetchSetCart } = this.props;
+    const { isSignin, addLocalCart, fetchSetCart, fetchAddCart } = this.props;
     if (isSignin) {
       fetchSetCart();
+      // fetchAddCart([
+      //   {
+      //     menuId: 2,
+      //     nameEng: "americano",
+      //     nameKo: "카페라떼",
+      //     imgUrl: "/img/coffee-sample.png",
+      //     option: "HOT/샷추가(1개)/사이즈업",
+      //     optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
+      //     quantity: 2,
+      //     price: 2500,
+      //     stock: 100,
+      //     direct: false
+      //   },
+      //   {
+      //     menuId: 2,
+      //     nameEng: "americano",
+      //     nameKo: "카페라떼",
+      //     imgUrl: "/img/coffee-sample.png",
+      //     option: "HOT/샷추가(1개)/사이즈업",
+      //     optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
+      //     quantity: 2,
+      //     price: 2500,
+      //     stock: 100,
+      //     direct: false
+      //   }
+      // ]);
     } else {
-      addLocalCart({
-        cartId: 10,
-        menuId: 2,
-        nameEng: "americano",
-        nameKo: "아메리카노",
-        imgUrl: "/img/coffee-sample.png",
-        option: "HOT/샷추가(1개)/사이즈업",
-        quantity: 1,
-        price: 1500,
-        stock: 100
-      });
-      addLocalCart({
-        cartId: 10,
-        menuId: 2,
-        nameEng: "americano",
-        nameKo: "카페라떼",
-        imgUrl: "/img/coffee-sample.png",
-        option: "HOT/샷추가(1개)/사이즈업",
-        quantity: 2,
-        price: 2500,
-        stock: 100
-      });
+      // addLocalCart({
+      //   menuId: 2,
+      //   nameEng: "americano",
+      //   nameKo: "아메리카노",
+      //   imgUrl: "/img/coffee-sample.png",
+      //   option: "HOT/샷추가(1개)/사이즈업",
+      //   optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
+      //   quantity: 1,
+      //   price: 1500,
+      //   stock: 100,
+      //   direct: false
+      // });
+      // addLocalCart({
+      //   menuId: 2,
+      //   nameEng: "americano",
+      //   nameKo: "카페라떼",
+      //   imgUrl: "/img/coffee-sample.png",
+      //   option: "HOT/샷추가(1개)/사이즈업",
+      //   optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
+      //   quantity: 2,
+      //   price: 2500,
+      //   stock: 100,
+      //   direct: false
+      // });
     }
   }
 

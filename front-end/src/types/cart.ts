@@ -23,7 +23,7 @@ export interface ICartMenu {
 
 export interface ICartReq {
   direct: boolean;
-  menuId: boolean;
+  menuId: number;
   option: ICartMenuOption[];
   quantity: number;
 }
