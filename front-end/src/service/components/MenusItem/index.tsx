@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TMenusItem } from "../../../types";
+import { TMenusItem } from "../../../types/menu";
 import "./styles.scss";
 import { RouteComponentProps, withRouter } from "react-router";
 

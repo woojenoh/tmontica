@@ -171,3 +171,11 @@ export type TCartAction =
   | IFetchChangeCart
   | IFetchChangeCartFulfilled
   | IFetchChangeCartRejected;
+
+// 카트 추가 요청 타입
+export type TCartAddReq = {
+  menuId: number;
+  quantity: number;
+  direct: boolean;
+  option: Array<ICartMenuOption>;
+};

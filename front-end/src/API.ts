@@ -1,4 +1,4 @@
-import { TCartAddReq } from "./types";
+import { TCartAddReq } from "./types/cart";
 import { ICartMenu } from "./types/cart";
 import history from "./history";
 
