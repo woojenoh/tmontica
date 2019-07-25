@@ -13,6 +13,7 @@ export interface ICartItemProps {
   removeLocalCart(payload: number): void;
   changeLocalCart(id: number, quantity: number): void;
   fetchRemoveCart(payload: number): void;
+  fetchChangeCart(id: number, quantity: number): void;
 }
 
 export interface ICartItemState {
@@ -37,8 +38,11 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
   };
 
   handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { id, isSignin, changeLocalCart } = this.props;
+    const { id, isSignin, changeLocalCart, fetchChangeCart } = this.props;
     if (isSignin) {
+      if (id) {
+        fetchChangeCart(id, Number(e.currentTarget.value));
+      }
     } else {
       if (id) {
         changeLocalCart(id, Number(e.currentTarget.value));

@@ -167,8 +167,42 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
 
 function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
   try {
-    // 유저 장바구니 디비에 수량 수정하는 API 필요.
-    // 수정하고 Cart 상태에도 수량 수정한거 반영 필요.
+    // 카트 아이디와 수량으로 디비에 있는 해당 메뉴를 삭제한다.
+    const jwtToken = localStorage.getItem("JWT");
+    yield axios.put(
+      `http://tmontica-idev.tmon.co.kr/api/carts/${action.id}`,
+      {
+        quantity: action.quantity
+      },
+      {
+        headers: {
+          Authorization: jwtToken
+        }
+      }
+    );
+    // 해당 아이디에 해당하는 메뉴의 개수를 변경하고, 그에 따라 전체 사이즈와 가격도 변경한다.
+    const state = yield select();
+    const newCart = _(state.cart.cart).clone() as cartTypes.ICart;
+    const targetMenus = newCart.menus.map((m: cartTypes.ICartMenu) => {
+      if (m.cartId === action.id) {
+        const changeQuantity = m.quantity - action.quantity;
+        if (changeQuantity > 0) {
+          // 수량이 줄었을 경우.
+          newCart.size -= changeQuantity;
+          newCart.totalPrice -= m.price * changeQuantity;
+        } else {
+          // 수량이 늘었을 경우.
+          newCart.size += -changeQuantity;
+          newCart.totalPrice += m.price * -changeQuantity;
+        }
+        m.quantity = action.quantity;
+        return m;
+      } else {
+        return m;
+      }
+    });
+    newCart.menus = targetMenus;
+    yield put(cartActionCreators.fetchChangeCartFulfilled(newCart));
   } catch (error) {
     yield put(cartActionCreators.fetchChangeCartRejected(error.response));
   }
@@ -181,5 +215,5 @@ export default function* userSagas() {
   yield takeEvery(cartActionTypes.FETCH_SET_CART, fetchSetCartSagas);
   yield takeEvery(cartActionTypes.FETCH_ADD_CART, fetchAddCartSagas);
   yield takeEvery(cartActionTypes.FETCH_REMOVE_CART, fetchRemoveCartSagas);
-  yield takeEvery(cartActionCreators.fetchChangeCart, fetchChangeCartSagas);
+  yield takeEvery(cartActionTypes.FETCH_CHANGE_CART, fetchChangeCartSagas);
 }

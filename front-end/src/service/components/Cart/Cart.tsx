@@ -51,30 +51,30 @@ class Cart extends React.Component<ICartProps, ICartState> {
       //   }
       // ]);
     } else {
-      addLocalCart({
-        menuId: 2,
-        nameEng: "americano",
-        nameKo: "아메리카노",
-        imgUrl: "/img/coffee-sample.png",
-        option: "HOT/샷추가(1개)/사이즈업",
-        optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
-        quantity: 1,
-        price: 1500,
-        stock: 100,
-        direct: false
-      });
-      addLocalCart({
-        menuId: 2,
-        nameEng: "americano",
-        nameKo: "카페라떼",
-        imgUrl: "/img/coffee-sample.png",
-        option: "HOT/샷추가(1개)/사이즈업",
-        optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
-        quantity: 2,
-        price: 2500,
-        stock: 100,
-        direct: false
-      });
+      // addLocalCart({
+      //   menuId: 2,
+      //   nameEng: "americano",
+      //   nameKo: "아메리카노",
+      //   imgUrl: "/img/coffee-sample.png",
+      //   option: "HOT/샷추가(1개)/사이즈업",
+      //   optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
+      //   quantity: 1,
+      //   price: 1500,
+      //   stock: 100,
+      //   direct: false
+      // });
+      // addLocalCart({
+      //   menuId: 2,
+      //   nameEng: "americano",
+      //   nameKo: "카페라떼",
+      //   imgUrl: "/img/coffee-sample.png",
+      //   option: "HOT/샷추가(1개)/사이즈업",
+      //   optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
+      //   quantity: 2,
+      //   price: 2500,
+      //   stock: 100,
+      //   direct: false
+      // });
     }
   }
 
