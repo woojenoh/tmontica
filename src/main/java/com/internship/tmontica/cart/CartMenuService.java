@@ -113,10 +113,7 @@ public class CartMenuService {
 
     // 카트 수정하기 api
     public ResponseEntity updateCartApi(int id, CartUpdateReq cartUpdateReq){
-        CartMenu cartMenu = cartMenuDao.getCartMenuByCartId(id);
-        int unitPrice = cartMenu.getPrice() / cartMenu.getQuantity(); // 해당 카트메뉴의 1개 가격
-        // 수량과 가격 업데이트
-        int result = cartMenuDao.updateCartMenuQuantity(id, unitPrice * cartUpdateReq.getQuantity(), cartUpdateReq.getQuantity());
+        int result = cartMenuDao.updateCartMenuQuantity(id, cartUpdateReq.getQuantity());
         if(result < 0) return new ResponseEntity(HttpStatus.BAD_REQUEST);
         return new ResponseEntity(HttpStatus.OK);
     }
