@@ -1,8 +1,10 @@
+@import "../../../assets/scss/colors.scss";
+
 .detail {
   display: flex;
   max-width: 800px;
   min-height: 500px;
-  border: 1px solid #ebebeb;
+  border: 1px solid $border-gray;
   margin: 0 auto;
   background-color: white;
 
@@ -19,7 +21,7 @@
   display: flex;
   align-items: center;
   padding: 40px 0;
-  border-right: 1px solid #ebebeb;
+  border-right: 1px solid $border-gray;
 }
 
 .detail__img {

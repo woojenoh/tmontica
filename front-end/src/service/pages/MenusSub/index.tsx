@@ -3,7 +3,7 @@ import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import MenuItems from "../../components/MenusItems";
 import { MenuAPI } from "../../../API";
-import { TMenusItem } from "../../../types";
+import { TMenusItem } from "../../../types/menu";
 
 interface MatchParams {
   categoryEng: string;
@@ -38,8 +38,6 @@ export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubS
   }
 
   render() {
-    const { categoryKo } = this.props;
-
     return (
       <>
         <main className="main">

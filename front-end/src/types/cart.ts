@@ -12,16 +12,23 @@ export interface ICartMenu {
   nameEng: string;
   nameKo: string;
   imgUrl: string;
-  option: string;
   quantity: number;
   price: number;
-  optionArray?: ICartMenuOptionArrayItem[];
+  option: string;
+  optionArray?: ICartMenuOption[];
   cartId?: number;
   stock?: number;
   direct?: boolean;
 }
 
-export interface ICartMenuOptionArrayItem {
+export interface ICartReq {
+  direct: boolean;
+  menuId: number;
+  option: ICartMenuOption[];
+  quantity: number;
+}
+
+export interface ICartMenuOption {
   id: number;
   quantity: number;
 }
@@ -97,7 +104,7 @@ export interface IFetchSetCartRejected {
 
 export interface IFetchAddCart {
   type: typeof cartActionTypes.FETCH_ADD_CART;
-  payload: ICartMenu;
+  payload: ICartMenu[];
 }
 
 export interface IFetchAddCartFulfilled {
@@ -164,3 +171,11 @@ export type TCartAction =
   | IFetchChangeCart
   | IFetchChangeCartFulfilled
   | IFetchChangeCartRejected;
+
+// 카트 추가 요청 타입
+export type TCartAddReq = {
+  menuId: number;
+  quantity: number;
+  direct: boolean;
+  option: Array<ICartMenuOption>;
+};

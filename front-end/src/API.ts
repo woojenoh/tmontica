@@ -1,9 +1,11 @@
-import { TCartAddReq } from "./types";
+import { TCartAddReq } from "./types/cart";
 import history from "./history";
+import { TOrderReq } from "./types/order";
 
-const API_URL = "http://localhost:3000/fakeapi";
+// const API_URL = "http://localhost:3000/fakeapi";
 // const API_URL = "https://my-json-server.typicode.com/yeolsa/tmontica-json";
-// const API_URL = "http://tmontica-idev.tmon.co.kr/api";
+export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
+// export const API_URL = "http://localhost:8080/api";
 
 function fetchJSON(reqURL: string) {
   return fetch(reqURL, {
@@ -15,11 +17,14 @@ function fetchJSON(reqURL: string) {
   });
 }
 
-function post(reqURL: string, data: any) {
+function postWithJWT(reqURL: string, data: any) {
+  const jwt = localStorage.getItem("JWT") || "";
+
   return fetch(reqURL, {
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      Authorization: jwt
     },
     method: "POST",
     body: JSON.stringify(data)
@@ -33,8 +38,8 @@ export const MenuAPI = (() => {
     return fetchJSON(`${API_URL}/menus`);
   }
 
-  function getMenuByCateory(categoryEng: string) {
-    return fetchJSON(`${API_URL}/menus/${categoryEng}`);
+  function getMenuByCateory(categoryEng: string, page = 1, size = 4) {
+    return fetchJSON(`${API_URL}/menus/${categoryEng}?page=${page}&size=${size}`);
   }
 
   function getMenuById(menuId: number = 1) {
@@ -49,19 +54,23 @@ export const MenuAPI = (() => {
 })();
 
 export const CartAPI = (() => {
-  function* addCart(cartAddReq: TCartAddReq) {
-    try {
-      // yield post(`${API_URL}/carts`, cartAddReq);
-      if (cartAddReq.direct) {
-        yield localStorage.setItem("isDirect", "Y");
-        yield history.push("/payment");
-      } else {
-        yield localStorage.setItem("isDirect", "N");
-      }
-    } catch (error) {}
+  function addCart(cartAddReqs: Array<TCartAddReq>) {
+    return postWithJWT(`${API_URL}/carts`, cartAddReqs);
   }
 
   return {
     addCart
+  };
+})();
+
+export const OrderAPI = (() => {
+  async function order(data: TOrderReq) {
+    const orderId = await postWithJWT(`${API_URL}/orders`, data);
+
+    history.push(`/orders?orderId=${orderId}`);
+  }
+
+  return {
+    order
   };
 })();

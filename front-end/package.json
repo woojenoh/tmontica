@@ -16,6 +16,7 @@
     "@types/react-router-dom": "^4.3.4",
     "@types/recompose": "^0.30.6",
     "@types/underscore": "^1.9.2",
+    "@types/uuid": "^3.4.5",
     "axios": "^0.19.0",
     "history": "^4.9.0",
     "jwt-decode": "^2.2.0",
@@ -31,7 +32,8 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-saga": "^1.0.5",
     "typescript": "3.5.3",
-    "underscore": "^1.9.1"
+    "underscore": "^1.9.1",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "start": "react-scripts start",

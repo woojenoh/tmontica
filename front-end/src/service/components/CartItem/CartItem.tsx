@@ -3,7 +3,7 @@ import { numberCommaRegex } from "../../../utils";
 import "./styles.scss";
 
 export interface ICartItemProps {
-  id: number;
+  id: number | undefined;
   name: string;
   price: number;
   option: string | Object;
@@ -12,6 +12,8 @@ export interface ICartItemProps {
   isSignin: boolean;
   removeLocalCart(payload: number): void;
   changeLocalCart(id: number, quantity: number): void;
+  fetchRemoveCart(payload: number): void;
+  fetchChangeCart(id: number, quantity: number): void;
 }
 
 export interface ICartItemState {
@@ -36,10 +38,15 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
   };
 
   handleQuantityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { id, isSignin, changeLocalCart } = this.props;
+    const { id, isSignin, changeLocalCart, fetchChangeCart } = this.props;
     if (isSignin) {
+      if (id !== undefined) {
+        fetchChangeCart(id, Number(e.currentTarget.value));
+      }
     } else {
-      changeLocalCart(id, Number(e.currentTarget.value));
+      if (id !== undefined) {
+        changeLocalCart(id, Number(e.currentTarget.value));
+      }
     }
     this.setState({
       quantity: Number(e.currentTarget.value)
@@ -48,7 +55,16 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
 
   render() {
     const { quantity } = this.state;
-    const { id, name, price, option, imgUrl, removeLocalCart } = this.props;
+    const {
+      id,
+      name,
+      price,
+      option,
+      imgUrl,
+      removeLocalCart,
+      isSignin,
+      fetchRemoveCart
+    } = this.props;
     const { buildSelectOptions, handleQuantityChange } = this;
 
     return (
@@ -57,7 +73,14 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
         <div className="cart__item-info">
           <span className="cart__item-name">
             {name} - {numberCommaRegex(price)}원
-            <span className="cart__item-delete" onClick={() => removeLocalCart(id)}>
+            <span
+              className="cart__item-delete"
+              onClick={() =>
+                isSignin
+                  ? id !== undefined && fetchRemoveCart(id)
+                  : id !== undefined && removeLocalCart(id)
+              }
+            >
               &times;
             </span>
           </span>

@@ -1,0 +1,191 @@
+@import "../../../assets/scss/colors.scss";
+
+.d-flex {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
+  margin-bottom: 5px;
+}
+
+.d-inline-b {
+  display: inline-block;
+}
+
+img {
+  width: 100%;
+}
+
+body {
+  background: #f1f1f1;
+  font-weight: normal;
+}
+
+body > .main,
+h2 {
+  font-family: "Malgun Gothic", "맑은 고딕", Helvetica, "Apple SD Gothic Neo", Dotum, "돋움",
+    sans-serif;
+}
+
+.main {
+  padding: 0;
+  h2 {
+    letter-spacing: -0.06em;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 18px;
+    margin-bottom: 21px;
+    color: #16181a;
+  }
+}
+
+.order__container {
+  border: 1px solid $border-gray;
+}
+
+.payment__methods {
+  .payment__method {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .payment__method:not(.active) {
+    background: transparent;
+    border: 1px solid #19bc9b;
+    color: #19bc9b;
+  }
+
+  .payment__method:not(.active):hover {
+    background-color: #19bc9b;
+    color: white;
+  }
+}
+
+.button {
+  border-color: #6c7580;
+}
+
+.card {
+  margin-top: 10px;
+  border-bottom: 1px solid #dfe2e6;
+  background: #fff;
+  padding: 21px 0 0;
+}
+
+.plr15 {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.order.card > .order__top {
+  border-bottom: 1px solid #b7bfc8;
+}
+
+.order__menu-img {
+  width: 72px;
+}
+
+li.order__menu {
+  border-bottom: 1px solid #b7bfc8;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.5rem 15px;
+  font-size: 15px;
+}
+
+.order__menu-options {
+  font-size: 14px;
+  color: #959da6;
+  letter-spacing: initial;
+}
+
+h3.order__menu-title {
+  font-size: 16px;
+  margin-bottom: 2px;
+  margin-top: 7px;
+}
+
+.order__menu-cnt-wrap {
+  text-align: left;
+}
+
+.order__menu-price-wrap {
+  text-align: right;
+}
+
+.order__menu-description {
+  width: calc(100% - 72px);
+}
+
+.order__menu-cnt-price-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 5px;
+  padding-bottom: 7px;
+}
+
+/* 포인트 결제 */
+.payment__points {
+  padding: 15px;
+  position: relative;
+}
+
+.payment__points > input {
+  border: 1px solid #b7bfc8;
+  width: 100%;
+  font-size: 22px;
+  box-sizing: border-box;
+  padding: 4px 8px;
+  /* padding-right: 22px; */
+  margin-bottom: 6px;
+}
+
+.payment__points > div {
+  position: relative;
+  padding-left: 11px;
+  font-size: 14px;
+}
+
+/* 사용가능한 포인트 앞에 점찍기 */
+.payment__points > div:before {
+  display: inline-block;
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #6c7580;
+  content: "";
+}
+
+/* 결제 금액 확인 */
+.price > .d-flex:nth-child(4) {
+  margin-bottom: 15px;
+}
+
+.button--group {
+  margin: 0 15px;
+  display: flex;
+  .button {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+  }
+
+  .button:nth-child(1) {
+    margin-right: 8px;
+  }
+
+  .button--cancle {
+    background: #f44336;
+  }
+}
+
+section.price.card {
+  padding-bottom: 15px;
+}
