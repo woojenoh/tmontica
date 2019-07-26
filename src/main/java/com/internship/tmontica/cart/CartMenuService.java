@@ -75,17 +75,17 @@ public class CartMenuService {
                 cartMenuDao.deleteDirectCartMenu();
             }
 
-            List<Cart_OptionReq> option = cartReq.getOption();
-            String optionStr = "";
+            List<Cart_OptionReq> options = cartReq.getOption();
+            StringBuilder optionStr = new StringBuilder();
             int optionPrice = 0;
-            for (int i = 0; i < option.size(); i++) {
+            for (Cart_OptionReq option : options) {
                 // DB에 들어갈 옵션 문자열 만들기
-                if (i != 0) {
-                    optionStr += "/";
+                if (option.getId() != 1) {
+                    optionStr.append("/");
                 }
-                int optionId = option.get(i).getId();
-                int opQuantity = option.get(i).getQuantity();
-                optionStr += optionId + "__" + opQuantity;
+                int optionId = option.getId();
+                int opQuantity = option.getQuantity();
+                optionStr.append(optionId + "__" + opQuantity);
 
                 // 옵션들의 가격 계산
                 optionPrice += ((optionDao.getOptionById(optionId).getPrice()) * opQuantity);
@@ -95,7 +95,7 @@ public class CartMenuService {
             String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
 
             // 카트 테이블에 추가하기
-            CartMenu cartMenu = new CartMenu(cartReq.getQuantity(), optionStr, userId,
+            CartMenu cartMenu = new CartMenu(cartReq.getQuantity(), optionStr.toString(), userId,
                     optionPrice, cartReq.getMenuId(), cartReq.isDirect());
             int result = cartMenuDao.addCartMenu(cartMenu);
             int cartId = cartMenu.getId();
@@ -137,25 +137,23 @@ public class CartMenuService {
     public String convertOptionStringToCli(String option){
         // 맵으로 만들어서 함수의 파라미터로 던지기...
         //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
-        //String option = cartMenu.getOption();
-        String convert = ""; // 변환할 문자열
+        StringBuilder convert = new StringBuilder();
         String[] arrOption = option.split("/");
-        for (int j = 0; j < arrOption.length; j++) {
-            String[] oneOption = arrOption[j].split("__");
-            Option tmpOption = optionDao.getOptionById(Integer.valueOf(oneOption[0]));
-            if (j != 0) {
-                convert += "/";
-            }
+
+        for (String opStr : arrOption) {
+            String[] oneOption = opStr.split("__");
+            Option tmpOption = optionDao.getOptionById(Integer.parseInt(oneOption[0]));
+
             if (tmpOption.getType().equals("Temperature")) {
-                convert += tmpOption.getName();
-            } else if(tmpOption.getType().equals("Shot")){
-                convert += "샷추가" + "(" + oneOption[1] + "개)";
+                convert.append(tmpOption.getName());
+            } else if(tmpOption.getType().equals("/Shot")){
+                convert.append("/샷추가("+oneOption[1]+"개)");
             } else if(tmpOption.getType().equals("Syrup")){
-                convert += "시럽추가" + "(" + oneOption[1] + "개)";
+                convert.append("/시럽추가("+oneOption[1]+"개)");
             } else if(tmpOption.getType().equals("Size")){
-                convert += "사이즈업";
+                convert.append("/사이즈업");
             }
         }
-        return convert;
+        return convert.toString();
     }
 }
