@@ -2,6 +2,7 @@ package com.internship.tmontica.order;
 
 import com.internship.tmontica.cart.CartMenu;
 import com.internship.tmontica.cart.CartMenuDao;
+import com.internship.tmontica.cart.CartMenuService;
 import com.internship.tmontica.menu.MenuDao;
 import com.internship.tmontica.option.Option;
 import com.internship.tmontica.option.OptionDao;
@@ -12,8 +13,11 @@ import com.internship.tmontica.order.model.response.OrderListResp;
 import com.internship.tmontica.order.model.response.OrderResp;
 import com.internship.tmontica.order.model.response.Order_MenusResp;
 import com.internship.tmontica.security.JwtService;
+import com.internship.tmontica.user.exception.UserException;
+import com.internship.tmontica.user.exception.UserExceptionType;
 import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +34,8 @@ public class OrderService {
     private final OrderDao orderDao;
     private final CartMenuDao cartMenuDao;
     private final MenuDao menuDao;
-    private final OptionDao optionDao;
     private final JwtService jwtService;
+    private final CartMenuService cartMenuService;
 
 
     // 주문내역 가져오기 api
@@ -59,14 +63,13 @@ public class OrderService {
     }
 
     // 결제하기 api
-    @Transactional(rollbackFor = NotEnoughStockException.class)
+    @Transactional(rollbackFor = {NotEnoughStockException.class, UserException.class} )
     public Map<String, Integer> addOrderApi(OrderReq orderReq){
         //토큰에서 유저아이디
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         // TODO: totalprice 여기서 한번더 계산이 필요한가?
         Order order = new Order(0,orderReq.getPayment(),orderReq.getTotalPrice(),orderReq.getUsedPoint(),
                 orderReq.getTotalPrice()-orderReq.getUsedPoint(), "미결제", userId);
-
         // 주문테이블에 추가
         orderDao.addOrder(order);
         int orderId = order.getId();
@@ -76,6 +79,12 @@ public class OrderService {
         List<Order_MenusReq> menus = orderReq.getMenus();
         for (Order_MenusReq menu: menus) {
             CartMenu cartMenu = cartMenuDao.getCartMenuByCartId(menu.getCartId());
+
+            // 로그인한 아이디와 디비의 아이디 다르면 rollback
+            if(!userId.equals(cartMenu.getUserId())){
+                throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
+            }
+
             int price = (menuDao.getMenuById(cartMenu.getMenuId()).getSellPrice()) + cartMenu.getPrice();// 옵션 + 메뉴 가격
             OrderDetail orderDetail = new OrderDetail(0, orderId, cartMenu.getOption(), price, cartMenu.getQuantity(),cartMenu.getMenuId());
 
@@ -107,7 +116,7 @@ public class OrderService {
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         // 유저 아이디 검사
         if(!userId.equals(order.getUserId())){
-            //return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
         }
 
         List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(orderId);
@@ -115,25 +124,7 @@ public class OrderService {
         //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
         for (int i = 0; i < menus.size(); i++) {
             String option = menus.get(i).getOption();
-            String convert = ""; // 변환할 문자열
-
-            String[] arrOption = option.split("/");
-            for (int j = 0; j < arrOption.length; j++) {
-                String[] oneOption = arrOption[j].split("__");
-                Option tmpOption = optionDao.getOptionById(Integer.valueOf(oneOption[0]));
-                if (j != 0) {
-                    convert += "/";
-                }
-                if (tmpOption.getType().equals("Temperature")) {
-                    convert += tmpOption.getName();
-                } else if(tmpOption.getType().equals("Shot")){
-                    convert += "샷추가" + "(" + oneOption[1] + "개)";
-                } else if(tmpOption.getType().equals("Syrup")){
-                    convert += "시럽추가" + "(" + oneOption[1] + "개)";
-                } else if(tmpOption.getType().equals("Size")){
-                    convert += "사이즈업" + "(" + oneOption[1] + "개)";
-                }
-            }
+            String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
 
             menus.get(i).setOption(convert);
         }
@@ -149,6 +140,7 @@ public class OrderService {
         String dbUserId = orderDao.getOrderByOrderId(orderId).getUserId();
         if(!userId.equals(dbUserId)){
             // 아이디 디비와 다를경우 예외처리
+            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
         }
         // orders 테이블에서 status 수정
         orderDao.deleteOrder(orderId);
