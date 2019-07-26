@@ -17,7 +17,7 @@ public class CartMenu {
     @NotNull
     private String userId;
     @NotNull
-    private int price;  // 메뉴의 옵션, 수량이 모두 포함된 가격
+    private int price;  // 옵션의 가격...
     @NotNull
     private int menuId;
     @NotNull

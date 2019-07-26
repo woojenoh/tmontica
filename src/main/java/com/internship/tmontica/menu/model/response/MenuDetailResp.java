@@ -12,7 +12,7 @@ public class MenuDetailResp {
     private String nameEng;
     private String nameKo;
     private String description;
-    private String img;
+    private String imgUrl;
     private int sellPrice;
     private int discountRate;
     private String categoryEng;

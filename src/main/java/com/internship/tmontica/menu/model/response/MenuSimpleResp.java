@@ -9,6 +9,6 @@ public class MenuSimpleResp {
     private int id;
     private String nameEng;
     private String nameKo;
-    private String img;
+    private String imgUrl;
     private int stock;
 }
