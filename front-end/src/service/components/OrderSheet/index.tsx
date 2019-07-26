@@ -46,8 +46,10 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     this.getOrder();
   }
 
-  componentDidUpdate() {
-    this.getOrder();
+  componentDidUpdate(prevProps: IOrderSheetProps) {
+    if (this.props.orderId !== prevProps.orderId) {
+      this.getOrder();
+    }
   }
 
   tempData = {
