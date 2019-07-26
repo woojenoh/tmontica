@@ -34,7 +34,7 @@ function get(reqURL: string, params?: Map<string, string> | null, jwt?: string) 
     },
     method: "GET"
   }).then(res => {
-    return res.ok ? res.json() : res.json();
+    return res.ok ? res.json() : "";
   });
 }
 

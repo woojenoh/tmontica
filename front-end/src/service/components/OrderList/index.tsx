@@ -5,7 +5,7 @@ import { OrderAPI } from "../../../API";
 import _ from "underscore";
 
 export interface IOrderListProps {
-  handleOrderListItemClick(): void;
+  handleOrderListItemClick(orderId: number): void;
 }
 
 interface IOrder {
@@ -27,6 +27,8 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
   async getOrderAll() {
     const data = await OrderAPI.getOrderAll();
     const { orders } = data;
+    _.sortBy(orders, "orderId");
+    orders.reverse();
 
     this.setState({
       orders
@@ -69,8 +71,6 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
   render() {
     const { handleOrderListItemClick } = this.props;
     const { orders } = this.state;
-    _.sortBy(orders, "orderId");
-    orders.reverse();
     return (
       <>
         <h1 className="orders-list__title">주문내역({orders.length})</h1>

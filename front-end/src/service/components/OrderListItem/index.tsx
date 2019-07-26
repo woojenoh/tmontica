@@ -6,7 +6,7 @@ export interface IOrderListItemProps {
   name: string;
   date: string;
   status: string;
-  handleOrderListItemClick(): void;
+  handleOrderListItemClick(orderId: number): void;
 }
 
 function OrderListItem(props: IOrderListItemProps) {
@@ -15,7 +15,7 @@ function OrderListItem(props: IOrderListItemProps) {
   return (
     <li
       onClick={e => {
-        handleOrderListItemClick();
+        handleOrderListItemClick(orderId);
       }}
       className={
         status === "준비완료"

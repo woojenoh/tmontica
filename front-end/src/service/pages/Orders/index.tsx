@@ -6,13 +6,20 @@ import "./styles.scss";
 export interface IOrdersProps {}
 
 class Orders extends PureComponent<IOrdersProps> {
-  handleOrderListItemClick() {}
+  state = {
+    orderId: 0
+  };
+
+  handleOrderListItemClick(orderId: number) {
+    this.setState({ orderId: orderId });
+  }
 
   render() {
+    const { orderId } = this.state;
     return (
       <main className="main">
         <section className="orders">
-          <OrderSheet orderId={0} />
+          <OrderSheet orderId={orderId} />
         </section>
         <section className="orders-list">
           <OrderList handleOrderListItemClick={this.handleOrderListItemClick.bind(this)} />

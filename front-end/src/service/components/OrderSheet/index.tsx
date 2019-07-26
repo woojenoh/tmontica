@@ -31,13 +31,11 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
   };
 
   async getOrder() {
-    const data = await OrderAPI.getOrderById(this.props.orderId);
-    if (data.status !== 200) {
-      console.log(data.message);
+    const order = await OrderAPI.getOrderById(this.props.orderId);
+
+    if (order === "") {
       return;
     }
-
-    const { order } = data;
 
     this.setState({
       order
@@ -45,6 +43,10 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
   }
 
   componentDidMount() {
+    this.getOrder();
+  }
+
+  componentDidUpdate() {
     this.getOrder();
   }
 
@@ -148,7 +150,7 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
             {_(order.menus).map((m: TOrderDetail) => {
               return (
                 <OrderSheetItem
-                  key={m.id}
+                  key={`${orderId}_${m.id}`}
                   name={m.nameEng}
                   price={m.sellPrice}
                   optionString={m.optionString}
