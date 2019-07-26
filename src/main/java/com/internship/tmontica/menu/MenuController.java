@@ -55,7 +55,7 @@ public class MenuController {
         List<MenuSimpleResp> categoryMenus = modelMapper.map(menus, new TypeToken<List<MenuSimpleResp>>(){}.getType());
 
         for(MenuSimpleResp menu : categoryMenus)
-            menu.setImgUrl(location.concat(menu.getImgUrl()));
+            menu.setImgUrl("/images/".concat(menu.getImgUrl()));
 
         menucategoryResp.setMenus(categoryMenus);
         return new ResponseEntity<>(menucategoryResp, HttpStatus.OK);
