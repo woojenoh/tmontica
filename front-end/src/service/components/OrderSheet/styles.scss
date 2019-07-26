@@ -1,6 +1,10 @@
 @import "../../../assets/scss/mediaQuery.scss";
 @import "../../../assets/scss/colors.scss";
 
+.hide {
+  display: none !important;
+}
+
 .orders__top {
   display: flex;
   justify-content: space-between;
