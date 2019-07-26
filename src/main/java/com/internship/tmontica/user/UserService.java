@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.mail.SimpleMailMessage;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Service
@@ -56,7 +55,7 @@ public class UserService { //implements UserDetail
             return;
         }
 
-        throw new InvalidUserRoleException();
+        throw new UserException(UserExceptionType.INVALID_USER_ROLE_EXCEPTION);
     }
 
     @Transactional(readOnly = true)
@@ -113,7 +112,7 @@ public class UserService { //implements UserDetail
     private void checkMissingSessionUserIdException(String userId){
 
         if(userId == null){
-            throw new MissingSessionAttributeException();
+            throw new UserException(UserExceptionType.MISSING_SESSION_ATTRIBUTE_EXCEPTION);
         }
     }
 
@@ -165,7 +164,7 @@ public class UserService { //implements UserDetail
 
         String attribute = (String)session.getAttribute(key);
         if(attribute==null){
-            throw new MissingSessionAttributeException();
+            throw new UserException(UserExceptionType.MISSING_SESSION_ATTRIBUTE_EXCEPTION);
         }
         return attribute;
     }
@@ -200,7 +199,7 @@ public class UserService { //implements UserDetail
     private void checkUserIdDuplicatedException(String id){
 
         if(isDuplicate(id)){
-            throw new UserIdDuplicatedException();
+            throw new UserException(UserExceptionType.USER_ID_DUPLICATED_EXCEPTION);
         }
     }
 
@@ -212,7 +211,7 @@ public class UserService { //implements UserDetail
     private void checkPasswordMismatchException(String password, String comparePassword){
 
         if(!isSamePassword(password, comparePassword)){
-            throw new PasswordMismatchException();
+            throw new UserException(UserExceptionType.PASSWORD_MISMATCH_EXCEPTION);
         }
     }
 
@@ -224,7 +223,7 @@ public class UserService { //implements UserDetail
     private void checkUserIdNotFoundException(String id){
 
         if(!isExistUser(id)){
-            throw new UserIdNotFoundException();
+            throw new UserException(UserExceptionType.USER_ID_NOT_FOUND_EXCEPTION);
         }
     }
 
@@ -236,7 +235,7 @@ public class UserService { //implements UserDetail
     private void checkEmailMismatchException(String email, String compareEmail){
 
         if(!isCorrectEmail(email, compareEmail)){
-            throw new EmailMismatchException();
+            throw new UserException(UserExceptionType.EMAIL_MISMATCH_EXCEPTION);
         }
     }
 //    @Override

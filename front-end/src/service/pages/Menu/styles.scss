@@ -66,12 +66,16 @@
   font-size: 15px;
 }
 
+.temperature:last-child {
+  margin-right: 0;
+}
+
 .detail__hot:hover {
   background-color: #fa5252;
   color: white;
 }
 
-.detail__hot--active {
+.detail__hot.active {
   background-color: #fa5252;
   color: white;
 }
@@ -93,7 +97,7 @@
   color: white;
 }
 
-.detail__ice--active {
+.detail__ice.active {
   background-color: #228be6;
   color: white;
 }
@@ -186,12 +190,12 @@ input[type="number"].counter__number::-webkit-inner-spin-button {
   font-size: 14px;
 }
 
-.option__size:hover {
-  background-color: #343a40;
-  color: white;
-}
+// .option__size:hover {
+//   background-color: #343a40;
+//   color: white;
+// }
 
-.option__size--active {
+.option__size.active {
   background-color: #343a40;
   color: white;
 }
