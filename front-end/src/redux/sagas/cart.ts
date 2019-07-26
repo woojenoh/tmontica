@@ -99,6 +99,15 @@ function* changeLocalCartSagas(action: cartTypes.IChangeLocalCart) {
 
 function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
   try {
+    // 로컬 카트에 메뉴가 있으면 먼저 카트 디비에 넣고 로컬 카트는 초기화한다.
+    const localCart = localStorage.getItem("LocalCart");
+    if (localCart) {
+      const parsedLocalCart = JSON.parse(localCart) as cartTypes.ICart;
+      if (parsedLocalCart.size > 0) {
+        yield put(cartActionCreators.fetchAddCart(parsedLocalCart.menus));
+        yield put(cartActionCreators.initializeLocalCart());
+      }
+    }
     // 토큰으로 API를 호출해 카트 상태를 갱신한다.
     const jwtToken = localStorage.getItem("JWT");
     const response = yield axios.get(`${API_URL}/carts`, {
