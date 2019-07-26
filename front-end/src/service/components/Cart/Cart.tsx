@@ -10,6 +10,7 @@ export interface ICartProps {
   localCart: cartTypes.ICart | null;
   cart: cartTypes.ICart | null;
   handleCartClose(): void;
+  initializeLocalCart(): void;
   addLocalCart(payload: cartTypes.ICartMenu): void;
   fetchSetCart(): void;
   fetchAddCart(payload: cartTypes.ICartMenu[]): void;
@@ -21,9 +22,15 @@ export interface ICartState {
 
 class Cart extends React.Component<ICartProps, ICartState> {
   componentDidMount() {
-    const { isSignin, fetchSetCart } = this.props;
+    const { isSignin, initializeLocalCart, fetchSetCart } = this.props;
     if (isSignin) {
       fetchSetCart();
+    } else {
+      const localCart = localStorage.getItem("LocalCart");
+      // 만약 로컬카트가 생성된게 없으면 생성한다.
+      if (!localCart) {
+        initializeLocalCart();
+      }
     }
   }
 
