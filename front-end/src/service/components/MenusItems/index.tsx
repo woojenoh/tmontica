@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import MenuItem from "../MenusItem";
 import { TMenusItem } from "../../../types/menu";
 import { RouteComponentProps, withRouter } from "react-router-dom";
+import "./styles.scss";
 
 export interface IMenuItemsProps extends RouteComponentProps {
   categoryKo: string;
@@ -18,7 +19,7 @@ class MenuItems extends React.Component<IMenuItemsProps> {
         <div className="menu__top">
           <h1 className="menu__title">{categoryKo}</h1>
           {categoryEng ? (
-            <Link to={`/menus/${categoryEng}`}>
+            <Link to={`/menus/${categoryEng}`} className="menu__link">
               <span className="menu__more">+</span>
             </Link>
           ) : (

@@ -4,6 +4,9 @@
   border: 1px solid $border-gray;
   height: 150px;
   background-color: white;
+  .banner__img {
+    display: none;
+  }
 }
 
 .main {
