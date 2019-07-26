@@ -5,25 +5,62 @@ export type TMenusItem = {
   imgUrl: string;
 };
 
-export interface CartType {
-  size: number;
-  totalPrice: number;
-  menus: CartMenuType[];
+export interface TBasicMenuOption {
+  id: number;
+  quantity: number;
 }
 
-export interface CartMenuType {
+export interface TMenuOption extends TBasicMenuOption {
+  type: string;
+  name?: string;
+  price: number | 0;
+}
+
+export type TMenu = {
+  id: number;
+  nameEng: string;
+  nameKo: string;
+  description: string;
+  imgUrl: string;
+  sellPrice: number;
+  discountRate: number;
+  category: string;
+  stock: number;
+  monthlyMenu: boolean;
+  option: Array<TMenuOption>;
+  getOptionById(id: number): TMenuOption;
+};
+
+export type TBasicMenuOptionArray = Array<TBasicMenuOption>;
+export type TMenuOptionMap = Map<string, TMenuOption>;
+
+// 카트 추가 요청 타입
+export type TCartAddReq = {
+  menuId: number;
+  quantity: number;
+  direct: boolean;
+  option: TBasicMenuOptionArray;
+};
+
+export interface ICart {
+  size: number;
+  totalPrice: number;
+  menus: ICartMenu[];
+}
+
+export interface ICartMenu {
   cartId?: number;
   stock?: number;
   menuId: number;
-  menuNameEng: string;
-  menuNameKo: string;
+  nameEng: string;
+  nameKo: string;
   imgUrl: string;
   option: string;
   quantity: number;
   price: number;
 }
 
-export interface CartMenuOptionType {
+export interface ICartMenuOption {
   Temperature?: {
     name: string;
     price: number;

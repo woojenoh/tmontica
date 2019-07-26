@@ -28,8 +28,7 @@ public interface CartMenuDao {
     List<CartMenu> getCartMenuByUserId(String userId);
 
     // 카트에서 수량과 가격 수정하기
-    @Update("update cart_menus set quantity = #{quantity}, price = #{price} where id = #{id}")
-    int updateCartMenuQuantity(int id, int price, int quantity);
-
+    @Update("update cart_menus set quantity = #{quantity} where id = #{id}")
+    int updateCartMenuQuantity(int id, int quantity);
 
 }

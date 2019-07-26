@@ -8,8 +8,6 @@ import java.util.List;
 @Data
 public class OrderReq {
     @NotNull
-    private String userId;
-    @NotNull
     private List<Order_MenusReq> menus;
     private int usedPoint;
     @NotNull

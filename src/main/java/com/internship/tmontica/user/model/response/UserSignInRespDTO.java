@@ -1,6 +1,5 @@
 package com.internship.tmontica.user.model.response;
 
-import com.internship.tmontica.util.UserConfigValueName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
