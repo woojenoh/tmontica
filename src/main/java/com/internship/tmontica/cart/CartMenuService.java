@@ -47,7 +47,10 @@ public class CartMenuService {
         int totalPrice = 0;
         for (CartMenu cartMenu: cartMenus) {
             // 메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
-            String option = convertOptionStringToCli(cartMenu.getOption());
+            String option = "";
+            if(!cartMenu.getOption().equals("")){
+                option = convertOptionStringToCli(cartMenu.getOption());
+            }
             // 메뉴아이디로 메뉴정보 가져오기
             Menu menu = menuDao.getMenuById(cartMenu.getMenuId());
             int price = menu.getSellPrice()+cartMenu.getPrice(); // 메뉴가격 + 옵션가격
