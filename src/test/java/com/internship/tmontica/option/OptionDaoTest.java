@@ -1,4 +1,4 @@
-package com.internship.tmontica.repository;
+package com.internship.tmontica.option;
 
 import com.internship.tmontica.option.Option;
 import com.internship.tmontica.option.OptionDao;

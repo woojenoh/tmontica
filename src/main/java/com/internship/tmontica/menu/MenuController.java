@@ -4,9 +4,7 @@ import com.internship.tmontica.menu.exception.BindingResultHelper;
 import com.internship.tmontica.menu.model.response.*;
 import com.internship.tmontica.menu.model.request.MenuReq;
 import com.internship.tmontica.menu.model.request.MenuUpdateReq;
-import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.util.CategoryName;
-import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -27,7 +25,6 @@ import java.util.*;
 public class MenuController {
     private final MenuService menuService;
     private final ModelMapper modelMapper;
-    private final JwtService jwtService;
     @Value("${menu.imagepath}")
     private String location;
 
@@ -51,7 +48,7 @@ public class MenuController {
         menucategoryResp.setCategoryKo(CategoryName.categoryEngToKo(category));
 
         List<Menu> menus = menuService.getMenusByCategory(category, page, size);
-
+        // 메뉴가 없으면 no content
         if(menus == null)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
@@ -87,7 +84,6 @@ public class MenuController {
 
         Menu menu = new Menu();
         modelMapper.map(menuReq, menu);
-        menu.setCreatorId(JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id"));
 
         // 메뉴 저장
         menuService.addMenu(menu, menuReq.getOptionIds(), menuReq.getImgFile());
@@ -103,10 +99,8 @@ public class MenuController {
         log.info("[menu api] 메뉴 수정하기");
         log.info("menuReq : {}", menuReq.toString());
 
-        // menuReq --> menu
         Menu menu = new Menu();
         menu.setId(menuReq.getMenuId());
-        menu.setUpdaterId(JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id"));
         modelMapper.map(menuReq, menu);
 
         menuService.updateMenu(menu, menuReq.getImgFile());

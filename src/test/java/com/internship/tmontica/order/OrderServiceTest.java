@@ -1,4 +1,4 @@
-package com.internship.tmontica.service;
+package com.internship.tmontica.order;
 
 import static org.junit.Assert.*;
 

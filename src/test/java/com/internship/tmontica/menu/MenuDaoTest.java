@@ -1,4 +1,4 @@
-package com.internship.tmontica.repository;
+package com.internship.tmontica.menu;
 
 import com.internship.tmontica.menu.Menu;
 import com.internship.tmontica.option.Option;
@@ -14,7 +14,6 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@TestPropertySource("classpath:application-test.properties")
 @SpringBootTest
 public class MenuDaoTest {
     @Autowired

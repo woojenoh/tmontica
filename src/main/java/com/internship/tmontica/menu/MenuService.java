@@ -5,8 +5,10 @@ import com.internship.tmontica.menu.model.response.MenuMainResp;
 import com.internship.tmontica.menu.model.response.MenuOptionResp;
 import com.internship.tmontica.menu.model.response.MenuSimpleResp;
 import com.internship.tmontica.option.Option;
+import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.user.UserDao;
 import com.internship.tmontica.util.CategoryName;
+import com.internship.tmontica.util.JsonUtil;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +31,10 @@ import java.util.*;
 public class MenuService {
     private final MenuDao menuDao;
     private final ModelMapper modelMapper;
+    private final JwtService jwtService;
     @Value("${menu.imagepath}")
     private String location;
+
     // TODO : 예외처리..
     // 메인 화면에 나타나는 메뉴 정보
     public List<MenuMainResp> getMainMenus(){
@@ -49,6 +53,7 @@ public class MenuService {
         String imgUrl = saveImg(imgFile, menu.getNameEng());
         menu.setImgUrl(imgUrl);
 
+        menu.setCreatorId(JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id"));
         menu.setCreatedDate(new Date());
         menuDao.addMenu(menu);
 
@@ -103,6 +108,8 @@ public class MenuService {
         if(!existMenu(menu.getId()))
             return;
 
+        menu.setUpdaterId(JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id"));
+
         if(imgFile!=null){
             String img = saveImg(imgFile, menu.getNameEng());
             menu.setImgUrl(img);
@@ -154,28 +161,24 @@ public class MenuService {
 
     // 이미지 파일 저장
     private String saveImg(MultipartFile imgFile, String name){
+
         // file url : imagefile/년/월/일/파일이름
-        String dir = "imagefile/";
+        StringBuilder sb = new StringBuilder("imagefile/");
         Calendar calendar = Calendar.getInstance();
-        dir = dir + calendar.get(Calendar.YEAR);
-        dir = dir + "/";
-        dir = dir + (calendar.get(Calendar.MONTH) + 1);
-        dir = dir + "/";
-        dir = dir + calendar.get(Calendar.DAY_OF_MONTH);
-        dir = dir + "/";
+        sb.append(calendar.get(Calendar.YEAR)).append("/");
+        sb.append(calendar.get(Calendar.MONTH) + 1).append("/");
+        sb.append(calendar.get(Calendar.DAY_OF_MONTH)).append("/");
         // 실제 저장되는 path
-        File dirFile = new File(location + dir);
+        File dirFile = new File(location + sb.toString());
         dirFile.mkdirs(); // 디렉토리가 없을 경우 만든다.
 
-        dir += name;
-        dir = dir + "_" +  UUID.randomUUID().toString();  // 유일한 식별자
-        // 확장자
-        String extension = imgFile.getOriginalFilename().split("\\.")[1];
-        dir += "." + extension;
+        sb.append(name).append("_").append(UUID.randomUUID().toString()); // 유일한 식별자
+        String extension = imgFile.getOriginalFilename().split("\\.")[1];      // 확장자 -> stream 으로 수정해야함.
+        sb.append(".").append(extension);
 
         log.info("img type : {}", extension);
-
-        try(FileOutputStream fos = new FileOutputStream(location + dir);
+        String dir = sb.toString();
+        try(FileOutputStream fos = new FileOutputStream(location.concat(dir));
             InputStream in = imgFile.getInputStream()){
             byte[] buffer = new byte[1024];
             int readCount = 0;
@@ -187,6 +190,12 @@ public class MenuService {
         }
 
         return dir;
+    }
+
+    public Optional<String> getExtensionByStringHandling(String filename) {
+        return Optional.ofNullable(filename)
+                .filter(f -> f.contains("."))
+                .map(f -> f.substring(filename.lastIndexOf(".") + 1));
     }
 
 }
