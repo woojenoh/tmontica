@@ -1,5 +1,6 @@
 package com.internship.tmontica.order;
 
+import com.internship.tmontica.order.model.response.OrderStatusLogResp;
 import com.internship.tmontica.order.model.response.Order_MenusResp;
 import org.apache.ibatis.annotations.*;
 
@@ -51,6 +52,8 @@ public interface OrderDao {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addOrderDetail(OrderDetail orderDetail);
 
-
+    // orderId로 order_status_log 내역 가져오기
+    @Select("select status_type as status, editor_id, modified_date from order_status_logs where order_id=#{orderId}")
+    List<OrderStatusLogResp> getOrderStatusLogByOrderId(int orderId);
 
 }

@@ -152,7 +152,7 @@ public class CartMenuService {
 
             if (tmpOption.getType().equals("Temperature")) {
                 convert.append(tmpOption.getName());
-            } else if(tmpOption.getType().equals("/Shot")){
+            } else if(tmpOption.getType().equals("Shot")){
                 convert.append("/샷추가("+oneOption[1]+"개)");
             } else if(tmpOption.getType().equals("Syrup")){
                 convert.append("/시럽추가("+oneOption[1]+"개)");

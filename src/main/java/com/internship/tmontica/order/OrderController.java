@@ -2,6 +2,7 @@ package com.internship.tmontica.order;
 
 import com.internship.tmontica.order.model.request.OrderReq;
 import com.internship.tmontica.order.model.request.OrderStatusReq;
+import com.internship.tmontica.order.model.response.OrderDetailResp;
 import com.internship.tmontica.order.model.response.OrderResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,8 +59,8 @@ public class OrderController {
 
     /** 주문 상세 정보 가져오기(관리자) */
     @GetMapping("/detail/{orderId}")
-    public ResponseEntity getOrderDetail(){
-//        orderService.
-        return new ResponseEntity(HttpStatus.OK);
+    public ResponseEntity<OrderDetailResp> getOrderDetail(@PathVariable("orderId")int orderId){
+        OrderDetailResp orderDetailResp = orderService.getOrderDetailApi(orderId);
+        return new ResponseEntity(orderDetailResp, HttpStatus.OK);
     }
 }
