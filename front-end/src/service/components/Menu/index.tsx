@@ -107,7 +107,6 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
 
     if (cartAddReq.direct) {
       localStorage.setItem("isDirect", "Y");
-      history.push("/payment");
     } else {
       localStorage.setItem("isDirect", "N");
     }
