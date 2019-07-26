@@ -56,6 +56,16 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
     usablePoint: 0
   };
 
+  async order() {
+    const orderId = await OrderAPI.order({
+      menus: [],
+      usedPoint: this.state.usedPoint,
+      totalPrice: this.state.totalPrice,
+      payment: "현장결제"
+    });
+    history.push(`/orders?orderId=${orderId}`);
+  }
+
   componentDidMount() {}
 
   render() {
@@ -166,12 +176,7 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
                   onClick={() => {
                     if (window.confirm("결제하시겠습니까?")) {
                       // TODO: 결제하기 API 호출
-                      OrderAPI.order({
-                        menus: [],
-                        usedPoint: this.state.usedPoint,
-                        totalPrice: this.state.totalPrice,
-                        payment: "현장결제"
-                      });
+                      this.order();
                       // 내 주문 페이지로 이동
                     }
                   }}

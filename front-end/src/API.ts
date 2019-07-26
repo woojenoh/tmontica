@@ -64,10 +64,8 @@ export const CartAPI = (() => {
 })();
 
 export const OrderAPI = (() => {
-  async function order(data: TOrderReq) {
-    const orderId = await postWithJWT(`${API_URL}/orders`, data);
-
-    history.push(`/orders?orderId=${orderId}`);
+  function order(data: TOrderReq) {
+    return postWithJWT(`${API_URL}/orders`, data);
   }
 
   return {
