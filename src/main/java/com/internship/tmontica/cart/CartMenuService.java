@@ -12,6 +12,8 @@ import com.internship.tmontica.option.Option;
 import com.internship.tmontica.option.OptionDao;
 import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.security.JwtServiceImpl;
+import com.internship.tmontica.user.exception.UserException;
+import com.internship.tmontica.user.exception.UserExceptionType;
 import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -96,8 +98,6 @@ public class CartMenuService {
                 optionPrice += ((optionDao.getOptionById(optionId).getPrice()) * opQuantity);
             }
 
-
-
             // 카트 테이블에 추가하기
             CartMenu cartMenu = new CartMenu(cartReq.getQuantity(), optionStr.toString(), userId,
                     optionPrice, cartReq.getMenuId(), cartReq.isDirect());
@@ -117,7 +117,8 @@ public class CartMenuService {
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         String cartUserId = cartMenuDao.getCartMenuByCartId(id).getUserId();
         if(!userId.equals(cartUserId)){
-            // 아이디 일치하지 않ㅇ르 경우
+            // 아이디 일치하지 않을 경우
+            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
         }
         int result = cartMenuDao.updateCartMenuQuantity(id, cartUpdateReq.getQuantity());
         return result;
@@ -129,7 +130,8 @@ public class CartMenuService {
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         String cartUserId = cartMenuDao.getCartMenuByCartId(id).getUserId();
         if(!userId.equals(cartUserId)){
-            // 아이디 일치하지 않ㅇ르 경우
+            // 아이디 일치하지 않을 경우
+            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
         }
         //카트에 담긴 정보 삭제하기
         int result = cartMenuDao.deleteCartMenu(id);

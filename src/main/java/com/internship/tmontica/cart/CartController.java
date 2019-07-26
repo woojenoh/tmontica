@@ -24,7 +24,6 @@ public class CartController {
     @PostMapping
     public ResponseEntity<?> addCart(@RequestBody @Valid List<CartReq> cartReqs) {
         List<CartIdResp> cartIds = cartMenuService.addCartApi(cartReqs);
-        //if(cartIds == null)return new ResponseEntity<>("카트에 추가 실패",HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(cartIds, HttpStatus.OK);
     }
 
