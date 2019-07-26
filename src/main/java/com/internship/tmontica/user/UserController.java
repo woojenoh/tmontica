@@ -23,9 +23,18 @@ public class UserController {
     public ResponseEntity<String> signUp(@RequestBody @Valid UserSignUpReqDTO userSignUpReqDTO) {
 
         if(userService.signUp(userSignUpReqDTO)){
-            return new ResponseEntity<>("Sign up Success", HttpStatus.CREATED);
+            return new ResponseEntity<>("Sign up success need Activate with mail", HttpStatus.CREATED);
         }
-        return new ResponseEntity<>("Sign up Fail", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Sign up error", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<String> activateUser(@RequestParam("id")String userId, @RequestParam("token")String token){
+
+        if(userService.activateUser(userId, token)){
+            return new ResponseEntity<>("Activate Success", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Fail to Activate", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping("/duplicate/{userId}")

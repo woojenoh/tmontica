@@ -17,7 +17,6 @@ import org.springframework.mail.MailSendException;
 import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.mail.SimpleMailMessage;
 
 import javax.servlet.http.HttpSession;
 
@@ -31,22 +30,29 @@ public class UserService { //implements UserDetail
     private final MailSender sender;
     private final JwtService jwtService;
 
-
-    private enum MailOption {
-        findId, findPassword
-    }
-
     @Transactional
-    public boolean signUp(UserSignUpReqDTO userSignUpReqDTO){
+    public boolean signUp(UserSignUpReqDTO userSignUpReqDTO) throws MailSendException{
+
         //userSignUpReqDTO.setPassword(passwordEncoder.encode(user.getPassword())); need passwordEnconding
         checkUserIdDuplicatedException(userSignUpReqDTO.getId());
         checkPasswordMismatchException(userSignUpReqDTO.getPassword(), userSignUpReqDTO.getPasswordCheck());
         setRole(userSignUpReqDTO);
+        String key = new AuthenticationKey().getAuthenticationKey();
         User user = modelMapper.map(userSignUpReqDTO, User.class);
-        return userDao.addUser(user) > 0;
+        setActivateCode(user, key);
+        if(userDao.addUser(user) < 1){
+            return false;
+        }
+        UserMailForm userMailForm = new UserMailForm(MailType.SIGN_UP, user);
+        userMailForm.setAuthenticationKey(key);
+        userMailForm.makeMail();
+        sender.send(userMailForm.getMsg());
+
+        return true;
     }
 
     private void setRole(UserSignUpReqDTO userSignUpReqDTO){
+
         String role = userSignUpReqDTO.getRole();
         if(role == null || role.equals(UserRole.USER.toString())){
             userSignUpReqDTO.setRole("USER");
@@ -56,6 +62,22 @@ public class UserService { //implements UserDetail
         }
 
         throw new UserException(UserExceptionType.INVALID_USER_ROLE_EXCEPTION);
+    }
+
+    private void setActivateCode(User user, String activateCode){
+
+        user.setActivateCode(activateCode);
+    }
+
+    public boolean activateUser(String id, String code){
+
+        checkUserIdNotFoundException(id);
+        User user = userDao.getUserByUserId(id);
+        if(!code.equals(user.getActivateCode())){
+            throw new UserException(UserExceptionType.ACTIVATE_CODE_MISMATCH_EXCEPTION);
+        }
+
+        return userDao.updateActivateStatus(1) > 0;
     }
 
     @Transactional(readOnly = true)
@@ -72,9 +94,18 @@ public class UserService { //implements UserDetail
     @Transactional(readOnly = true)
     public void signIn(UserSignInReqDTO userSignInReqDTO) {
 
+        User user = userDao.getUserByUserId(userSignInReqDTO.getId());
         checkUserIdNotFoundException(userSignInReqDTO.getId());
-        checkPasswordMismatchException(userSignInReqDTO.getPassword(),
-                userDao.getUserByUserId(userSignInReqDTO.getId()).getPassword());
+        checkPasswordMismatchException(userSignInReqDTO.getPassword(), user.getPassword());
+        checkUserActivateException(user);
+    }
+
+    private void checkUserActivateException(User user){
+
+        if(user.isActive()){
+            return;
+        }
+        throw new UserException(UserExceptionType.USER_NOT_ACTIVATE_EXCEPTION);
     }
 
     @Transactional(readOnly = true)
@@ -134,8 +165,12 @@ public class UserService { //implements UserDetail
             return false;
         }
         AuthenticationKey authenticationKey = new AuthenticationKey();
-        sender.send(sendMail(user, MailOption.findId, authenticationKey.getAuthenticationKey()));
-        httpSession.setAttribute(UserConfigValueName.ID_AUTH_CODE, authenticationKey.getAuthenticationKey());
+        String key = authenticationKey.getAuthenticationKey();
+        UserMailForm userMailForm = new UserMailForm(MailType.FIND_ID, user);
+        userMailForm.setAuthenticationKey(key);
+        userMailForm.makeMail();
+        sender.send(userMailForm.getMsg());
+        httpSession.setAttribute(UserConfigValueName.ID_AUTH_CODE, key);
         httpSession.setAttribute(UserConfigValueName.FIND_ID_SESSION_ATTRIBUTE_NAME, user.getId());
         return true;
     }
@@ -144,7 +179,8 @@ public class UserService { //implements UserDetail
     public boolean sendUserPassword(String id, String email) throws MailSendException{
         User user = userDao.getUserByUserId(id);
         checkEmailMismatchException(user.getEmail(), email);
-        sender.send(sendMail(user, MailOption.findPassword));
+        UserMailForm userMailForm = new UserMailForm(MailType.FIND_PW, user);
+        sender.send(userMailForm.getMsg());
         return true;
     }
 
@@ -176,26 +212,6 @@ public class UserService { //implements UserDetail
         return modelMapper.map(userDao.getUserByUserId(id), UserInfoRespDTO.class);
     }
 
-    private SimpleMailMessage sendMail(User user, MailOption mailOption, String... strings) {
-
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setFrom("tmontica701@gmail.com");
-        msg.setTo(user.getEmail());
-
-        switch(mailOption){
-            case findId:
-                msg.setSubject("[TMONG CAFFE]"+user.getName()+"님 아이디 찾기 메일입니다.");
-                msg.setText("인증키는 "+strings[0]+"입니다. 본인과 관련없는 메일이라면 무시하시면 됩니다.");
-                break;
-            case findPassword:
-                msg.setSubject("[TMONG CAFFE]"+user.getName()+"님 비밀번호 찾기 메일입니다.");
-                msg.setText("찾으시는 비밀번호는 "+user.getPassword()+"입니다. 본인과 관련없는 메일이라면 무시하시면 됩니다.");
-                break;
-        }
-
-        return msg;
-    }
-
     private void checkUserIdDuplicatedException(String id){
 
         if(isDuplicate(id)){
@@ -217,7 +233,7 @@ public class UserService { //implements UserDetail
 
     private boolean isExistUser(String id){
 
-        return userDao.getUserByUserId(id)!=null;
+        return userDao.getUserIdByUserId(id)!=null;
     }
 
     private void checkUserIdNotFoundException(String id){
