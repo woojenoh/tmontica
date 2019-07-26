@@ -14,6 +14,7 @@ import {
 import history from "../../../history";
 import { ICartMenu } from "../../../types/cart";
 import MenuOption from "../MenuOptionList";
+import { CDN } from "../../../constants";
 
 const getOptionById = (options: Array<TMenuOption>, id: number) => {
   return _.chain(options)
@@ -268,7 +269,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
         <main className="main">
           <section className="detail">
             <div className="detail__left">
-              <img src={menu.imgUrl} alt={menu.nameKo} className="detail__img" />
+              <img src={`${CDN}${menu.imgUrl}`} alt={menu.nameKo} className="detail__img" />
             </div>
             <div className="detail__right">
               <h1 className="detail__title">{menu.nameKo}</h1>
