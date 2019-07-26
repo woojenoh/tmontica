@@ -17,6 +17,33 @@ function fetchJSON(reqURL: string) {
   });
 }
 
+function get(reqURL: string, params?: Map<string, string> | null, jwt?: string) {
+  if (typeof params !== "undefined" && params !== null && !/[?]/.test(reqURL)) {
+    reqURL += `?${Array.from(params.entries())
+      .map(x => {
+        return `${x[0]}=${x[1]}`;
+      })
+      .join("&")}`;
+  }
+
+  return fetch(reqURL, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: jwt || ""
+    },
+    method: "GET"
+  }).then(res => {
+    return res.ok ? res.json() : res.json();
+  });
+}
+
+function getWithJWT(reqURL: string, params?: Map<string, string> | null) {
+  const jwt = localStorage.getItem("JWT") || "";
+
+  return get(reqURL, params, jwt);
+}
+
 function postWithJWT(reqURL: string, data: any) {
   const jwt = localStorage.getItem("JWT") || "";
 
@@ -35,15 +62,15 @@ function postWithJWT(reqURL: string, data: any) {
 
 export const MenuAPI = (() => {
   function getMenuAll() {
-    return fetchJSON(`${API_URL}/menus`);
+    return get(`${API_URL}/menus`);
   }
 
   function getMenuByCateory(categoryEng: string, page = 1, size = 4) {
-    return fetchJSON(`${API_URL}/menus/${categoryEng}?page=${page}&size=${size}`);
+    return get(`${API_URL}/menus/${categoryEng}?page=${page}&size=${size}`);
   }
 
   function getMenuById(menuId: number = 1) {
-    return fetchJSON(`${API_URL}/menus/${menuId}`);
+    return get(`${API_URL}/menus/${menuId}`);
   }
 
   return {
@@ -68,7 +95,17 @@ export const OrderAPI = (() => {
     return postWithJWT(`${API_URL}/orders`, data);
   }
 
+  function getOrderById(orderId: number) {
+    return getWithJWT(`${API_URL}/orders/${orderId}`);
+  }
+
+  function getOrderAll() {
+    return getWithJWT(`${API_URL}/orders`);
+  }
+
   return {
-    order
+    order,
+    getOrderAll,
+    getOrderById
   };
 })();

@@ -11,7 +11,12 @@ interface MatchParams {
 
 interface IPaymentProps extends RouteComponentProps<MatchParams> {}
 
-interface IPaymentState {}
+interface IPaymentState {
+  totalPrice: number;
+  usedPoint: number;
+  usablePoint: number;
+  orderCarts: Array<ICartMenu>;
+}
 
 const OrderMenu = ({
   nameKo,
@@ -53,7 +58,8 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
   state = {
     totalPrice: 0,
     usedPoint: 0,
-    usablePoint: 0
+    usablePoint: 0,
+    orderCarts: []
   };
 
   async order() {
@@ -66,16 +72,23 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
     history.push(`/orders?orderId=${orderId}`);
   }
 
-  componentDidMount() {}
-
-  render() {
+  componentDidMount() {
     const orderCarts = JSON.parse(localStorage.getItem("orderCarts") || "[]");
-  
+
     if (!Array.isArray(orderCarts) || (Array.isArray(orderCarts) && orderCarts.length === 0)) {
       alert("주문 정보가 존재하지 않습니다.");
       history.push("/");
       return;
     }
+
+    this.setState({
+      orderCarts
+    });
+  }
+
+  render() {
+    const { orderCarts } = this.state;
+
     const orderPrice = orderCarts.reduce((prev, cur: ICartMenu) => prev + cur.price, 0);
 
     return (

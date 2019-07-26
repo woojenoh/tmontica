@@ -16,7 +16,7 @@ export interface TMenuOption extends TBasicMenuOption {
   price: number | 0;
 }
 
-export type TMenu = {
+export interface TMenu {
   id: number;
   nameEng: string;
   nameKo: string;
@@ -29,7 +29,12 @@ export type TMenu = {
   monthlyMenu: boolean;
   option: Array<TMenuOption>;
   getOptionById(id: number): TMenuOption;
-};
+}
+
+export interface TOrderDetail extends TMenu {
+  quantity: number;
+  optionString: string;
+}
 
 export type TBasicMenuOptionArray = Array<TBasicMenuOption>;
 export type TMenuOptionMap = Map<string, TMenuOption>;

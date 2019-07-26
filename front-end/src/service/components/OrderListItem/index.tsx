@@ -6,13 +6,17 @@ export interface IOrderListItemProps {
   name: string;
   date: string;
   status: string;
+  handleOrderListItemClick(): void;
 }
 
 function OrderListItem(props: IOrderListItemProps) {
-  const { orderId, name, date, status } = props;
+  const { orderId, name, date, status, handleOrderListItemClick } = props;
 
   return (
     <li
+      onClick={e => {
+        handleOrderListItemClick();
+      }}
       className={
         status === "준비완료"
           ? "orders-list__item orders-list__item--ready"
@@ -22,7 +26,7 @@ function OrderListItem(props: IOrderListItemProps) {
       }
     >
       <div className="orders-list__item-left">
-        <span className="orders-list__item-number">{orderId}</span>
+        <span className="orders-list__item-number">{orderId.toString().padStart(5, "0")}</span>
         <span className="orders-list__item-names">{name}</span>
       </div>
       <div className="orders-list__item-right">
