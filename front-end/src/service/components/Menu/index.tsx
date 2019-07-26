@@ -211,7 +211,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
       nameKo: menu.nameKo,
       imgUrl: menu.imgUrl,
       quantity,
-      price: totalPrice,
+      price: totalPrice / quantity,
       option: optionString,
       optionArray: convertOptionMapToArray(option),
       direct
