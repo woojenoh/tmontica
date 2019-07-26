@@ -1,14 +1,13 @@
 package com.internship.tmontica.user;
 
 import org.apache.ibatis.annotations.*;
-import org.springframework.stereotype.Component;
 
 @Mapper
 public interface UserDao {
 
     //CRUD
-    @Insert("INSERT INTO users (id ,name ,email, birth_date, password, role) " +
-            "VALUES(#{id}, #{name}, #{email}, #{birthDate}, #{password}, #{role})")
+    @Insert("INSERT INTO users (id ,name ,email, birth_date, password, role, activate_code) " +
+            "VALUES(#{id}, #{name}, #{email}, #{birthDate}, #{password}, #{role}, #{activateCode})")
     int addUser(User user);
     @Select("SELECT * FROM users WHERE id = #{id}")
     User getUserByUserId(String id);
@@ -19,4 +18,8 @@ public interface UserDao {
     // 가입시 User Mail 중복검사 안해서 메일이 중복되는경우 문제생길수 있음.
     @Select("SELECT * FROM users WHERE email = #{email}")
     User getUserByEmail(String email);
+    @Select("SELECT id FROM users where id = #{id}")
+    String getUserIdByUserId(String id);
+    @Update("UPDATE users SET is_active = #{isActive}")
+    int updateActivateStatus(int isActive);
 }

@@ -24,4 +24,6 @@ public class User {
     private Date createdDate;
     @Min(0)
     private int point;
+    private boolean isActive;
+    private String activateCode;
 }

@@ -47,6 +47,10 @@ CREATE TABLE IF NOT EXISTS `tmontica`.`users` (
   `created_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `point` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`))
+
+ALTER TABLE `tmontica`.`users`
+ADD COLUMN `is_active` VARCHAR(45) NOT NULL DEFAULT 0 AFTER `point`,
+ADD COLUMN `activate_code` VARCHAR(45) NULL AFTER `is_active`;
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
