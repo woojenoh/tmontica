@@ -31,8 +31,8 @@ public interface OrderDao {
     List<String> getMenuNamesByOrderId(int orderId);
 
     // orderId로 주문상태를 주문취소로 바꾸기
-    @Update("update orders set status=\"주문취소\" where id=#{orderId}")
-    void deleteOrder(int orderId);
+    @Update("update orders set status=#{status} where id=#{orderId}")
+    void updateOrderStatus(int orderId, String status);
 
     // order_status_log 추가
     @Insert("insert into order_status_logs " +

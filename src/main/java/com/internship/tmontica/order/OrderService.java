@@ -8,11 +8,13 @@ import com.internship.tmontica.option.Option;
 import com.internship.tmontica.option.OptionDao;
 import com.internship.tmontica.order.exception.NotEnoughStockException;
 import com.internship.tmontica.order.model.request.OrderReq;
+import com.internship.tmontica.order.model.request.OrderStatusReq;
 import com.internship.tmontica.order.model.request.Order_MenusReq;
 import com.internship.tmontica.order.model.response.OrderListResp;
 import com.internship.tmontica.order.model.response.OrderResp;
 import com.internship.tmontica.order.model.response.Order_MenusResp;
 import com.internship.tmontica.security.JwtService;
+import com.internship.tmontica.user.UserRole;
 import com.internship.tmontica.user.exception.UserException;
 import com.internship.tmontica.user.exception.UserExceptionType;
 import com.internship.tmontica.util.JsonUtil;
@@ -134,7 +136,7 @@ public class OrderService {
         return orderResp;
     }
 
-    // 주문 취소 api
+    // 주문 취소 api(사용자)
     public void cancelOrderApi(int orderId){
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         String dbUserId = orderDao.getOrderByOrderId(orderId).getUserId();
@@ -143,9 +145,26 @@ public class OrderService {
             throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
         }
         // orders 테이블에서 status 수정
-        orderDao.deleteOrder(orderId);
+        orderDao.updateOrderStatus(orderId, OrderStatusType.CANCEL.toString());
         // order_status_log 테이블에도 주문취소 로그 추가
-        OrderStatusLog orderStatusLog = new OrderStatusLog("주문취소", userId, orderId);
+        OrderStatusLog orderStatusLog = new OrderStatusLog(OrderStatusType.CANCEL.toString(), userId, orderId);
         orderDao.addOrderStatusLog(orderStatusLog);
     }
+
+    // 주문 상태 변경 api(관리자)
+    public void updateOrderStatusApi(int orderId, OrderStatusReq orderStatusReq){
+        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
+        String role = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"role");
+        if(!role.equals(UserRole.ADMIN.toString())){
+            throw new UserException(UserExceptionType.INVALID_USER_ROLE_EXCEPTION);
+        }
+        // orders 테이블에서 status 수정
+        orderDao.updateOrderStatus(orderId, orderStatusReq.getStatus());
+        // order_status_log 테이블에도 로그 추가
+        OrderStatusLog orderStatusLog = new OrderStatusLog(orderStatusReq.getStatus(), userId, orderId);
+        orderDao.addOrderStatusLog(orderStatusLog);
+    }
+
+    // 주문 상세정보 가져오기 api(관리자)
+
 }
