@@ -10,6 +10,7 @@ export interface ICartProps {
   localCart: cartTypes.ICart | null;
   cart: cartTypes.ICart | null;
   handleCartClose(): void;
+  initializeLocalCart(): void;
   addLocalCart(payload: cartTypes.ICartMenu): void;
   fetchSetCart(): void;
   fetchAddCart(payload: cartTypes.ICartMenu[]): void;
@@ -21,60 +22,15 @@ export interface ICartState {
 
 class Cart extends React.Component<ICartProps, ICartState> {
   componentDidMount() {
-    const { isSignin, addLocalCart, fetchSetCart, fetchAddCart } = this.props;
+    const { isSignin, initializeLocalCart, fetchSetCart } = this.props;
     if (isSignin) {
       fetchSetCart();
-      // fetchAddCart([
-      //   {
-      //     menuId: 6,
-      //     nameEng: "Caramel Maki",
-      //     nameKo: "카라멜 마끼아또",
-      //     imgUrl: "/img/coffee-sample.png",
-      //     option: "HOT/샷추가(1개)/사이즈업",
-      //     optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
-      //     quantity: 1,
-      //     price: 2600,
-      //     stock: 100,
-      //     direct: false
-      //   },
-      //   {
-      //     menuId: 6,
-      //     nameEng: "Caramel Maki",
-      //     nameKo: "카라멜 마끼아또",
-      //     imgUrl: "/img/coffee-sample.png",
-      //     option: "HOT/샷추가(1개)/사이즈업",
-      //     optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
-      //     quantity: 2,
-      //     price: 2600,
-      //     stock: 100,
-      //     direct: false
-      //   }
-      // ]);
     } else {
-      // addLocalCart({
-      //   menuId: 2,
-      //   nameEng: "americano",
-      //   nameKo: "아메리카노",
-      //   imgUrl: "/img/coffee-sample.png",
-      //   option: "HOT/샷추가(1개)/사이즈업",
-      //   optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
-      //   quantity: 1,
-      //   price: 1500,
-      //   stock: 100,
-      //   direct: false
-      // });
-      // addLocalCart({
-      //   menuId: 2,
-      //   nameEng: "americano",
-      //   nameKo: "카페라떼",
-      //   imgUrl: "/img/coffee-sample.png",
-      //   option: "HOT/샷추가(1개)/사이즈업",
-      //   optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
-      //   quantity: 2,
-      //   price: 2500,
-      //   stock: 100,
-      //   direct: false
-      // });
+      const localCart = localStorage.getItem("LocalCart");
+      // 만약 로컬카트가 생성된게 없으면 생성한다.
+      if (!localCart) {
+        initializeLocalCart();
+      }
     }
   }
 

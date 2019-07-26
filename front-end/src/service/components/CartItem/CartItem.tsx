@@ -72,7 +72,9 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
         <img src={imgUrl} alt="Coffee Sample" className="cart__item-img" />
         <div className="cart__item-info">
           <span className="cart__item-name">
-            {name} - {numberCommaRegex(price)}원
+            <div className="cart__item-name-span">
+              {`${name} / ${numberCommaRegex(price * quantity)}원`}
+            </div>
             <span
               className="cart__item-delete"
               onClick={() =>
@@ -84,7 +86,7 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
               &times;
             </span>
           </span>
-          <span className="cart__item-option">{option}</span>
+          <span className="cart__item-option">{option || "옵션이 없습니다."}</span>
         </div>
         <div className="cart__item-quantity">
           <select
