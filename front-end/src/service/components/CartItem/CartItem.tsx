@@ -1,5 +1,6 @@
 import * as React from "react";
 import { numberCommaRegex } from "../../../utils";
+import { CDN } from "../../../constants";
 import "./styles.scss";
 
 export interface ICartItemProps {
@@ -69,7 +70,7 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
 
     return (
       <li className="cart__item">
-        <img src={imgUrl} alt="Coffee Sample" className="cart__item-img" />
+        <img src={`${CDN}${imgUrl}`} alt="Coffee Sample" className="cart__item-img" />
         <div className="cart__item-info">
           <span className="cart__item-name">
             <div className="cart__item-name-span">
