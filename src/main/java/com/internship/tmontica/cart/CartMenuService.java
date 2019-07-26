@@ -71,11 +71,13 @@ public class CartMenuService {
     // 카트에 추가하기 api
     public List<CartIdResp> addCartApi(List<CartReq> cartReqs){
         List<CartIdResp> cartIds = new ArrayList<>();
+        // 토큰에서 userId 가져오기
+        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
 
         for (CartReq cartReq: cartReqs) {
-            // direct : true 이면 카트에서 direct = true 인 것을 삭제하기
+            // direct : true 이면 userId 의 카트에서 direct = true 인 것을 삭제하기
             if (cartReq.isDirect()) {
-                cartMenuDao.deleteDirectCartMenu();
+                cartMenuDao.deleteDirectCartMenu(userId);
             }
 
             List<Cart_OptionReq> options = cartReq.getOption();
@@ -94,8 +96,7 @@ public class CartMenuService {
                 optionPrice += ((optionDao.getOptionById(optionId).getPrice()) * opQuantity);
             }
 
-            // 토큰에서 userId 가져오기
-            String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
+
 
             // 카트 테이블에 추가하기
             CartMenu cartMenu = new CartMenu(cartReq.getQuantity(), optionStr.toString(), userId,
