@@ -48,10 +48,13 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
   }
 
   componentDidMount() {
-    this.getOrder();
+    if (this.props.orderId > 0) {
+      this.getOrder();
+    }
   }
 
   componentDidUpdate(prevProps: IOrderSheetProps) {
+    debugger;
     if (this.props.orderId !== prevProps.orderId) {
       this.getOrder();
     }

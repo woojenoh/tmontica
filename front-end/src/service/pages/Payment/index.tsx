@@ -65,7 +65,9 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
   async order() {
     try {
       const orderId = await OrderAPI.order({
-        menus: [],
+        menus: this.state.orderCarts.map((c: ICartMenu) => {
+          return { cartId: typeof c.cartId === "undefined" ? 0 : c.cartId };
+        }),
         usedPoint: this.state.usedPoint,
         totalPrice: this.state.totalPrice,
         payment: "현장결제"
