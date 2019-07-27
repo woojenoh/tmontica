@@ -4,6 +4,7 @@ import com.internship.tmontica.order.model.request.OrderReq;
 import com.internship.tmontica.order.model.request.OrderStatusReq;
 import com.internship.tmontica.order.model.response.OrderDetailResp;
 import com.internship.tmontica.order.model.response.OrderResp;
+import com.internship.tmontica.order.model.response.OrdersByStatusResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +35,10 @@ public class OrderController {
     }
 
     /** 주문정보 한개 가져오기(상세내역 포함) */
-    @GetMapping("/{orderId}")
+    @GetMapping("/{orderId:\\d+}")
     public ResponseEntity<OrderResp> getOrderByOrderId(@PathVariable("orderId")int orderId){
         OrderResp orderResp  = orderService.getOneOrderApi(orderId);
-        return new ResponseEntity(orderResp, HttpStatus.OK);
+        return new ResponseEntity<>(orderResp, HttpStatus.OK);
     }
 
 
@@ -56,11 +57,16 @@ public class OrderController {
     }
 
     /** 주문 상태별로 주문 정보 가져오기(관리자) */
+    @GetMapping("/{status:[A-Z]+_?[A-Z]+}")
+    public ResponseEntity<List<OrdersByStatusResp>> getOrderByStatus(@PathVariable("status")String status){
+        List<OrdersByStatusResp> ordersByStatusResps = orderService.getOrderByStatusApi(status);
+        return new ResponseEntity<>(ordersByStatusResps, HttpStatus.OK);
+    }
 
     /** 주문 상세 정보 가져오기(관리자) */
     @GetMapping("/detail/{orderId}")
     public ResponseEntity<OrderDetailResp> getOrderDetail(@PathVariable("orderId")int orderId){
         OrderDetailResp orderDetailResp = orderService.getOrderDetailApi(orderId);
-        return new ResponseEntity(orderDetailResp, HttpStatus.OK);
+        return new ResponseEntity<>(orderDetailResp, HttpStatus.OK);
     }
 }

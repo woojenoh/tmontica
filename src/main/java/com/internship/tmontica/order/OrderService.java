@@ -69,7 +69,7 @@ public class OrderService {
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         // TODO: totalprice 여기서 한번더 계산이 필요한가?
         Order order = new Order(0,orderReq.getPayment(),orderReq.getTotalPrice(),orderReq.getUsedPoint(),
-                orderReq.getTotalPrice()-orderReq.getUsedPoint(), OrderStatusType.BEFORE_PAYMENT.toString(), userId);
+                orderReq.getTotalPrice()-orderReq.getUsedPoint(), OrderStatusType.BEFORE_PAYMENT.getStatus(), userId);
         // 주문테이블에 추가
         orderDao.addOrder(order);
         int orderId = order.getId();
@@ -102,7 +102,7 @@ public class OrderService {
             // 장바구니에서는 삭제
             cartMenuDao.deleteCartMenu(menu.getCartId());
             // 주문상태로그테이블에 "미결제" 상태로 추가
-            orderDao.addOrderStatusLog(new OrderStatusLog(OrderStatusType.BEFORE_PAYMENT.toString(), userId, orderId));
+            orderDao.addOrderStatusLog(new OrderStatusLog(OrderStatusType.BEFORE_PAYMENT.getStatus(), userId, orderId));
 
         }
         Map<String, Integer> map = new HashMap<>(); // 리턴할 객체
@@ -143,15 +143,16 @@ public class OrderService {
             throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
         }
         // orders 테이블에서 status 수정
-        orderDao.updateOrderStatus(orderId, OrderStatusType.CANCEL.toString());
+        orderDao.updateOrderStatus(orderId, OrderStatusType.CANCEL.getStatus());
         // order_status_log 테이블에도 주문취소 로그 추가
-        OrderStatusLog orderStatusLog = new OrderStatusLog(OrderStatusType.CANCEL.toString(), userId, orderId);
+        OrderStatusLog orderStatusLog = new OrderStatusLog(OrderStatusType.CANCEL.getStatus(), userId, orderId);
         orderDao.addOrderStatusLog(orderStatusLog);
     }
 
     // 주문 상태 변경 api(관리자)
     public void updateOrderStatusApi(int orderId, OrderStatusReq orderStatusReq){
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
+        // 관리자 권한 검사
         String role = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"role");
         if(!role.equals(UserRole.ADMIN.toString())){
             throw new UserException(UserExceptionType.INVALID_USER_ROLE_EXCEPTION);
@@ -164,11 +165,35 @@ public class OrderService {
     }
 
     // 주문 상태별로 주문정보 가져오기 api(관리자)
+    public List<OrdersByStatusResp> getOrderByStatusApi(String status) {
+        // 관리자 권한 검사
+        String role = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"role");
+        if(!role.equals(UserRole.ADMIN.toString())){
+            throw new UserException(UserExceptionType.INVALID_USER_ROLE_EXCEPTION);
+        }
 
-    
+        List<Order> orders = orderDao.getOrderByStatus(OrderStatusType.valueOf(status).getStatus());
+        List<OrdersByStatusResp> ordersByStatusResps = new ArrayList<>();
+        for(Order order : orders){
+            List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(order.getId());
+            //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
+            for (Order_MenusResp menu : menus) {
+                String option = menu.getOption();
+                String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
+                menu.setOption(convert);
+            }
+            OrdersByStatusResp obs = new OrdersByStatusResp(order.getId(), order.getOrderDate(), order.getPayment(),
+                    order.getTotalPrice(), order.getUsedPoint(), order.getRealPrice(), order.getStatus(), order.getUserId(), menus);
+
+            ordersByStatusResps.add(obs);
+        }
+        return ordersByStatusResps;
+    }
+
+
     // 주문 상세정보 가져오기 api(관리자)
     public OrderDetailResp getOrderDetailApi(int orderId){
-        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
+        // 관리자 권한 검사
         String role = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"role");
         if(!role.equals(UserRole.ADMIN.toString())){
             throw new UserException(UserExceptionType.INVALID_USER_ROLE_EXCEPTION);
@@ -180,7 +205,6 @@ public class OrderService {
         for (Order_MenusResp menu : menus) {
             String option = menu.getOption();
             String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
-
             menu.setOption(convert);
         }
         List<OrderStatusLogResp> orderStatusLogs = orderDao.getOrderStatusLogByOrderId(orderId);
@@ -188,4 +212,6 @@ public class OrderService {
         OrderDetailResp orderDetailResp = new OrderDetailResp(order.getUserId(), orderId, order.getTotalPrice(),menus, orderStatusLogs);
         return orderDetailResp;
     }
+
+
 }

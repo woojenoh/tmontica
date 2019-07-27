@@ -56,4 +56,8 @@ public interface OrderDao {
     @Select("select status_type as status, editor_id, modified_date from order_status_logs where order_id=#{orderId}")
     List<OrderStatusLogResp> getOrderStatusLogByOrderId(int orderId);
 
+    // order Status로 주문정보 가져오기
+    @Select("select * from orders where status = #{status}")
+    List<Order> getOrderByStatus(String status);
+
 }
