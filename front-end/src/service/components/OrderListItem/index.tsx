@@ -18,7 +18,7 @@ function OrderListItem(props: IOrderListItemProps) {
         handleOrderListItemClick(orderId);
       }}
       className={
-        status === "준비완료"
+        /준비완료|READY/.test(status)
           ? "orders-list__item orders-list__item--ready"
           : status === "픽업완료" || status === "주문취소"
           ? "orders-list__item orders-list__item--pickuped"

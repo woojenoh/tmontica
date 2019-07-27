@@ -64,6 +64,7 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     결제완료: 1,
     준비중: 2,
     준비완료: 3,
+    READY: 3,
     픽업완료: 4
   } as { [key: string]: number };
 

@@ -23,9 +23,7 @@ class Orders extends PureComponent<IOrdersProps> {
     const { orderId } = this.state;
     return (
       <main className="main">
-        <section className="orders">
-          <OrderSheet orderId={orderId} />
-        </section>
+        <OrderSheet orderId={orderId} />
         <section className="orders-list">
           <OrderList handleOrderListItemClick={this.handleOrderListItemClick.bind(this)} />
         </section>
