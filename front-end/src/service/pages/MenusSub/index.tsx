@@ -25,12 +25,16 @@ export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubS
   };
 
   async getMenuByCateory(categoryEng?: string) {
-    const categoryMenus = await MenuAPI.getMenuByCateory(this.props.match.params.categoryEng);
-    const { categoryKo, menus } = categoryMenus;
-    this.setState({
-      categoryKo,
-      menus
-    });
+    try {
+      const categoryMenus = await MenuAPI.getMenuByCateory(this.props.match.params.categoryEng);
+      const { categoryKo, menus } = categoryMenus;
+      this.setState({
+        categoryKo,
+        menus
+      });
+    } catch (err) {
+      alert(err);
+    }
   }
 
   componentDidMount() {

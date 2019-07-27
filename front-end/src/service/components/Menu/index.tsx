@@ -104,21 +104,26 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
 
   // 바로구매
   async orderDirect(cartAddReq: TCartAddReq) {
-    const data = await CartAPI.addCart([cartAddReq]);
+    try {
+      const data = await CartAPI.addCart([cartAddReq]);
 
-    if (cartAddReq.direct) {
-      localStorage.setItem("isDirect", "Y");
-    } else {
-      localStorage.setItem("isDirect", "N");
+      if (cartAddReq.direct) {
+        localStorage.setItem("isDirect", "Y");
+      } else {
+        localStorage.setItem("isDirect", "N");
+      }
+      const orderPreparedCart = this.getOrderPreparedCart({
+        direct: true,
+        cartId: data[0].cartId
+      });
+
+      localStorage.setItem("orderCarts", JSON.stringify([orderPreparedCart]));
+
+      history.push("/payment");
+    } catch (err) {
+      alert(err);
+      history.push("/");
     }
-    const orderPreparedCart = this.getOrderPreparedCart({
-      direct: true,
-      cartId: data[0].cartId
-    });
-
-    localStorage.setItem("orderCarts", JSON.stringify([orderPreparedCart]));
-
-    history.push("/payment");
   }
 
   handleQuantity(isPlus: boolean) {
@@ -205,17 +210,21 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
   }
 
   async getMenu() {
-    const { menuId } = this.props.match.params;
+    try {
+      const { menuId } = this.props.match.params;
 
-    const menu = await MenuAPI.getMenuById(parseInt(menuId));
+      const menu = await MenuAPI.getMenuById(parseInt(menuId));
 
-    this.setState(
-      {
-        menu
-      },
-      this.updateTotalPrice
-    );
-    return Promise.resolve();
+      this.setState(
+        {
+          menu
+        },
+        this.updateTotalPrice
+      );
+      return Promise.resolve();
+    } catch (err) {
+      alert(err);
+    }
   }
 
   componentDidMount() {

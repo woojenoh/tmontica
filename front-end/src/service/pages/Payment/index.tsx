@@ -63,13 +63,18 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
   };
 
   async order() {
-    const orderId = await OrderAPI.order({
-      menus: [],
-      usedPoint: this.state.usedPoint,
-      totalPrice: this.state.totalPrice,
-      payment: "현장결제"
-    });
-    history.push(`/orders?orderId=${orderId}`);
+    try {
+      const orderId = await OrderAPI.order({
+        menus: [],
+        usedPoint: this.state.usedPoint,
+        totalPrice: this.state.totalPrice,
+        payment: "현장결제"
+      });
+      history.push(`/orders?orderId=${orderId}`);
+    } catch (err) {
+      alert(err);
+      history.push("/");
+    }
   }
 
   componentDidMount() {

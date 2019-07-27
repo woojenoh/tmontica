@@ -25,14 +25,18 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
   };
 
   async getOrderAll() {
-    const data = await OrderAPI.getOrderAll();
-    const { orders } = data;
-    _.sortBy(orders, "orderId");
-    orders.reverse();
+    try {
+      const data = await OrderAPI.getOrderAll();
+      const { orders } = data;
+      _.sortBy(orders, "orderId");
+      orders.reverse();
 
-    this.setState({
-      orders
-    });
+      this.setState({
+        orders
+      });
+    } catch (err) {
+      alert(err);
+    }
   }
 
   componentDidMount() {

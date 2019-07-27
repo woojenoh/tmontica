@@ -21,10 +21,14 @@ export default class Menus extends React.Component<IMenusProps, IMenusState> {
   };
 
   async getMenuAll() {
-    const menuAll = await MenuAPI.getMenuAll();
-    this.setState({
-      menuAll
-    });
+    try {
+      const menuAll = await MenuAPI.getMenuAll();
+      this.setState({
+        menuAll
+      });
+    } catch (err) {
+      alert(err);
+    }
   }
 
   componentDidMount() {

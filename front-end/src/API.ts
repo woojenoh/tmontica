@@ -1,20 +1,37 @@
 import { TCartAddReq } from "./types/cart";
-import history from "./history";
 import { TOrderReq } from "./types/order";
+import history from "./history";
 
 // const API_URL = "http://localhost:3000/fakeapi";
 // const API_URL = "https://my-json-server.typicode.com/yeolsa/tmontica-json";
 export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
 // export const API_URL = "http://localhost:8080/api";
 
-function fetchJSON(reqURL: string) {
-  return fetch(reqURL, {
-    headers: {
-      Accept: "application/json"
-    }
-  }).then(res => {
-    return res.ok ? res.json() : new Error();
-  });
+function handleError(res: string) {
+  debugger;
+  res = JSON.parse(res);
+
+  alert("알 수 없는 이유로 서비스 이용이 불가능합니다.");
+  return;
+}
+
+async function fetchTMON(url: string, options: RequestInit) {
+  const res = await fetch(url, options);
+
+  const json = await res.json();
+  if (res.ok) {
+    return json;
+  }
+
+  const err = json as {
+    timestamp: string;
+    status: number;
+    error: string;
+    message: string;
+    path: string;
+  };
+
+  throw new Error(err.message);
 }
 
 function get(reqURL: string, params?: Map<string, string> | null, jwt?: string) {
@@ -26,15 +43,13 @@ function get(reqURL: string, params?: Map<string, string> | null, jwt?: string) 
       .join("&")}`;
   }
 
-  return fetch(reqURL, {
+  return fetchTMON(reqURL, {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
       Authorization: jwt || ""
     },
     method: "GET"
-  }).then(res => {
-    return res.ok ? res.json() : "";
   });
 }
 
@@ -47,7 +62,7 @@ function getWithJWT(reqURL: string, params?: Map<string, string> | null) {
 function postWithJWT(reqURL: string, data: any) {
   const jwt = localStorage.getItem("JWT") || "";
 
-  return fetch(reqURL, {
+  return fetchTMON(reqURL, {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -55,8 +70,6 @@ function postWithJWT(reqURL: string, data: any) {
     },
     method: "POST",
     body: JSON.stringify(data)
-  }).then(res => {
-    return res.ok ? res.json() : new Error();
   });
 }
 

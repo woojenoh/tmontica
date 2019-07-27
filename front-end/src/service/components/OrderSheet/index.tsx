@@ -1,10 +1,10 @@
 import * as React from "react";
 import OrderSheetItem from "../OrderSheetItem";
-import { numberCommaRegex } from "../../../utils";
 import "./styles.scss";
 import { OrderAPI } from "../../../API";
-import { TMenu, TOrderDetail } from "../../../types/menu";
+import { TOrderDetail } from "../../../types/menu";
 import _ from "underscore";
+import history from "../../../history";
 
 export interface IOrderSheetProps {
   orderId: number;
@@ -31,15 +31,20 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
   };
 
   async getOrder() {
-    const order = await OrderAPI.getOrderById(this.props.orderId);
+    try {
+      const order = await OrderAPI.getOrderById(this.props.orderId);
 
-    if (order === "") {
-      return;
+      if (order === "") {
+        return;
+      }
+
+      this.setState({
+        order
+      });
+    } catch (err) {
+      alert(err);
+      history.push("/");
     }
-
-    this.setState({
-      order
-    });
   }
 
   componentDidMount() {
