@@ -7,14 +7,6 @@ import history from "./history";
 export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
 // export const API_URL = "http://localhost:8080/api";
 
-function handleError(res: string) {
-  debugger;
-  res = JSON.parse(res);
-
-  alert("알 수 없는 이유로 서비스 이용이 불가능합니다.");
-  return;
-}
-
 async function fetchTMON(url: string, options: RequestInit) {
   const res = await fetch(url, options);
 
