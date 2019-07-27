@@ -11,6 +11,11 @@ class Orders extends PureComponent<IOrdersProps> {
   };
 
   handleOrderListItemClick(orderId: number) {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth"
+    });
     this.setState({ orderId: orderId });
   }
 

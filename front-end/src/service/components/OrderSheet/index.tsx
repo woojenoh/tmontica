@@ -59,34 +59,6 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     }
   }
 
-  tempData = {
-    orderId: 10,
-    payment: "현장결제",
-    status: "결제완료",
-    totalPrice: 3000,
-    realPrice: 2000,
-    usedPoint: 1000,
-    orderDate: "2019-07-19 11:12:40",
-    menus: [
-      {
-        menuId: 1,
-        NameEng: "americano",
-        NameKo: "아메리카노",
-        option: "HOT/샷추가(1개)/사이즈추가",
-        quantity: 1,
-        price: 1000
-      },
-      {
-        menuId: 2,
-        NameEng: "garlic bread",
-        NameKo: "갈릭퐁당브레드",
-        option: "",
-        quantity: 1,
-        price: 3000
-      }
-    ]
-  };
-
   statusCode = {
     미결제: 0,
     결제완료: 1,
@@ -160,7 +132,7 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
               return (
                 <OrderSheetItem
                   key={`${orderId}_${m.id}`}
-                  name={m.nameEng}
+                  name={m.nameKo}
                   price={m.sellPrice}
                   optionString={m.optionString}
                   quantity={m.quantity}

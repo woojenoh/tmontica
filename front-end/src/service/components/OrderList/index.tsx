@@ -43,35 +43,6 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
     this.getOrderAll();
   }
 
-  tempData = {
-    orders: [
-      {
-        orderId: 12,
-        orderDate: "2019-07-19 11:12:40",
-        status: "결제완료",
-        menuNames: ["청포도에이드", "카페라떼", "소보로빵"]
-      },
-      {
-        orderId: 11,
-        orderDate: "2019-07-19 11:12:40",
-        status: "준비완료",
-        menuNames: ["아메리카노", "카페라떼", "소보로빵"]
-      },
-      {
-        orderId: 10,
-        orderDate: "2019-07-19 11:12:40",
-        status: "픽업완료",
-        menuNames: ["카페모카", "카페라떼", "소보로빵"]
-      },
-      {
-        orderId: 9,
-        orderDate: "2019-07-19 11:12:40",
-        status: "주문취소",
-        menuNames: ["카페모카", "카페라떼", "소보로빵"]
-      }
-    ]
-  };
-
   render() {
     const { handleOrderListItemClick } = this.props;
     const { orders } = this.state;

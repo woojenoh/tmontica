@@ -1,6 +1,5 @@
 import { TCartAddReq } from "./types/cart";
 import { TOrderReq } from "./types/order";
-import history from "./history";
 
 // const API_URL = "http://localhost:3000/fakeapi";
 // const API_URL = "https://my-json-server.typicode.com/yeolsa/tmontica-json";

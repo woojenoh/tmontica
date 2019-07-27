@@ -1,5 +1,4 @@
 import * as React from "react";
-import { numberCommaRegex } from "../../../utils";
 import "./styles.scss";
 
 export interface IOrderSheetItemProps {
@@ -16,7 +15,9 @@ function OrderSheetItem(props: IOrderSheetItemProps) {
     <li className="orders__item">
       <img src="/img/coffee-sample.png" alt="Coffee Sample" className="orders__item-img" />
       <div className="orders__item-info">
-        <h2 className="orders__item-name">{`${name} - ${numberCommaRegex(price)}원`}</h2>
+        <h2 className="orders__item-name">{`${name}${
+          Number.isInteger(price) ? ` - ${Number(price).toLocaleString()}` : ""
+        }`}</h2>
         <span className="orders__item-options">
           {optionString ? optionString : "옵션이 없습니다."}
         </span>
