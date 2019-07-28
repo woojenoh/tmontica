@@ -79,9 +79,11 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
             <span
               className="cart__item-delete"
               onClick={() =>
-                isSignin
-                  ? id !== undefined && fetchRemoveCart(id)
-                  : id !== undefined && removeLocalCart(id)
+                window.confirm(`${name} 메뉴를 삭제하시겠습니까?`)
+                  ? isSignin
+                    ? id !== undefined && fetchRemoveCart(id)
+                    : id !== undefined && removeLocalCart(id)
+                  : ""
               }
             >
               &times;
