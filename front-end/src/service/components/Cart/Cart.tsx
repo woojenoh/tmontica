@@ -28,7 +28,7 @@ class Cart extends React.Component<ICartProps, ICartState> {
     if (isSignin) {
       fetchSetCart();
     } else {
-      const localCart = localStorage.getItem("LocalCart");
+      const localCart = localStorage.getItem("localCart");
       // 만약 로컬카트가 생성된게 없으면 생성한다.
       if (!localCart) {
         initializeLocalCart();
