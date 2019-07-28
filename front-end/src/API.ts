@@ -45,13 +45,13 @@ function get(reqURL: string, params?: Map<string, string> | null, jwt?: string) 
 }
 
 function getWithJWT(reqURL: string, params?: Map<string, string> | null) {
-  const jwt = localStorage.getItem("JWT") || "";
+  const jwt = localStorage.getItem("jwt") || "";
 
   return get(reqURL, params, jwt);
 }
 
 function postWithJWT(reqURL: string, data: any) {
-  const jwt = localStorage.getItem("JWT") || "";
+  const jwt = localStorage.getItem("jwt") || "";
 
   return fetchTMON(reqURL, {
     headers: {
