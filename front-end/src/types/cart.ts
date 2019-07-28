@@ -148,6 +148,11 @@ export interface IFetchChangeCartRejected {
   error: AxiosError;
 }
 
+export interface ISetOrderCart {
+  type: typeof cartActionTypes.SET_ORDER_CART;
+  payload: ICartMenu[];
+}
+
 export type TCartAction =
   | IInitializeLocalCart
   | IAddLocalCart
@@ -170,7 +175,8 @@ export type TCartAction =
   | IFetchRemoveCartRejected
   | IFetchChangeCart
   | IFetchChangeCartFulfilled
-  | IFetchChangeCartRejected;
+  | IFetchChangeCartRejected
+  | ISetOrderCart;
 
 // 카트 추가 요청 타입
 export type TCartAddReq = {

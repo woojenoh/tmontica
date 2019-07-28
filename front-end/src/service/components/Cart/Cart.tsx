@@ -1,4 +1,5 @@
 import * as React from "react";
+import history from "../../../history";
 import CartItem from "../CartItem";
 import { numberCommaRegex } from "../../../utils";
 import * as cartTypes from "../../../types/cart";
@@ -14,6 +15,7 @@ export interface ICartProps {
   addLocalCart(payload: cartTypes.ICartMenu): void;
   fetchSetCart(): void;
   fetchAddCart(payload: cartTypes.ICartMenu[]): void;
+  setOrderCart(payload: cartTypes.ICartMenu[]): void;
 }
 
 export interface ICartState {
@@ -35,7 +37,7 @@ class Cart extends React.Component<ICartProps, ICartState> {
   }
 
   render() {
-    const { isCartOpen, handleCartClose, isSignin, localCart, cart } = this.props;
+    const { isCartOpen, handleCartClose, isSignin, localCart, cart, setOrderCart } = this.props;
 
     return (
       <section className={isCartOpen ? "cart" : "cart cart--close"}>
@@ -113,7 +115,22 @@ class Cart extends React.Component<ICartProps, ICartState> {
                 원
               </span>
             </div>
-            <button className="button cart__button">결제 및 주문하기</button>
+            <button
+              className="button cart__button"
+              onClick={() =>
+                isSignin
+                  ? cart
+                    ? cart.size
+                      ? window.confirm("주문하시겠습니까?")
+                        ? setOrderCart(cart.menus)
+                        : ""
+                      : alert("장바구니가 비었습니다.")
+                    : alert("문제가 발생했습니다.")
+                  : (alert("로그인 후 주문하세요."), history.push("/signin"))
+              }
+            >
+              결제 및 주문하기
+            </button>
           </div>
         </div>
       </section>

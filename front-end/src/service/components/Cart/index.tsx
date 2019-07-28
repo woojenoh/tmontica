@@ -19,6 +19,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     fetchSetCart: () => dispatch(cartActionCreators.fetchSetCart()),
     fetchAddCart: (payload: cartTypes.ICartMenu[]) => {
       dispatch(cartActionCreators.fetchAddCart(payload));
+    },
+    setOrderCart: (payload: cartTypes.ICartMenu[]) => {
+      dispatch(cartActionCreators.setOrderCart(payload));
     }
   };
 };
