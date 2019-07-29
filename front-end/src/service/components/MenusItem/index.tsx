@@ -10,9 +10,8 @@ interface IMenuItemProps extends RouteComponentProps {
 }
 class MenuItem extends React.Component<IMenuItemProps> {
   render() {
-    const { id, nameKo, imgUrl } = this.props.menu;
-
-    return (
+    const { id, nameKo, imgUrl, stock } = this.props.menu;
+    return stock > 0 ? (
       <li
         className="menu__item"
         data-id={id}
@@ -24,6 +23,8 @@ class MenuItem extends React.Component<IMenuItemProps> {
           <img src={`${CDN}${imgUrl}`} alt={nameKo} className="menu__img" />
         </div>
       </li>
+    ) : (
+      ""
     );
   }
 }

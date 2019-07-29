@@ -3,7 +3,8 @@ import "./styles.scss";
 import history from "../../../history";
 import { RouteComponentProps } from "react-router-dom";
 import { ICartMenu } from "../../../types/cart";
-import { OrderAPI } from "../../../API";
+import { order } from "../../../api/order";
+import { CDN } from "../../../constants";
 
 interface MatchParams {
   categoryEng: string;
@@ -34,7 +35,7 @@ const OrderMenu = ({
   return (
     <li className="order__menu">
       <div className="order__menu-img">
-        <img src={imgUrl} alt={nameKo} />
+        <img src={`${CDN}${imgUrl}`} alt={nameKo} />
       </div>
       <div className="order__menu-description">
         <div className="order__menu-title-wrap">
@@ -46,7 +47,7 @@ const OrderMenu = ({
             <span className="order__menu-cnt">{quantity}</span>개
           </div>
           <div className="order__menu-price-wrap d-inline-b">
-            <span className="order__menu-price">{Number(price).toLocaleString()}</span>원
+            <span className="order__menu-price">{Number(price * quantity).toLocaleString()}</span>원
           </div>
         </div>
       </div>
@@ -64,7 +65,7 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
 
   async order() {
     try {
-      const orderId = await OrderAPI.order({
+      const orderId = await order({
         menus: this.state.orderCarts.map((c: ICartMenu) => {
           return { cartId: typeof c.cartId === "undefined" ? 0 : c.cartId };
         }),
@@ -80,7 +81,7 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
   }
 
   componentDidMount() {
-    const orderCarts = JSON.parse(localStorage.getItem("orderCarts") || "[]");
+    const orderCarts = JSON.parse(localStorage.getItem("orderCart") || "[]");
 
     if (!Array.isArray(orderCarts) || (Array.isArray(orderCarts) && orderCarts.length === 0)) {
       alert("주문 정보가 존재하지 않습니다.");
@@ -89,15 +90,18 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
     }
 
     this.setState({
-      orderCarts
+      orderCarts,
+      totalPrice: this.getOrderPrice(orderCarts)
     });
+  }
+
+  getOrderPrice(orderCarts: Array<ICartMenu>) {
+    return orderCarts.reduce((prev: number, cur: ICartMenu) => cur.price * cur.quantity + prev, 0);
   }
 
   render() {
     const { orderCarts } = this.state;
-
-    const orderPrice = orderCarts.reduce((prev, cur: ICartMenu) => prev + cur.price, 0);
-
+    const orderPrice = this.getOrderPrice(orderCarts);
     return (
       <>
         <main className="main">
@@ -190,7 +194,18 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
                 </div>
               </div>
               <div className="button--group">
-                <div className="button--cancle button button--green">취소</div>
+                <div
+                  className="button--cancle button button--green"
+                  onClick={e => {
+                    e.preventDefault();
+                    if (window.confirm("취소하시겠습니까?")) {
+                      localStorage.removeItem("orderCart");
+                      history.goBack();
+                    }
+                  }}
+                >
+                  취소
+                </div>
                 <div
                   className="button--pay button button--green"
                   onClick={() => {

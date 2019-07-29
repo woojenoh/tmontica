@@ -1,7 +1,7 @@
 import * as React from "react";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
-import { MenuAPI } from "../../../API";
+import { getMenuAll } from "../../../api/menu";
 import MenuItems from "../../components/MenusItems";
 import { IMenuItemsProps } from "../../components/MenusItems";
 
@@ -22,7 +22,7 @@ export default class Menus extends React.Component<IMenusProps, IMenusState> {
 
   async getMenuAll() {
     try {
-      const menuAll = await MenuAPI.getMenuAll();
+      const menuAll = await getMenuAll();
       this.setState({
         menuAll
       });

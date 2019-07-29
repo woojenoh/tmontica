@@ -1,7 +1,7 @@
 import * as React from "react";
 import OrderListItem from "../OrderListItem";
 import "./styles.scss";
-import { OrderAPI } from "../../../API";
+import { getOrderAll } from "../../../api/order";
 import _ from "underscore";
 
 export interface IOrderListProps {
@@ -26,7 +26,7 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
 
   async getOrderAll() {
     try {
-      const data = await OrderAPI.getOrderAll();
+      const data = await getOrderAll();
       const { orders } = data;
       _.sortBy(orders, "orderId");
       orders.reverse();
@@ -56,7 +56,7 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
                   const name =
                     o.menuNames.length > 0
                       ? `${o.menuNames[0]}${
-                          o.menuNames.length > 1 ? `외 ${o.menuNames.length - 1}개}` : ``
+                          o.menuNames.length > 1 ? `외 ${o.menuNames.length - 1}개` : ``
                         }`
                       : "";
 

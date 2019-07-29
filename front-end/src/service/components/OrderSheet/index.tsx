@@ -1,10 +1,11 @@
 import * as React from "react";
 import OrderSheetItem from "../OrderSheetItem";
 import "./styles.scss";
-import { OrderAPI } from "../../../API";
+import { getOrderById } from "../../../api/order";
 import { TOrderDetail } from "../../../types/menu";
 import _ from "underscore";
 import history from "../../../history";
+import { PureComponent } from "react";
 
 export interface IOrderSheetProps {
   orderId: number;
@@ -30,11 +31,21 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     order: {} as TOrder
   };
 
+  intervalId = {} as NodeJS.Timeout;
+
   async getOrder() {
     try {
-      const order = await OrderAPI.getOrderById(this.props.orderId);
+      if (this.props.orderId <= 0) {
+        return;
+      }
+
+      let order = await getOrderById(this.props.orderId);
 
       if (order === "") {
+        order = {} as TOrder;
+      }
+
+      if (this.state.order["status"] && this.state.order.status === order.status) {
         return;
       }
 
@@ -51,12 +62,19 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     if (this.props.orderId > 0) {
       this.getOrder();
     }
+    this.intervalId = setInterval(() => {
+      this.getOrder();
+    }, 1000);
   }
 
   componentDidUpdate(prevProps: IOrderSheetProps) {
     if (this.props.orderId !== prevProps.orderId) {
       this.getOrder();
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
   }
 
   statusCode = {
@@ -129,17 +147,7 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
               : ""}
           </ul>
           <ul className="orders__items">
-            {_(order.menus).map((m: TOrderDetail) => {
-              return (
-                <OrderSheetItem
-                  key={`${orderId}_${m.id}`}
-                  name={m.nameKo}
-                  price={m.sellPrice}
-                  optionString={m.optionString}
-                  quantity={m.quantity}
-                />
-              );
-            })}
+            <OrderSheetList order={order} />
           </ul>
           <div className="orders__total">
             <div className="orders__total-price">
@@ -158,4 +166,29 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
   }
 }
 
+interface IOrderSheetListProps {
+  order: TOrder;
+}
+
+class OrderSheetList extends PureComponent<IOrderSheetListProps> {
+  render() {
+    const { order } = this.props;
+
+    return (
+      <ul className="orders__items">
+        {_(order.menus).map((m: TOrderDetail, i) => {
+          return (
+            <OrderSheetItem
+              key={`${order.orderId}_${i}`}
+              name={m.nameKo}
+              price={m.sellPrice}
+              option={m.option}
+              quantity={m.quantity}
+            />
+          );
+        })}
+      </ul>
+    );
+  }
+}
 export default OrderSheet;

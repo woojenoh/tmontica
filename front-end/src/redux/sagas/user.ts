@@ -6,7 +6,7 @@ import * as userActionTypes from "../actionTypes/user";
 import * as userActionCreators from "../actionCreators/user";
 import * as userTypes from "../../types/user";
 import * as cartActionCreators from "../actionCreators/cart";
-import { API_URL } from "../../API";
+import { API_URL } from "../../api/common";
 
 function* fetchSignupSagas(action: userTypes.IFetchSignup) {
   try {
@@ -33,7 +33,11 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
     yield put(userActionCreators.fetchSigninFulfilled());
     // 로그인 후 유저의 장바구니를 가져온다. 순서를 보장하기 위해 로그인 사가에.
     yield put(cartActionCreators.fetchSetCart());
-    history.push("/");
+    if (/admin/.test(window.location.href)) {
+      history.push("/admin");
+    } else {
+      history.push("/");
+    }
   } catch (error) {
     yield put(userActionCreators.fetchSigninRejected(error.response));
     alert("아이디와 비밀번호를 다시 확인해주세요.");
