@@ -80,7 +80,7 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
   }
 
   componentDidMount() {
-    const orderCarts = JSON.parse(localStorage.getItem("orderCarts") || "[]");
+    const orderCarts = JSON.parse(localStorage.getItem("orderCart") || "[]");
 
     if (!Array.isArray(orderCarts) || (Array.isArray(orderCarts) && orderCarts.length === 0)) {
       alert("주문 정보가 존재하지 않습니다.");
