@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 interface Props {}
 interface State {}
@@ -13,34 +14,34 @@ export default class AdminMenus extends Component<Props, State> {
           <div className="sidebar-sticky">
             <ul className="nav flex-column">
               <li className="nav-item">
-                <a href="#" className="nav-link">
+                <Link to="#" className="nav-link">
                   <i className="fas fa-shopping-cart feather" />
                   주문 관리
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a href="#" className="nav-link">
+                <Link to="#" className="nav-link">
                   <i className="fas fa-coffee feather" />
                   메뉴 관리
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a href="#" className="nav-link">
+                <Link to="#" className="nav-link">
                   <i className="far fa-flag feather" />
                   배너 관리
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a href="#" className="nav-link">
+                <Link to="#" className="nav-link">
                   <i className="fas fa-user feather" />
                   사용자 관리
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
-                <a href="#" className="nav-link">
+                <Link to="#" className="nav-link">
                   <i className="far fa-chart-bar feather" />
                   통계
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -140,12 +141,12 @@ export default class AdminMenus extends Component<Props, State> {
                         카테고리
                       </button>
                       <div className="dropdown-menu">
-                        <a className="dropdown-item" href="#">
+                        <Link className="dropdown-item" to="#">
                           음료
-                        </a>
-                        <a className="dropdown-item" href="#">
+                        </Link>
+                        <Link className="dropdown-item" to="#">
                           디저트
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>

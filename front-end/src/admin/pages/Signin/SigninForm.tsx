@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "../../../assets/scss/admin.scss";
 import Header from "../../components/Header";
 import * as userTypes from "../../../types/user";
-import SigninForm from "../../../service/components/SigninForm";
+import "./styles.scss";
 
 interface Props {
   fetchSignin(payload: userTypes.IUserSigninInfo): void;
@@ -24,7 +24,9 @@ export default class AdminSignin extends Component<Props, State> {
   handleSigninSubmit = (e: React.FormEvent<HTMLInputElement>) => {
     const { id, password } = this.state;
     const { fetchSignin } = this.props;
+
     e.preventDefault();
+
     fetchSignin({ id: id, password: password });
   };
 
@@ -32,35 +34,39 @@ export default class AdminSignin extends Component<Props, State> {
     const { handleInputChange, handleSigninSubmit } = this;
     return (
       <>
-        <Header />
-        <main className="container">
+        <Header hide={true} />
+        <main>
           <div id="login-form" className="card">
-            <h3>로그인</h3>
-            <div className="input-group">
-              <div className="input-group-prepend">
-                <span className="input-group-text">아이디</span>
+            <h3>티몽티카 관리자 로그인</h3>
+            <div className="signin__logo-wrapper">
+              <img src="/img/tmon-logo.png" alt="Tmon logo" className="signin__logo" />
+            </div>
+            <div className="inner">
+              <div className="input-group">
+                <input
+                  type="text"
+                  name="id"
+                  className="form-control"
+                  placeholder="아이디"
+                  onChange={e => handleInputChange(e)}
+                />
+              </div>
+              <div className="input-group">
+                <input
+                  type="password"
+                  name="password"
+                  className="form-control"
+                  placeholder="비밀번호"
+                  onChange={e => handleInputChange(e)}
+                />
               </div>
               <input
-                type="text"
-                name="id"
-                className="form-control"
-                placeholder="아이디를 입력하세요."
-                onChange={e => handleInputChange(e)}
+                type="submit"
+                onClick={e => handleSigninSubmit(e)}
+                value="로그인"
+                className="btn btn-primary btn-submit"
               />
             </div>
-            <div className="input-group">
-              <div className="input-group-prepend">
-                <span className="input-group-text">비밀번호</span>
-              </div>
-              <input
-                type="password"
-                name="password"
-                className="form-control"
-                placeholder="비밀번호를 입력하세요."
-                onChange={e => handleInputChange(e)}
-              />
-            </div>
-            <input type="submit" onClick={e => handleSigninSubmit(e)} value="로그인" />
           </div>
         </main>
       </>

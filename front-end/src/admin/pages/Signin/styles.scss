@@ -1,0 +1,42 @@
+main {
+  #login-form {
+    width: 500px;
+    margin: 0 auto;
+    margin-top: 150px;
+    padding: 0 50px 70px;
+
+    h3 {
+      margin-top: 70px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .signin__logo-wrapper {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      height: 100px;
+      padding: 10px;
+      background-color: white;
+      border-radius: 50%;
+      border: 1px solid #dee2e6;
+    }
+
+    .inner {
+      .input-group {
+        margin-bottom: 10px;
+      }
+
+      .input-group {
+        .form-control {
+          border-radius: 0;
+        }
+      }
+
+      .btn-submit {
+        width: 100%;
+      }
+    }
+  }
+}
