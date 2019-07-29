@@ -3,8 +3,11 @@ import "../../../assets/scss/admin.scss";
 import Header from "../../components/Header";
 import * as userTypes from "../../../types/user";
 import "./styles.scss";
+import { Redirect } from "react-router";
 
 interface Props {
+  isSignin: boolean;
+  isAdmin: boolean;
   fetchSignin(payload: userTypes.IUserSigninInfo): void;
 }
 export interface State {
@@ -32,7 +35,10 @@ export default class AdminSignin extends Component<Props, State> {
 
   render() {
     const { handleInputChange, handleSigninSubmit } = this;
-    return (
+
+    const { isSignin, isAdmin } = this.props;
+
+    return !isSignin || !isAdmin ? (
       <>
         <Header hide={true} />
         <main>
@@ -70,6 +76,8 @@ export default class AdminSignin extends Component<Props, State> {
           </div>
         </main>
       </>
+    ) : (
+      <Redirect to={"/admin/menus"} />
     );
   }
 }
