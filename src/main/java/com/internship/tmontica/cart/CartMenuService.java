@@ -21,10 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -35,8 +32,6 @@ public class CartMenuService {
     private final OptionDao optionDao;
     private final MenuDao menuDao;
     private final JwtService jwtService;
-
-    private static final String PRE_FIX = "/images/";
 
     // 카트 정보 가져오기 api
     public CartResp getCartMenuApi(){
@@ -60,9 +55,8 @@ public class CartMenuService {
             int price = menu.getSellPrice()+cartMenu.getPrice(); // 메뉴가격 + 옵션가격
 
             // List<Cart_MenusResp> 에 넣기
-            menu.setImgUrl(PRE_FIX.concat(menu.getImgUrl()));
             Cart_MenusResp cart_menusResp = new Cart_MenusResp(cartMenu.getId(), cartMenu.getMenuId(), menu.getNameEng(),
-                                                                menu.getNameKo(),menu.getImgUrl(), option ,
+                                                                menu.getNameKo(),"/images/".concat(menu.getImgUrl()), option ,
                                                                 cartMenu.getQuantity(), price, menu.getStock());
             menus.add(cart_menusResp);
             // totalPrice 에 가격 누적
@@ -149,7 +143,6 @@ public class CartMenuService {
         //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
         StringBuilder convert = new StringBuilder();
         String[] arrOption = option.split("/");
-
         for (String opStr : arrOption) {
             String[] oneOption = opStr.split("__");
             Option tmpOption = optionDao.getOptionById(Integer.parseInt(oneOption[0]));

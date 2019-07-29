@@ -37,8 +37,6 @@ public class OrderService {
     private final JwtService jwtService;
     private final CartMenuService cartMenuService;
 
-    private static final String PRE_FIX = "/images/";
-
 
     // 주문내역 가져오기 api
     public Map<String, List> getOrderListApi(){
@@ -103,10 +101,11 @@ public class OrderService {
             orderDao.addOrderDetail(orderDetail);
             // 장바구니에서는 삭제
             cartMenuDao.deleteCartMenu(menu.getCartId());
-            // 주문상태로그테이블에 "미결제" 상태로 추가
-            orderDao.addOrderStatusLog(new OrderStatusLog(OrderStatusType.BEFORE_PAYMENT.getStatus(), userId, orderId));
 
         }
+        // 주문상태로그테이블에 "미결제" 상태로 추가
+        orderDao.addOrderStatusLog(new OrderStatusLog(OrderStatusType.BEFORE_PAYMENT.getStatus(), userId, orderId));
+
         Map<String, Integer> map = new HashMap<>(); // 리턴할 객체
         map.put("orderId", orderId); // 반환값 orderId
         return map;
@@ -132,7 +131,7 @@ public class OrderService {
             }
 
             // imgUrl 경로 설정
-            menu.setImgUrl(PRE_FIX.concat(menu.getImgUrl()));
+            menu.setImgUrl("/images/".concat(menu.getImgUrl()));
         }
 
         OrderResp orderResp = new OrderResp(orderId, order.getPayment(), order.getStatus(), order.getTotalPrice(),
@@ -190,7 +189,7 @@ public class OrderService {
                     menu.setOption(convert);
                 }
 
-                menu.setImgUrl(PRE_FIX.concat(menu.getImgUrl()));
+                menu.setImgUrl("/images/".concat(menu.getImgUrl()));
             }
             OrdersByStatusResp obs = new OrdersByStatusResp(order.getId(), order.getOrderDate(), order.getPayment(),
                     order.getTotalPrice(), order.getUsedPoint(), order.getRealPrice(), order.getStatus(), order.getUserId(), menus);
@@ -218,7 +217,7 @@ public class OrderService {
                 String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
                 menu.setOption(convert);
             }
-            menu.setImgUrl(PRE_FIX.concat(menu.getImgUrl()));
+            menu.setImgUrl("/images/".concat(menu.getImgUrl()));
         }
         List<OrderStatusLogResp> orderStatusLogs = orderDao.getOrderStatusLogByOrderId(orderId);
 
