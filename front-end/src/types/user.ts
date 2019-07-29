@@ -73,6 +73,20 @@ export interface ISetUser {
   payload: IUser;
 }
 
+export interface IFetchFindId {
+  type: typeof userActionTypes.FETCH_FIND_ID;
+  payload: string;
+}
+
+export interface IFetchFindIdFulfilled {
+  type: typeof userActionTypes.FETCH_FIND_ID_FULFILLED;
+}
+
+export interface IFetchFindIdRejected {
+  type: typeof userActionTypes.FETCH_FIND_ID_REJECTED;
+  error: AxiosError;
+}
+
 export type TUserAction =
   | IFetchSignup
   | IFetchSignupFulfilled
@@ -81,4 +95,7 @@ export type TUserAction =
   | IFetchSigninFulfilled
   | IFetchSigninRejected
   | ISignout
-  | ISetUser;
+  | ISetUser
+  | IFetchFindId
+  | IFetchFindIdFulfilled
+  | IFetchFindIdRejected;

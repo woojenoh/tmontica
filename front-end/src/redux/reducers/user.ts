@@ -55,6 +55,16 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
         ...state,
         user: action.payload
       };
+    // FETCH_FIND_ID
+    case actionTypes.FETCH_FIND_ID:
+      return state;
+    case actionTypes.FETCH_FIND_ID_FULFILLED:
+      return state;
+    case actionTypes.FETCH_FIND_ID_REJECTED:
+      return {
+        ...state,
+        error: action.error
+      };
     default:
       return state;
   }

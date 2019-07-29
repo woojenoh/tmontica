@@ -54,3 +54,23 @@ export function setUser(payload: userTypes.IUser) {
     payload
   };
 }
+
+export function fetchFindId(payload: string) {
+  return {
+    type: actionTypes.FETCH_FIND_ID,
+    payload
+  };
+}
+
+export function fetchFindIdFulfilled() {
+  return {
+    type: actionTypes.FETCH_FIND_ID_FULFILLED
+  };
+}
+
+export function fetchFindIdRejected(error: AxiosError) {
+  return {
+    type: actionTypes.FETCH_FIND_ID_REJECTED,
+    error
+  };
+}

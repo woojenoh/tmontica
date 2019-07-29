@@ -40,7 +40,23 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
   }
 }
 
+function* fetchFindIdSagas(action: userTypes.IFetchFindId) {
+  try {
+    yield axios.get(`${API_URL}/api/users/findid`, {
+      params: {
+        email: action.payload
+      }
+    });
+    alert("입력하신 이메일로 아이디가 전송되었습니다.");
+    yield put(userActionCreators.fetchFindIdFulfilled());
+  } catch (error) {
+    alert("문제가 발생했습니다.");
+    yield put(userActionCreators.fetchFindIdRejected(error.response));
+  }
+}
+
 export default function* userSagas() {
   yield takeEvery(userActionTypes.FETCH_SIGNUP, fetchSignupSagas);
   yield takeEvery(userActionTypes.FETCH_SIGNIN, fetchSigninSagas);
+  yield takeEvery(userActionTypes.FETCH_FIND_ID, fetchFindIdSagas);
 }
