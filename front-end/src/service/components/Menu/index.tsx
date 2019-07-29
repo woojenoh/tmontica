@@ -117,7 +117,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
         cartId: data[0].cartId
       });
 
-      localStorage.setItem("orderCarts", JSON.stringify([orderPreparedCart]));
+      localStorage.setItem("orderCart", JSON.stringify([orderPreparedCart]));
 
       history.push("/payment");
     } catch (err) {
