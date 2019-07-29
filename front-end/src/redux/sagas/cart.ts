@@ -1,4 +1,4 @@
-import { put, takeEvery, select } from "redux-saga/effects";
+import { put, takeLatest, select } from "redux-saga/effects";
 import _ from "underscore";
 import axios from "axios";
 import * as cartActionTypes from "../actionTypes/cart";
@@ -228,11 +228,11 @@ function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
 }
 
 export default function* userSagas() {
-  yield takeEvery(cartActionTypes.ADD_LOCAL_CART, addLocalCartSagas);
-  yield takeEvery(cartActionTypes.REMOVE_LOCAL_CART, removeLocalCartSagas);
-  yield takeEvery(cartActionTypes.CHANGE_LOCAL_CART, changeLocalCartSagas);
-  yield takeEvery(cartActionTypes.FETCH_SET_CART, fetchSetCartSagas);
-  yield takeEvery(cartActionTypes.FETCH_ADD_CART, fetchAddCartSagas);
-  yield takeEvery(cartActionTypes.FETCH_REMOVE_CART, fetchRemoveCartSagas);
-  yield takeEvery(cartActionTypes.FETCH_CHANGE_CART, fetchChangeCartSagas);
+  yield takeLatest(cartActionTypes.ADD_LOCAL_CART, addLocalCartSagas);
+  yield takeLatest(cartActionTypes.REMOVE_LOCAL_CART, removeLocalCartSagas);
+  yield takeLatest(cartActionTypes.CHANGE_LOCAL_CART, changeLocalCartSagas);
+  yield takeLatest(cartActionTypes.FETCH_SET_CART, fetchSetCartSagas);
+  yield takeLatest(cartActionTypes.FETCH_ADD_CART, fetchAddCartSagas);
+  yield takeLatest(cartActionTypes.FETCH_REMOVE_CART, fetchRemoveCartSagas);
+  yield takeLatest(cartActionTypes.FETCH_CHANGE_CART, fetchChangeCartSagas);
 }

@@ -1,4 +1,4 @@
-import { put, takeEvery } from "redux-saga/effects";
+import { put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 import history from "../../history";
 import jwt from "jwt-decode";
@@ -71,8 +71,8 @@ function* fetchFindPasswordSagas(action: userTypes.IFetchFindPassword) {
 }
 
 export default function* userSagas() {
-  yield takeEvery(userActionTypes.FETCH_SIGNUP, fetchSignupSagas);
-  yield takeEvery(userActionTypes.FETCH_SIGNIN, fetchSigninSagas);
-  yield takeEvery(userActionTypes.FETCH_FIND_ID, fetchFindIdSagas);
-  yield takeEvery(userActionTypes.FETCH_FIND_PASSWORD, fetchFindPasswordSagas);
+  yield takeLatest(userActionTypes.FETCH_SIGNUP, fetchSignupSagas);
+  yield takeLatest(userActionTypes.FETCH_SIGNIN, fetchSigninSagas);
+  yield takeLatest(userActionTypes.FETCH_FIND_ID, fetchFindIdSagas);
+  yield takeLatest(userActionTypes.FETCH_FIND_PASSWORD, fetchFindPasswordSagas);
 }
