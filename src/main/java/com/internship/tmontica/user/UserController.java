@@ -23,9 +23,18 @@ public class UserController {
     public ResponseEntity<String> signUp(@RequestBody @Valid UserSignUpReqDTO userSignUpReqDTO) {
 
         if(userService.signUp(userSignUpReqDTO)){
-            return new ResponseEntity<>("Sign up Success", HttpStatus.CREATED);
+            return new ResponseEntity<>(UserResponseMessage.SIGN_UP_SUCCESS.getMessage(), HttpStatus.CREATED);
         }
-        return new ResponseEntity<>("Sign up Fail", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(UserResponseMessage.SIGN_UP_FAIL.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<String> activateUser(@RequestParam("id")String userId, @RequestParam("token")String token){
+
+        if(userService.activateUser(userId, token)){
+            return new ResponseEntity<>(UserResponseMessage.ACTIVATE_SUCCESS.getMessage(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(UserResponseMessage.ACTIVATE_FAIL.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping("/duplicate/{userId}")
@@ -47,41 +56,41 @@ public class UserController {
     @PostMapping("/checkpw")
     public ResponseEntity<String> checkPassword(@RequestBody @Valid UserCheckPasswordReqDTO userCheckPasswordReqDTO) {
         userService.checkPassword(userCheckPasswordReqDTO);
-        return new ResponseEntity<>("Correct password", HttpStatus.OK);
+        return new ResponseEntity<>(UserResponseMessage.PASSWORD_CHECK_SUCCESS.getMessage(), HttpStatus.OK);
     }
 
     @PutMapping
     public ResponseEntity<String> changePassword(@RequestBody @Valid UserChangePasswordReqDTO userChangePasswordReqDTO) {
         if(userService.changePassword(userChangePasswordReqDTO)){
-            return new ResponseEntity<>("change password Success", HttpStatus.OK);
+            return new ResponseEntity<>(UserResponseMessage.PASSWORD_CHANGE_SUCCESS.getMessage(), HttpStatus.OK);
         }
-        return new ResponseEntity<>("change password Fail", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(UserResponseMessage.PASSWORD_CHANGE_FAIL.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<String> withDrawUser(@PathVariable("userId") String id){
-        if(userService.withDrawUser(id)){
-            return new ResponseEntity<>("Delete User Success", HttpStatus.ACCEPTED);
+        if(userService.withdrawUser(id)){
+            return new ResponseEntity<>(UserResponseMessage.WITHDRAW_USER_SUCCESS.getMessage(), HttpStatus.ACCEPTED);
         }
-        return new ResponseEntity<>("Delete User Fail", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(UserResponseMessage.WITHDRAW_USER_FAIL.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/findid")
     public ResponseEntity<String> findUserId(@RequestParam String email, HttpSession httpSession) {
 
         if(userService.sendUserId(email, httpSession)){
-            return new ResponseEntity<>("Send email Success", HttpStatus.OK);
+            return new ResponseEntity<>(UserResponseMessage.MAIL_SEND_SUCCESS.getMessage(), HttpStatus.OK);
         }
-        return new ResponseEntity<>("이메일 정보가 없어서 메일은 발송하지 않았습니다.", HttpStatus.OK);
+        return new ResponseEntity<>(UserResponseMessage.MAIL_SEND_FAIL.getMessage(), HttpStatus.OK);
     }
 
     @GetMapping("/findpw")
     public ResponseEntity<String> findUserPassword(@RequestParam String id, @RequestParam String email){
 
         if(userService.sendUserPassword(id, email)){
-            return new ResponseEntity<>("Send email Success", HttpStatus.OK);
+            return new ResponseEntity<>(UserResponseMessage.MAIL_SEND_SUCCESS.getMessage(), HttpStatus.OK);
         }
-        return new ResponseEntity<>("Send email Fail", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(UserResponseMessage.MAIL_SEND_FAIL.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/findid/confirm")
