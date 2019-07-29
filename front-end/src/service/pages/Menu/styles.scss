@@ -1,18 +1,31 @@
 @import "../../../assets/scss/colors.scss";
+@import "../../../assets/scss/mediaQuery.scss";
 
 .detail {
+  position: relative;
   display: flex;
   max-width: 800px;
   min-height: 500px;
   border: 1px solid $border-gray;
   margin: 0 auto;
   background-color: white;
-
+  @include desktop {
+    display: block;
+    max-width: 500px;
+  }
+  @include tablet {
+    display: block;
+    max-width: 500px;
+  }
+  @include mobile {
+    display: block;
+    max-width: 500px;
+  }
   .detail__sell-price {
-    padding: 0 10% 20px;
     width: 100%;
     text-align: right;
     display: inline-block;
+    padding-bottom: 20px;
   }
 }
 
@@ -22,6 +35,21 @@
   align-items: center;
   padding: 40px 0;
   border-right: 1px solid $border-gray;
+  @include desktop {
+    width: 100%;
+    padding: 0;
+    border-right: none;
+  }
+  @include tablet {
+    width: 100%;
+    padding: 0;
+    border-right: none;
+  }
+  @include mobile {
+    width: 100%;
+    padding: 0;
+    border-right: none;
+  }
 }
 
 .detail__img {
@@ -31,14 +59,31 @@
 .detail__right {
   width: 50%;
   height: 100%;
-  padding: 50px 0;
+  padding: 50px 30px;
+  display: flex;
+  align-self: center;
+  @include desktop {
+    width: 100%;
+    padding: 30px;
+  }
+  @include tablet {
+    width: 100%;
+    padding: 30px;
+  }
+  @include mobile {
+    width: 100%;
+    padding: 20px;
+  }
+  .detail__right-container {
+    flex: 1;
+  }
 }
 
 .detail__title {
   font-size: 30px;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .detail__options {
@@ -46,7 +91,6 @@
 
 .detail__option {
   display: flex;
-  justify-content: center;
   margin-bottom: 30px;
 }
 
@@ -66,6 +110,7 @@
   color: #fa5252;
   cursor: pointer;
   font-size: 15px;
+  flex: 1;
 }
 
 .temperature:last-child {
@@ -92,6 +137,7 @@
   color: #228be6;
   cursor: pointer;
   font-size: 14px;
+  flex: 1;
 }
 
 .detail__ice:hover {
@@ -112,11 +158,16 @@
   align-items: center;
   margin-right: 20px;
   font-size: 14px;
+  flex: 1;
+  border: 1px solid black;
+  @include mobile {
+    font-size: 13px;
+  }
 }
 
 .option__counter {
   display: flex;
-  width: 60%;
+  flex: 3;
 }
 
 .counter__minus {
@@ -182,7 +233,6 @@ input[type="number"].counter__number::-webkit-inner-spin-button {
 }
 
 .option__size {
-  width: calc(80% + 20px);
   height: 40px;
   border: 1px solid #343a40;
   display: flex;
@@ -190,6 +240,7 @@ input[type="number"].counter__number::-webkit-inner-spin-button {
   align-items: center;
   cursor: pointer;
   font-size: 14px;
+  flex: 1;
 }
 
 // .option__size:hover {
@@ -206,15 +257,14 @@ input[type="number"].counter__number::-webkit-inner-spin-button {
   display: flex;
   margin-top: 20px;
   justify-content: center;
-
   .button {
     width: 40%;
   }
 }
 
 .detail__button {
-  width: 40%;
   height: 40px;
+  flex: 1;
 }
 
 .detail__button:first-child {
@@ -225,30 +275,9 @@ input[type="number"].counter__number::-webkit-inner-spin-button {
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
-  border-top: 1px solid black;
-  padding: 20px 10% 0;
   margin-top: 20px;
-
   .total {
     display: inline-block;
     text-align: right;
-  }
-}
-
-@media (max-width: 1020px) {
-  .detail {
-    display: block;
-    max-width: 500px;
-  }
-  .detail__left {
-    width: 100%;
-    padding: 0;
-    border-right: none;
-  }
-  .detail__right {
-    width: 100%;
-  }
-  .option__title {
-    font-size: 13px;
   }
 }
