@@ -1,0 +1,34 @@
+.find-id__form {
+  margin: 40px 0;
+  .input.find-id__input {
+    margin-bottom: 10px;
+  }
+  .button.find-id__button {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    margin-top: 12px;
+    margin-right: 10px;
+  }
+}
+
+.find-password__form {
+  margin: 40px 0;
+  .input.find-password__input {
+    margin-bottom: 10px;
+    &:nth-child(2) {
+      margin-bottom: 0;
+    }
+  }
+  .button.find-password__button {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    margin-top: 12px;
+    margin-right: 10px;
+  }
+}

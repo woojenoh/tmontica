@@ -17,6 +17,7 @@ import Signin from "./service/pages/Signin";
 import Signup from "./service/pages/Signup";
 import Orders from "./service/pages/Orders";
 import Payment from "./service/pages/Payment";
+import FindAccount from "./service/pages/FindAccount";
 
 export interface IAppProps extends RouteComponentProps {
   isSignin: boolean;
@@ -98,6 +99,7 @@ class App extends React.Component<IAppProps> {
           <Route exact path="/admin/signin" component={Menus} />
           <Route exact path="/signin" component={Signin} />
           <Route exact path="/signup" component={Signup} />
+          <Route exact path="/find" component={FindAccount} />
           <Route exact path="/" component={Menus} />
           <Route path="*" component={Menus} />
         </Switch>
