@@ -1,86 +1,37 @@
 package com.internship.tmontica.menu;
 
+import com.internship.tmontica.menu.exception.BindingResultHelper;
 import com.internship.tmontica.menu.model.response.*;
-import com.internship.tmontica.option.Option;
 import com.internship.tmontica.menu.model.request.MenuReq;
 import com.internship.tmontica.menu.model.request.MenuUpdateReq;
-import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.util.CategoryName;
-import com.internship.tmontica.util.JsonUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.util.*;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/menus")
+@RequiredArgsConstructor
 public class MenuController {
-    @Autowired
-    private MenuService menuService;
-    @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    private JwtService jwtService;
+    private final MenuService menuService;
+    private final ModelMapper modelMapper;
+    @Value("${menu.imagepath}")
+    private String location;
 
     /** 전체 메뉴 (메인 화면 ) **/
     @GetMapping
     public ResponseEntity<List<MenuMainResp>> getAllMenus(){
-        List<MenuMainResp> allMenus = new ArrayList<>();
-
-        //1. 이달의 메뉴
-        MenuMainResp menuMonthly = new MenuMainResp();
-        menuMonthly.setCategoryKo("이달의 메뉴");
-        menuMonthly.setCategoryEng("monthlymenu");
-        // 1-1. DB에서 이달의 메뉴 정보를 가져옴
-        List<Menu> montlyMenus = menuService.getMonthlyMenus();
-        // 1-2. Menu --> MenuSimpleResp
-        Type listType = new TypeToken<List<MenuSimpleResp>>(){}.getType();
-        List<MenuSimpleResp> monthlyMenuList = modelMapper.map(montlyMenus, listType);
-        menuMonthly.setMenus(monthlyMenuList);
-
-        allMenus.add(menuMonthly);
-
-        //2. 카테고리 : coffee
-        MenuMainResp menuCoffee = new MenuMainResp();
-        menuCoffee.setCategoryKo(CategoryName.CATEGORY_COFFEE_KO);
-        menuCoffee.setCategoryEng(CategoryName.CATEGORY_COFFEE);
-
-        // 2-1. DB에서 커피 카테고리 메뉴 정보를 가져옴 (한번에 8개)
-        List<Menu> coffeeMenus = menuService.getMenusByCategory(CategoryName.CATEGORY_COFFEE, 1, 8);
-
-        // 2-2. Menu --> MenuSimpleResp
-        List<MenuSimpleResp> coffeeMenuList = modelMapper.map(coffeeMenus, listType);
-        menuCoffee.setMenus(coffeeMenuList);
-
-        allMenus.add(menuCoffee);
-
-        //3. 카테고리 : ade
-        MenuMainResp menuAde = new MenuMainResp();
-        menuAde.setCategoryKo(CategoryName.CATEGORY_ADE_KO);
-        menuAde.setCategoryEng(CategoryName.CATEGORY_ADE);
-
-        // 3-1. DB에서 에이드 카테고리의 메뉴 정보를 가져옴 (한번에 8개)
-        List<Menu> adeMenus = menuService.getMenusByCategory(CategoryName.CATEGORY_ADE, 1, 8);
-
-        // 3-2. Menu --> MenuSimpleResp
-        List<MenuSimpleResp> adeMenuList = modelMapper.map(adeMenus, listType);
-        menuAde.setMenus(adeMenuList);
-
-        allMenus.add(menuAde);
-
+        List<MenuMainResp> allMenus = menuService.getMainMenus();
         return new ResponseEntity<>(allMenus, HttpStatus.OK);
     }
 
@@ -97,12 +48,15 @@ public class MenuController {
         menucategoryResp.setCategoryKo(CategoryName.categoryEngToKo(category));
 
         List<Menu> menus = menuService.getMenusByCategory(category, page, size);
-        // TODO : 상태코드 어떻게 할지..
+        // 메뉴가 없으면 no content
         if(menus == null)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-        Type listType = new TypeToken<List<MenuSimpleResp>>(){}.getType();
-        List<MenuSimpleResp> categoryMenus = modelMapper.map(menus, listType);
+        List<MenuSimpleResp> categoryMenus = modelMapper.map(menus, new TypeToken<List<MenuSimpleResp>>(){}.getType());
+
+        for(MenuSimpleResp menu : categoryMenus)
+            menu.setImgUrl("/images/".concat(menu.getImgUrl()));
+
         menucategoryResp.setMenus(categoryMenus);
         return new ResponseEntity<>(menucategoryResp, HttpStatus.OK);
     }
@@ -110,20 +64,10 @@ public class MenuController {
     /** 상세 메뉴 정보 가져오기 **/
     @GetMapping("/{menuId:\\d+}")
     public ResponseEntity<MenuDetailResp> getMenuDetail(@PathVariable("menuId")int menuId){
-        MenuDetailResp menuDetailResp = new MenuDetailResp();
-        // 상세 메뉴 정보 가져오기
-        Menu menu = menuService.getMenuById(menuId);
+        MenuDetailResp menuDetailResp = menuService.getMenuDetailById(menuId);
         // 메뉴가 없으면 no content
-        if(menu == null)
+        if(menuDetailResp == null)
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
-        modelMapper.map(menu, menuDetailResp);
-        // 메뉴의 옵션 정보 가져오기
-        List<Option> options = menuService.getOptionsById(menuId);
-        Type listType = new TypeToken<List<MenuOptionResp>>(){}.getType();
-        List<MenuOptionResp> menuOptions = modelMapper.map(options, listType);
-
-        menuDetailResp.setOption(menuOptions);
 
         return new ResponseEntity<>(menuDetailResp, HttpStatus.OK);
     }
@@ -131,28 +75,19 @@ public class MenuController {
     /** 메뉴 추가하기 **/
     @PostMapping
     public ResponseEntity addMenu(@ModelAttribute @Valid MenuReq menuReq, BindingResult bindingResult){
-
-        //TODO : 로그인 유저 아이디 가져오기
         //TODO : 예외 처리..
         if(bindingResult.hasErrors())
-            return new ResponseEntity("binding error",HttpStatus.BAD_REQUEST);
+            BindingResultHelper.throwCustomInvalidParameterException(bindingResult);
 
         log.info("[menu api] 메뉴 추가하기");
         log.info("menuReq : {}", menuReq.toString());
 
         Menu menu = new Menu();
         modelMapper.map(menuReq, menu);
-        menu.setCreatorId(JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id"));
-
-        // 판매가가 올바른 값인지 검사
-        int sellPrice = menuReq.getProductPrice() * (100 - menuReq.getDiscountRate())/100;
-        if(sellPrice != menuReq.getSellPrice())
-            return new ResponseEntity("sell price값이 틀렸습니다.", HttpStatus.BAD_REQUEST);
 
         // 메뉴 저장
         menuService.addMenu(menu, menuReq.getOptionIds(), menuReq.getImgFile());
         return new ResponseEntity(HttpStatus.OK);
-
     }
 
     /** 메뉴 수정하기 **/
@@ -163,26 +98,12 @@ public class MenuController {
 
         log.info("[menu api] 메뉴 수정하기");
         log.info("menuReq : {}", menuReq.toString());
-        log.info("menuId : {}", menuReq.getMenuId());
 
-        // TODO : 아이디에 해당하는 메뉴가 없을때..
-        // TODO : 업데이트 유저 아이디 가져오기
-        // menuReq --> menu
         Menu menu = new Menu();
         menu.setId(menuReq.getMenuId());
-        menu.setUpdatedDate(new Date());
         modelMapper.map(menuReq, menu);
 
-        // 이미지 파일 저장 ( 있으면 저장.. 없으면 기존 경로 저장.) --> 서비스 로직에서 체크
-        if(menuReq.getImgFile()!=null){
-            String img = saveImg(menuReq.getImgFile(), menuReq.getCategoryEng(), menuReq.getNameEng());
-            menu.setImgUrl(img);
-        }else{
-            Menu beforeMenu = menuService.getMenuById(menuReq.getMenuId());
-            menu.setImgUrl(beforeMenu.getImgUrl());
-        }
-
-        menuService.updateMenu(menu);
+        menuService.updateMenu(menu, menuReq.getImgFile());
 
         return new ResponseEntity(HttpStatus.OK);
     }
@@ -196,43 +117,5 @@ public class MenuController {
         menuService.deleteMenu(menuId);
         return new ResponseEntity(HttpStatus.OK);
     }
-
-
-    // 이미지 파일 저장
-    private String saveImg(MultipartFile imgFile, String category, String name){
-        // file url : imagefile/년/월/일/파일이름
-        String dir = "imagefile/";
-        Calendar calendar = Calendar.getInstance();
-        dir = dir + calendar.get(Calendar.YEAR);
-        dir = dir + "/";
-        dir = dir + (calendar.get(Calendar.MONTH) + 1);
-        dir = dir + "/";
-        dir = dir + calendar.get(Calendar.DAY_OF_MONTH);
-        dir = dir + "/";
-        dir += category + "/";
-        File dirFile = new File(dir);
-        dirFile.mkdirs(); // 디렉토리가 없을 경우 만든다.
-        dir += name;
-        dir = dir + "_" +  UUID.randomUUID().toString();  // 유일한 식별자
-        // 확장자
-        String extension = imgFile.getOriginalFilename().split("\\.")[1];
-        dir += "." + extension;
-
-        log.info("img type : {}", extension);
-
-        try(FileOutputStream fos = new FileOutputStream(dir);
-            InputStream in = imgFile.getInputStream()){
-            byte[] buffer = new byte[1024];
-            int readCount = 0;
-            while((readCount = in.read(buffer)) != -1){
-                fos.write(buffer, 0, readCount);
-            }
-        }catch(Exception ex){
-            ex.printStackTrace();
-        }
-
-        return dir;
-    }
-
 
 }

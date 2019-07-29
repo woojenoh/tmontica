@@ -1,5 +1,7 @@
+@import "../../../assets/scss/colors.scss";
+
 .banner {
-  border: 1px solid #ebebeb;
+  border: 1px solid $border-gray;
   height: 150px;
   background-color: white;
 }
@@ -46,7 +48,7 @@
 .menu__item {
   position: relative;
   width: 25%;
-  border: 1px solid #ebebeb;
+  border: 1px solid $border-gray;
   border-width: 1px 1px 1px 0px;
   text-align: center;
   overflow: hidden;
@@ -60,11 +62,11 @@
 }
 
 .menu__item:first-child {
-  border-left: 1px solid #ebebeb;
+  border-left: 1px solid $border-gray;
 }
 
 .menu__item:nth-child(4n + 1) {
-  border-left: 1px solid #ebebeb;
+  border-left: 1px solid $border-gray;
 }
 
 .menu__item:nth-child(n + 5) {
@@ -125,7 +127,7 @@
   }
 
   .menu__item:nth-child(3n + 1) {
-    border-left: 1px solid #ebebeb;
+    border-left: 1px solid $border-gray;
   }
 
   .menu__item:nth-child(n + 4) {
@@ -148,7 +150,7 @@
   }
 
   .menu__item:nth-child(2n + 1) {
-    border-left: 1px solid #ebebeb;
+    border-left: 1px solid $border-gray;
   }
 
   .menu__item:nth-child(n + 3) {
