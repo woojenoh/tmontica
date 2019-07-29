@@ -4,6 +4,7 @@ import history from "../../../history";
 import { RouteComponentProps } from "react-router-dom";
 import { ICartMenu } from "../../../types/cart";
 import { OrderAPI } from "../../../API";
+import { CDN } from "../../../constants";
 
 interface MatchParams {
   categoryEng: string;
@@ -34,7 +35,7 @@ const OrderMenu = ({
   return (
     <li className="order__menu">
       <div className="order__menu-img">
-        <img src={imgUrl} alt={nameKo} />
+        <img src={`${CDN}${imgUrl}`} alt={nameKo} />
       </div>
       <div className="order__menu-description">
         <div className="order__menu-title-wrap">
@@ -193,7 +194,18 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
                 </div>
               </div>
               <div className="button--group">
-                <div className="button--cancle button button--green">취소</div>
+                <div
+                  className="button--cancle button button--green"
+                  onClick={e => {
+                    e.preventDefault();
+                    if (window.confirm("취소하시겠습니까?")) {
+                      localStorage.removeItem("orderCart");
+                      history.goBack();
+                    }
+                  }}
+                >
+                  취소
+                </div>
                 <div
                   className="button--pay button button--green"
                   onClick={() => {
