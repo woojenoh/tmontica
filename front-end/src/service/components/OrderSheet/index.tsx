@@ -165,7 +165,7 @@ class OrderSheetList extends PureComponent<IOrderSheetListProps> {
               key={`${order.orderId}_${i}`}
               name={m.nameKo}
               price={m.sellPrice}
-              optionString={m.optionString}
+              option={m.option}
               quantity={m.quantity}
             />
           );

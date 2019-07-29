@@ -32,9 +32,20 @@ export interface TMenu {
   getOptionById(id: number): TMenuOption;
 }
 
-export interface TOrderDetail extends TMenu {
+export interface TOrderDetail {
+  id: number;
+  nameEng: string;
+  nameKo: string;
+  description: string;
+  imgUrl: string;
+  sellPrice: number;
+  discountRate: number;
+  category: string;
+  stock: number;
+  monthlyMenu: boolean;
+  option: string;
+  getOptionById(id: number): TMenuOption;
   quantity: number;
-  optionString: string;
 }
 
 export type TBasicMenuOptionArray = Array<TBasicMenuOption>;
