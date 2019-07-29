@@ -3,6 +3,7 @@ import "./styles.scss";
 
 export interface IFindAccountFormProps {
   fetchFindId(payload: string): void;
+  fetchFindPassword(payload: { email: string; id: string }): void;
 }
 
 export interface IFindAccountFormState {
@@ -33,16 +34,26 @@ class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccoun
     });
   };
 
+  handleFindPasswordSubmit = () => {
+    const { fetchFindPassword } = this.props;
+    const { passwordEmail, passwordId } = this.state;
+    fetchFindPassword({ email: passwordEmail, id: passwordId });
+    this.setState({
+      passwordEmail: "",
+      passwordId: ""
+    });
+  };
+
   render() {
     const { idEmail, passwordId, passwordEmail } = this.state;
-    const { handleInputChange, handleFindIdSubmit } = this;
+    const { handleInputChange, handleFindIdSubmit, handleFindPasswordSubmit } = this;
 
     return (
       <>
         <form className="find-id__form">
           <input
             type="text"
-            name="accountEmail"
+            name="idEmail"
             className="input find-id__form__input"
             placeholder="이메일"
             onChange={e => handleInputChange(e)}
@@ -53,6 +64,7 @@ class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccoun
             type="submit"
             className="button button--orange find-id__button"
             value="아이디 찾기"
+            onClick={() => handleFindIdSubmit()}
           />
         </form>
         <form className="find-password__form">
@@ -78,7 +90,7 @@ class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccoun
             type="submit"
             className="button button--orange find-password__button"
             value="비밀번호 찾기"
-            onClick={() => handleFindIdSubmit()}
+            onClick={() => handleFindPasswordSubmit()}
           />
         </form>
       </>

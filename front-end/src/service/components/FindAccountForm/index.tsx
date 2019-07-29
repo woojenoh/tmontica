@@ -5,7 +5,9 @@ import { Dispatch } from "redux";
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    fetchFindId: (payload: string) => dispatch(userActionCreators.fetchFindId(payload))
+    fetchFindId: (payload: string) => dispatch(userActionCreators.fetchFindId(payload)),
+    fetchFindPassword: (payload: { email: string; id: string }) =>
+      dispatch(userActionCreators.fetchFindPassword(payload))
   };
 };
 

@@ -74,3 +74,23 @@ export function fetchFindIdRejected(error: AxiosError) {
     error
   };
 }
+
+export function fetchFindPassword(payload: { id: string; email: string }) {
+  return {
+    type: actionTypes.FETCH_FIND_PASSWORD,
+    payload
+  };
+}
+
+export function fetchFindPasswordFulfilled() {
+  return {
+    type: actionTypes.FETCH_FIND_PASSWORD_FULFILLED
+  };
+}
+
+export function fetchFindPasswordRejected(error: AxiosError) {
+  return {
+    type: actionTypes.FETCH_FIND_PASSWORD_REJECTED,
+    error
+  };
+}

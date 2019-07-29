@@ -65,6 +65,16 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
         ...state,
         error: action.error
       };
+    // FETCH_FIND_PASSWORD
+    case actionTypes.FETCH_FIND_PASSWORD:
+      return state;
+    case actionTypes.FETCH_FIND_PASSWORD_FULFILLED:
+      return state;
+    case actionTypes.FETCH_FIND_PASSWORD_REJECTED:
+      return {
+        ...state,
+        error: action.error
+      };
     default:
       return state;
   }

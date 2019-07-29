@@ -42,7 +42,7 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
 
 function* fetchFindIdSagas(action: userTypes.IFetchFindId) {
   try {
-    yield axios.get(`${API_URL}/api/users/findid`, {
+    yield axios.get(`${API_URL}/users/findid`, {
       params: {
         email: action.payload
       }
@@ -55,8 +55,24 @@ function* fetchFindIdSagas(action: userTypes.IFetchFindId) {
   }
 }
 
+function* fetchFindPasswordSagas(action: userTypes.IFetchFindPassword) {
+  try {
+    yield axios.get(`${API_URL}/users/findpw`, {
+      params: {
+        email: action.payload.email,
+        id: action.payload.id
+      }
+    });
+    alert("입력하신 이메일로 임시 비밀번호가 전송되었습니다.");
+    yield put(userActionCreators.fetchFindPasswordFulfilled());
+  } catch (error) {
+    yield put(userActionCreators.fetchFindPasswordRejected(error));
+  }
+}
+
 export default function* userSagas() {
   yield takeEvery(userActionTypes.FETCH_SIGNUP, fetchSignupSagas);
   yield takeEvery(userActionTypes.FETCH_SIGNIN, fetchSigninSagas);
   yield takeEvery(userActionTypes.FETCH_FIND_ID, fetchFindIdSagas);
+  yield takeEvery(userActionTypes.FETCH_FIND_PASSWORD, fetchFindPasswordSagas);
 }
