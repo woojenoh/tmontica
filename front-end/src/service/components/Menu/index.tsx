@@ -14,8 +14,8 @@ import {
 } from "../../../utils";
 import history from "../../../history";
 import { ICartMenu } from "../../../types/cart";
-import MenuOption from "../MenuOptionList";
 import { CDN } from "../../../constants";
+import MenuOption from "../MenuOptionList";
 
 const getOptionById = (options: Array<TMenuOption>, id: number) => {
   return _.chain(options)
