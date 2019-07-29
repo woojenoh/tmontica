@@ -281,71 +281,73 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
               <img src={`${CDN}${menu.imgUrl}`} alt={menu.nameKo} className="detail__img" />
             </div>
             <div className="detail__right">
-              <h1 className="detail__title">{menu.nameKo}</h1>
-              <div className="detail__sell-price">
-                <span className="price-style">{Number(menu.sellPrice).toLocaleString()}</span>원
-              </div>
-              <ul className="detail__options">
-                {this.renderDetailOptions("Temperature", menu.option)}
-                <li key={9999} className="detail__option">
-                  <span className="option__title">수량</span>
-                  <div className="option__counter">
-                    <div className="counter__minus" onClick={e => this.handleQuantity(false)}>
-                      -
+              <div className="detail__right-container">
+                <h1 className="detail__title">{menu.nameKo}</h1>
+                <div className="detail__sell-price">
+                  <span className="price-style">{Number(menu.sellPrice).toLocaleString()}</span>원
+                </div>
+                <ul className="detail__options">
+                  {this.renderDetailOptions("Temperature", menu.option)}
+                  <li key={9999} className="detail__option">
+                    <span className="option__title">수량</span>
+                    <div className="option__counter">
+                      <div className="counter__minus" onClick={e => this.handleQuantity(false)}>
+                        -
+                      </div>
+                      <input
+                        type="number"
+                        name="quantity"
+                        className="counter__number"
+                        value={this.state.quantity}
+                        readOnly
+                      />
+                      <div className="counter__plus" onClick={e => this.handleQuantity(true)}>
+                        +
+                      </div>
                     </div>
-                    <input
-                      type="number"
-                      name="quantity"
-                      className="counter__number"
-                      value={this.state.quantity}
-                      readOnly
-                    />
-                    <div className="counter__plus" onClick={e => this.handleQuantity(true)}>
-                      +
-                    </div>
-                  </div>
-                </li>
-                {this.renderDetailOptions("Shot", menu.option)}
-                {this.renderDetailOptions("Syrup", menu.option)}
-                {this.renderDetailOptions("Size", menu.option)}
-              </ul>
-              <div className="detail__prices">
-                <span>총 상품금액</span>
-                <span className="total-price-view">
-                  <span className="total-price">
-                    {Number(this.state.totalPrice).toLocaleString()}
+                  </li>
+                  {this.renderDetailOptions("Shot", menu.option)}
+                  {this.renderDetailOptions("Syrup", menu.option)}
+                  {this.renderDetailOptions("Size", menu.option)}
+                </ul>
+                <div className="detail__prices">
+                  <span>총 상품금액</span>
+                  <span className="total-price-view">
+                    <span className="total-price">
+                      {Number(this.state.totalPrice).toLocaleString()}
+                    </span>
+                    원
                   </span>
-                  원
-                </span>
-              </div>
-              <div className="detail__buttons">
-                <button
-                  className="button detail__button"
-                  onClick={e => {
-                    this.props.isSignin
-                      ? this.props.fetchAddCart([
-                          this.getOrderPreparedCart({
-                            direct: false
-                          })
-                        ])
-                      : this.props.addLocalCart(
-                          this.getOrderPreparedCart({
-                            direct: false
-                          })
-                        );
-                  }}
-                >
-                  장바구니
-                </button>
-                <button
-                  className="button button--orange detail__button"
-                  onClick={e => {
-                    e.preventDefault();
-                    this.handleDirectOrder();
-                  }}
-                >
-                  구매하기
-                </button>
+                </div>
+                <div className="detail__buttons">
+                  <button
+                    className="button detail__button"
+                    onClick={e => {
+                      this.props.isSignin
+                        ? this.props.fetchAddCart([
+                            this.getOrderPreparedCart({
+                              direct: false
+                            })
+                          ])
+                        : this.props.addLocalCart(
+                            this.getOrderPreparedCart({
+                              direct: false
+                            })
+                          );
+                    }}
+                  >
+                    장바구니
+                  </button>
+                  <button
+                    className="button button--orange detail__button"
+                    onClick={e => {
+                      e.preventDefault();
+                      this.handleDirectOrder();
+                    }}
+                  >
+                    구매하기
+                  </button>
+                </div>
               </div>
             </div>
           </section>
