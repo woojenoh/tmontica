@@ -56,7 +56,7 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
                   const name =
                     o.menuNames.length > 0
                       ? `${o.menuNames[0]}${
-                          o.menuNames.length > 1 ? `외 ${o.menuNames.length - 1}개}` : ``
+                          o.menuNames.length > 1 ? `외 ${o.menuNames.length - 1}개` : ``
                         }`
                       : "";
 

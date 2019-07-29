@@ -5,6 +5,7 @@ import { OrderAPI } from "../../../API";
 import { TOrderDetail } from "../../../types/menu";
 import _ from "underscore";
 import history from "../../../history";
+import { PureComponent } from "react";
 
 export interface IOrderSheetProps {
   orderId: number;
@@ -32,10 +33,10 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
 
   async getOrder() {
     try {
-      const order = await OrderAPI.getOrderById(this.props.orderId);
+      let order = await OrderAPI.getOrderById(this.props.orderId);
 
       if (order === "") {
-        return;
+        order = {} as TOrder;
       }
 
       this.setState({
@@ -129,17 +130,7 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
               : ""}
           </ul>
           <ul className="orders__items">
-            {_(order.menus).map((m: TOrderDetail) => {
-              return (
-                <OrderSheetItem
-                  key={`${orderId}_${m.id}`}
-                  name={m.nameKo}
-                  price={m.sellPrice}
-                  optionString={m.optionString}
-                  quantity={m.quantity}
-                />
-              );
-            })}
+            <OrderSheetList order={order} />
           </ul>
           <div className="orders__total">
             <div className="orders__total-price">
@@ -158,4 +149,29 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
   }
 }
 
+interface IOrderSheetListProps {
+  order: TOrder;
+}
+
+class OrderSheetList extends PureComponent<IOrderSheetListProps> {
+  render() {
+    const { order } = this.props;
+
+    return (
+      <ul className="orders__items">
+        {_(order.menus).map((m: TOrderDetail, i) => {
+          return (
+            <OrderSheetItem
+              key={`${order.orderId}_${i}`}
+              name={m.nameKo}
+              price={m.sellPrice}
+              optionString={m.optionString}
+              quantity={m.quantity}
+            />
+          );
+        })}
+      </ul>
+    );
+  }
+}
 export default OrderSheet;
