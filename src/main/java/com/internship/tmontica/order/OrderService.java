@@ -4,8 +4,6 @@ import com.internship.tmontica.cart.CartMenu;
 import com.internship.tmontica.cart.CartMenuDao;
 import com.internship.tmontica.cart.CartMenuService;
 import com.internship.tmontica.menu.MenuDao;
-import com.internship.tmontica.option.Option;
-import com.internship.tmontica.option.OptionDao;
 import com.internship.tmontica.order.exception.NotEnoughStockException;
 import com.internship.tmontica.order.model.request.OrderReq;
 import com.internship.tmontica.order.model.request.OrderStatusReq;
@@ -17,7 +15,6 @@ import com.internship.tmontica.user.exception.UserException;
 import com.internship.tmontica.user.exception.UserExceptionType;
 import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
