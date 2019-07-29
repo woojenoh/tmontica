@@ -4,6 +4,7 @@ import com.internship.tmontica.menu.exception.BindingResultHelper;
 import com.internship.tmontica.menu.model.response.*;
 import com.internship.tmontica.menu.model.request.MenuReq;
 import com.internship.tmontica.menu.model.request.MenuUpdateReq;
+import com.internship.tmontica.menu.validaton.MenuValidator;
 import com.internship.tmontica.util.CategoryName;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,8 +25,13 @@ import java.util.*;
 @RequestMapping("/api/menus")
 @RequiredArgsConstructor
 public class MenuController {
+
     private final MenuService menuService;
+
     private final ModelMapper modelMapper;
+
+    private final MenuValidator menuValidator;
+
     @Value("${menu.imagepath}")
     private String location;
 
@@ -74,10 +81,14 @@ public class MenuController {
 
     /** 메뉴 추가하기 **/
     @PostMapping
-    public ResponseEntity addMenu(@ModelAttribute @Valid MenuReq menuReq, BindingResult bindingResult){
+    public ResponseEntity addMenu(@ModelAttribute @Valid MenuReq menuReq,BindingResult bindingResult){
         //TODO : 예외 처리..
         if(bindingResult.hasErrors())
             BindingResultHelper.throwCustomInvalidParameterException(bindingResult);
+
+        menuValidator.validate(menuReq, bindingResult);
+        if(bindingResult.hasErrors())
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
         log.info("[menu api] 메뉴 추가하기");
         log.info("menuReq : {}", menuReq.toString());

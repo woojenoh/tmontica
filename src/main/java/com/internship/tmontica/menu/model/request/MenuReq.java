@@ -1,7 +1,9 @@
 package com.internship.tmontica.menu.model.request;
 
-import com.internship.tmontica.menu.validaton.ValidMenuReq;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,7 +13,9 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@ValidMenuReq
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class MenuReq {
     //TODO : validation..
     @NotEmpty(message = "메뉴이름(영어)가 명시되어야 합니다.")
