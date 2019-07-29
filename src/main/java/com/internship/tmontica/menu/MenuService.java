@@ -76,7 +76,7 @@ public class MenuService {
         List<MenuOptionResp> menuOptions = modelMapper.map(options, new TypeToken<List<MenuOptionResp>>(){}.getType());
 
         menuDetailResp.setOption(menuOptions);
-        menuDetailResp.setImgUrl(location.concat(menuDetailResp.getImgUrl()));
+        menuDetailResp.setImgUrl("/images/".concat(menuDetailResp.getImgUrl()));
 
         return menuDetailResp;
     }
@@ -152,7 +152,7 @@ public class MenuService {
         List<MenuSimpleResp> menuList = modelMapper.map(menus, new TypeToken<List<MenuSimpleResp>>(){}.getType());
 
         for(MenuSimpleResp menu : menuList)
-            menu.setImgUrl(location.concat(menu.getImgUrl()));
+            menu.setImgUrl("/images/".concat(menu.getImgUrl()));
 
         menuMainResp.setMenus(menuList);
 

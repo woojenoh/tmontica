@@ -30,6 +30,7 @@ public class MenuReq {
     private String categoryEng;
     @NotEmpty(message = "카테고리가 명시되어야 합니다.")
     private String categoryKo;
+    @NotNull
     @Min(value = 0, message = "재고는 0이상 이어야 합니다.")
     private int stock;
     @NotNull(message = "이달의 메뉴 여부가 명시되어야 합니다.")
