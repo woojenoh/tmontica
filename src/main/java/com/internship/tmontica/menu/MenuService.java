@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Slf4j
@@ -39,7 +41,7 @@ public class MenuService {
     // 메인 화면에 나타나는 메뉴 정보
     public List<MenuMainResp> getMainMenus(){
         List<MenuMainResp> allMenus = new ArrayList<>();
-
+        // 이달의 메뉴 , 커피 , 에이드 , 빵
         allMenus.add(getMenuMain(CategoryName.CATEGORY_MONTHLY));
         allMenus.add(getMenuMain(CategoryName.CATEGORY_COFFEE));
         allMenus.add(getMenuMain(CategoryName.CATEGORY_ADE));
@@ -135,6 +137,34 @@ public class MenuService {
     public boolean existMenu(int id){
         return (menuDao.getMenuById(id) == null) ? false : true;
     }
+
+    // 기간 한정 메뉴 : 시작일 체크
+    @Scheduled(cron = "10 * * * * *")
+    public void checkMenuStart(){
+        log.info("[menu check menu start] : 스케쥴러 동작");
+        List<Menu> checkMenus = menuDao.getPeriodBeforeMenu();  // 시작일이 오늘이고, usable = false 인 메뉴들을 가져온다.
+        Date now = new Date();
+        for(Menu menu : checkMenus){
+            if(menu.getStartDate().before(now) && menu.getEndDate().after(now)) {   // 시작 시간이 지난 경우 & 종료 시간이 남은 경우
+                log.info("[menu start] : {}" , menu);
+                menuDao.updateMenuUsable(menu.getId(), true);   // menu의 usable = true 로 변경
+            }
+        }
+    }
+    // 기간 한정 메뉴 : 종료일 체크
+    @Scheduled(cron = "10 * * * * *")
+    public void checkMenuEnd(){
+        log.info("[menu check menu end] : 스케쥴러 동작");
+        List<Menu> checkMenus = menuDao.getPeriodAfterMenu();   // 종료일이 오늘이고, usable = true 인 메뉴들을 가져온다.
+        Date now = new Date();
+        for(Menu menu : checkMenus){
+            if(menu.getEndDate().after(now)) {   // 종료 시간이 지난 경우
+                log.info("[menu end] : {}", menu);
+                menuDao.updateMenuUsable(menu.getId(), false);  // menu의 usable = false로 변경
+            }
+        }
+    }
+
 
     private MenuMainResp getMenuMain(String categoryEng){
         MenuMainResp menuMainResp = new MenuMainResp();
