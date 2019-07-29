@@ -36,6 +36,8 @@ public class CartMenuService {
     private final MenuDao menuDao;
     private final JwtService jwtService;
 
+    private static final String PRE_FIX = "/images/";
+
     // 카트 정보 가져오기 api
     public CartResp getCartMenuApi(){
         // 토큰에서 아이디 가져오기
@@ -56,7 +58,9 @@ public class CartMenuService {
             // 메뉴아이디로 메뉴정보 가져오기
             Menu menu = menuDao.getMenuById(cartMenu.getMenuId());
             int price = menu.getSellPrice()+cartMenu.getPrice(); // 메뉴가격 + 옵션가격
+
             // List<Cart_MenusResp> 에 넣기
+            menu.setImgUrl(PRE_FIX.concat(menu.getImgUrl()));
             Cart_MenusResp cart_menusResp = new Cart_MenusResp(cartMenu.getId(), cartMenu.getMenuId(), menu.getNameEng(),
                                                                 menu.getNameKo(),menu.getImgUrl(), option ,
                                                                 cartMenu.getQuantity(), price, menu.getStock());
@@ -87,7 +91,7 @@ public class CartMenuService {
             int optionPrice = 0;
             for (Cart_OptionReq option : options) {
                 // DB에 들어갈 옵션 문자열 만들기
-                if (option.getId() != 1) {
+                if (option.getId() > 2) {
                     optionStr.append("/");
                 }
                 int optionId = option.getId();

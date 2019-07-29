@@ -37,6 +37,8 @@ public class OrderService {
     private final JwtService jwtService;
     private final CartMenuService cartMenuService;
 
+    private static final String PRE_FIX = "/images/";
+
 
     // 주문내역 가져오기 api
     public Map<String, List> getOrderListApi(){
@@ -121,12 +123,16 @@ public class OrderService {
 
         List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(orderId);
 
-        //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
         for (Order_MenusResp menu : menus) {
-            String option = menu.getOption();
-            String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
+            //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
+            if(!menu.getOption().equals("")){
+                String option = menu.getOption();
+                String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
+                menu.setOption(convert);
+            }
 
-            menu.setOption(convert);
+            // imgUrl 경로 설정
+            menu.setImgUrl(PRE_FIX.concat(menu.getImgUrl()));
         }
 
         OrderResp orderResp = new OrderResp(orderId, order.getPayment(), order.getStatus(), order.getTotalPrice(),
@@ -176,11 +182,15 @@ public class OrderService {
         List<OrdersByStatusResp> ordersByStatusResps = new ArrayList<>();
         for(Order order : orders){
             List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(order.getId());
-            //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
             for (Order_MenusResp menu : menus) {
-                String option = menu.getOption();
-                String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
-                menu.setOption(convert);
+                //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
+                if(!menu.getOption().equals("")){
+                    String option = menu.getOption();
+                    String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
+                    menu.setOption(convert);
+                }
+
+                menu.setImgUrl(PRE_FIX.concat(menu.getImgUrl()));
             }
             OrdersByStatusResp obs = new OrdersByStatusResp(order.getId(), order.getOrderDate(), order.getPayment(),
                     order.getTotalPrice(), order.getUsedPoint(), order.getRealPrice(), order.getStatus(), order.getUserId(), menus);
@@ -201,11 +211,14 @@ public class OrderService {
 
         Order order = orderDao.getOrderByOrderId(orderId);
         List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(orderId);
-        //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
         for (Order_MenusResp menu : menus) {
-            String option = menu.getOption();
-            String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
-            menu.setOption(convert);
+            //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
+            if(!menu.getOption().equals("")){
+                String option = menu.getOption();
+                String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
+                menu.setOption(convert);
+            }
+            menu.setImgUrl(PRE_FIX.concat(menu.getImgUrl()));
         }
         List<OrderStatusLogResp> orderStatusLogs = orderDao.getOrderStatusLogByOrderId(orderId);
 
