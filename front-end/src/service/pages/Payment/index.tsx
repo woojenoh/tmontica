@@ -3,7 +3,7 @@ import "./styles.scss";
 import history from "../../../history";
 import { RouteComponentProps } from "react-router-dom";
 import { ICartMenu } from "../../../types/cart";
-import { OrderAPI } from "../../../API";
+import { order } from "../../../api/order";
 import { CDN } from "../../../constants";
 
 interface MatchParams {
@@ -65,7 +65,7 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
 
   async order() {
     try {
-      const orderId = await OrderAPI.order({
+      const orderId = await order({
         menus: this.state.orderCarts.map((c: ICartMenu) => {
           return { cartId: typeof c.cartId === "undefined" ? 0 : c.cartId };
         }),

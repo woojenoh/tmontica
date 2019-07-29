@@ -1,7 +1,7 @@
 import * as React from "react";
 import OrderSheetItem from "../OrderSheetItem";
 import "./styles.scss";
-import { OrderAPI } from "../../../API";
+import { getOrderById } from "../../../api/order";
 import { TOrderDetail } from "../../../types/menu";
 import _ from "underscore";
 import history from "../../../history";
@@ -39,7 +39,7 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
         return;
       }
 
-      let order = await OrderAPI.getOrderById(this.props.orderId);
+      let order = await getOrderById(this.props.orderId);
 
       if (order === "") {
         order = {} as TOrder;

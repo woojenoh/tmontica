@@ -4,8 +4,8 @@ import axios from "axios";
 import * as cartActionTypes from "../actionTypes/cart";
 import * as cartActionCreators from "../actionCreators/cart";
 import * as cartTypes from "../../types/cart";
-import { API_URL } from "../../API";
-import { CartAPI } from "../../API";
+import { API_URL } from "../../api/common";
+import { addCart } from "../../api/cart";
 
 function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
   try {
@@ -136,7 +136,7 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
 
     // 만든 형태를 API로 전송하고, 응답으로 받은 카트 아이디들을 저장한다.
     // API 요청 분리.
-    const data = yield CartAPI.addCart(cartReqs);
+    const data = yield addCart(cartReqs);
 
     // 현재 카트 상태에 새로운 카트 메뉴들을 추가한다.
     const state = yield select();

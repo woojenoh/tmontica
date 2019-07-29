@@ -6,7 +6,7 @@ import * as userActionTypes from "../actionTypes/user";
 import * as userActionCreators from "../actionCreators/user";
 import * as userTypes from "../../types/user";
 import * as cartActionCreators from "../actionCreators/cart";
-import { API_URL } from "../../API";
+import { API_URL } from "../../api/common";
 
 function* fetchSignupSagas(action: userTypes.IFetchSignup) {
   try {

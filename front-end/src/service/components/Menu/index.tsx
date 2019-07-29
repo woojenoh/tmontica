@@ -1,7 +1,8 @@
 import React, { Component, MouseEvent } from "react";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
-import { MenuAPI, CartAPI } from "../../../API";
+import { addCart } from "../../../api/cart";
+import { getMenuById } from "../../../api/menu";
 import _ from "underscore";
 import { TCartAddReq } from "../../../types/cart";
 import { TMenuOption, TMenu, TMenuOptionMap } from "../../../types/menu";
@@ -105,7 +106,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
   // 바로구매
   async orderDirect(cartAddReq: TCartAddReq) {
     try {
-      const data = await CartAPI.addCart([cartAddReq]);
+      const data = await addCart([cartAddReq]);
 
       if (cartAddReq.direct) {
         localStorage.setItem("isDirect", "Y");
@@ -213,7 +214,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
     try {
       const { menuId } = this.props.match.params;
 
-      const menu = await MenuAPI.getMenuById(parseInt(menuId));
+      const menu = await getMenuById(parseInt(menuId));
       this.setState(
         {
           menu
