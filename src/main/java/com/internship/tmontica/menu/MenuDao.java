@@ -28,7 +28,10 @@ public interface MenuDao {
     @Select("SELECT * FROM menus WHERE category_eng = #{category} AND usable = 1 LIMIT #{limit} OFFSET #{offset}")
     List<Menu> getMenusByCategory(String category, int limit, int offset);
 
-    @Select("SELECT * FROM menus WHERE monthly_menu = 1 AND usable = 1 order by created_date desc Limit 4")
+    @Select("SELECT * FROM menus WHERE category_eng = #{category} AND usable = 1 AND stock > 0 LIMIT #{limit} OFFSET #{offset}")
+    List<Menu> getMenusByCategoryAndStock(String category, int limit, int offset);
+
+    @Select("SELECT * FROM menus WHERE monthly_menu = 1 AND usable = 1  AND stock > 0 order by created_date desc Limit 4")
     List<Menu> getMonthlyMenus();
 
     @Update("UPDATE menus " +

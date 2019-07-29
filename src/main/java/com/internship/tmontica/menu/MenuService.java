@@ -176,7 +176,7 @@ public class MenuService {
         if(categoryEng.equals(CategoryName.CATEGORY_MONTHLY)){
             menus = menuDao.getMonthlyMenus();
         }else{
-            menus = menuDao.getMenusByCategory(categoryEng, 8, 0);
+            menus = menuDao.getMenusByCategoryAndStock(categoryEng, 8, 0);
         }
 
         List<MenuSimpleResp> menuList = modelMapper.map(menus, new TypeToken<List<MenuSimpleResp>>(){}.getType());

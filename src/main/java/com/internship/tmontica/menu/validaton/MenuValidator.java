@@ -4,10 +4,8 @@ import com.internship.tmontica.menu.model.request.MenuReq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
 
 import java.util.Date;
-import java.util.List;
 
 @Component
 @Slf4j
@@ -35,6 +33,10 @@ public class MenuValidator {
 
         // 4. 이미지 파일
         if(menuReq.getImgFile().isEmpty()){
+            errors.rejectValue("imgFile", "wrongValue", "imgFile is wrong");
+        }
+
+        if(!menuReq.getImgFile().getContentType().startsWith("image")){
             errors.rejectValue("imgFile", "wrongValue", "imgFile is wrong");
         }
 

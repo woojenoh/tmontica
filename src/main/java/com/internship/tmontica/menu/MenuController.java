@@ -1,6 +1,5 @@
 package com.internship.tmontica.menu;
 
-import com.internship.tmontica.menu.exception.BindingResultHelper;
 import com.internship.tmontica.menu.model.response.*;
 import com.internship.tmontica.menu.model.request.MenuReq;
 import com.internship.tmontica.menu.model.request.MenuUpdateReq;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -84,7 +82,7 @@ public class MenuController {
     public ResponseEntity addMenu(@ModelAttribute @Valid MenuReq menuReq,BindingResult bindingResult){
         //TODO : 예외 처리..
         if(bindingResult.hasErrors())
-            BindingResultHelper.throwCustomInvalidParameterException(bindingResult);
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
         menuValidator.validate(menuReq, bindingResult);
         if(bindingResult.hasErrors())
@@ -128,5 +126,7 @@ public class MenuController {
         menuService.deleteMenu(menuId);
         return new ResponseEntity(HttpStatus.OK);
     }
+
+
 
 }
