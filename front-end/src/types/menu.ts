@@ -3,6 +3,7 @@ export type TMenusItem = {
   nameKo: string;
   nameEng: string;
   imgUrl: string;
+  stock: number;
 };
 
 export interface TBasicMenuOption {

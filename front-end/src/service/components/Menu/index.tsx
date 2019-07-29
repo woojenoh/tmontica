@@ -214,13 +214,16 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
       const { menuId } = this.props.match.params;
 
       const menu = await MenuAPI.getMenuById(parseInt(menuId));
-
       this.setState(
         {
           menu
         },
         this.updateTotalPrice
       );
+      if (menu.stock <= 0) {
+        return Promise.reject("품절된 상품입니다.");
+      }
+
       return Promise.resolve();
     } catch (err) {
       alert(err);
@@ -228,15 +231,21 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
   }
 
   componentDidMount() {
-    this.getMenu().then(() => {
-      // HOT/ICE 옵션 디폴트로 하나 선택
-      const defaultSelectedTemperatureOption = Array.from(
-        document.querySelectorAll(".temperature")
-      )[0] as HTMLElement;
-      if (typeof defaultSelectedTemperatureOption !== "undefined") {
-        defaultSelectedTemperatureOption.click();
+    this.getMenu().then(
+      () => {
+        // HOT/ICE 옵션 디폴트로 하나 선택
+        const defaultSelectedTemperatureOption = Array.from(
+          document.querySelectorAll(".temperature")
+        )[0] as HTMLElement;
+        if (typeof defaultSelectedTemperatureOption !== "undefined") {
+          defaultSelectedTemperatureOption.click();
+        }
+      },
+      errMsg => {
+        alert(errMsg);
+        history.push("/");
       }
-    });
+    );
   }
 
   updateTotalPrice() {
