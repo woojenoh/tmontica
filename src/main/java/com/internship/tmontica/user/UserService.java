@@ -16,9 +16,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +31,6 @@ public class UserService { //implements UserDetail
     private final MailSender sender;
     private final JwtService jwtService;
 
-    @Transactional
     public boolean signUp(UserSignUpReqDTO userSignUpReqDTO) throws MailSendException{
 
         //userSignUpReqDTO.setPassword(passwordEncoder.encode(user.getPassword())); need passwordEnconding
@@ -51,13 +51,14 @@ public class UserService { //implements UserDetail
         return true;
     }
 
+    // 권한 추가되면 수정되야함 구조 변경 가능할듯,,
     private void setRole(UserSignUpReqDTO userSignUpReqDTO){
 
         String role = userSignUpReqDTO.getRole();
-        if(role == null || role.equals(UserRole.USER.toString())){
+        if(role == null || role.equals(UserRole.USER.getRole())){
             userSignUpReqDTO.setRole("USER");
             return;
-        } else if (role.equals(UserRole.ADMIN.toString())){
+        } else if (role.equals(UserRole.ADMIN.getRole())){
             return;
         }
 
@@ -80,7 +81,6 @@ public class UserService { //implements UserDetail
         return userDao.updateActivateStatus(1) > 0;
     }
 
-    @Transactional(readOnly = true)
     public boolean idDuplicateCheck(String id){
         return !isDuplicate(id);
     }
@@ -91,7 +91,6 @@ public class UserService { //implements UserDetail
         return !(user == null);
     }
 
-    @Transactional(readOnly = true)
     public void signIn(UserSignInReqDTO userSignInReqDTO) {
 
         User user = userDao.getUserByUserId(userSignInReqDTO.getId());
@@ -108,7 +107,6 @@ public class UserService { //implements UserDetail
         throw new UserException(UserExceptionType.USER_NOT_ACTIVATE_EXCEPTION);
     }
 
-    @Transactional(readOnly = true)
      public UserSignInRespDTO makeJwtToken(UserSignInReqDTO userSignInReqDTO){
 
         return new UserSignInRespDTO(jwtService.getToken(makeTokenUser(userSignInReqDTO.getId())));
@@ -120,7 +118,6 @@ public class UserService { //implements UserDetail
         return modelMapper.map(user, UserTokenInfoDTO.class);
     }
 
-    @Transactional(readOnly = true)
     public void checkPassword(UserCheckPasswordReqDTO userCheckPasswordReqDTO){
 
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id");
@@ -129,7 +126,6 @@ public class UserService { //implements UserDetail
                 userDao.getUserByUserId(userId).getPassword());
     }
 
-    @Transactional
     public boolean changePassword(UserChangePasswordReqDTO userChangePasswordReqDTO){
 
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id");
@@ -147,8 +143,7 @@ public class UserService { //implements UserDetail
         }
     }
 
-    @Transactional
-    public boolean withDrawUser(String id){
+    public boolean withdrawUser(String id){
 
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id");
         if(!userId.equals(id)){
@@ -158,24 +153,24 @@ public class UserService { //implements UserDetail
         return userDao.deleteUser(id) > 0;
     }
 
-    @Transactional(readOnly = true)
     public boolean sendUserId(String email, HttpSession httpSession) throws MailSendException{
-        User user = userDao.getUserByEmail(email);
-        if(user == null){
+
+        List<User> userList = userDao.getUserByEmail(email);
+        if(userList == null){
             return false;
         }
         AuthenticationKey authenticationKey = new AuthenticationKey();
         String key = authenticationKey.getAuthenticationKey();
-        UserMailForm userMailForm = new UserMailForm(MailType.FIND_ID, user);
+        UserMailForm userMailForm = new UserMailForm(MailType.FIND_ID, userList.get(0));
         userMailForm.setAuthenticationKey(key);
         userMailForm.makeMail();
         sender.send(userMailForm.getMsg());
         httpSession.setAttribute(UserConfigValueName.ID_AUTH_CODE, key);
-        httpSession.setAttribute(UserConfigValueName.FIND_ID_SESSION_ATTRIBUTE_NAME, user.getId());
+        httpSession.setAttribute(UserConfigValueName.FIND_ID_SESSION_ATTRIBUTE_NAME,
+                 userList.stream().map(User :: getId).collect(Collectors.toList()));
         return true;
     }
 
-    @Transactional
     public boolean sendUserPassword(String id, String email) throws MailSendException{
         User user = userDao.getUserByUserId(id);
         checkEmailMismatchException(user.getEmail(), email);
@@ -184,28 +179,27 @@ public class UserService { //implements UserDetail
         return true;
     }
 
-    @Transactional
     public UserFindIdRespDTO checkAuthCode(UserFindIdReqDTO userFindIdReqDTO, HttpSession session){
 
-        String authCode = checkSessionAttribute(session, UserConfigValueName.ID_AUTH_CODE);
+        String authCode = (String)checkSessionAttribute(session, UserConfigValueName.ID_AUTH_CODE);
         if(userFindIdReqDTO.getAuthCode().equals(authCode)){
-            String findId = checkSessionAttribute(session, UserConfigValueName.FIND_ID_SESSION_ATTRIBUTE_NAME);
-            return new UserFindIdRespDTO(findId, true);
+            @SuppressWarnings("unchecked")
+            List<String> findIds = (List<String>)checkSessionAttribute(session, UserConfigValueName.FIND_ID_SESSION_ATTRIBUTE_NAME);
+            return new UserFindIdRespDTO(findIds, true);
         }
 
-        return new UserFindIdRespDTO("",false );
+        return new UserFindIdRespDTO(null,false );
     }
 
-    private String checkSessionAttribute(HttpSession session, String key){
+    private Object checkSessionAttribute(HttpSession session, String key){
 
-        String attribute = (String)session.getAttribute(key);
+        Object attribute = session.getAttribute(key);
         if(attribute==null){
             throw new UserException(UserExceptionType.MISSING_SESSION_ATTRIBUTE_EXCEPTION);
         }
         return attribute;
     }
 
-    @Transactional(readOnly = true)
     public UserInfoRespDTO getUserInfo(String id){
 
         checkUserIdNotFoundException(id);
