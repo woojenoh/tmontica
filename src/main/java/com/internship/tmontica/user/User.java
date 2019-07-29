@@ -1,11 +1,13 @@
 package com.internship.tmontica.user;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.*;
 import java.util.Date;
 
 @Data
+@AllArgsConstructor
 public class User {
 
     @Pattern(regexp="^[a-z0-9]{6,19}$")
