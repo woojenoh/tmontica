@@ -31,12 +31,22 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     order: {} as TOrder
   };
 
+  intervalId = {} as NodeJS.Timeout;
+
   async getOrder() {
     try {
+      if (this.props.orderId <= 0) {
+        return;
+      }
+
       let order = await OrderAPI.getOrderById(this.props.orderId);
 
       if (order === "") {
         order = {} as TOrder;
+      }
+
+      if (this.state.order["status"] && this.state.order.status === order.status) {
+        return;
       }
 
       this.setState({
@@ -52,12 +62,19 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     if (this.props.orderId > 0) {
       this.getOrder();
     }
+    this.intervalId = setInterval(() => {
+      this.getOrder();
+    }, 1000);
   }
 
   componentDidUpdate(prevProps: IOrderSheetProps) {
     if (this.props.orderId !== prevProps.orderId) {
       this.getOrder();
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
   }
 
   statusCode = {
