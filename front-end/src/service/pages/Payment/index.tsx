@@ -46,7 +46,7 @@ const OrderMenu = ({
             <span className="order__menu-cnt">{quantity}</span>개
           </div>
           <div className="order__menu-price-wrap d-inline-b">
-            <span className="order__menu-price">{Number(price).toLocaleString()}</span>원
+            <span className="order__menu-price">{Number(price * quantity).toLocaleString()}</span>원
           </div>
         </div>
       </div>
@@ -89,15 +89,18 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
     }
 
     this.setState({
-      orderCarts
+      orderCarts,
+      totalPrice: this.getOrderPrice(orderCarts)
     });
+  }
+
+  getOrderPrice(orderCarts: Array<ICartMenu>) {
+    return orderCarts.reduce((prev: number, cur: ICartMenu) => cur.price * cur.quantity + prev, 0);
   }
 
   render() {
     const { orderCarts } = this.state;
-
-    const orderPrice = orderCarts.reduce((prev, cur: ICartMenu) => prev + cur.price, 0);
-
+    const orderPrice = this.getOrderPrice(orderCarts);
     return (
       <>
         <main className="main">
