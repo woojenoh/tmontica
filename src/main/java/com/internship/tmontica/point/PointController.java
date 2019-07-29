@@ -3,11 +3,9 @@ package com.internship.tmontica.point;
 import com.internship.tmontica.point.model.request.PointLogReqDTO;
 import com.internship.tmontica.point.model.response.PointTypeRespDTO;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sun.jvm.hotspot.utilities.PointerLocation;
 
 import javax.validation.Valid;
 
