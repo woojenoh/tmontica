@@ -12,7 +12,8 @@ class UserMailForm {
     private static final String ADMIN_ADDRESS = "tmontica701@gmail.com";
     private User user;
     private String authenticationKey;
-    private static final String ACTIVE_API_LINK = "http://tmontica-idev.tmon.co.kr/signin?active=true&";
+    private static final String ACTIVE_API_LINK = "http://localhost:3000/signin?active=true&";
+    //private static final String ACTIVE_API_LINK = "http://tmontica-idev.tmon.co.kr/signin?active=true&";
     private static final String ID_PARAM = "id=";
     private static final String TOKEN_PARAM = "&token=";
     private MailType mailType;

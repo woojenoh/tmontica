@@ -175,6 +175,7 @@ public class UserService { //implements UserDetail
         User user = userDao.getUserByUserId(id);
         checkEmailMismatchException(user.getEmail(), email);
         UserMailForm userMailForm = new UserMailForm(MailType.FIND_PW, user);
+        userMailForm.makeMail();
         sender.send(userMailForm.getMsg());
         return true;
     }
