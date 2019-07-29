@@ -65,6 +65,16 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
         ...state,
         error: action.error
       };
+    // FETCH_FIND_ID_CONFIRM
+    case actionTypes.FETCH_FIND_ID_CONFIRM:
+      return state;
+    case actionTypes.FETCH_FIND_ID_CONFIRM_FULFILLED:
+      return state;
+    case actionTypes.FETCH_FIND_ID_CONFIRM_REJECTED:
+      return {
+        ...state,
+        error: action.error
+      };
     // FETCH_FIND_PASSWORD
     case actionTypes.FETCH_FIND_PASSWORD:
       return state;

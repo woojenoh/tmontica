@@ -75,6 +75,26 @@ export function fetchFindIdRejected(error: AxiosError) {
   };
 }
 
+export function fetchFindIdConfirm(payload: string) {
+  return {
+    type: actionTypes.FETCH_FIND_ID_CONFIRM,
+    payload
+  };
+}
+
+export function fetchFindIdConfirmFulfilled() {
+  return {
+    type: actionTypes.FETCH_FIND_ID_CONFIRM_FULFILLED
+  };
+}
+
+export function fetchFindIdConfirmRejected(error: AxiosError) {
+  return {
+    type: actionTypes.FETCH_FIND_ID_CONFIRM_REJECTED,
+    error
+  };
+}
+
 export function fetchFindPassword(payload: { id: string; email: string }) {
   return {
     type: actionTypes.FETCH_FIND_PASSWORD,

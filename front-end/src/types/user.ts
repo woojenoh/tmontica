@@ -87,6 +87,20 @@ export interface IFetchFindIdRejected {
   error: AxiosError;
 }
 
+export interface IFetchFindIdConfirm {
+  type: typeof userActionTypes.FETCH_FIND_ID_CONFIRM;
+  payload: string;
+}
+
+export interface IFetchFindIdConfirmFulfilled {
+  type: typeof userActionTypes.FETCH_FIND_ID_CONFIRM_FULFILLED;
+}
+
+export interface IFetchFindIdConfirmRejected {
+  type: typeof userActionTypes.FETCH_FIND_ID_CONFIRM_REJECTED;
+  error: AxiosError;
+}
+
 export interface IFetchFindPassword {
   type: typeof userActionTypes.FETCH_FIND_PASSWORD;
   payload: {
@@ -118,4 +132,7 @@ export type TUserAction =
   | IFetchFindIdRejected
   | IFetchFindPassword
   | IFetchFindPasswordFulfilled
-  | IFetchFindPasswordRejected;
+  | IFetchFindPasswordRejected
+  | IFetchFindIdConfirm
+  | IFetchFindIdConfirmFulfilled
+  | IFetchFindIdConfirmRejected;

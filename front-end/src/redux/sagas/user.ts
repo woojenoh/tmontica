@@ -15,8 +15,8 @@ function* fetchSignupSagas(action: userTypes.IFetchSignup) {
     alert("가입이 완료되었습니다.");
     history.push("/signin");
   } catch (error) {
+    alert(error.response.data.exceptionMessage);
     yield put(userActionCreators.fetchSignupRejected(error.response));
-    alert("아이디와 비밀번호를 다시 확인해주세요.");
   }
 }
 
@@ -35,8 +35,8 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
     yield put(cartActionCreators.fetchSetCart());
     history.push("/");
   } catch (error) {
+    alert(error.response.data.exceptionMessage);
     yield put(userActionCreators.fetchSigninRejected(error.response));
-    alert("아이디와 비밀번호를 다시 확인해주세요.");
   }
 }
 
@@ -47,11 +47,24 @@ function* fetchFindIdSagas(action: userTypes.IFetchFindId) {
         email: action.payload
       }
     });
-    alert("입력하신 이메일로 아이디가 전송되었습니다.");
+    alert("입력하신 이메일로 인증코드가 전송되었습니다.");
     yield put(userActionCreators.fetchFindIdFulfilled());
   } catch (error) {
-    alert("문제가 발생했습니다.");
+    alert(error.response.data.exceptionMessage);
     yield put(userActionCreators.fetchFindIdRejected(error.response));
+  }
+}
+
+function* fetchFindIdConfirmSagas(action: userTypes.IFetchFindIdConfirm) {
+  try {
+    const response = yield axios.post(`${API_URL}/users/findid/confirm`, {
+      authCode: action.payload
+    });
+    alert(response);
+    yield put(userActionCreators.fetchFindIdConfirmFulfilled());
+  } catch (error) {
+    alert(error.response.data.exceptionMessage);
+    yield put(userActionCreators.fetchFindIdConfirmRejected(error.response));
   }
 }
 
@@ -66,7 +79,8 @@ function* fetchFindPasswordSagas(action: userTypes.IFetchFindPassword) {
     alert("입력하신 이메일로 임시 비밀번호가 전송되었습니다.");
     yield put(userActionCreators.fetchFindPasswordFulfilled());
   } catch (error) {
-    yield put(userActionCreators.fetchFindPasswordRejected(error));
+    alert(error.response.data.exceptionMessage);
+    yield put(userActionCreators.fetchFindPasswordRejected(error.response));
   }
 }
 
@@ -74,5 +88,6 @@ export default function* userSagas() {
   yield takeLatest(userActionTypes.FETCH_SIGNUP, fetchSignupSagas);
   yield takeLatest(userActionTypes.FETCH_SIGNIN, fetchSigninSagas);
   yield takeLatest(userActionTypes.FETCH_FIND_ID, fetchFindIdSagas);
+  yield takeLatest(userActionTypes.FETCH_FIND_ID_CONFIRM, fetchFindIdConfirmSagas);
   yield takeLatest(userActionTypes.FETCH_FIND_PASSWORD, fetchFindPasswordSagas);
 }

@@ -4,10 +4,12 @@ import "./styles.scss";
 export interface IFindAccountFormProps {
   fetchFindId(payload: string): void;
   fetchFindPassword(payload: { email: string; id: string }): void;
+  fetchFindIdConfirm(payload: string): void;
 }
 
 export interface IFindAccountFormState {
   idEmail: string;
+  idCode: string;
   passwordId: string;
   passwordEmail: string;
 }
@@ -15,6 +17,7 @@ export interface IFindAccountFormState {
 class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccountFormState> {
   state = {
     idEmail: "",
+    idCode: "",
     passwordId: "",
     passwordEmail: ""
   };
@@ -34,6 +37,15 @@ class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccoun
     });
   };
 
+  handleFindIdConfirmSubmit = () => {
+    const { fetchFindIdConfirm } = this.props;
+    const { idCode } = this.state;
+    fetchFindIdConfirm(idCode);
+    this.setState({
+      idCode: ""
+    });
+  };
+
   handleFindPasswordSubmit = () => {
     const { fetchFindPassword } = this.props;
     const { passwordEmail, passwordId } = this.state;
@@ -45,8 +57,13 @@ class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccoun
   };
 
   render() {
-    const { idEmail, passwordId, passwordEmail } = this.state;
-    const { handleInputChange, handleFindIdSubmit, handleFindPasswordSubmit } = this;
+    const { idEmail, idCode, passwordId, passwordEmail } = this.state;
+    const {
+      handleInputChange,
+      handleFindIdSubmit,
+      handleFindIdConfirmSubmit,
+      handleFindPasswordSubmit
+    } = this;
 
     return (
       <>
@@ -66,6 +83,22 @@ class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccoun
             value="아이디 찾기"
             onClick={() => handleFindIdSubmit()}
           />
+          <form className="find-id__code">
+            <input
+              type="text"
+              name="idCode"
+              className="input find-id__code-input"
+              placeholder="인증코드"
+              onChange={e => handleInputChange(e)}
+              value={idCode}
+              required
+            />
+            <input
+              type="submit"
+              className="button find-id__code-button"
+              onClick={() => handleFindIdConfirmSubmit()}
+            />
+          </form>
         </form>
         <form className="find-password__form">
           <input
