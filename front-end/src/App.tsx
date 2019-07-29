@@ -18,6 +18,8 @@ import Signup from "./service/pages/Signup";
 import Orders from "./service/pages/Orders";
 import Payment from "./service/pages/Payment";
 import FindAccount from "./service/pages/FindAccount";
+import AdminSignin from "./admin/pages/Signin";
+import AdminMenus from "./admin/pages/AdminMenus";
 
 export interface IAppProps extends RouteComponentProps {
   isSignin: boolean;
@@ -113,17 +115,17 @@ class App extends React.Component<IAppProps> {
         {!/^\/admin/.test(location.pathname) ? <Header /> : ""}
         <Switch>
           <AdminRoute exact path="/admin/orders" component={Menus} />
-          <AdminRoute exact path="/admin/menus" component={Menus} />
+          <AdminRoute exact path="/admin/menus" component={AdminMenus} />
           <AdminRoute exact path="/admin/users" component={Menus} />
           <AdminRoute exact path="/admin/banners" component={Menus} />
           <AdminRoute exact path="/admin/statistics" component={Menus} />
-          <AdminRoute exact path="/admin" component={Menus} />
+          <AdminRoute exact path="/admin" component={AdminMenus} />
           <PrivateRoute exact path="/payment" component={Payment} />
           <PrivateRoute exact path="/orders" component={Orders} />
           <PrivateRoute exact path="/user" component={Menus} />
           <PublicRoute exact path="/menus/:menuId([0-9]+)" component={Menu} />
           <PublicRoute exact path="/menus/:categoryEng([a-zA-Z]+)" component={MenusSub} />
-          <PublicRoute exact path="/admin/signin" component={Menus} />
+          <PublicRoute exact path="/admin/signin" component={AdminSignin} />
           <PublicRoute exact path="/signin" component={Signin} />
           <PublicRoute exact path="/signup" component={Signup} />
           <PublicRoute exact path="/find" component={FindAccount} />
