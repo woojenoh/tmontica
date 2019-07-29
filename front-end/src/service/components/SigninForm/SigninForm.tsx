@@ -52,7 +52,9 @@ class SigninForm extends React.Component<ISigninFormProps, ISigninFormState> {
           onChange={e => handleInputChange(e)}
           required
         />
-        <span className="signin__find">아이디/비밀번호 찾기</span>
+        <Link to="/find" className="signin__find">
+          아이디/비밀번호 찾기
+        </Link>
         <div className="signin__button-container">
           <Link to="/signup" className="button signin__button">
             회원가입
