@@ -1,5 +1,6 @@
 package com.internship.tmontica.user;
 
+import com.internship.tmontica.user.model.response.UserChangePasswordDTO;
 import org.apache.ibatis.annotations.*;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -15,7 +16,7 @@ public interface UserDao {
     @Select("SELECT * FROM users WHERE id = #{id}")
     User getUserByUserId(String id);
     @Update("UPDATE users SET password = #{password} WHERE id = #{id}")
-    int updateUserPassword(User user);
+    int updateUserPassword(UserChangePasswordDTO userChangePasswordDTO);
     @Delete("DELETE FROM users WHERE id = #{id}")
     int deleteUser(String id);
     // 가입시 User Mail 중복검사 안해서 메일이 중복되는경우 문제생길수 있음.

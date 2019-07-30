@@ -76,9 +76,9 @@ public class UserController {
     }
 
     @GetMapping("/findid")
-    public ResponseEntity<String> findUserId(@RequestParam String email, HttpSession httpSession) {
+    public ResponseEntity<String> findUserId(@RequestParam String email) {
 
-        if(userService.sendUserId(email, httpSession)){
+        if(userService.sendUserId(email)){
             return new ResponseEntity<>(UserResponseMessage.MAIL_SEND_SUCCESS.getMessage(), HttpStatus.OK);
         }
         return new ResponseEntity<>(UserResponseMessage.MAIL_SEND_FAIL.getMessage(), HttpStatus.OK);
@@ -94,9 +94,9 @@ public class UserController {
     }
 
     @PostMapping("/findid/confirm")
-    public ResponseEntity<UserFindIdRespDTO> findIdConfirm(@RequestBody @Valid UserFindIdReqDTO userFindIdReqDTO, HttpSession session){
+    public ResponseEntity<UserFindIdRespDTO> findIdConfirm(@RequestBody @Valid UserFindIdReqDTO userFindIdReqDTO){
 
-        UserFindIdRespDTO userFindIdRespDTO = userService.checkAuthCode(userFindIdReqDTO, session);
+        UserFindIdRespDTO userFindIdRespDTO = userService.checkAuthCode(userFindIdReqDTO);
         if(userFindIdRespDTO.isSuccess()){
             return new ResponseEntity<>(userFindIdRespDTO, HttpStatus.OK);
         }

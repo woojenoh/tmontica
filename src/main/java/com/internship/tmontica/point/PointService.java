@@ -21,7 +21,7 @@ public class PointService {
 
     public boolean postPointLog(PointLogReqDTO pointLogReqDTO){
 
-        //poin
+
         return true;
     }
 

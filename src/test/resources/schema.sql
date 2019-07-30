@@ -18,14 +18,10 @@ CREATE TABLE IF NOT EXISTS `banners` (
   PRIMARY KEY (`id`));
 
 
-
-
 -- -----------------------------------------------------
--- Table `tmontica`.`users`
+-- Table `users`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `users` ;
-
-
 
 CREATE TABLE IF NOT EXISTS `users` (
   `name` VARCHAR(45) NOT NULL,
@@ -36,10 +32,21 @@ CREATE TABLE IF NOT EXISTS `users` (
   `role` CHAR(10) NOT NULL DEFAULT 'user',
   `created_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `point` INT(11) NOT NULL DEFAULT '0',
+  `is_active` TINYINT(1) NOT NULL DEFAULT 0,
+  `activate_code` VARCHAR(45) NULL,
   PRIMARY KEY (`id`));
 
 
+-- -----------------------------------------------------
+-- Table `find_id`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `find_id` ;
 
+CREATE TABLE `tmontica`.`find_id` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `auth_code` VARCHAR(45) NULL,
+  `find_ids` VARCHAR (255) NULL,
+  PRIMARY KEY (`id`));
 
 -- -----------------------------------------------------
 -- Table `tmontica`.`menus`
