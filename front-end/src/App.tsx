@@ -112,6 +112,7 @@ class App extends React.Component<IAppProps> {
       <Switch>
         <AdminRoute exact path="/admin/orders" component={Menus} />
         <AdminRoute exact path="/admin/menus" component={AdminMenus} />
+        <AdminRoute exact path="/admin/menus/:menuId([0-9]+)" component={AdminMenus} />
         <AdminRoute exact path="/admin/users" component={Menus} />
         <AdminRoute exact path="/admin/banners" component={Menus} />
         <AdminRoute exact path="/admin/statistics" component={Menus} />

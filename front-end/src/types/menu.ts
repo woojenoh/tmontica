@@ -1,3 +1,22 @@
+import { string, number } from "prop-types";
+
+// 메뉴 추가시
+export interface TMenuAddRequest {
+  nameKo: string;
+  nameEng: string;
+  description: string;
+  monthlyMenu: boolean;
+  categoryKo: string;
+  categoryEng: string;
+  productPrice: number;
+  sellPrice: number;
+  discountRate: number;
+  optionIds: Array<number>;
+  usable: boolean;
+  startDate: string;
+  endDate: string;
+}
+
 export type TMenusItem = {
   id: number;
   nameKo: string;
