@@ -2,6 +2,7 @@ package com.internship.tmontica.order.model.request;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class OrderReq {
     private int usedPoint;
     @NotNull
     private int totalPrice;
-    @NotNull
+    @NotEmpty
     private String payment;
 
 }
