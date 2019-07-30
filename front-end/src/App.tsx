@@ -106,32 +106,46 @@ class App extends React.Component<IAppProps> {
     }
   };
 
+  Swicher = () => {
+    const { AdminRoute, PrivateRoute, PublicRoute } = this;
+    return (
+      <Switch>
+        <AdminRoute exact path="/admin/orders" component={Menus} />
+        <AdminRoute exact path="/admin/menus" component={AdminMenus} />
+        <AdminRoute exact path="/admin/users" component={Menus} />
+        <AdminRoute exact path="/admin/banners" component={Menus} />
+        <AdminRoute exact path="/admin/statistics" component={Menus} />
+        <AdminRoute exact path="/admin" component={AdminMenus} />
+        <PrivateRoute exact path="/payment" component={Payment} />
+        <PrivateRoute exact path="/orders" component={Orders} />
+        <PrivateRoute exact path="/user" component={Menus} />
+        <PublicRoute exact path="/menus/:menuId([0-9]+)" component={Menu} />
+        <PublicRoute exact path="/menus/:categoryEng([a-zA-Z]+)" component={MenusSub} />
+        <PublicRoute exact path="/admin/signin" component={AdminSignin} />
+        <PublicRoute exact path="/signin" component={Signin} />
+        <PublicRoute exact path="/signup" component={Signup} />
+        <PublicRoute exact path="/find" component={FindAccount} />
+        <PublicRoute exact path="/" component={Menus} />
+        <PublicRoute path="*" component={Menus} />
+      </Switch>
+    );
+  };
+
   render() {
     const { location } = this.props;
-    const { AdminRoute, PrivateRoute, PublicRoute } = this;
 
     return (
       <>
-        {!/^\/admin/.test(location.pathname) ? <Header /> : ""}
-        <Switch>
-          <AdminRoute exact path="/admin/orders" component={Menus} />
-          <AdminRoute exact path="/admin/menus" component={AdminMenus} />
-          <AdminRoute exact path="/admin/users" component={Menus} />
-          <AdminRoute exact path="/admin/banners" component={Menus} />
-          <AdminRoute exact path="/admin/statistics" component={Menus} />
-          <AdminRoute exact path="/admin" component={AdminMenus} />
-          <PrivateRoute exact path="/payment" component={Payment} />
-          <PrivateRoute exact path="/orders" component={Orders} />
-          <PrivateRoute exact path="/user" component={Menus} />
-          <PublicRoute exact path="/menus/:menuId([0-9]+)" component={Menu} />
-          <PublicRoute exact path="/menus/:categoryEng([a-zA-Z]+)" component={MenusSub} />
-          <PublicRoute exact path="/admin/signin" component={AdminSignin} />
-          <PublicRoute exact path="/signin" component={Signin} />
-          <PublicRoute exact path="/signup" component={Signup} />
-          <PublicRoute exact path="/find" component={FindAccount} />
-          <PublicRoute exact path="/" component={Menus} />
-          <PublicRoute path="*" component={Menus} />
-        </Switch>
+        {!/^\/admin/.test(location.pathname) ? (
+          <>
+            <Header />
+            <this.Swicher />
+          </>
+        ) : (
+          <div id="admin">
+            <this.Swicher />
+          </div>
+        )}
       </>
     );
   }

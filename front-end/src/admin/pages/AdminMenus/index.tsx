@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Header from "../../components/Header";
+import Header from "../../components/AdminHeader";
 
 interface Props {}
 interface State {}
@@ -11,7 +11,7 @@ export default class AdminMenus extends Component<Props, State> {
   render() {
     return (
       <>
-        <Header title="메뉴 관리"/>
+        <Header title="메뉴 관리" />
         <div className="main-wrapper">
           <nav className="col-md-2 d-none d-md-block bg-light sidebar">
             <div className="sidebar-sticky">
