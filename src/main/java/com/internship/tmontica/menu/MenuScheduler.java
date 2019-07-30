@@ -28,7 +28,6 @@ public class MenuScheduler {
                     filteredMenus.add(menu);
             }else if(menu.getStartDate().before(now) && menu.getEndDate().after(now)){
                 filteredMenus.add(menu);
-                log.info("[limited menu] : {}" + menu);
             }
         }
 

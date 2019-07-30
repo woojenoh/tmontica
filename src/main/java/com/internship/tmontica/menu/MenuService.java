@@ -1,5 +1,6 @@
 package com.internship.tmontica.menu;
 
+import com.internship.tmontica.menu.exception.SaveImgException;
 import com.internship.tmontica.menu.model.response.MenuDetailResp;
 import com.internship.tmontica.menu.model.response.MenuMainResp;
 import com.internship.tmontica.menu.model.response.MenuOptionResp;
@@ -48,6 +49,7 @@ public class MenuService {
     // TODO : 예외처리..
     // 메인 화면에 나타나는 메뉴 정보
     public List<MenuMainResp> getMainMenus(){
+
         List<MenuMainResp> allMenus = new ArrayList<>();
         // 이달의 메뉴 , 커피 , 에이드 , 빵
         allMenus.add(getMenuMainResp(CategoryName.CATEGORY_MONTHLY));
@@ -55,7 +57,6 @@ public class MenuService {
         allMenus.add(getMenuMainResp(CategoryName.CATEGORY_ADE));
         allMenus.add(getMenuMainResp(CategoryName.CATEGORY_BREAD));
 
-        log.info("[menu] usableMenus count : {}", usableMenus.size());
         return allMenus;
     }
 
@@ -103,10 +104,13 @@ public class MenuService {
 
     // 카테고리 별 메뉴 정보 가져오기
     public List<Menu> getMenusByCategory(String category, int page, int size){
+        long startTime = System.currentTimeMillis();
         // 해당 카테고리의 모든 메뉴를 가져온다.
         List<Menu> categoryMenus = usableMenus.stream().filter(menu -> menu.getCategoryEng().equals(category))
                                               .collect(Collectors.toList());
         // 가져온 메뉴들 중 페이지에 맞는 메뉴들만 리턴한다.
+        long endTime = System.currentTimeMillis();
+        log.info("getMenuByCategory 실행 시간 : {} ", endTime - startTime);
         return getMenusByPage(page, size, categoryMenus);
 
     }
@@ -223,7 +227,9 @@ public class MenuService {
         dirFile.mkdirs(); // 디렉토리가 없을 경우 만든다.
 
         sb.append(name).append("_").append(UUID.randomUUID().toString()); // 유일한 식별자
-        String extension = imgFile.getOriginalFilename().split("\\.")[1];      // 확장자 -> stream 으로 수정해야함.
+        // 확장자 가져오기.
+        String extension = getExtensionByStringHandling(imgFile.getOriginalFilename())
+                                                                .orElseThrow(() -> new SaveImgException());
         sb.append(".").append(extension);
 
         log.info("img type : {}", extension);

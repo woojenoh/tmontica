@@ -1,5 +1,7 @@
 package com.internship.tmontica.menu;
 
+import com.internship.tmontica.menu.exception.MenuException;
+import com.internship.tmontica.menu.exception.MenuExceptionType;
 import com.internship.tmontica.menu.exception.MenuValidException;
 import com.internship.tmontica.menu.model.request.MenuReq;
 import com.internship.tmontica.menu.model.request.MenuUpdateReq;
@@ -51,7 +53,7 @@ public class MenuController {
 
         List<Menu> menus = menuService.getAllMenus(page, size);
         if (menus.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new MenuException(MenuExceptionType.MENU_NO_CONTENT_EXCEPTION);
         }
         return new ResponseEntity<>(menus, HttpStatus.OK);
 
@@ -70,9 +72,9 @@ public class MenuController {
         menucategoryResp.setCategoryKo(CategoryName.categoryEngToKo(category));
 
         List<Menu> menus = menuService.getMenusByCategory(category, page, size);
-        // 메뉴가 없으면 no content
+        // 메뉴가 없는 경우
         if(menus == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new MenuException(MenuExceptionType.MENU_NO_CONTENT_EXCEPTION);
         }
         List<MenuSimpleResp> categoryMenus = modelMapper.map(menus, new TypeToken<List<MenuSimpleResp>>(){}.getType());
 
@@ -89,7 +91,7 @@ public class MenuController {
         MenuDetailResp menuDetailResp = menuService.getMenuDetailById(menuId);
         // 메뉴가 없으면 no content
         if(menuDetailResp == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new MenuException(MenuExceptionType.MENU_NO_CONTENT_EXCEPTION);
         }
         return new ResponseEntity<>(menuDetailResp, HttpStatus.OK);
     }
@@ -97,7 +99,6 @@ public class MenuController {
     /** 메뉴 추가하기 **/
     @PostMapping
     public ResponseEntity addMenu(@ModelAttribute @Valid MenuReq menuReq,BindingResult bindingResult){
-        //TODO : 예외 처리..
         if(bindingResult.hasErrors()) {
             throw new MenuValidException("Menu Create Form", "메뉴 추가 폼 데이터가 올바르지 않습니다.", bindingResult);
         }

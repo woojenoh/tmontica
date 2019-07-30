@@ -1,6 +1,7 @@
 package com.internship.tmontica.exception.handler;
 
 import com.internship.tmontica.exception.TmonTicaExceptionFormat;
+import com.internship.tmontica.menu.exception.MenuException;
 import com.internship.tmontica.menu.exception.SaveImgException;
 import com.internship.tmontica.menu.exception.MenuValidException;
 import com.internship.tmontica.security.exception.UnauthorizedException;
@@ -52,5 +53,11 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public TmonTicaExceptionFormat handleSaveImgException(SaveImgException e){
         return new TmonTicaExceptionFormat("imgFile", "올바른 이미지 파일이 아닙니다.");
+    }
+
+    @ExceptionHandler(MenuException.class)
+    public ResponseEntity<TmonTicaExceptionFormat> handleMenuException(MenuException e){
+        log.info("MenuException : {}" , e.getErrorMessage());
+        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), e.getMenuExceptionType().getResponseType());
     }
 }
