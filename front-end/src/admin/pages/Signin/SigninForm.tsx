@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "../../../assets/scss/admin.scss";
-import Header from "../../components/Header";
+import Header from "../../components/AdminHeader";
 import * as userTypes from "../../../types/user";
 import "./styles.scss";
 import { Redirect } from "react-router";
@@ -40,8 +40,8 @@ export default class AdminSignin extends Component<Props, State> {
 
     return !isSignin || !isAdmin ? (
       <>
-        <Header hide={true} />
-        <main>
+        <Header hide={true} title="관리자 로그인" />
+        <main id="admin-main">
           <div id="login-form" className="card">
             <h3>티몽티카 관리자 로그인</h3>
             <div className="signin__logo-wrapper">
