@@ -40,7 +40,7 @@ export default class AdminSignin extends Component<Props, State> {
 
     return !isSignin || !isAdmin ? (
       <>
-        <Header hide={true} />
+        <Header hide={true} title="관리자 로그인" />
         <main>
           <div id="login-form" className="card">
             <h3>티몽티카 관리자 로그인</h3>
