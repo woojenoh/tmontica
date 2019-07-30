@@ -1,8 +1,10 @@
 package com.internship.tmontica.exception.handler;
 
+import com.internship.tmontica.cart.exception.CartValidException;
 import com.internship.tmontica.exception.TmonTicaExceptionFormat;
 import com.internship.tmontica.menu.exception.SaveImgException;
 import com.internship.tmontica.menu.exception.MenuValidException;
+import com.internship.tmontica.order.exception.NotEnoughStockException;
 import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.exception.UserException;
 import org.slf4j.Logger;
@@ -52,5 +54,20 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public TmonTicaExceptionFormat handleSaveImgException(SaveImgException e){
         return new TmonTicaExceptionFormat("imgFile", "올바른 이미지 파일이 아닙니다.");
+    }
+
+    // 카트
+    @ExceptionHandler(CartValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public TmonTicaExceptionFormat handleCartValidException(CartValidException e){
+        return new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage(), e.getBindingResult());
+    }
+
+    // 재고
+    @ExceptionHandler(NotEnoughStockException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public TmonTicaExceptionFormat handleNotEnoughStockException(NotEnoughStockException e) {
+        log.info("stock is not enough exception");
+        return new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage());
     }
 }
