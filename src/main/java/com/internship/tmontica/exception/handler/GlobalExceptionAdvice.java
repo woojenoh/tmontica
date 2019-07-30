@@ -5,6 +5,7 @@ import com.internship.tmontica.menu.exception.SaveImgException;
 import com.internship.tmontica.menu.exception.MenuValidException;
 import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.exception.UserException;
+import com.internship.tmontica.user.exception.UserExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
