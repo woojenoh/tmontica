@@ -14,6 +14,7 @@ public class MenuDetailResp {
     private String description;
     private String imgUrl;
     private int sellPrice;
+    private int productPrice;
     private int discountRate;
     private String categoryEng;
     private String categoryKo;

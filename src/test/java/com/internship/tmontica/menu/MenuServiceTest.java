@@ -20,9 +20,7 @@ public class MenuServiceTest {
 
     @Test
     public void 메뉴_가져오기(){
-        List<Menu> menus= menuService.getAllMenus();
-        for(Menu menu : menus)
-            System.out.println(menu.toString());
+
     }
 
 }

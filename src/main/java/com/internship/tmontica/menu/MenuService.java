@@ -6,59 +6,71 @@ import com.internship.tmontica.menu.model.response.MenuOptionResp;
 import com.internship.tmontica.menu.model.response.MenuSimpleResp;
 import com.internship.tmontica.option.Option;
 import com.internship.tmontica.security.JwtService;
-import com.internship.tmontica.user.UserDao;
 import com.internship.tmontica.util.CategoryName;
 import com.internship.tmontica.util.JsonUtil;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class MenuService {
+
     private final MenuDao menuDao;
+
     private final ModelMapper modelMapper;
+
     private final JwtService jwtService;
+
     @Value("${menu.imagepath}")
     private String location;
+
+    public static List<Menu> usableMenus;
+
+    public MenuService(MenuDao menuDao, ModelMapper modelMapper, JwtService jwtService){
+        this.menuDao = menuDao;
+        this.modelMapper = modelMapper;
+        this.jwtService = jwtService;
+        usableMenus = new ArrayList<>();
+    }
 
     // TODO : 예외처리..
     // 메인 화면에 나타나는 메뉴 정보
     public List<MenuMainResp> getMainMenus(){
         List<MenuMainResp> allMenus = new ArrayList<>();
         // 이달의 메뉴 , 커피 , 에이드 , 빵
-        allMenus.add(getMenuMain(CategoryName.CATEGORY_MONTHLY));
-        allMenus.add(getMenuMain(CategoryName.CATEGORY_COFFEE));
-        allMenus.add(getMenuMain(CategoryName.CATEGORY_ADE));
-        allMenus.add(getMenuMain(CategoryName.CATEGORY_BREAD));
+        allMenus.add(getMenuMainResp(CategoryName.CATEGORY_MONTHLY));
+        allMenus.add(getMenuMainResp(CategoryName.CATEGORY_COFFEE));
+        allMenus.add(getMenuMainResp(CategoryName.CATEGORY_ADE));
+        allMenus.add(getMenuMainResp(CategoryName.CATEGORY_BREAD));
 
+        log.info("[menu] usableMenus count : {}", usableMenus.size());
         return allMenus;
     }
+
     // 메뉴 추가
     @Transactional
     public int addMenu(Menu menu, List<Integer>optionIds, MultipartFile imgFile){
         String imgUrl = saveImg(imgFile, menu.getNameEng());
         menu.setImgUrl(imgUrl);
 
+        // 등록인 정보 가져오기
         menu.setCreatorId(JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id"));
         menu.setCreatedDate(new Date());
         menuDao.addMenu(menu);
 
+        // 메뉴의 옵션 추가
         for(int optionId : optionIds)
             menuDao.addMenuOption(menu.getId(), optionId);
 
@@ -68,10 +80,16 @@ public class MenuService {
 
     // 하나의 메뉴 상세 정보 가져오기
     public MenuDetailResp getMenuDetailById(int id){
-        Menu menu = menuDao.getMenuById(id);
-
+        Menu menu = null;
+        for(Menu checkMenu : usableMenus){
+            if(checkMenu.getId() == id){
+                menu = checkMenu;
+                break;
+            }
+        }
         if(menu == null) return null;
 
+        // 메뉴의 옵션 정보 가져오기
         List<Option> options = menuDao.getOptionsById(id);
 
         MenuDetailResp menuDetailResp = modelMapper.map(menu, MenuDetailResp.class);
@@ -83,26 +101,42 @@ public class MenuService {
         return menuDetailResp;
     }
 
-    // 하나의 메뉴 정보 가져오기
-    public Menu getMenuById(int id){
-        return menuDao.getMenuById(id);
-    }
-
-
-    // 모든 메뉴 정보 가져오기
-    public List<Menu> getAllMenus(){
-        return menuDao.getAllMenus();
-    }
-
     // 카테고리 별 메뉴 정보 가져오기
     public List<Menu> getMenusByCategory(String category, int page, int size){
-        int offset = (page - 1) * size;
-        return menuDao.getMenusByCategory(category, size, offset);
+        // 해당 카테고리의 모든 메뉴를 가져온다.
+        List<Menu> categoryMenus = usableMenus.stream().filter(menu -> menu.getCategoryEng().equals(category))
+                                              .collect(Collectors.toList());
+        // 가져온 메뉴들 중 페이지에 맞는 메뉴들만 리턴한다.
+        return getMenusByPage(page, size, categoryMenus);
+
+    }
+
+    // 메뉴 정보 가져오기 (전체)
+    public List<Menu> getAllMenus(int page, int size){
+        // 페이지에 맞는 메뉴들만 리턴한다.
+        return getMenusByPage(page, size, usableMenus);
+
+    }
+
+    private List<Menu> getMenusByPage(int page, int size, List<Menu> menus) {
+        int startIndex = (page - 1) * size;
+
+        if(startIndex < 0 || startIndex >= menus.size())
+            return new ArrayList<>();
+
+        int endIndex = (startIndex + size < menus.size())? startIndex + size : menus.size();
+
+        return menus.subList(startIndex, endIndex);
     }
 
     // 메뉴 옵션 추가
     public int addMenuOption(int menuId, int optionId){
         return menuDao.addMenuOption(menuId, optionId);
+    }
+
+    // 하나의 메뉴 정보 가져오기
+    public Menu getMenuById(int id){
+        return menuDao.getMenuById(id);
     }
 
     // 메뉴 수정하기
@@ -138,54 +172,40 @@ public class MenuService {
         return (menuDao.getMenuById(id) == null) ? false : true;
     }
 
-    // 기간 한정 메뉴 : 시작일 체크
-    @Scheduled(cron = "10 * * * * *")
-    public void checkMenuStart(){
-        log.info("[menu check menu start] : 스케쥴러 동작");
-        List<Menu> checkMenus = menuDao.getPeriodBeforeMenu();  // 시작일이 오늘이고, usable = false 인 메뉴들을 가져온다.
-        Date now = new Date();
-        for(Menu menu : checkMenus){
-            if(menu.getStartDate().before(now) && menu.getEndDate().after(now)) {   // 시작 시간이 지난 경우 & 종료 시간이 남은 경우
-                log.info("[menu start] : {}" , menu);
-                menuDao.updateMenuUsable(menu.getId(), true);   // menu의 usable = true 로 변경
-            }
-        }
-    }
-    // 기간 한정 메뉴 : 종료일 체크
-    @Scheduled(cron = "10 * * * * *")
-    public void checkMenuEnd(){
-        log.info("[menu check menu end] : 스케쥴러 동작");
-        List<Menu> checkMenus = menuDao.getPeriodAfterMenu();   // 종료일이 오늘이고, usable = true 인 메뉴들을 가져온다.
-        Date now = new Date();
-        for(Menu menu : checkMenus){
-            if(menu.getEndDate().after(now)) {   // 종료 시간이 지난 경우
-                log.info("[menu end] : {}", menu);
-                menuDao.updateMenuUsable(menu.getId(), false);  // menu의 usable = false로 변경
-            }
-        }
-    }
-
-
-    private MenuMainResp getMenuMain(String categoryEng){
+    // 메인 화면에 필요한 메뉴정보 가져오기.
+    private MenuMainResp getMenuMainResp(String categoryEng){
+        // 메인 화면에 나타나는 메뉴 정보
         MenuMainResp menuMainResp = new MenuMainResp();
-
         menuMainResp.setCategoryEng(categoryEng);
         menuMainResp.setCategoryKo(CategoryName.categoryEngToKo(categoryEng));
-        List<Menu> menus;
+        List<Menu> menus = new ArrayList<>();
 
-        if(categoryEng.equals(CategoryName.CATEGORY_MONTHLY)){
-            menus = menuDao.getMonthlyMenus();
+        int count = 0;
+        if(categoryEng.equals(CategoryName.CATEGORY_MONTHLY)){  // 4개 까지 가져온다.
+            for(Menu menu : usableMenus){
+                if(count == 4) break;
+                if(menu.isMonthlyMenu()){
+                    menus.add(menu);
+                    count++;
+                }
+
+            }
         }else{
-            menus = menuDao.getMenusByCategoryAndStock(categoryEng, 8, 0);
+            for(Menu menu : usableMenus){   // 8개 까지 가져온다.
+                if(count == 8) break;
+                if(menu.getCategoryEng().equals(categoryEng)){
+                    menus.add(menu);
+                    count++;
+                }
+            }
         }
 
-        List<MenuSimpleResp> menuList = modelMapper.map(menus, new TypeToken<List<MenuSimpleResp>>(){}.getType());
+        List<MenuSimpleResp> menuSimpleList = modelMapper.map(menus, new TypeToken<List<MenuSimpleResp>>(){}.getType());
 
-        for(MenuSimpleResp menu : menuList)
+        for(MenuSimpleResp menu : menuSimpleList)
             menu.setImgUrl("/images/".concat(menu.getImgUrl()));
 
-        menuMainResp.setMenus(menuList);
-
+        menuMainResp.setMenus(menuSimpleList);
         return menuMainResp;
     }
 
