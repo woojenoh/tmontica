@@ -18,17 +18,26 @@ class UserMailForm {
     private static final String TOKEN_PARAM = "&token=";
     private MailType mailType;
 
-     UserMailForm(MailType mailType, User user) {
-        msg = new SimpleMailMessage();
-        msg.setFrom(ADMIN_ADDRESS);
-        msg.setTo(user.getEmail());
-        setUser(user);
-        setMailType(mailType);
+     UserMailForm(MailType mailType, User user, boolean isNeedAuthKey) {
+         setUser(user);
+         setMailType(mailType);
+         msg = new SimpleMailMessage();
+         msg.setFrom(ADMIN_ADDRESS);
+         msg.setTo(user.getEmail());
+         msg.setSubject("[TMONG CAFFE]"+user.getName()+"님"+mailType.getDescription());
+         if(!isNeedAuthKey) {
+             makeMail();
+         }
     }
 
-     public void makeMail(){
+    UserMailForm(MailType mailType, User user, String authenticationKey) {
+        this(mailType, user, true);
+        this.authenticationKey = authenticationKey;
+        makeMail();
+    }
 
-         msg.setSubject("[TMONG CAFFE]"+user.getName()+"님"+mailType.getDescription());
+     private void makeMail(){
+
          switch (mailType){
 
              case FIND_ID:
