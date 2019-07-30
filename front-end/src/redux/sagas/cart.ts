@@ -117,6 +117,7 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
     });
     yield put(cartActionCreators.fetchSetCartFulfilled(response.data));
   } catch (error) {
+    alert(error.response.data.exceptionMessage);
     yield put(cartActionCreators.fetchSetCartRejected(error.response));
   }
 }
@@ -152,6 +153,7 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
     alert("상품이 담겼습니다.");
     yield put(cartActionCreators.fetchAddCartFulfilled(newCart));
   } catch (error) {
+    alert(error.response.data.exceptionMessage);
     yield put(cartActionCreators.fetchAddCartRejected(error.response));
   }
 }
@@ -179,6 +181,7 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
     });
     yield put(cartActionCreators.fetchRemoveCartFulfilled(newCart));
   } catch (error) {
+    alert(error.response.data.exceptionMessage);
     yield put(cartActionCreators.fetchRemoveCartRejected(error));
   }
 }
@@ -223,6 +226,7 @@ function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
     newCart.menus = targetMenus;
     yield put(cartActionCreators.fetchChangeCartFulfilled(newCart));
   } catch (error) {
+    alert(error.response.data.exceptionMessage);
     yield put(cartActionCreators.fetchChangeCartRejected(error.response));
   }
 }
