@@ -1,10 +1,14 @@
 import * as React from "react";
 
-export interface IAdminOrdersRowProps {}
+export interface IAdminOrdersRowProps {
+  handleModalOpen(): void;
+}
 
 function AdminOrdersRow(props: IAdminOrdersRowProps) {
+  const { handleModalOpen } = props;
+
   return (
-    <tr data-toggle="modal" data-target="#orderModal">
+    <tr data-toggle="modal" onClick={() => handleModalOpen()}>
       <td className="menu__td check">
         <input type="checkbox" aria-label="Checkbox for following text input" />
       </td>
