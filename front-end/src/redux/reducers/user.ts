@@ -42,6 +42,16 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
         ...state,
         error: action.error
       };
+    // FETCH_SIGNIN_ACTIVE
+    case actionTypes.FETCH_SIGNIN_ACTIVE:
+      return state;
+    case actionTypes.FETCH_SIGNIN_ACTIVE_FULFILLED:
+      return state;
+    case actionTypes.FETCH_SIGNIN_ACTIVE_REJECTED:
+      return {
+        ...state,
+        error: action.error
+      };
     case actionTypes.SIGNOUT:
       localStorage.removeItem("jwt");
       history.push("/");
@@ -54,6 +64,36 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
       return {
         ...state,
         user: action.payload
+      };
+    // FETCH_FIND_ID
+    case actionTypes.FETCH_FIND_ID:
+      return state;
+    case actionTypes.FETCH_FIND_ID_FULFILLED:
+      return state;
+    case actionTypes.FETCH_FIND_ID_REJECTED:
+      return {
+        ...state,
+        error: action.error
+      };
+    // FETCH_FIND_ID_CONFIRM
+    case actionTypes.FETCH_FIND_ID_CONFIRM:
+      return state;
+    case actionTypes.FETCH_FIND_ID_CONFIRM_FULFILLED:
+      return state;
+    case actionTypes.FETCH_FIND_ID_CONFIRM_REJECTED:
+      return {
+        ...state,
+        error: action.error
+      };
+    // FETCH_FIND_PASSWORD
+    case actionTypes.FETCH_FIND_PASSWORD:
+      return state;
+    case actionTypes.FETCH_FIND_PASSWORD_FULFILLED:
+      return state;
+    case actionTypes.FETCH_FIND_PASSWORD_REJECTED:
+      return {
+        ...state,
+        error: action.error
       };
     default:
       return state;
