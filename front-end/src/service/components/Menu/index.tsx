@@ -106,7 +106,11 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
   // 바로구매
   async orderDirect(cartAddReq: TCartAddReq) {
     try {
-      const data = await addCart<TCartId[]>([cartAddReq]);
+      const data = await addCart([cartAddReq]);
+
+      if (typeof data === "undefined") {
+        return;
+      }
 
       if (cartAddReq.direct) {
         localStorage.setItem("isDirect", "Y");
@@ -214,7 +218,9 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
     try {
       const { menuId } = this.props.match.params;
 
-      const menu = await getMenuById<TMenu>(parseInt(menuId));
+      const menu = await getMenuById(parseInt(menuId));
+
+      if (typeof menu === "undefined") return Promise.reject("메뉴가 없습니다.");
       this.setState(
         {
           menu

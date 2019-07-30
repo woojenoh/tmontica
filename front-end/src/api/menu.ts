@@ -1,13 +1,17 @@
 import { get, API_URL } from "./common";
+import { TCommonError } from "../types/error";
+import { TMenu, TMenusItem, TMenuByCategory } from "../types/menu";
 
-export function getMenuAll<T>() {
-  return get<T>(`${API_URL}/menus`);
+export function getMenuAll() {
+  return get<Object, TCommonError>(`${API_URL}/menus`);
 }
 
-export function getMenuByCateory<T>(categoryEng: string, page = 1, size = 4) {
-  return get<T>(`${API_URL}/menus/${categoryEng}?page=${page}&size=${size}`);
+export function getMenuByCateory(categoryEng: string, page = 1, size = 4) {
+  return get<TMenuByCategory, TCommonError>(
+    `${API_URL}/menus/${categoryEng}?page=${page}&size=${size}`
+  );
 }
 
-export function getMenuById<T>(menuId: number = 1) {
-  return get<T>(`${API_URL}/menus/${menuId}`);
+export function getMenuById(menuId: number = 1) {
+  return get<TMenu, TCommonError>(`${API_URL}/menus/${menuId}`);
 }

@@ -1,21 +1,32 @@
-import { TCommonError } from "../types/error";
+import { TMessageError } from "../types/error";
 
 export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
 
-async function fetchTMON<T>(url: string, options: RequestInit) {
+async function fetchTMON<SuccessDataType, ErrorType extends TMessageError>(
+  url: string,
+  options: RequestInit
+) {
   const res = await fetch(url, options);
 
   const json = await res.json();
   if (res.ok) {
-    return json as T;
+    return json as SuccessDataType;
   }
 
-  const err = json as TCommonError;
+  const err = json as ErrorType;
 
-  throw new Error(err.message);
+  error(err.message);
 }
 
-export function get<T>(reqURL: string, params?: Map<string, string> | null, jwt?: string) {
+function error(message: string | undefined): never {
+  throw new Error(message);
+}
+
+export function get<T, E extends TMessageError>(
+  reqURL: string,
+  params?: Map<string, string> | null,
+  jwt?: string
+) {
   if (typeof params !== "undefined" && params !== null && !/[?]/.test(reqURL)) {
     reqURL += `?${Array.from(params.entries())
       .map(x => {
@@ -24,7 +35,7 @@ export function get<T>(reqURL: string, params?: Map<string, string> | null, jwt?
       .join("&")}`;
   }
 
-  return fetchTMON<T>(reqURL, {
+  return fetchTMON<T, E>(reqURL, {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -34,16 +45,19 @@ export function get<T>(reqURL: string, params?: Map<string, string> | null, jwt?
   });
 }
 
-export function getWithJWT<T>(reqURL: string, params?: Map<string, string> | null) {
+export function getWithJWT<T, E extends TMessageError>(
+  reqURL: string,
+  params?: Map<string, string> | null
+) {
   const jwt = localStorage.getItem("jwt") || "";
 
-  return get<T>(reqURL, params, jwt);
+  return get<T, E>(reqURL, params, jwt);
 }
 
-export function postWithJWT<T>(reqURL: string, data: any) {
+export function postWithJWT<T, E extends TMessageError>(reqURL: string, data: any) {
   const jwt = localStorage.getItem("jwt") || "";
 
-  return fetchTMON<T>(reqURL, {
+  return fetchTMON<T, E>(reqURL, {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",

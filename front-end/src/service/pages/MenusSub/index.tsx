@@ -3,7 +3,8 @@ import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import MenuItems from "../../components/MenusItems";
 import { getMenuByCateory } from "../../../api/menu";
-import { TMenusItem } from "../../../types/menu";
+import { TMenusItem, TMenuByCategory } from "../../../types/menu";
+import { type } from "os";
 
 interface MatchParams {
   categoryEng: string;
@@ -13,10 +14,7 @@ interface IMenusSubProps extends RouteComponentProps<MatchParams> {
   categoryKo: string;
 }
 
-interface IMenusSubState {
-  categoryKo: string;
-  menus: Array<TMenusItem>;
-}
+interface IMenusSubState extends TMenuByCategory {}
 
 export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubState> {
   state = {
@@ -26,9 +24,10 @@ export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubS
 
   async getMenuByCateory(categoryEng?: string) {
     try {
-      const categoryMenus = await getMenuByCateory<IMenusSubState>(
-        this.props.match.params.categoryEng
-      );
+      const categoryMenus = await getMenuByCateory(this.props.match.params.categoryEng);
+
+      if (typeof categoryMenus === "undefined") throw new Error("메뉴 정보를 불러오지 못했습니다.");
+
       const { categoryKo, menus } = categoryMenus;
       this.setState({
         categoryKo,

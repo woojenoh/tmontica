@@ -3,21 +3,13 @@ import OrderListItem from "../OrderListItem";
 import "./styles.scss";
 import { getOrderAll } from "../../../api/order";
 import _ from "underscore";
+import { TOrderAllRes, IOrder } from "../../../types/order";
 
 export interface IOrderListProps {
   handleOrderListItemClick(orderId: number): void;
 }
 
-interface IOrder {
-  orderId: number;
-  orderDate: string;
-  status: string;
-  menuNames: Array<string>;
-}
-
-export interface IOrderListState {
-  orders: Array<IOrder>;
-}
+export interface IOrderListState extends TOrderAllRes {}
 
 class OrderList extends React.Component<IOrderListProps, IOrderListState> {
   state = {
@@ -26,7 +18,10 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
 
   async getOrderAll() {
     try {
-      const data = await getOrderAll<IOrderListState>();
+      const data = await getOrderAll();
+
+      if (typeof data === "undefined") throw new Error("주문 내역이 존재하지 않습니다.");
+
       const { orders } = data;
       _.sortBy(orders, "orderId");
       orders.reverse();

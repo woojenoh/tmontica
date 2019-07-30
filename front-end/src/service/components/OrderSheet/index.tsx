@@ -6,20 +6,10 @@ import { TOrderDetail } from "../../../types/menu";
 import _ from "underscore";
 import history from "../../../history";
 import { PureComponent } from "react";
+import { TOrder } from "../../../types/order";
 
 export interface IOrderSheetProps {
   orderId: number;
-}
-
-interface TOrder {
-  orderId: number;
-  payment: string;
-  status: string;
-  totalPrice: number;
-  realPrice: number;
-  usedPoint: number;
-  orderDate: string;
-  menus: Array<TOrderDetail>;
 }
 
 export interface IOrderSheetState {
@@ -39,7 +29,9 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
         return;
       }
 
-      let order = await getOrderById<TOrder>(this.props.orderId);
+      let order = await getOrderById(this.props.orderId);
+
+      if (typeof order === "undefined") throw new Error("주문정보가 없습니다.");
 
       if (this.state.order["status"] && this.state.order.status === order.status) {
         return;

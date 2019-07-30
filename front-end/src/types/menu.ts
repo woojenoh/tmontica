@@ -1,5 +1,10 @@
 import { string, number } from "prop-types";
 
+export interface TMenuByCategory {
+  categoryKo: string;
+  menus: Array<TMenusItem>;
+}
+
 // 메뉴 추가시
 export interface TMenuAddRequest {
   nameKo: string;
