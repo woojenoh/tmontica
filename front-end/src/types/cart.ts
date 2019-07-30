@@ -1,6 +1,12 @@
 import { AxiosError } from "axios";
 import * as cartActionTypes from "../redux/actionTypes/cart";
 
+export type TCartId = {
+  cartId: number;
+};
+
+export type TAddCartRes = Array<TCartId>;
+
 export interface ICart {
   size: number;
   totalPrice: number;

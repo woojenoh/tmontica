@@ -1,6 +1,7 @@
-import { TCartAddReq } from "../types/cart";
+import { TCartAddReq, TAddCartRes } from "../types/cart";
 import { postWithJWT, API_URL } from "./common";
+import { TCommonError } from "../types/error";
 
-export function addCart(cartAddReqs: Array<TCartAddReq>) {
-  return postWithJWT(`${API_URL}/carts`, cartAddReqs);
+export function addCart<T>(cartAddReqs: Array<TCartAddReq>) {
+  return postWithJWT<T>(`${API_URL}/carts`, cartAddReqs);
 }

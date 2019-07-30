@@ -1,25 +1,21 @@
+import { TCommonError } from "../types/error";
+
 export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
 
-async function fetchTMON(url: string, options: RequestInit) {
+async function fetchTMON<T>(url: string, options: RequestInit) {
   const res = await fetch(url, options);
 
   const json = await res.json();
   if (res.ok) {
-    return json;
+    return json as T;
   }
 
-  const err = json as {
-    timestamp: string;
-    status: number;
-    error: string;
-    message: string;
-    path: string;
-  };
+  const err = json as TCommonError;
 
   throw new Error(err.message);
 }
 
-export function get(reqURL: string, params?: Map<string, string> | null, jwt?: string) {
+export function get<T>(reqURL: string, params?: Map<string, string> | null, jwt?: string) {
   if (typeof params !== "undefined" && params !== null && !/[?]/.test(reqURL)) {
     reqURL += `?${Array.from(params.entries())
       .map(x => {
@@ -28,7 +24,7 @@ export function get(reqURL: string, params?: Map<string, string> | null, jwt?: s
       .join("&")}`;
   }
 
-  return fetchTMON(reqURL, {
+  return fetchTMON<T>(reqURL, {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -38,16 +34,16 @@ export function get(reqURL: string, params?: Map<string, string> | null, jwt?: s
   });
 }
 
-export function getWithJWT(reqURL: string, params?: Map<string, string> | null) {
+export function getWithJWT<T>(reqURL: string, params?: Map<string, string> | null) {
   const jwt = localStorage.getItem("jwt") || "";
 
-  return get(reqURL, params, jwt);
+  return get<T>(reqURL, params, jwt);
 }
 
-export function postWithJWT(reqURL: string, data: any) {
+export function postWithJWT<T>(reqURL: string, data: any) {
   const jwt = localStorage.getItem("jwt") || "";
 
-  return fetchTMON(reqURL, {
+  return fetchTMON<T>(reqURL, {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",

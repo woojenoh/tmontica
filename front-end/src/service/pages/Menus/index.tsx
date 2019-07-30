@@ -22,7 +22,7 @@ export default class Menus extends React.Component<IMenusProps, IMenusState> {
 
   async getMenuAll() {
     try {
-      const menuAll = await getMenuAll();
+      const menuAll = await getMenuAll<Object>();
       this.setState({
         menuAll
       });

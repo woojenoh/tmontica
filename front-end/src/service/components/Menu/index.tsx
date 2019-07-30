@@ -4,7 +4,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { addCart } from "../../../api/cart";
 import { getMenuById } from "../../../api/menu";
 import _ from "underscore";
-import { TCartAddReq } from "../../../types/cart";
+import { TCartAddReq, TCartId } from "../../../types/cart";
 import { TMenuOption, TMenu, TMenuOptionMap } from "../../../types/menu";
 import {
   createCartAddReq,
@@ -106,7 +106,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
   // 바로구매
   async orderDirect(cartAddReq: TCartAddReq) {
     try {
-      const data = await addCart([cartAddReq]);
+      const data = await addCart<TCartId[]>([cartAddReq]);
 
       if (cartAddReq.direct) {
         localStorage.setItem("isDirect", "Y");
@@ -214,7 +214,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
     try {
       const { menuId } = this.props.match.params;
 
-      const menu = await getMenuById(parseInt(menuId));
+      const menu = await getMenuById<TMenu>(parseInt(menuId));
       this.setState(
         {
           menu

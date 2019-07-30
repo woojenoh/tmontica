@@ -39,11 +39,7 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
         return;
       }
 
-      let order = await getOrderById(this.props.orderId);
-
-      if (order === "") {
-        order = {} as TOrder;
-      }
+      let order = await getOrderById<TOrder>(this.props.orderId);
 
       if (this.state.order["status"] && this.state.order.status === order.status) {
         return;

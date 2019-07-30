@@ -26,7 +26,7 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
 
   async getOrderAll() {
     try {
-      const data = await getOrderAll();
+      const data = await getOrderAll<IOrderListState>();
       const { orders } = data;
       _.sortBy(orders, "orderId");
       orders.reverse();
