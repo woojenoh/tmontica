@@ -5,6 +5,7 @@ import com.internship.tmontica.cart.CartMenuDao;
 import com.internship.tmontica.cart.CartMenuService;
 import com.internship.tmontica.menu.MenuDao;
 import com.internship.tmontica.order.exception.NotEnoughStockException;
+import com.internship.tmontica.order.exception.StockExceptionType;
 import com.internship.tmontica.order.model.request.OrderReq;
 import com.internship.tmontica.order.model.request.OrderStatusReq;
 import com.internship.tmontica.order.model.request.Order_MenusReq;
@@ -88,7 +89,7 @@ public class OrderService {
             int stock = menuDao.getMenuById(orderDetail.getMenuId()).getStock(); // 메뉴의 현재 재고량
             int quantity = orderDetail.getQuantity(); // 차감할 메뉴의 수량
             if(stock-quantity < 0){ // 재고가 모자랄 경우 rollback
-                throw new NotEnoughStockException();
+                throw new NotEnoughStockException(cartMenu.getMenuId(), StockExceptionType.NOT_ENOUGH_STOCK);
             }
             // 재고가 남아있는 경우
             // 재고 수량 차감

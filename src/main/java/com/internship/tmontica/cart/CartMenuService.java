@@ -10,18 +10,18 @@ import com.internship.tmontica.menu.Menu;
 import com.internship.tmontica.menu.MenuDao;
 import com.internship.tmontica.option.Option;
 import com.internship.tmontica.option.OptionDao;
+import com.internship.tmontica.order.exception.NotEnoughStockException;
+import com.internship.tmontica.order.exception.StockExceptionType;
 import com.internship.tmontica.security.JwtService;
-import com.internship.tmontica.security.JwtServiceImpl;
 import com.internship.tmontica.user.exception.UserException;
 import com.internship.tmontica.user.exception.UserExceptionType;
 import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -75,6 +75,12 @@ public class CartMenuService {
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
 
         for (CartReq cartReq: cartReqs) {
+            int stock = menuDao.getMenuById(cartReq.getMenuId()).getStock(); // 메뉴의 현재 재고량
+            int quantity = cartReq.getQuantity(); // 차감할 메뉴의 수량
+            if(stock-quantity < 0){ // 재고가 모자랄 경우 rollback
+                throw new NotEnoughStockException(cartReq.getMenuId(), StockExceptionType.NOT_ENOUGH_STOCK);
+            }
+
             // direct : true 이면 userId 의 카트에서 direct = true 인 것을 삭제하기
             if (cartReq.isDirect()) {
                 cartMenuDao.deleteDirectCartMenu(userId);

@@ -1,9 +1,11 @@
 package com.internship.tmontica.exception.handler;
 
+import com.internship.tmontica.cart.exception.CartValidException;
 import com.internship.tmontica.exception.TmonTicaExceptionFormat;
 import com.internship.tmontica.menu.exception.MenuException;
 import com.internship.tmontica.menu.exception.SaveImgException;
 import com.internship.tmontica.menu.exception.MenuValidException;
+import com.internship.tmontica.order.exception.NotEnoughStockException;
 import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.exception.UserException;
 import com.internship.tmontica.user.exception.UserExceptionType;
@@ -60,5 +62,20 @@ public class GlobalExceptionAdvice {
     public ResponseEntity<TmonTicaExceptionFormat> handleMenuException(MenuException e){
         log.info("MenuException : {}" , e.getErrorMessage());
         return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), e.getMenuExceptionType().getResponseType());
+    }
+
+    // 카트
+    @ExceptionHandler(CartValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public TmonTicaExceptionFormat handleCartValidException(CartValidException e){
+        return new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage(), e.getBindingResult());
+    }
+
+    // 재고
+    @ExceptionHandler(NotEnoughStockException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public TmonTicaExceptionFormat handleNotEnoughStockException(NotEnoughStockException e) {
+        log.info("stock is not enough exception");
+        return new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage());
     }
 }
