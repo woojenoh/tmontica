@@ -57,6 +57,10 @@ export interface IFetchSignin {
 
 export interface IFetchSigninFulfilled {
   type: typeof userActionTypes.FETCH_SIGNIN_FULFILLED;
+  payload: {
+    user: IUser;
+    isAdmin: boolean;
+  };
 }
 
 export interface IFetchSigninRejected {
@@ -83,11 +87,6 @@ export interface IFetchSigninActiveRejected {
 
 export interface ISignout {
   type: typeof userActionTypes.SIGNOUT;
-}
-
-export interface ISetUser {
-  type: typeof userActionTypes.SET_USER;
-  payload: IUser;
 }
 
 export interface IFetchFindId {
@@ -143,7 +142,6 @@ export type TUserAction =
   | IFetchSigninFulfilled
   | IFetchSigninRejected
   | ISignout
-  | ISetUser
   | IFetchFindId
   | IFetchFindIdFulfilled
   | IFetchFindIdRejected

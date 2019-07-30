@@ -26,11 +26,15 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
     // 토큰에서 유저 정보를 가져와 상태에 저장한다.
     const jwtToken = jwt(response.data.authorization) as userTypes.IJwtToken;
     const parsedUserInfo = JSON.parse(jwtToken.userInfo);
-    yield put(userActionCreators.setUser(parsedUserInfo));
     // jwt를 로컬 스토리지에 저장한다.
     localStorage.setItem("jwt", response.data.authorization);
     alert("환영합니다!");
-    yield put(userActionCreators.fetchSigninFulfilled());
+    yield put(
+      userActionCreators.fetchSigninFulfilled({
+        user: parsedUserInfo,
+        isAdmin: parsedUserInfo.role === "ADMIN"
+      })
+    );
     // 로그인 후 유저의 장바구니를 가져온다. 순서를 보장하기 위해 로그인 사가에.
     yield put(cartActionCreators.fetchSetCart());
     if (/admin/.test(window.location.href)) {
@@ -80,7 +84,7 @@ function* fetchFindIdConfirmSagas(action: userTypes.IFetchFindIdConfirm) {
     const response = yield axios.post(`${API_URL}/users/findid/confirm`, {
       authCode: action.payload
     });
-    alert(response);
+    alert(`회원님의 아이디는 ${response.data.userIdList} 입니다.`);
     yield put(userActionCreators.fetchFindIdConfirmFulfilled());
   } catch (error) {
     alert(error.response.data.exceptionMessage);

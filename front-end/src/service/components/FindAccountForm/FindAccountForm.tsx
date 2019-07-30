@@ -28,27 +28,30 @@ class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccoun
     } as { [K in keyof IFindAccountFormState]: IFindAccountFormState[K] });
   };
 
-  handleFindIdSubmit = () => {
+  handleFindIdSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const { fetchFindId } = this.props;
     const { idEmail } = this.state;
+    e.preventDefault();
     fetchFindId(idEmail);
     this.setState({
       idEmail: ""
     });
   };
 
-  handleFindIdConfirmSubmit = () => {
+  handleFindIdConfirmSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const { fetchFindIdConfirm } = this.props;
     const { idCode } = this.state;
+    e.preventDefault();
     fetchFindIdConfirm(idCode);
     this.setState({
       idCode: ""
     });
   };
 
-  handleFindPasswordSubmit = () => {
+  handleFindPasswordSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const { fetchFindPassword } = this.props;
     const { passwordEmail, passwordId } = this.state;
+    e.preventDefault();
     fetchFindPassword({ email: passwordEmail, id: passwordId });
     this.setState({
       passwordEmail: "",
@@ -67,7 +70,7 @@ class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccoun
 
     return (
       <>
-        <form className="find-id__form">
+        <form className="find-id__form" onSubmit={e => handleFindIdSubmit(e)}>
           <input
             type="text"
             name="idEmail"
@@ -81,26 +84,21 @@ class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccoun
             type="submit"
             className="button button--orange find-id__button"
             value="아이디 찾기"
-            onClick={() => handleFindIdSubmit()}
           />
-          <form className="find-id__code">
-            <input
-              type="text"
-              name="idCode"
-              className="input find-id__code-input"
-              placeholder="인증코드"
-              onChange={e => handleInputChange(e)}
-              value={idCode}
-              required
-            />
-            <input
-              type="submit"
-              className="button find-id__code-button"
-              onClick={() => handleFindIdConfirmSubmit()}
-            />
-          </form>
         </form>
-        <form className="find-password__form">
+        <form className="find-id__code" onSubmit={e => handleFindIdConfirmSubmit(e)}>
+          <input
+            type="text"
+            name="idCode"
+            className="input find-id__code-input"
+            placeholder="인증코드"
+            onChange={e => handleInputChange(e)}
+            value={idCode}
+            required
+          />
+          <input type="submit" className="button find-id__code-button" />
+        </form>
+        <form className="find-password__form" onSubmit={e => handleFindPasswordSubmit(e)}>
           <input
             type="text"
             name="passwordId"
@@ -123,7 +121,6 @@ class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccoun
             type="submit"
             className="button button--orange find-password__button"
             value="비밀번호 찾기"
-            onClick={() => handleFindPasswordSubmit()}
           />
         </form>
       </>
