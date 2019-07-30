@@ -139,7 +139,9 @@ class App extends React.Component<IAppProps> {
         {!/^\/admin/.test(location.pathname) ? (
           <>
             <Header />
-            <this.Swicher />
+            <div id="service">
+              <this.Swicher />
+            </div>
           </>
         ) : (
           <div id="admin">
