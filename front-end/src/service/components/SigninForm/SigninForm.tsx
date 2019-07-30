@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Link, withRouter, RouteComponentProps } from "react-router-dom";
-import history from "../../../history";
 import * as userTypes from "../../../types/user";
 import "./styles.scss";
 
