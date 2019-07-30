@@ -29,9 +29,10 @@ export function fetchSignin(payload: userTypes.IUserSigninInfo) {
   };
 }
 
-export function fetchSigninFulfilled() {
+export function fetchSigninFulfilled(payload: { user: userTypes.IUser; isAdmin: boolean }) {
   return {
-    type: actionTypes.FETCH_SIGNIN_FULFILLED
+    type: actionTypes.FETCH_SIGNIN_FULFILLED,
+    payload
   };
 }
 
@@ -65,13 +66,6 @@ export function fetchSigninActiveRejected(error: AxiosError) {
 export function signout() {
   return {
     type: actionTypes.SIGNOUT
-  };
-}
-
-export function setUser(payload: userTypes.IUser) {
-  return {
-    type: actionTypes.SET_USER,
-    payload
   };
 }
 

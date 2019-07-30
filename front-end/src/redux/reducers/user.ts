@@ -35,7 +35,9 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
     case actionTypes.FETCH_SIGNIN_FULFILLED:
       return {
         ...state,
-        isSignin: true
+        user: action.payload.user,
+        isSignin: true,
+        isAdmin: action.payload.isAdmin
       };
     case actionTypes.FETCH_SIGNIN_REJECTED:
       return {
@@ -59,11 +61,6 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
         ...state,
         user: null,
         isSignin: false
-      };
-    case actionTypes.SET_USER:
-      return {
-        ...state,
-        user: action.payload
       };
     // FETCH_FIND_ID
     case actionTypes.FETCH_FIND_ID:
