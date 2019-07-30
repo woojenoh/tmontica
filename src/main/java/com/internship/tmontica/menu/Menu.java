@@ -43,5 +43,8 @@ public class  Menu {
     @NotEmpty
     private String nameKo;
 
+    private Date startDate;
+    private Date endDate;
+
 
 }

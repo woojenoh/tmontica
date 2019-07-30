@@ -93,5 +93,5 @@ hs_err_pid*
 
 /.gitignore
 
-*.sql
+#*.sql
 .factorypath

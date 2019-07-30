@@ -1,15 +1,21 @@
 package com.internship.tmontica.menu.model.request;
 
-import com.internship.tmontica.menu.validaton.ValidMenuReq;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
-@ValidMenuReq
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class MenuReq {
     //TODO : validation..
     @NotEmpty(message = "메뉴이름(영어)가 명시되어야 합니다.")
@@ -36,6 +42,10 @@ public class MenuReq {
     @NotNull(message = "이달의 메뉴 여부가 명시되어야 합니다.")
     private boolean monthlyMenu;
     private boolean usable = true;
+    @DateTimeFormat(pattern = "yyyy.MM.dd HH:mm:ss")
+    private Date startDate;
+    @DateTimeFormat(pattern = "yyyy.MM.dd HH:mm:ss")
+    private Date endDate;
 
     private List<Integer> optionIds = new ArrayList<>();
 

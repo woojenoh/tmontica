@@ -1,9 +1,14 @@
 package com.internship.tmontica.menu;
 
-import com.internship.tmontica.menu.exception.BindingResultHelper;
-import com.internship.tmontica.menu.model.response.*;
+import com.internship.tmontica.menu.exception.ErrorCode;
+import com.internship.tmontica.menu.exception.ErrorResponse;
 import com.internship.tmontica.menu.model.request.MenuReq;
 import com.internship.tmontica.menu.model.request.MenuUpdateReq;
+import com.internship.tmontica.menu.model.response.MenuCategoryResp;
+import com.internship.tmontica.menu.model.response.MenuDetailResp;
+import com.internship.tmontica.menu.model.response.MenuMainResp;
+import com.internship.tmontica.menu.model.response.MenuSimpleResp;
+import com.internship.tmontica.menu.validaton.MenuValidator;
 import com.internship.tmontica.util.CategoryName;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,15 +21,20 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/menus")
 @RequiredArgsConstructor
 public class MenuController {
+
     private final MenuService menuService;
+
     private final ModelMapper modelMapper;
+
+    private final MenuValidator menuValidator;
+
     @Value("${menu.imagepath}")
     private String location;
 
@@ -35,11 +45,23 @@ public class MenuController {
         return new ResponseEntity<>(allMenus, HttpStatus.OK);
     }
 
+    /** 전체 메뉴 가져오기 **/
+    @GetMapping("/all")
+    public ResponseEntity<List<Menu>> getAllMenus(@RequestParam(value = "page", required = false, defaultValue = "1")int page,
+                                                  @RequestParam(value = "size", required = false, defaultValue = "10")int size){
+
+        List<Menu> menus = menuService.getAllMenus(page, size);
+        if (menus.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(menus, HttpStatus.OK);
+
+    }
+
     /** 카테고리 별 메뉴 가져오기 **/
     @GetMapping("/{category:[a-z-]+}")
     public ResponseEntity<MenuCategoryResp> getMenusByCategory(@PathVariable("category")String category,
-                                                               @RequestParam("page")int page,
-                                                               @RequestParam("size")int size){
+                                                               @RequestParam(value = "page", required = false) int page,
+                                                               @RequestParam(value = "size", required = false) int size){
 
         MenuCategoryResp menucategoryResp = new MenuCategoryResp();
         menucategoryResp.setSize(size);
@@ -74,11 +96,15 @@ public class MenuController {
 
     /** 메뉴 추가하기 **/
     @PostMapping
-    public ResponseEntity addMenu(@ModelAttribute @Valid MenuReq menuReq, BindingResult bindingResult){
+    public ResponseEntity addMenu(@ModelAttribute @Valid MenuReq menuReq,BindingResult bindingResult){
         //TODO : 예외 처리..
-        if(bindingResult.hasErrors())
-            BindingResultHelper.throwCustomInvalidParameterException(bindingResult);
-
+        if(bindingResult.hasErrors()) {
+            return new ResponseEntity(ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, bindingResult), HttpStatus.BAD_REQUEST);
+        }
+        menuValidator.validate(menuReq, bindingResult);
+        if(bindingResult.hasErrors()) {
+            return new ResponseEntity(ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, bindingResult), HttpStatus.BAD_REQUEST);
+        }
         log.info("[menu api] 메뉴 추가하기");
         log.info("menuReq : {}", menuReq.toString());
 
@@ -93,9 +119,9 @@ public class MenuController {
     /** 메뉴 수정하기 **/
     @PutMapping
     public ResponseEntity updateMenu(@ModelAttribute @Valid MenuUpdateReq menuReq, BindingResult bindingResult){
-        if(bindingResult.hasErrors())
+        if(bindingResult.hasErrors()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
-
+        }
         log.info("[menu api] 메뉴 수정하기");
         log.info("menuReq : {}", menuReq.toString());
 
@@ -117,5 +143,6 @@ public class MenuController {
         menuService.deleteMenu(menuId);
         return new ResponseEntity(HttpStatus.OK);
     }
+
 
 }

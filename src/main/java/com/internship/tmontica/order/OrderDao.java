@@ -37,7 +37,7 @@ public interface OrderDao {
 
     // order_status_log 추가
     @Insert("insert into order_status_logs " +
-            "values(0, #{statusType}, #{editorId}, #{orderId}, sysdate())")
+            "values(0, #{status}, #{editorId}, #{orderId}, sysdate())")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addOrderStatusLog(OrderStatusLog orderStatusLog);
 
@@ -53,7 +53,7 @@ public interface OrderDao {
     int addOrderDetail(OrderDetail orderDetail);
 
     // orderId로 order_status_log 내역 가져오기
-    @Select("select status_type as status, editor_id, modified_date from order_status_logs where order_id=#{orderId}")
+    @Select("select status, editor_id, modified_date from order_status_logs where order_id=#{orderId}")
     List<OrderStatusLogResp> getOrderStatusLogByOrderId(int orderId);
 
     // order Status로 주문정보 가져오기
