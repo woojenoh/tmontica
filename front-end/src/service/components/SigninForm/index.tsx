@@ -7,7 +7,9 @@ import { Dispatch } from "redux";
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     fetchSignin: (payload: userTypes.IUserSigninInfo) =>
-      dispatch(userActionCreators.fetchSignin(payload))
+      dispatch(userActionCreators.fetchSignin(payload)),
+    fetchSigninActive: (payload: { id: string; token: string }) =>
+      dispatch(userActionCreators.fetchSigninActive(payload))
   };
 };
 

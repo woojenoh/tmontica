@@ -40,6 +40,22 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
   }
 }
 
+function* fetchSigninActiveSagas(action: userTypes.IFetchSigninActive) {
+  try {
+    yield axios.get(`${API_URL}/users/active`, {
+      params: {
+        id: action.payload.id,
+        token: action.payload.token
+      }
+    });
+    alert("인증이 완료되었습니다. 이제 로그인이 가능합니다.");
+    yield put(userActionCreators.fetchSigninActiveFulfilled());
+  } catch (error) {
+    alert(error.response.data.exceptionMessage);
+    yield put(userActionCreators.fetchSigninActiveRejected(error.response));
+  }
+}
+
 function* fetchFindIdSagas(action: userTypes.IFetchFindId) {
   try {
     yield axios.get(`${API_URL}/users/findid`, {
@@ -87,6 +103,7 @@ function* fetchFindPasswordSagas(action: userTypes.IFetchFindPassword) {
 export default function* userSagas() {
   yield takeLatest(userActionTypes.FETCH_SIGNUP, fetchSignupSagas);
   yield takeLatest(userActionTypes.FETCH_SIGNIN, fetchSigninSagas);
+  yield takeLatest(userActionTypes.FETCH_SIGNIN_ACTIVE, fetchSigninActiveSagas);
   yield takeLatest(userActionTypes.FETCH_FIND_ID, fetchFindIdSagas);
   yield takeLatest(userActionTypes.FETCH_FIND_ID_CONFIRM, fetchFindIdConfirmSagas);
   yield takeLatest(userActionTypes.FETCH_FIND_PASSWORD, fetchFindPasswordSagas);

@@ -42,6 +42,26 @@ export function fetchSigninRejected(error: AxiosError) {
   };
 }
 
+export function fetchSigninActive(payload: { id: string; token: string }) {
+  return {
+    type: actionTypes.FETCH_SIGNIN_ACTIVE,
+    payload
+  };
+}
+
+export function fetchSigninActiveFulfilled() {
+  return {
+    type: actionTypes.FETCH_SIGNIN_ACTIVE_FULFILLED
+  };
+}
+
+export function fetchSigninActiveRejected(error: AxiosError) {
+  return {
+    type: actionTypes.FETCH_SIGNIN_ACTIVE_REJECTED,
+    error
+  };
+}
+
 export function signout() {
   return {
     type: actionTypes.SIGNOUT

@@ -64,6 +64,23 @@ export interface IFetchSigninRejected {
   error: AxiosError;
 }
 
+export interface IFetchSigninActive {
+  type: typeof userActionTypes.FETCH_SIGNIN_ACTIVE;
+  payload: {
+    id: string;
+    token: string;
+  };
+}
+
+export interface IFetchSigninActiveFulfilled {
+  type: typeof userActionTypes.FETCH_SIGNIN_ACTIVE_FULFILLED;
+}
+
+export interface IFetchSigninActiveRejected {
+  type: typeof userActionTypes.FETCH_SIGNIN_ACTIVE_REJECTED;
+  error: AxiosError;
+}
+
 export interface ISignout {
   type: typeof userActionTypes.SIGNOUT;
 }
@@ -135,4 +152,7 @@ export type TUserAction =
   | IFetchFindPasswordRejected
   | IFetchFindIdConfirm
   | IFetchFindIdConfirmFulfilled
-  | IFetchFindIdConfirmRejected;
+  | IFetchFindIdConfirmRejected
+  | IFetchSigninActive
+  | IFetchSigninActiveFulfilled
+  | IFetchSigninActiveRejected;
