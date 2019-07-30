@@ -39,18 +39,32 @@ DROP TABLE IF EXISTS `tmontica`.`users` ;
 
 CREATE TABLE IF NOT EXISTS `tmontica`.`users` (
   `name` VARCHAR(45) NOT NULL,
-  `user_id` VARCHAR(45) NOT NULL,
+  `id` VARCHAR(45) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `birth_date` DATETIME NOT NULL,
   `password` VARCHAR(100) NOT NULL,
   `role` CHAR(10) NOT NULL DEFAULT 'user',
   `created_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `point` INT(11) NOT NULL DEFAULT '0',
+  `is_active` TINYINT(1) NOT NULL DEFAULT 0,
+  `activate_code` VARCHAR(45) NULL,
   PRIMARY KEY (`id`))
 
-ALTER TABLE `tmontica`.`users`
-ADD COLUMN `is_active` VARCHAR(45) NOT NULL DEFAULT 0 AFTER `point`,
-ADD COLUMN `activate_code` VARCHAR(45) NULL AFTER `is_active`;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `tmontica`.`find_id`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tmontica`.`find_id` ;
+
+CREATE TABLE `tmontica`.`find_id` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `auth_code` VARCHAR(45) NULL,
+  `find_ids` VARCHAR (255) NULL,
+  PRIMARY KEY (`id`))
+
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 

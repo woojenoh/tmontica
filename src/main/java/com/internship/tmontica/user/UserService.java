@@ -3,21 +3,19 @@ package com.internship.tmontica.user;
 import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.exception.*;
+import com.internship.tmontica.user.find.FindDao;
+import com.internship.tmontica.user.find.FindId;
 import com.internship.tmontica.user.model.request.*;
-import com.internship.tmontica.user.model.response.UserFindIdRespDTO;
-import com.internship.tmontica.user.model.response.UserInfoRespDTO;
+import com.internship.tmontica.user.model.response.*;
 import com.internship.tmontica.security.AuthenticationKey;
-import com.internship.tmontica.user.model.response.UserSignInRespDTO;
-import com.internship.tmontica.user.model.response.UserTokenInfoDTO;
 import com.internship.tmontica.util.JsonUtil;
-import com.internship.tmontica.util.UserConfigValueName;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,10 +24,11 @@ import java.util.stream.Collectors;
 public class UserService { //implements UserDetail
 
     private final UserDao userDao;
-    //private final PasswordEncoder passwordEncoder;
+    private final FindDao findDao;
     private final ModelMapper modelMapper;
     private final MailSender sender;
     private final JwtService jwtService;
+
 
     public boolean signUp(UserSignUpReqDTO userSignUpReqDTO) throws MailSendException{
 
@@ -131,9 +130,8 @@ public class UserService { //implements UserDetail
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id");
         checkMissingSessionUserIdException(userId);
         checkPasswordMismatchException(userChangePasswordReqDTO.getNewPassword(), userChangePasswordReqDTO.getNewPasswordCheck());
-        User user = modelMapper.map(userChangePasswordReqDTO, User.class);
-        user.setId(userId);
-        return userDao.updateUserPassword(user) > 0;
+        UserChangePasswordDTO userChangePasswordDTO = new UserChangePasswordDTO(userId, userChangePasswordReqDTO.getNewPassword());
+        return userDao.updateUserPassword(userChangePasswordDTO) > 0;
     }
 
     private void checkMissingSessionUserIdException(String userId){
@@ -153,52 +151,51 @@ public class UserService { //implements UserDetail
         return userDao.deleteUser(id) > 0;
     }
 
-    public boolean sendUserId(String email, HttpSession httpSession) throws MailSendException{
+    @Transactional
+    public boolean sendUserId(String email) throws MailSendException{
 
         List<User> userList = userDao.getUserByEmail(email);
-        if(userList == null){
+        if(userList.isEmpty()){
             return false;
         }
         AuthenticationKey authenticationKey = new AuthenticationKey();
         String key = authenticationKey.getAuthenticationKey();
         UserMailForm userMailForm = new UserMailForm(MailType.FIND_ID, userList.get(0));
+        while(findDao.getAuthCode(key) != null){
+            key = authenticationKey.getAuthenticationKey();
+        }
+        findDao.addAuthCode(new FindId(key, userList.stream().map(User :: getId).collect(Collectors.toList()).toString()));
         userMailForm.setAuthenticationKey(key);
         userMailForm.makeMail();
         sender.send(userMailForm.getMsg());
-        httpSession.setAttribute(UserConfigValueName.ID_AUTH_CODE, key);
-        httpSession.setAttribute(UserConfigValueName.FIND_ID_SESSION_ATTRIBUTE_NAME,
-                 userList.stream().map(User :: getId).collect(Collectors.toList()));
         return true;
     }
 
+    @Transactional
     public boolean sendUserPassword(String id, String email) throws MailSendException{
         User user = userDao.getUserByUserId(id);
         checkEmailMismatchException(user.getEmail(), email);
+        String tempPassword = new AuthenticationKey().getAuthenticationKey();
+        UserChangePasswordDTO userChangePasswordDTO = new UserChangePasswordDTO(user.getId(), tempPassword);
+        userDao.updateUserPassword(userChangePasswordDTO);
+        user.setPassword(tempPassword);
         UserMailForm userMailForm = new UserMailForm(MailType.FIND_PW, user);
         userMailForm.makeMail();
         sender.send(userMailForm.getMsg());
         return true;
     }
 
-    public UserFindIdRespDTO checkAuthCode(UserFindIdReqDTO userFindIdReqDTO, HttpSession session){
+    @Transactional
+    public UserFindIdRespDTO checkAuthCode(UserFindIdReqDTO userFindIdReqDTO){
 
-        String authCode = (String)checkSessionAttribute(session, UserConfigValueName.ID_AUTH_CODE);
-        if(userFindIdReqDTO.getAuthCode().equals(authCode)){
-            @SuppressWarnings("unchecked")
-            List<String> findIds = (List<String>)checkSessionAttribute(session, UserConfigValueName.FIND_ID_SESSION_ATTRIBUTE_NAME);
+        FindId findId = findDao.getAuthCode(userFindIdReqDTO.getAuthCode());
+        if(findId != null){
+            String findIds = findId.getFindIds();
+            findDao.withdrawAuthCode(userFindIdReqDTO.getAuthCode());
             return new UserFindIdRespDTO(findIds, true);
         }
 
         return new UserFindIdRespDTO(null,false );
-    }
-
-    private Object checkSessionAttribute(HttpSession session, String key){
-
-        Object attribute = session.getAttribute(key);
-        if(attribute==null){
-            throw new UserException(UserExceptionType.MISSING_SESSION_ATTRIBUTE_EXCEPTION);
-        }
-        return attribute;
     }
 
     public UserInfoRespDTO getUserInfo(String id){
