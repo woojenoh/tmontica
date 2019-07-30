@@ -7,7 +7,7 @@ import java.util.Random;
 @Getter
 public class AuthenticationKey {
 
-    private static final int AUTHENTICATION_KEY_LENGTH = 20;
+    private static final int AUTHENTICATION_KEY_LENGTH = 10;
     private String authenticationKey;
 
     public AuthenticationKey(){

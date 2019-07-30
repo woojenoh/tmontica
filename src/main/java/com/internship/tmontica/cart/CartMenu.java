@@ -3,6 +3,8 @@ package com.internship.tmontica.cart;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -14,7 +16,7 @@ public class CartMenu {
     private String option;
     private int id;
 
-    @NotNull
+    @NotEmpty
     private String userId;
     @NotNull
     private int price;  // 옵션의 가격...
@@ -23,7 +25,7 @@ public class CartMenu {
     @NotNull
     private boolean direct;
 
-    public CartMenu(@NotNull int quantity, String option, @NotNull String userId, @NotNull int price, @NotNull int menuId, @NotNull boolean direct) {
+    public CartMenu(@NotNull int quantity, String option, @NotEmpty String userId, @NotNull int price, @NotNull int menuId, @NotNull boolean direct) {
         this.quantity = quantity;
         this.option = option;
         this.userId = userId;

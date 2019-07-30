@@ -12,6 +12,8 @@ import com.internship.tmontica.option.Option;
 import com.internship.tmontica.option.OptionDao;
 import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.security.JwtServiceImpl;
+import com.internship.tmontica.user.exception.UserException;
+import com.internship.tmontica.user.exception.UserExceptionType;
 import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,10 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -54,9 +53,10 @@ public class CartMenuService {
             // 메뉴아이디로 메뉴정보 가져오기
             Menu menu = menuDao.getMenuById(cartMenu.getMenuId());
             int price = menu.getSellPrice()+cartMenu.getPrice(); // 메뉴가격 + 옵션가격
+
             // List<Cart_MenusResp> 에 넣기
             Cart_MenusResp cart_menusResp = new Cart_MenusResp(cartMenu.getId(), cartMenu.getMenuId(), menu.getNameEng(),
-                                                                menu.getNameKo(),menu.getImgUrl(), option ,
+                                                                menu.getNameKo(),"/images/".concat(menu.getImgUrl()), option ,
                                                                 cartMenu.getQuantity(), price, menu.getStock());
             menus.add(cart_menusResp);
             // totalPrice 에 가격 누적
@@ -71,11 +71,13 @@ public class CartMenuService {
     // 카트에 추가하기 api
     public List<CartIdResp> addCartApi(List<CartReq> cartReqs){
         List<CartIdResp> cartIds = new ArrayList<>();
+        // 토큰에서 userId 가져오기
+        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
 
         for (CartReq cartReq: cartReqs) {
-            // direct : true 이면 카트에서 direct = true 인 것을 삭제하기
+            // direct : true 이면 userId 의 카트에서 direct = true 인 것을 삭제하기
             if (cartReq.isDirect()) {
-                cartMenuDao.deleteDirectCartMenu();
+                cartMenuDao.deleteDirectCartMenu(userId);
             }
 
             List<Cart_OptionReq> options = cartReq.getOption();
@@ -83,7 +85,7 @@ public class CartMenuService {
             int optionPrice = 0;
             for (Cart_OptionReq option : options) {
                 // DB에 들어갈 옵션 문자열 만들기
-                if (option.getId() != 1) {
+                if (option.getId() > 2) {
                     optionStr.append("/");
                 }
                 int optionId = option.getId();
@@ -93,9 +95,6 @@ public class CartMenuService {
                 // 옵션들의 가격 계산
                 optionPrice += ((optionDao.getOptionById(optionId).getPrice()) * opQuantity);
             }
-
-            // 토큰에서 userId 가져오기
-            String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
 
             // 카트 테이블에 추가하기
             CartMenu cartMenu = new CartMenu(cartReq.getQuantity(), optionStr.toString(), userId,
@@ -116,7 +115,8 @@ public class CartMenuService {
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         String cartUserId = cartMenuDao.getCartMenuByCartId(id).getUserId();
         if(!userId.equals(cartUserId)){
-            // 아이디 일치하지 않ㅇ르 경우
+            // 아이디 일치하지 않을 경우
+            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
         }
         int result = cartMenuDao.updateCartMenuQuantity(id, cartUpdateReq.getQuantity());
         return result;
@@ -128,7 +128,8 @@ public class CartMenuService {
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         String cartUserId = cartMenuDao.getCartMenuByCartId(id).getUserId();
         if(!userId.equals(cartUserId)){
-            // 아이디 일치하지 않ㅇ르 경우
+            // 아이디 일치하지 않을 경우
+            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
         }
         //카트에 담긴 정보 삭제하기
         int result = cartMenuDao.deleteCartMenu(id);
@@ -142,14 +143,13 @@ public class CartMenuService {
         //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
         StringBuilder convert = new StringBuilder();
         String[] arrOption = option.split("/");
-
         for (String opStr : arrOption) {
             String[] oneOption = opStr.split("__");
             Option tmpOption = optionDao.getOptionById(Integer.parseInt(oneOption[0]));
 
             if (tmpOption.getType().equals("Temperature")) {
                 convert.append(tmpOption.getName());
-            } else if(tmpOption.getType().equals("/Shot")){
+            } else if(tmpOption.getType().equals("Shot")){
                 convert.append("/샷추가("+oneOption[1]+"개)");
             } else if(tmpOption.getType().equals("Syrup")){
                 convert.append("/시럽추가("+oneOption[1]+"개)");

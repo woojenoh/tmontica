@@ -19,6 +19,6 @@ public class OrderControllerExceptionHandler{
     public TmonTicaExceptionFormat handleUnauthorizedException(UnauthorizedException e) {
 
         log.info("stock is not enough exception");
-        return new TmonTicaExceptionFormat("menu stok", "메뉴의 재고가 부족합니다");
+        return new TmonTicaExceptionFormat("menu stock", "메뉴의 재고가 부족합니다");
     }
 }

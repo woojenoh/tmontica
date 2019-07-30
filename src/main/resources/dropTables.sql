@@ -8,3 +8,4 @@ DROP TABLE IF EXISTS `tmontica`.`orders` ;
 DROP TABLE IF EXISTS `tmontica`.`cart_menus` ;
 DROP TABLE IF EXISTS `tmontica`.`menus` ;
 DROP TABLE IF EXISTS `tmontica`.`users` ;
+DROP TABLE IF EXISTs `tmontica`.`find_id`;

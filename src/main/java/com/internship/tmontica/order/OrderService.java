@@ -2,16 +2,17 @@ package com.internship.tmontica.order;
 
 import com.internship.tmontica.cart.CartMenu;
 import com.internship.tmontica.cart.CartMenuDao;
+import com.internship.tmontica.cart.CartMenuService;
 import com.internship.tmontica.menu.MenuDao;
-import com.internship.tmontica.option.Option;
-import com.internship.tmontica.option.OptionDao;
 import com.internship.tmontica.order.exception.NotEnoughStockException;
 import com.internship.tmontica.order.model.request.OrderReq;
+import com.internship.tmontica.order.model.request.OrderStatusReq;
 import com.internship.tmontica.order.model.request.Order_MenusReq;
-import com.internship.tmontica.order.model.response.OrderListResp;
-import com.internship.tmontica.order.model.response.OrderResp;
-import com.internship.tmontica.order.model.response.Order_MenusResp;
+import com.internship.tmontica.order.model.response.*;
 import com.internship.tmontica.security.JwtService;
+import com.internship.tmontica.user.UserRole;
+import com.internship.tmontica.user.exception.UserException;
+import com.internship.tmontica.user.exception.UserExceptionType;
 import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,8 @@ public class OrderService {
     private final OrderDao orderDao;
     private final CartMenuDao cartMenuDao;
     private final MenuDao menuDao;
-    private final OptionDao optionDao;
     private final JwtService jwtService;
+    private final CartMenuService cartMenuService;
 
 
     // 주문내역 가져오기 api
@@ -59,14 +60,13 @@ public class OrderService {
     }
 
     // 결제하기 api
-    @Transactional(rollbackFor = NotEnoughStockException.class)
+    @Transactional(rollbackFor = {NotEnoughStockException.class, UserException.class} )
     public Map<String, Integer> addOrderApi(OrderReq orderReq){
         //토큰에서 유저아이디
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         // TODO: totalprice 여기서 한번더 계산이 필요한가?
         Order order = new Order(0,orderReq.getPayment(),orderReq.getTotalPrice(),orderReq.getUsedPoint(),
-                orderReq.getTotalPrice()-orderReq.getUsedPoint(), "미결제", userId);
-
+                orderReq.getTotalPrice()-orderReq.getUsedPoint(), OrderStatusType.BEFORE_PAYMENT.getStatus(), userId);
         // 주문테이블에 추가
         orderDao.addOrder(order);
         int orderId = order.getId();
@@ -76,6 +76,12 @@ public class OrderService {
         List<Order_MenusReq> menus = orderReq.getMenus();
         for (Order_MenusReq menu: menus) {
             CartMenu cartMenu = cartMenuDao.getCartMenuByCartId(menu.getCartId());
+
+            // 로그인한 아이디와 디비의 아이디 다르면 rollback
+            if(!userId.equals(cartMenu.getUserId())){
+                throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
+            }
+
             int price = (menuDao.getMenuById(cartMenu.getMenuId()).getSellPrice()) + cartMenu.getPrice();// 옵션 + 메뉴 가격
             OrderDetail orderDetail = new OrderDetail(0, orderId, cartMenu.getOption(), price, cartMenu.getQuantity(),cartMenu.getMenuId());
 
@@ -92,10 +98,11 @@ public class OrderService {
             orderDao.addOrderDetail(orderDetail);
             // 장바구니에서는 삭제
             cartMenuDao.deleteCartMenu(menu.getCartId());
-            // 주문상태로그테이블에 "미결제" 상태로 추가
-            orderDao.addOrderStatusLog(new OrderStatusLog("미결제", userId, orderId));
 
         }
+        // 주문상태로그테이블에 "미결제" 상태로 추가
+        orderDao.addOrderStatusLog(new OrderStatusLog(OrderStatusType.BEFORE_PAYMENT.getStatus(), userId, orderId));
+
         Map<String, Integer> map = new HashMap<>(); // 리턴할 객체
         map.put("orderId", orderId); // 반환값 orderId
         return map;
@@ -107,35 +114,21 @@ public class OrderService {
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         // 유저 아이디 검사
         if(!userId.equals(order.getUserId())){
-            //return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
         }
 
         List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(orderId);
 
-        //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
-        for (int i = 0; i < menus.size(); i++) {
-            String option = menus.get(i).getOption();
-            String convert = ""; // 변환할 문자열
-
-            String[] arrOption = option.split("/");
-            for (int j = 0; j < arrOption.length; j++) {
-                String[] oneOption = arrOption[j].split("__");
-                Option tmpOption = optionDao.getOptionById(Integer.valueOf(oneOption[0]));
-                if (j != 0) {
-                    convert += "/";
-                }
-                if (tmpOption.getType().equals("Temperature")) {
-                    convert += tmpOption.getName();
-                } else if(tmpOption.getType().equals("Shot")){
-                    convert += "샷추가" + "(" + oneOption[1] + "개)";
-                } else if(tmpOption.getType().equals("Syrup")){
-                    convert += "시럽추가" + "(" + oneOption[1] + "개)";
-                } else if(tmpOption.getType().equals("Size")){
-                    convert += "사이즈업" + "(" + oneOption[1] + "개)";
-                }
+        for (Order_MenusResp menu : menus) {
+            //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
+            if(!menu.getOption().equals("")){
+                String option = menu.getOption();
+                String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
+                menu.setOption(convert);
             }
 
-            menus.get(i).setOption(convert);
+            // imgUrl 경로 설정
+            menu.setImgUrl("/images/".concat(menu.getImgUrl()));
         }
 
         OrderResp orderResp = new OrderResp(orderId, order.getPayment(), order.getStatus(), order.getTotalPrice(),
@@ -143,17 +136,91 @@ public class OrderService {
         return orderResp;
     }
 
-    // 주문 취소 api
+    // 주문 취소 api(사용자)
     public void cancelOrderApi(int orderId){
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         String dbUserId = orderDao.getOrderByOrderId(orderId).getUserId();
         if(!userId.equals(dbUserId)){
             // 아이디 디비와 다를경우 예외처리
+            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
         }
         // orders 테이블에서 status 수정
-        orderDao.deleteOrder(orderId);
+        orderDao.updateOrderStatus(orderId, OrderStatusType.CANCEL.getStatus());
         // order_status_log 테이블에도 주문취소 로그 추가
-        OrderStatusLog orderStatusLog = new OrderStatusLog("주문취소", userId, orderId);
+        OrderStatusLog orderStatusLog = new OrderStatusLog(OrderStatusType.CANCEL.getStatus(), userId, orderId);
         orderDao.addOrderStatusLog(orderStatusLog);
     }
+
+    // 주문 상태 변경 api(관리자)
+    public void updateOrderStatusApi(int orderId, OrderStatusReq orderStatusReq){
+        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
+        // 관리자 권한 검사
+        String role = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"role");
+        if(!role.equals(UserRole.ADMIN.toString())){
+            throw new UserException(UserExceptionType.INVALID_USER_ROLE_EXCEPTION);
+        }
+        // orders 테이블에서 status 수정
+        orderDao.updateOrderStatus(orderId, orderStatusReq.getStatus());
+        // order_status_log 테이블에도 로그 추가
+        OrderStatusLog orderStatusLog = new OrderStatusLog(orderStatusReq.getStatus(), userId, orderId);
+        orderDao.addOrderStatusLog(orderStatusLog);
+    }
+
+    // 주문 상태별로 주문정보 가져오기 api(관리자)
+    public List<OrdersByStatusResp> getOrderByStatusApi(String status) {
+        // 관리자 권한 검사
+        String role = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"role");
+        if(!role.equals(UserRole.ADMIN.toString())){
+            throw new UserException(UserExceptionType.INVALID_USER_ROLE_EXCEPTION);
+        }
+
+        List<Order> orders = orderDao.getOrderByStatus(OrderStatusType.valueOf(status).getStatus());
+        List<OrdersByStatusResp> ordersByStatusResps = new ArrayList<>();
+        for(Order order : orders){
+            List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(order.getId());
+            for (Order_MenusResp menu : menus) {
+                //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
+                if(!menu.getOption().equals("")){
+                    String option = menu.getOption();
+                    String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
+                    menu.setOption(convert);
+                }
+
+                menu.setImgUrl("/images/".concat(menu.getImgUrl()));
+            }
+            OrdersByStatusResp obs = new OrdersByStatusResp(order.getId(), order.getOrderDate(), order.getPayment(),
+                    order.getTotalPrice(), order.getUsedPoint(), order.getRealPrice(), order.getStatus(), order.getUserId(), menus);
+
+            ordersByStatusResps.add(obs);
+        }
+        return ordersByStatusResps;
+    }
+
+
+    // 주문 상세정보 가져오기 api(관리자)
+    public OrderDetailResp getOrderDetailApi(int orderId){
+        // 관리자 권한 검사
+        String role = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"role");
+        if(!role.equals(UserRole.ADMIN.toString())){
+            throw new UserException(UserExceptionType.INVALID_USER_ROLE_EXCEPTION);
+        }
+
+        Order order = orderDao.getOrderByOrderId(orderId);
+        List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(orderId);
+        for (Order_MenusResp menu : menus) {
+            //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
+            if(!menu.getOption().equals("")){
+                String option = menu.getOption();
+                String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
+                menu.setOption(convert);
+            }
+            menu.setImgUrl("/images/".concat(menu.getImgUrl()));
+        }
+        List<OrderStatusLogResp> orderStatusLogs = orderDao.getOrderStatusLogByOrderId(orderId);
+
+        OrderDetailResp orderDetailResp = new OrderDetailResp(order.getUserId(), orderId, order.getTotalPrice(),menus, orderStatusLogs);
+        return orderDetailResp;
+    }
+
+
 }
