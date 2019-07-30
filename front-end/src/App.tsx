@@ -20,6 +20,7 @@ import Payment from "./service/pages/Payment";
 import FindAccount from "./service/pages/FindAccount";
 import AdminSignin from "./admin/pages/Signin";
 import AdminMenus from "./admin/pages/AdminMenus";
+import AdminOrders from "./admin/pages/AdminOrders";
 
 export interface IAppProps extends RouteComponentProps {
   isSignin: boolean;
@@ -110,7 +111,7 @@ class App extends React.Component<IAppProps> {
     const { AdminRoute, PrivateRoute, PublicRoute } = this;
     return (
       <Switch>
-        <AdminRoute exact path="/admin/orders" component={Menus} />
+        <AdminRoute exact path="/admin/orders" component={AdminOrders} />
         <AdminRoute exact path="/admin/menus" component={AdminMenus} />
         <AdminRoute exact path="/admin/users" component={Menus} />
         <AdminRoute exact path="/admin/banners" component={Menus} />
