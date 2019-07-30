@@ -3,6 +3,7 @@ package com.internship.tmontica.exception.handler;
 import com.internship.tmontica.exception.TmonTicaExceptionFormat;
 import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.exception.UserException;
+import com.internship.tmontica.user.exception.UserExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -28,20 +29,8 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(UserException.class)
     public ResponseEntity<TmonTicaExceptionFormat> handleUserException(UserException e) {
         log.debug("UserExceptionMessage : {}", e.getErrorMessage());
-        switch (e.getUserExceptionType().getResponseType()) {
 
-            case BAD_REQUEST:
-                return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), HttpStatus.BAD_REQUEST);
-            case NOT_FOUND:
-                return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), HttpStatus.NOT_FOUND);
-            case CONFLICT:
-                return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), HttpStatus.CONFLICT);
-            case UNAUTHORIZED:
-                return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), HttpStatus.UNAUTHORIZED);
-
-            default:
-                return new ResponseEntity<>(new TmonTicaExceptionFormat("유저핸들러 케이스", "분류되지않은 케이스"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), e.getUserExceptionType().getResponseType());
     }
 
     @ExceptionHandler(MailSendException.class)
