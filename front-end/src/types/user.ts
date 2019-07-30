@@ -64,6 +64,23 @@ export interface IFetchSigninRejected {
   error: AxiosError;
 }
 
+export interface IFetchSigninActive {
+  type: typeof userActionTypes.FETCH_SIGNIN_ACTIVE;
+  payload: {
+    id: string;
+    token: string;
+  };
+}
+
+export interface IFetchSigninActiveFulfilled {
+  type: typeof userActionTypes.FETCH_SIGNIN_ACTIVE_FULFILLED;
+}
+
+export interface IFetchSigninActiveRejected {
+  type: typeof userActionTypes.FETCH_SIGNIN_ACTIVE_REJECTED;
+  error: AxiosError;
+}
+
 export interface ISignout {
   type: typeof userActionTypes.SIGNOUT;
 }
@@ -71,6 +88,51 @@ export interface ISignout {
 export interface ISetUser {
   type: typeof userActionTypes.SET_USER;
   payload: IUser;
+}
+
+export interface IFetchFindId {
+  type: typeof userActionTypes.FETCH_FIND_ID;
+  payload: string;
+}
+
+export interface IFetchFindIdFulfilled {
+  type: typeof userActionTypes.FETCH_FIND_ID_FULFILLED;
+}
+
+export interface IFetchFindIdRejected {
+  type: typeof userActionTypes.FETCH_FIND_ID_REJECTED;
+  error: AxiosError;
+}
+
+export interface IFetchFindIdConfirm {
+  type: typeof userActionTypes.FETCH_FIND_ID_CONFIRM;
+  payload: string;
+}
+
+export interface IFetchFindIdConfirmFulfilled {
+  type: typeof userActionTypes.FETCH_FIND_ID_CONFIRM_FULFILLED;
+}
+
+export interface IFetchFindIdConfirmRejected {
+  type: typeof userActionTypes.FETCH_FIND_ID_CONFIRM_REJECTED;
+  error: AxiosError;
+}
+
+export interface IFetchFindPassword {
+  type: typeof userActionTypes.FETCH_FIND_PASSWORD;
+  payload: {
+    id: string;
+    email: string;
+  };
+}
+
+export interface IFetchFindPasswordFulfilled {
+  type: typeof userActionTypes.FETCH_FIND_PASSWORD_FULFILLED;
+}
+
+export interface IFetchFindPasswordRejected {
+  type: typeof userActionTypes.FETCH_FIND_PASSWORD_REJECTED;
+  error: AxiosError;
 }
 
 export type TUserAction =
@@ -81,4 +143,16 @@ export type TUserAction =
   | IFetchSigninFulfilled
   | IFetchSigninRejected
   | ISignout
-  | ISetUser;
+  | ISetUser
+  | IFetchFindId
+  | IFetchFindIdFulfilled
+  | IFetchFindIdRejected
+  | IFetchFindPassword
+  | IFetchFindPasswordFulfilled
+  | IFetchFindPasswordRejected
+  | IFetchFindIdConfirm
+  | IFetchFindIdConfirmFulfilled
+  | IFetchFindIdConfirmRejected
+  | IFetchSigninActive
+  | IFetchSigninActiveFulfilled
+  | IFetchSigninActiveRejected;

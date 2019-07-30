@@ -1,10 +1,12 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter, RouteComponentProps } from "react-router-dom";
+import history from "../../../history";
 import * as userTypes from "../../../types/user";
 import "./styles.scss";
 
-export interface ISigninFormProps {
+export interface ISigninFormProps extends RouteComponentProps {
   fetchSignin(payload: userTypes.IUserSigninInfo): void;
+  fetchSigninActive(payload: { id: string; token: string }): void;
 }
 
 export interface ISigninFormState {
@@ -17,6 +19,17 @@ class SigninForm extends React.Component<ISigninFormProps, ISigninFormState> {
     id: "",
     password: ""
   };
+
+  componentDidMount() {
+    const { fetchSigninActive } = this.props;
+    const search = this.props.location.search;
+    const params = new URLSearchParams(search);
+    const id = params.get("id");
+    const token = params.get("token");
+    if (id && token) {
+      fetchSigninActive({ id: id, token: token });
+    }
+  }
 
   handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
     this.setState({
@@ -71,4 +84,4 @@ class SigninForm extends React.Component<ISigninFormProps, ISigninFormState> {
   }
 }
 
-export default SigninForm;
+export default withRouter(SigninForm);

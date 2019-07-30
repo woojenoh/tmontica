@@ -12,6 +12,20 @@
     margin-top: 12px;
     margin-right: 10px;
   }
+  .find-id__code {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    .find-id__code-input {
+      flex: 2;
+      height: 40px;
+      margin-right: 10px;
+    }
+    .find-id__code-button {
+      flex: 1;
+      height: 40px;
+    }
+  }
 }
 
 .find-password__form {

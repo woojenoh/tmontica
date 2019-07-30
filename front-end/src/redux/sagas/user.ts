@@ -1,4 +1,4 @@
-import { put, takeEvery } from "redux-saga/effects";
+import { put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 import history from "../../history";
 import jwt from "jwt-decode";
@@ -15,8 +15,8 @@ function* fetchSignupSagas(action: userTypes.IFetchSignup) {
     alert("가입이 완료되었습니다.");
     history.push("/signin");
   } catch (error) {
+    alert(error.response.data.exceptionMessage);
     yield put(userActionCreators.fetchSignupRejected(error.response));
-    alert("아이디와 비밀번호를 다시 확인해주세요.");
   }
 }
 
@@ -35,12 +35,76 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
     yield put(cartActionCreators.fetchSetCart());
     history.push("/");
   } catch (error) {
+    alert(error.response.data.exceptionMessage);
     yield put(userActionCreators.fetchSigninRejected(error.response));
-    alert("아이디와 비밀번호를 다시 확인해주세요.");
+  }
+}
+
+function* fetchSigninActiveSagas(action: userTypes.IFetchSigninActive) {
+  try {
+    yield axios.get(`${API_URL}/users/active`, {
+      params: {
+        id: action.payload.id,
+        token: action.payload.token
+      }
+    });
+    alert("인증이 완료되었습니다. 이제 로그인이 가능합니다.");
+    yield put(userActionCreators.fetchSigninActiveFulfilled());
+  } catch (error) {
+    alert(error.response.data.exceptionMessage);
+    yield put(userActionCreators.fetchSigninActiveRejected(error.response));
+  }
+}
+
+function* fetchFindIdSagas(action: userTypes.IFetchFindId) {
+  try {
+    yield axios.get(`${API_URL}/users/findid`, {
+      params: {
+        email: action.payload
+      }
+    });
+    alert("입력하신 이메일로 인증코드가 전송되었습니다.");
+    yield put(userActionCreators.fetchFindIdFulfilled());
+  } catch (error) {
+    alert(error.response.data.exceptionMessage);
+    yield put(userActionCreators.fetchFindIdRejected(error.response));
+  }
+}
+
+function* fetchFindIdConfirmSagas(action: userTypes.IFetchFindIdConfirm) {
+  try {
+    const response = yield axios.post(`${API_URL}/users/findid/confirm`, {
+      authCode: action.payload
+    });
+    alert(response);
+    yield put(userActionCreators.fetchFindIdConfirmFulfilled());
+  } catch (error) {
+    alert(error.response.data.exceptionMessage);
+    yield put(userActionCreators.fetchFindIdConfirmRejected(error.response));
+  }
+}
+
+function* fetchFindPasswordSagas(action: userTypes.IFetchFindPassword) {
+  try {
+    yield axios.get(`${API_URL}/users/findpw`, {
+      params: {
+        email: action.payload.email,
+        id: action.payload.id
+      }
+    });
+    alert("입력하신 이메일로 임시 비밀번호가 전송되었습니다.");
+    yield put(userActionCreators.fetchFindPasswordFulfilled());
+  } catch (error) {
+    alert(error.response.data.exceptionMessage);
+    yield put(userActionCreators.fetchFindPasswordRejected(error.response));
   }
 }
 
 export default function* userSagas() {
-  yield takeEvery(userActionTypes.FETCH_SIGNUP, fetchSignupSagas);
-  yield takeEvery(userActionTypes.FETCH_SIGNIN, fetchSigninSagas);
+  yield takeLatest(userActionTypes.FETCH_SIGNUP, fetchSignupSagas);
+  yield takeLatest(userActionTypes.FETCH_SIGNIN, fetchSigninSagas);
+  yield takeLatest(userActionTypes.FETCH_SIGNIN_ACTIVE, fetchSigninActiveSagas);
+  yield takeLatest(userActionTypes.FETCH_FIND_ID, fetchFindIdSagas);
+  yield takeLatest(userActionTypes.FETCH_FIND_ID_CONFIRM, fetchFindIdConfirmSagas);
+  yield takeLatest(userActionTypes.FETCH_FIND_PASSWORD, fetchFindPasswordSagas);
 }

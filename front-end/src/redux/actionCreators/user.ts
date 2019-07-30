@@ -42,6 +42,26 @@ export function fetchSigninRejected(error: AxiosError) {
   };
 }
 
+export function fetchSigninActive(payload: { id: string; token: string }) {
+  return {
+    type: actionTypes.FETCH_SIGNIN_ACTIVE,
+    payload
+  };
+}
+
+export function fetchSigninActiveFulfilled() {
+  return {
+    type: actionTypes.FETCH_SIGNIN_ACTIVE_FULFILLED
+  };
+}
+
+export function fetchSigninActiveRejected(error: AxiosError) {
+  return {
+    type: actionTypes.FETCH_SIGNIN_ACTIVE_REJECTED,
+    error
+  };
+}
+
 export function signout() {
   return {
     type: actionTypes.SIGNOUT
@@ -52,5 +72,65 @@ export function setUser(payload: userTypes.IUser) {
   return {
     type: actionTypes.SET_USER,
     payload
+  };
+}
+
+export function fetchFindId(payload: string) {
+  return {
+    type: actionTypes.FETCH_FIND_ID,
+    payload
+  };
+}
+
+export function fetchFindIdFulfilled() {
+  return {
+    type: actionTypes.FETCH_FIND_ID_FULFILLED
+  };
+}
+
+export function fetchFindIdRejected(error: AxiosError) {
+  return {
+    type: actionTypes.FETCH_FIND_ID_REJECTED,
+    error
+  };
+}
+
+export function fetchFindIdConfirm(payload: string) {
+  return {
+    type: actionTypes.FETCH_FIND_ID_CONFIRM,
+    payload
+  };
+}
+
+export function fetchFindIdConfirmFulfilled() {
+  return {
+    type: actionTypes.FETCH_FIND_ID_CONFIRM_FULFILLED
+  };
+}
+
+export function fetchFindIdConfirmRejected(error: AxiosError) {
+  return {
+    type: actionTypes.FETCH_FIND_ID_CONFIRM_REJECTED,
+    error
+  };
+}
+
+export function fetchFindPassword(payload: { id: string; email: string }) {
+  return {
+    type: actionTypes.FETCH_FIND_PASSWORD,
+    payload
+  };
+}
+
+export function fetchFindPasswordFulfilled() {
+  return {
+    type: actionTypes.FETCH_FIND_PASSWORD_FULFILLED
+  };
+}
+
+export function fetchFindPasswordRejected(error: AxiosError) {
+  return {
+    type: actionTypes.FETCH_FIND_PASSWORD_REJECTED,
+    error
   };
 }
