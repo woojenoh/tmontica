@@ -1,6 +1,8 @@
 package com.internship.tmontica.exception.handler;
 
 import com.internship.tmontica.exception.TmonTicaExceptionFormat;
+import com.internship.tmontica.menu.exception.SaveImgException;
+import com.internship.tmontica.menu.exception.MenuValidException;
 import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.exception.UserException;
 import org.slf4j.Logger;
@@ -28,20 +30,7 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(UserException.class)
     public ResponseEntity<TmonTicaExceptionFormat> handleUserException(UserException e) {
         log.debug("UserExceptionMessage : {}", e.getErrorMessage());
-        switch (e.getUserExceptionType().getResponseType()) {
-
-            case BAD_REQUEST:
-                return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), HttpStatus.BAD_REQUEST);
-            case NOT_FOUND:
-                return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), HttpStatus.NOT_FOUND);
-            case CONFLICT:
-                return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), HttpStatus.CONFLICT);
-            case UNAUTHORIZED:
-                return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), HttpStatus.UNAUTHORIZED);
-
-            default:
-                return new ResponseEntity<>(new TmonTicaExceptionFormat("유저핸들러 케이스", "분류되지않은 케이스"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), e.getUserExceptionType().getResponseType());
     }
 
     @ExceptionHandler(MailSendException.class)
@@ -49,5 +38,19 @@ public class GlobalExceptionAdvice {
     public TmonTicaExceptionFormat handleEmailSendException(){
         log.info("fail to send email");
         return new TmonTicaExceptionFormat("email sending", "이메일 전송 실패.");
+    }
+
+    // 메뉴
+    @ExceptionHandler(MenuValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public TmonTicaExceptionFormat handleMenuValidException(MenuValidException e) {
+        log.info("MenuExceptionMessage : {}" , e.getMessage());
+        return new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage(), e.getBindingResult());
+    }
+
+    @ExceptionHandler(SaveImgException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public TmonTicaExceptionFormat handleSaveImgException(SaveImgException e){
+        return new TmonTicaExceptionFormat("imgFile", "올바른 이미지 파일이 아닙니다.");
     }
 }

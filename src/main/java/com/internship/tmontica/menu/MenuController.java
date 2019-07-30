@@ -1,7 +1,6 @@
 package com.internship.tmontica.menu;
 
-import com.internship.tmontica.menu.exception.ErrorCode;
-import com.internship.tmontica.menu.exception.ErrorResponse;
+import com.internship.tmontica.menu.exception.MenuValidException;
 import com.internship.tmontica.menu.model.request.MenuReq;
 import com.internship.tmontica.menu.model.request.MenuUpdateReq;
 import com.internship.tmontica.menu.model.response.MenuCategoryResp;
@@ -51,8 +50,9 @@ public class MenuController {
                                                   @RequestParam(value = "size", required = false, defaultValue = "10")int size){
 
         List<Menu> menus = menuService.getAllMenus(page, size);
-        if (menus.isEmpty())
+        if (menus.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(menus, HttpStatus.OK);
 
     }
@@ -71,9 +71,9 @@ public class MenuController {
 
         List<Menu> menus = menuService.getMenusByCategory(category, page, size);
         // 메뉴가 없으면 no content
-        if(menus == null)
+        if(menus == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
+        }
         List<MenuSimpleResp> categoryMenus = modelMapper.map(menus, new TypeToken<List<MenuSimpleResp>>(){}.getType());
 
         for(MenuSimpleResp menu : categoryMenus)
@@ -88,9 +88,9 @@ public class MenuController {
     public ResponseEntity<MenuDetailResp> getMenuDetail(@PathVariable("menuId")int menuId){
         MenuDetailResp menuDetailResp = menuService.getMenuDetailById(menuId);
         // 메뉴가 없으면 no content
-        if(menuDetailResp == null)
+        if(menuDetailResp == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
+        }
         return new ResponseEntity<>(menuDetailResp, HttpStatus.OK);
     }
 
@@ -99,11 +99,11 @@ public class MenuController {
     public ResponseEntity addMenu(@ModelAttribute @Valid MenuReq menuReq,BindingResult bindingResult){
         //TODO : 예외 처리..
         if(bindingResult.hasErrors()) {
-            return new ResponseEntity(ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, bindingResult), HttpStatus.BAD_REQUEST);
+            throw new MenuValidException("Menu Create Form", "메뉴 추가 폼 데이터가 올바르지 않습니다.", bindingResult);
         }
         menuValidator.validate(menuReq, bindingResult);
         if(bindingResult.hasErrors()) {
-            return new ResponseEntity(ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, bindingResult), HttpStatus.BAD_REQUEST);
+            throw new MenuValidException("Menu Create Form", "메뉴 추가 폼 데이터가 올바르지 않습니다.", bindingResult);
         }
         log.info("[menu api] 메뉴 추가하기");
         log.info("menuReq : {}", menuReq.toString());
@@ -120,7 +120,7 @@ public class MenuController {
     @PutMapping
     public ResponseEntity updateMenu(@ModelAttribute @Valid MenuUpdateReq menuReq, BindingResult bindingResult){
         if(bindingResult.hasErrors()) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            throw new MenuValidException("Menu Update Form", "메뉴 수정 폼 데이터가 올바르지 않습니다.", bindingResult);
         }
         log.info("[menu api] 메뉴 수정하기");
         log.info("menuReq : {}", menuReq.toString());

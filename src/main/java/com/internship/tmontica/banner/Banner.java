@@ -15,7 +15,7 @@ public class Banner {
     private int id;
     private String usePage;
     private boolean usable;
-    private String img; // TODO : imgUrl로 변경
+    private String imgUrl;
     private String link;
     private Date start_date;
     private Date end_date;
