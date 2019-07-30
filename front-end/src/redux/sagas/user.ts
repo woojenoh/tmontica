@@ -76,7 +76,8 @@ function* fetchFindIdConfirmSagas(action: userTypes.IFetchFindIdConfirm) {
     const response = yield axios.post(`${API_URL}/users/findid/confirm`, {
       authCode: action.payload
     });
-    alert(response);
+    // 배열로 오면 바꿔줘야 한다.
+    alert(`회원님의 아이디는 ${response.data.userIdList}입니다.`);
     yield put(userActionCreators.fetchFindIdConfirmFulfilled());
   } catch (error) {
     alert(error.response.data.exceptionMessage);

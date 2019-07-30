@@ -1,5 +1,6 @@
 .find-id__form {
-  margin: 40px 0;
+  margin-top: 40px;
+  margin-bottom: 12px;
   .input.find-id__input {
     margin-bottom: 10px;
   }
@@ -12,19 +13,19 @@
     margin-top: 12px;
     margin-right: 10px;
   }
-  .find-id__code {
-    margin-top: 12px;
-    display: flex;
-    align-items: center;
-    .find-id__code-input {
-      flex: 2;
-      height: 40px;
-      margin-right: 10px;
-    }
-    .find-id__code-button {
-      flex: 1;
-      height: 40px;
-    }
+}
+
+.find-id__code {
+  display: flex;
+  align-items: center;
+  .find-id__code-input {
+    flex: 2;
+    height: 40px;
+    margin-right: 10px;
+  }
+  .find-id__code-button {
+    flex: 1;
+    height: 40px;
   }
 }
 
