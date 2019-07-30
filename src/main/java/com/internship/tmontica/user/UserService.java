@@ -16,6 +16,9 @@ import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -161,6 +164,7 @@ public class UserService { //implements UserDetail
         AuthenticationKey authenticationKey = new AuthenticationKey();
         String key = authenticationKey.getAuthenticationKey();
         UserMailForm userMailForm = new UserMailForm(MailType.FIND_ID, userList.get(0));
+
         while(findDao.getAuthCode(key) != null){
             key = authenticationKey.getAuthenticationKey();
         }
@@ -190,12 +194,12 @@ public class UserService { //implements UserDetail
 
         FindId findId = findDao.getAuthCode(userFindIdReqDTO.getAuthCode());
         if(findId != null){
-            String findIds = findId.getFindIds();
+            List<String> findIds = new ArrayList<>(Arrays.asList(findId.getFindIds().replace("[","").replace("]","").split(",")));
             findDao.withdrawAuthCode(userFindIdReqDTO.getAuthCode());
-            return new UserFindIdRespDTO(findIds, true);
+            return new UserFindIdRespDTO(findIds);
         }
 
-        return new UserFindIdRespDTO(null,false );
+        throw new UserException(UserExceptionType.AUTHCODE_NOT_FOUND_EXCEPTION);
     }
 
     public UserInfoRespDTO getUserInfo(String id){

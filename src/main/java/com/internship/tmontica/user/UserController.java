@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RestController
@@ -64,7 +63,7 @@ public class UserController {
         if(userService.changePassword(userChangePasswordReqDTO)){
             return new ResponseEntity<>(UserResponseMessage.PASSWORD_CHANGE_SUCCESS.getMessage(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(UserResponseMessage.PASSWORD_CHANGE_FAIL.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(UserResponseMessage.PASSWORD_CHANGE_FAIL.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @DeleteMapping("/{userId}")
@@ -97,11 +96,7 @@ public class UserController {
     public ResponseEntity<UserFindIdRespDTO> findIdConfirm(@RequestBody @Valid UserFindIdReqDTO userFindIdReqDTO){
 
         UserFindIdRespDTO userFindIdRespDTO = userService.checkAuthCode(userFindIdReqDTO);
-        if(userFindIdRespDTO.isSuccess()){
-            return new ResponseEntity<>(userFindIdRespDTO, HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(userFindIdRespDTO, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(userFindIdRespDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")

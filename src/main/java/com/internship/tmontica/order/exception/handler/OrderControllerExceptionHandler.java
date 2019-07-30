@@ -2,7 +2,7 @@ package com.internship.tmontica.order.exception.handler;
 
 import com.internship.tmontica.order.exception.NotEnoughStockException;
 import com.internship.tmontica.security.exception.UnauthorizedException;
-import com.internship.tmontica.util.TmonTicaExceptionFormat;
+import com.internship.tmontica.exception.TmonTicaExceptionFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

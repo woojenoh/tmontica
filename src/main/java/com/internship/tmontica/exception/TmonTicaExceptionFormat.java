@@ -1,4 +1,4 @@
-package com.internship.tmontica.util;
+package com.internship.tmontica.exception;
 
 import lombok.Getter;
 

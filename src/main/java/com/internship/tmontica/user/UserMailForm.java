@@ -27,6 +27,8 @@ class UserMailForm {
     }
 
      public void makeMail(){
+
+         msg.setSubject("[TMONG CAFFE]"+user.getName()+"님"+mailType.getDescription());
          switch (mailType){
 
              case FIND_ID:
@@ -44,20 +46,17 @@ class UserMailForm {
 
     private void makeFindIdEmail(){
 
-        msg.setSubject("[TMONG CAFFE]"+user.getName()+"님 아이디 찾기 메일입니다.");
         msg.setText("인증키는 ["+authenticationKey+"]입니다.\n 본인과 관련없는 메일이라면 무시하시면 됩니다.");
     }
 
     private void makeFindPwEmail(){
 
-        msg.setSubject("[TMONG CAFFE]"+user.getName()+"님 비밀번호 찾기 메일입니다.");
         msg.setText("임시 비밀번호는 "+user.getPassword()+"입니다. 임시비밀번호로 로그인한뒤 비밀번호를 변경해주세요.\n +" +
                 "본인과 관련없는 메일이라면 무시하시면 됩니다.");
     }
 
     private void makeActiveEmail(){
-
-        msg.setSubject("[TMONG CAFFE]"+user.getName()+"님 회원가입 인증 메일입니다.");
+         
         msg.setText("다음의 링크를 눌러 계정인증을 진행해주세요.\n[ "+
                 ACTIVE_API_LINK+ID_PARAM+user.getId()+
                 TOKEN_PARAM+authenticationKey+

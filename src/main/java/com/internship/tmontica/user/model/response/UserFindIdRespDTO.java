@@ -9,6 +9,5 @@ import java.util.List;
 @Getter
 public class UserFindIdRespDTO {
 
-    private String userIdList;
-    private boolean success;
+    private List<String> userIdList;
 }
