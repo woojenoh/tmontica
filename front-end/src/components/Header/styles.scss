@@ -1,0 +1,35 @@
+@import "../../assets/scss/colors.scss";
+
+.header {
+  border-bottom: 1px solid $border-gray;
+  background-color: white;
+  .header__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1024px;
+    height: 80px;
+    margin: 0 auto;
+    padding: 0 20px;
+    .header__logo {
+      width: 50px;
+      cursor: pointer;
+    }
+    .header__items {
+      display: flex;
+      justify-content: space-between;
+      .header__item {
+        margin-left: 40px;
+        cursor: pointer;
+        color: black;
+        svg {
+          font-size: 1.75em;
+        }
+      }
+
+      .header__item:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+}

@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import * as actionTypes from "../actionTypes/cart";
 import * as cartTypes from "../../types/cart";
 
@@ -85,7 +84,7 @@ export function fetchSetCartFulfilled(payload: cartTypes.ICart) {
   };
 }
 
-export function fetchSetCartRejected(error: AxiosError) {
+export function fetchSetCartRejected(error: string) {
   return {
     type: actionTypes.FETCH_SET_CART_REJECTED,
     error
@@ -106,7 +105,7 @@ export function fetchAddCartFulfilled(payload: cartTypes.ICart) {
   };
 }
 
-export function fetchAddCartRejected(error: AxiosError) {
+export function fetchAddCartRejected(error: string) {
   return {
     type: actionTypes.FETCH_ADD_CART_REJECTED,
     error
@@ -127,7 +126,7 @@ export function fetchRemoveCartFulfilled(payload: cartTypes.ICart) {
   };
 }
 
-export function fetchRemoveCartRejected(error: AxiosError) {
+export function fetchRemoveCartRejected(error: string) {
   return {
     type: actionTypes.FETCH_REMOVE_CART_REJECTED,
     error
@@ -149,7 +148,7 @@ export function fetchChangeCartFulfilled(payload: cartTypes.ICart) {
   };
 }
 
-export function fetchChangeCartRejected(error: AxiosError) {
+export function fetchChangeCartRejected(error: string) {
   return {
     type: actionTypes.FETCH_CHANGE_CART_REJECTED,
     error

@@ -9,18 +9,15 @@ import {
 } from "react-router-dom";
 import { connect } from "react-redux";
 import * as rootTypes from "./types/index";
-import Header from "./service/components/Header";
-import Menu from "./service/pages/Menu";
-import Menus from "./service/pages/Menus";
-import MenusSub from "./service/pages/MenusSub";
-import Signin from "./service/pages/Signin";
-import Signup from "./service/pages/Signup";
-import Orders from "./service/pages/Orders";
-import Payment from "./service/pages/Payment";
-import FindAccount from "./service/pages/FindAccount";
-import AdminSignin from "./admin/pages/Signin";
-import AdminMenus from "./admin/pages/AdminMenus";
-import AdminOrders from "./admin/pages/AdminOrders";
+import Header from "./components/Header";
+import Menu from "./pages/Menu";
+import Menus from "./pages/Menus";
+import MenusSub from "./pages/MenusSub";
+import Signin from "./pages/Signin";
+import Signup from "./pages/Signup";
+import Orders from "./pages/Orders";
+import Payment from "./pages/Payment";
+import FindAccount from "./pages/FindAccount";
 
 export interface IAppProps extends RouteComponentProps {
   isSignin: boolean;
@@ -28,32 +25,6 @@ export interface IAppProps extends RouteComponentProps {
 }
 
 class App extends React.Component<IAppProps> {
-  AdminRoute = ({ component: Component, ...rest }: RouteProps) => {
-    const { isSignin, isAdmin } = this.props;
-
-    if (Component) {
-      return (
-        <Route
-          {...rest}
-          render={props =>
-            isSignin && isAdmin ? (
-              <Component {...props} />
-            ) : (
-              <Redirect
-                to={{
-                  pathname: "/admin/signin",
-                  state: { from: props.location }
-                }}
-              />
-            )
-          }
-        />
-      );
-    } else {
-      return null;
-    }
-  };
-
   PrivateRoute = ({ component: Component, ...rest }: RouteProps) => {
     const { isSignin } = this.props;
 
@@ -107,49 +78,25 @@ class App extends React.Component<IAppProps> {
     }
   };
 
-  Swicher = () => {
-    const { AdminRoute, PrivateRoute, PublicRoute } = this;
-    return (
-      <Switch>
-        <AdminRoute exact path="/admin/orders" component={AdminOrders} />
-        <AdminRoute exact path="/admin/menus" component={AdminMenus} />
-        <AdminRoute exact path="/admin/menus/:menuId([0-9]+)" component={AdminMenus} />
-        <AdminRoute exact path="/admin/users" component={Menus} />
-        <AdminRoute exact path="/admin/banners" component={Menus} />
-        <AdminRoute exact path="/admin/statistics" component={Menus} />
-        <AdminRoute exact path="/admin" component={AdminMenus} />
-        <PrivateRoute exact path="/payment" component={Payment} />
-        <PrivateRoute exact path="/orders" component={Orders} />
-        <PrivateRoute exact path="/user" component={Menus} />
-        <PublicRoute exact path="/menus/:menuId([0-9]+)" component={Menu} />
-        <PublicRoute exact path="/menus/:categoryEng([a-zA-Z]+)" component={MenusSub} />
-        <PublicRoute exact path="/admin/signin" component={AdminSignin} />
-        <PublicRoute exact path="/signin" component={Signin} />
-        <PublicRoute exact path="/signup" component={Signup} />
-        <PublicRoute exact path="/find" component={FindAccount} />
-        <PublicRoute exact path="/" component={Menus} />
-        <PublicRoute path="*" component={Menus} />
-      </Switch>
-    );
-  };
-
   render() {
     const { location } = this.props;
+    const { PrivateRoute, PublicRoute } = this;
 
     return (
       <>
-        {!/^\/admin/.test(location.pathname) ? (
-          <>
-            <Header />
-            <div id="service">
-              <this.Swicher />
-            </div>
-          </>
-        ) : (
-          <div id="admin">
-            <this.Swicher />
-          </div>
-        )}
+        <Header />
+        <Switch>
+          <PrivateRoute exact path="/payment" component={Payment} />
+          <PrivateRoute exact path="/orders" component={Orders} />
+          <PrivateRoute exact path="/user" component={Menus} />
+          <PublicRoute exact path="/menus/:menuId([0-9]+)" component={Menu} />
+          <PublicRoute exact path="/menus/:categoryEng([a-zA-Z]+)" component={MenusSub} />
+          <PublicRoute exact path="/signin" component={Signin} />
+          <PublicRoute exact path="/signup" component={Signup} />
+          <PublicRoute exact path="/find" component={FindAccount} />
+          <PublicRoute exact path="/" component={Menus} />
+          <PublicRoute path="*" component={Menus} />
+        </Switch>
       </>
     );
   }

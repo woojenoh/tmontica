@@ -1,6 +1,11 @@
 import * as userActionTypes from "../redux/actionTypes/user";
 import { AxiosError } from "axios";
 
+export interface IUserSigninActive {
+  id: string;
+  token: string;
+}
+
 export interface IUserState {
   user: IUser | null;
   isSignin: boolean;
@@ -47,7 +52,7 @@ export interface IFetchSignupFulfilled {
 
 export interface IFetchSignupRejected {
   type: typeof userActionTypes.FETCH_SIGNUP_REJECTED;
-  error: AxiosError;
+  error: string;
 }
 
 export interface IFetchSignin {
@@ -65,7 +70,7 @@ export interface IFetchSigninFulfilled {
 
 export interface IFetchSigninRejected {
   type: typeof userActionTypes.FETCH_SIGNIN_REJECTED;
-  error: AxiosError;
+  error: string;
 }
 
 export interface IFetchSigninActive {
@@ -82,7 +87,7 @@ export interface IFetchSigninActiveFulfilled {
 
 export interface IFetchSigninActiveRejected {
   type: typeof userActionTypes.FETCH_SIGNIN_ACTIVE_REJECTED;
-  error: AxiosError;
+  error: string;
 }
 
 export interface ISignout {
@@ -100,7 +105,7 @@ export interface IFetchFindIdFulfilled {
 
 export interface IFetchFindIdRejected {
   type: typeof userActionTypes.FETCH_FIND_ID_REJECTED;
-  error: AxiosError;
+  error: string;
 }
 
 export interface IFetchFindIdConfirm {
@@ -114,7 +119,7 @@ export interface IFetchFindIdConfirmFulfilled {
 
 export interface IFetchFindIdConfirmRejected {
   type: typeof userActionTypes.FETCH_FIND_ID_CONFIRM_REJECTED;
-  error: AxiosError;
+  error: string;
 }
 
 export interface IFetchFindPassword {
@@ -131,7 +136,7 @@ export interface IFetchFindPasswordFulfilled {
 
 export interface IFetchFindPasswordRejected {
   type: typeof userActionTypes.FETCH_FIND_PASSWORD_REJECTED;
-  error: AxiosError;
+  error: string;
 }
 
 export type TUserAction =

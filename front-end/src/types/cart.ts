@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import * as cartActionTypes from "../redux/actionTypes/cart";
 
 export type TCartId = {
@@ -105,7 +104,7 @@ export interface IFetchSetCartFulfilled {
 
 export interface IFetchSetCartRejected {
   type: typeof cartActionTypes.FETCH_SET_CART_REJECTED;
-  error: AxiosError;
+  error: string;
 }
 
 export interface IFetchAddCart {
@@ -120,7 +119,7 @@ export interface IFetchAddCartFulfilled {
 
 export interface IFetchAddCartRejected {
   type: typeof cartActionTypes.FETCH_ADD_CART_REJECTED;
-  error: AxiosError;
+  error: string;
 }
 
 export interface IFetchRemoveCart {
@@ -135,7 +134,7 @@ export interface IFetchRemoveCartFulfilled {
 
 export interface IFetchRemoveCartRejected {
   type: typeof cartActionTypes.FETCH_REMOVE_CART_REJECTED;
-  error: AxiosError;
+  error: string;
 }
 
 export interface IFetchChangeCart {
@@ -151,7 +150,7 @@ export interface IFetchChangeCartFulfilled {
 
 export interface IFetchChangeCartRejected {
   type: typeof cartActionTypes.FETCH_CHANGE_CART_REJECTED;
-  error: AxiosError;
+  error: string;
 }
 
 export interface ISetOrderCart {

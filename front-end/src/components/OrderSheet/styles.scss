@@ -1,0 +1,108 @@
+@import "../../assets/scss/mediaQuery.scss";
+@import "../../assets/scss/colors.scss";
+
+.hide {
+  display: none !important;
+}
+
+.orders__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  .orders__top-title {
+    font-size: 25px;
+  }
+  .orders__top-cancel {
+    padding: 7px 10px;
+    border: 1px solid $light-red;
+    color: $light-red;
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+      background-color: $light-red;
+      color: white;
+    }
+  }
+}
+
+.orders__content {
+  width: 100%;
+  min-height: 300px;
+  border: 1px solid $border-gray;
+  background-color: white;
+  padding: 20px 0;
+  .orders__status-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 0 20px;
+    @include mobile {
+      display: block;
+    }
+    .orders__status {
+      font-size: 14px;
+      border: 1px solid $border-gray;
+      background-color: white;
+      padding: 5px 10px;
+      border-radius: 10px;
+      position: relative;
+      z-index: 0;
+      &::after {
+        content: "";
+        position: absolute;
+        width: 29px;
+        height: 3px;
+        background-color: $border-gray;
+        right: -29px;
+        top: 10px;
+        z-index: 0;
+        @include mobile {
+          display: none;
+        }
+      }
+      &:last-child::after {
+        display: none;
+      }
+      &.orders__status--green {
+        background-color: $light-green;
+        border: none;
+        color: white;
+      }
+      &.orders__status--gray {
+        background-color: $border-gray;
+        border: none;
+        color: black;
+      }
+      @include mobile {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+    }
+  }
+  .orders__items {
+    margin: 20px 0;
+  }
+  .orders__total {
+    text-align: right;
+    line-height: 1.2em;
+    @include mobile {
+      font-size: 15px;
+    }
+    .orders__total-price {
+      margin-bottom: 5px;
+      padding: 0 20px;
+    }
+    .orders__total-discount {
+      padding: 0 20px;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid $border-gray;
+    }
+    .orders__total-result {
+      color: $light-red;
+      font-weight: bold;
+      padding: 0 20px;
+    }
+  }
+}

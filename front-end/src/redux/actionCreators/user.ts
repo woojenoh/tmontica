@@ -1,6 +1,5 @@
 import * as actionTypes from "../actionTypes/user";
 import * as userTypes from "../../types/user";
-import { AxiosError } from "axios";
 
 export function fetchSignup(payload: userTypes.IUserSignupInfo) {
   return {
@@ -15,7 +14,7 @@ export function fetchSignupFulfilled() {
   };
 }
 
-export function fetchSignupRejected(error: AxiosError) {
+export function fetchSignupRejected(error: string) {
   return {
     type: actionTypes.FETCH_SIGNUP_REJECTED,
     error
@@ -36,7 +35,7 @@ export function fetchSigninFulfilled(payload: { user: userTypes.IUser; isAdmin: 
   };
 }
 
-export function fetchSigninRejected(error: AxiosError) {
+export function fetchSigninRejected(error: string) {
   return {
     type: actionTypes.FETCH_SIGNIN_REJECTED,
     error
@@ -56,7 +55,7 @@ export function fetchSigninActiveFulfilled() {
   };
 }
 
-export function fetchSigninActiveRejected(error: AxiosError) {
+export function fetchSigninActiveRejected(error: string) {
   return {
     type: actionTypes.FETCH_SIGNIN_ACTIVE_REJECTED,
     error
@@ -82,7 +81,7 @@ export function fetchFindIdFulfilled() {
   };
 }
 
-export function fetchFindIdRejected(error: AxiosError) {
+export function fetchFindIdRejected(error: string) {
   return {
     type: actionTypes.FETCH_FIND_ID_REJECTED,
     error
@@ -102,7 +101,7 @@ export function fetchFindIdConfirmFulfilled() {
   };
 }
 
-export function fetchFindIdConfirmRejected(error: AxiosError) {
+export function fetchFindIdConfirmRejected(error: string) {
   return {
     type: actionTypes.FETCH_FIND_ID_CONFIRM_REJECTED,
     error
@@ -122,7 +121,7 @@ export function fetchFindPasswordFulfilled() {
   };
 }
 
-export function fetchFindPasswordRejected(error: AxiosError) {
+export function fetchFindPasswordRejected(error: string) {
   return {
     type: actionTypes.FETCH_FIND_PASSWORD_REJECTED,
     error

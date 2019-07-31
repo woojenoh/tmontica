@@ -24,15 +24,21 @@ function error(message: string | undefined): never {
 
 export function get<T, E extends TMessageError>(
   reqURL: string,
-  params?: Map<string, string> | null,
+  params?: Map<string, string> | Object | null,
   jwt?: string
 ) {
   if (typeof params !== "undefined" && params !== null && !/[?]/.test(reqURL)) {
-    reqURL += `?${Array.from(params.entries())
-      .map(x => {
-        return `${x[0]}=${x[1]}`;
-      })
-      .join("&")}`;
+    if (params instanceof Map) {
+      reqURL += `?${Array.from(params.entries())
+        .map(x => {
+          return `${x[0]}=${x[1]}`;
+        })
+        .join("&")}`;
+    } else {
+      reqURL += `?${Object.entries(params)
+        .map(([key, val]) => `${key}=${val}`)
+        .join("&")}`;
+    }
   }
 
   return fetchTMON<T, E>(reqURL, {
@@ -54,16 +60,20 @@ export function getWithJWT<T, E extends TMessageError>(
   return get<T, E>(reqURL, params, jwt);
 }
 
-export function postWithJWT<T, E extends TMessageError>(reqURL: string, data: any) {
-  const jwt = localStorage.getItem("jwt") || "";
-
+export function post<T, E extends TMessageError>(reqURL: string, data: any, jwt?: string) {
   return fetchTMON<T, E>(reqURL, {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: jwt
+      Authorization: jwt || ""
     },
     method: "POST",
     body: JSON.stringify(data)
   });
+}
+
+export function postWithJWT<T, E extends TMessageError>(reqURL: string, data: any) {
+  const jwt = localStorage.getItem("jwt") || "";
+
+  return post<T, E>(reqURL, data, jwt);
 }

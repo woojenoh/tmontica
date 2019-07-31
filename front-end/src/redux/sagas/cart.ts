@@ -108,12 +108,12 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
         yield put(cartActionCreators.initializeLocalCart());
       }
     }
-    
-    const response = yield getCart();
-    yield put(cartActionCreators.fetchSetCartFulfilled(response.data));
+
+    const data = yield getCart();
+    yield put(cartActionCreators.fetchSetCartFulfilled(data));
   } catch (error) {
-    alert(error.response.data.exceptionMessage);
-    yield put(cartActionCreators.fetchSetCartRejected(error.response));
+    alert(error);
+    yield put(cartActionCreators.fetchSetCartRejected(error));
   }
 }
 
@@ -136,6 +136,7 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
 
     // 현재 카트 상태에 새로운 카트 메뉴들을 추가한다.
     const state = yield select();
+
     const newCart = _(state.cart.cart).clone() as cartTypes.ICart;
     const newCartMenus = cartMenus.map((m: cartTypes.ICartMenu, index: number) => {
       newCart.size += m.quantity;
@@ -148,8 +149,8 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
     alert("상품이 담겼습니다.");
     yield put(cartActionCreators.fetchAddCartFulfilled(newCart));
   } catch (error) {
-    alert(error.response.data.exceptionMessage);
-    yield put(cartActionCreators.fetchAddCartRejected(error.response));
+    alert(error);
+    yield put(cartActionCreators.fetchAddCartRejected(error));
   }
 }
 
@@ -176,7 +177,7 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
     });
     yield put(cartActionCreators.fetchRemoveCartFulfilled(newCart));
   } catch (error) {
-    alert(error.response.data.exceptionMessage);
+    alert(error);
     yield put(cartActionCreators.fetchRemoveCartRejected(error));
   }
 }
@@ -222,8 +223,8 @@ function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
     newCart.menus = targetMenus;
     yield put(cartActionCreators.fetchChangeCartFulfilled(newCart));
   } catch (error) {
-    alert(error.response.data.exceptionMessage);
-    yield put(cartActionCreators.fetchChangeCartRejected(error.response));
+    alert(error);
+    yield put(cartActionCreators.fetchChangeCartRejected(error));
   }
 }
 

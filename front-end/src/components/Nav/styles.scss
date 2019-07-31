@@ -1,0 +1,121 @@
+@import "../../assets/scss/mediaQuery.scss";
+@import "../../assets/scss/colors.scss";
+
+.nav {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  &.nav--close {
+    pointer-events: none;
+  }
+  .nav__dim {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: black;
+    opacity: 0.1;
+    transition: 0.5s opacity ease;
+    z-index: 1;
+    &.nav__dim--close {
+      opacity: 0;
+    }
+  }
+  .nav__content {
+    position: fixed;
+    right: 0;
+    background-color: white;
+    width: 400px;
+    height: 100%;
+    z-index: 10;
+    border-left: 1px solid $border-gray;
+    transition: 0.5s right ease;
+    @include mobile {
+      width: 90%;
+    }
+    &.nav__content--close {
+      right: -400px;
+    }
+    .nav__title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 80px;
+      font-size: 25px;
+      font-weight: bold;
+      border-bottom: 1px solid $border-gray;
+      @include mobile {
+        font-size: 20px;
+      }
+    }
+    .nav__close {
+      position: absolute;
+      left: 25px;
+      top: 20px;
+      font-size: 35px;
+      cursor: pointer;
+    }
+    .nav__top {
+      display: flex;
+      height: 56px;
+      font-size: 15px;
+      border-bottom: 1px solid $border-gray;
+      .nav__top-point {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        text-align: center;
+        font-size: 17px;
+        font-weight: bold;
+        border-right: 1px solid $border-gray;
+        cursor: pointer;
+      }
+      .nav__top-logout {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        text-align: center;
+        font-size: 17px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+    }
+    .nav__items {
+      .nav__item {
+        .nav__item-title {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          width: 100%;
+          height: 50px;
+          padding: 0 20px;
+          border-top: 1px solid black;
+          border-bottom: 1px solid black;
+          font-size: 18px;
+          font-weight: bold;
+        }
+        .nav__item-link {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          width: 100%;
+          height: 50px;
+          padding: 0 20px;
+          border-bottom: 1px solid $border-gray;
+          text-decoration: none;
+          color: black;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
