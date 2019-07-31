@@ -5,7 +5,7 @@ import * as cartActionTypes from "../actionTypes/cart";
 import * as cartActionCreators from "../actionCreators/cart";
 import * as cartTypes from "../../types/cart";
 import { API_URL } from "../../api/common";
-import { addCart } from "../../api/cart";
+import { addCart, getCart } from "../../api/cart";
 
 function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
   try {
@@ -108,13 +108,8 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
         yield put(cartActionCreators.initializeLocalCart());
       }
     }
-    // 토큰으로 API를 호출해 카트 상태를 갱신한다.
-    const jwtToken = localStorage.getItem("jwt");
-    const response = yield call(axios.get, `${API_URL}/carts`, {
-      headers: {
-        Authorization: jwtToken
-      }
-    });
+    
+    const response = yield getCart();
     yield put(cartActionCreators.fetchSetCartFulfilled(response.data));
   } catch (error) {
     alert(error.response.data.exceptionMessage);
