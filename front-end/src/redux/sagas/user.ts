@@ -1,4 +1,4 @@
-import { put, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 import history from "../../history";
 import jwt from "jwt-decode";
@@ -10,7 +10,7 @@ import { API_URL } from "../../api/common";
 
 function* fetchSignupSagas(action: userTypes.IFetchSignup) {
   try {
-    yield axios.post(`${API_URL}/users/signup`, action.payload);
+    yield call(axios.post, `${API_URL}/users/signup`, action.payload);
     yield put(userActionCreators.fetchSignupFulfilled());
     alert("가입이 완료되었습니다.");
     history.push("/signin");
@@ -22,7 +22,7 @@ function* fetchSignupSagas(action: userTypes.IFetchSignup) {
 
 function* fetchSigninSagas(action: userTypes.IFetchSignin) {
   try {
-    const response = yield axios.post(`${API_URL}/users/signin`, action.payload);
+    const response = yield call(axios.post, `${API_URL}/users/signin`, action.payload);
     // 토큰에서 유저 정보를 가져와 상태에 저장한다.
     const jwtToken = jwt(response.data.authorization) as userTypes.IJwtToken;
     const parsedUserInfo = JSON.parse(jwtToken.userInfo);
@@ -50,7 +50,7 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
 
 function* fetchSigninActiveSagas(action: userTypes.IFetchSigninActive) {
   try {
-    yield axios.get(`${API_URL}/users/active`, {
+    yield call(axios.get, `${API_URL}/users/active`, {
       params: {
         id: action.payload.id,
         token: action.payload.token
@@ -66,7 +66,7 @@ function* fetchSigninActiveSagas(action: userTypes.IFetchSigninActive) {
 
 function* fetchFindIdSagas(action: userTypes.IFetchFindId) {
   try {
-    yield axios.get(`${API_URL}/users/findid`, {
+    yield call(axios.get, `${API_URL}/users/findid`, {
       params: {
         email: action.payload
       }
@@ -81,7 +81,7 @@ function* fetchFindIdSagas(action: userTypes.IFetchFindId) {
 
 function* fetchFindIdConfirmSagas(action: userTypes.IFetchFindIdConfirm) {
   try {
-    const response = yield axios.post(`${API_URL}/users/findid/confirm`, {
+    const response = yield call(axios.post, `${API_URL}/users/findid/confirm`, {
       authCode: action.payload
     });
     alert(`회원님의 아이디는 ${response.data.userIdList} 입니다.`);
@@ -94,7 +94,7 @@ function* fetchFindIdConfirmSagas(action: userTypes.IFetchFindIdConfirm) {
 
 function* fetchFindPasswordSagas(action: userTypes.IFetchFindPassword) {
   try {
-    yield axios.get(`${API_URL}/users/findpw`, {
+    yield call(axios.get, `${API_URL}/users/findpw`, {
       params: {
         email: action.payload.email,
         id: action.payload.id

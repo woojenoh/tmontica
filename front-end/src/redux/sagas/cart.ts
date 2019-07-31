@@ -1,4 +1,4 @@
-import { put, takeLatest, select } from "redux-saga/effects";
+import { call, put, takeLatest, select } from "redux-saga/effects";
 import _ from "underscore";
 import axios from "axios";
 import * as cartActionTypes from "../actionTypes/cart";
@@ -110,7 +110,7 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
     }
     // 토큰으로 API를 호출해 카트 상태를 갱신한다.
     const jwtToken = localStorage.getItem("jwt");
-    const response = yield axios.get(`${API_URL}/carts`, {
+    const response = yield call(axios.get, `${API_URL}/carts`, {
       headers: {
         Authorization: jwtToken
       }
@@ -162,7 +162,7 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
   try {
     // 카트 아이디로 디비에 있는 해당 메뉴를 삭제한다.
     const jwtToken = localStorage.getItem("jwt");
-    yield axios.delete(`${API_URL}/carts/${action.payload}`, {
+    yield call(axios.delete, `${API_URL}/carts/${action.payload}`, {
       headers: {
         Authorization: jwtToken
       }
@@ -190,7 +190,8 @@ function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
   try {
     // 카트 아이디와 수량으로 디비에 있는 해당 메뉴를 삭제한다.
     const jwtToken = localStorage.getItem("jwt");
-    yield axios.put(
+    yield call(
+      axios.put,
       `${API_URL}/carts/${action.id}`,
       {
         quantity: action.quantity
