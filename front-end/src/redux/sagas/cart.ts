@@ -6,7 +6,6 @@ import * as cartActionCreators from "../actionCreators/cart";
 import * as cartTypes from "../../types/cart";
 import { API_URL } from "../../api/common";
 import { addCart } from "../../api/cart";
-import { TAddCartRes } from "../../types/cart";
 
 function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
   try {

@@ -1,4 +1,4 @@
-import { TCartAddReq, TAddCartRes, TCartId } from "../types/cart";
+import { TCartAddReq, TCartId } from "../types/cart";
 import { postWithJWT, API_URL } from "./common";
 import { TCommonError } from "../types/error";
 

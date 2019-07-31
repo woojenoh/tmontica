@@ -1,7 +1,6 @@
 import { TMenuOptionMap } from "./types/menu";
 import { ICartMenuOption } from "./types/cart";
 import history from "./history";
-import { ChangeEvent } from "react";
 
 export const goToSignin = (message = "로그인이 필요합니다.") => {
   alert(message);

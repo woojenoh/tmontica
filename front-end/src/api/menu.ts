@@ -1,6 +1,6 @@
 import { get, API_URL } from "./common";
 import { TCommonError } from "../types/error";
-import { TMenu, TMenusItem, TMenuByCategory } from "../types/menu";
+import { TMenu, TMenuByCategory } from "../types/menu";
 
 export function getMenuAll() {
   return get<Object, TCommonError>(`${API_URL}/menus`);

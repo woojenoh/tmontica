@@ -3,8 +3,7 @@ import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import MenuItems from "../../components/MenusItems";
 import { getMenuByCateory } from "../../../api/menu";
-import { TMenusItem, TMenuByCategory } from "../../../types/menu";
-import { type } from "os";
+import { TMenuByCategory } from "../../../types/menu";
 
 interface MatchParams {
   categoryEng: string;

@@ -4,7 +4,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { addCart } from "../../../api/cart";
 import { getMenuById } from "../../../api/menu";
 import _ from "underscore";
-import { TCartAddReq, TCartId } from "../../../types/cart";
+import { TCartAddReq } from "../../../types/cart";
 import { TMenuOption, TMenu, TMenuOptionMap } from "../../../types/menu";
 import {
   createCartAddReq,

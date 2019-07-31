@@ -2,8 +2,6 @@ import React, { Component, FormEvent } from "react";
 import Header from "../../components/AdminHeader";
 import Nav from "../../components/Nav";
 import { Table, Modal, Dropdown } from "react-bootstrap";
-import {} from "../../../api/menu";
-import _ from "underscore";
 import DatePicker from "react-datepicker";
 
 interface IAdminMenusProps {}
