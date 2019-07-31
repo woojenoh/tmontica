@@ -1,5 +1,7 @@
 package com.internship.tmontica.order;
 
+import com.internship.tmontica.order.exception.OrderExceptionType;
+import com.internship.tmontica.order.exception.OrderValidException;
 import com.internship.tmontica.order.model.request.OrderReq;
 import com.internship.tmontica.order.model.request.OrderStatusReq;
 import com.internship.tmontica.order.model.response.OrderDetailResp;
@@ -8,6 +10,7 @@ import com.internship.tmontica.order.model.response.OrdersByStatusResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,7 +25,10 @@ public class OrderController {
 
     /** 주문 받기(결제하기) */
     @PostMapping
-    public ResponseEntity<Map<String, Integer>> addOrder(@RequestBody @Valid OrderReq orderReq){
+    public ResponseEntity<Map<String, Integer>> addOrder(@RequestBody @Valid OrderReq orderReq, BindingResult bindingResult){
+        if(bindingResult.hasErrors()) {
+            throw new OrderValidException(OrderExceptionType.INVALID_ORDER_ADD_FORM, bindingResult);
+        }
         Map<String, Integer> map = orderService.addOrderApi(orderReq);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
@@ -51,7 +57,10 @@ public class OrderController {
 
     /** 주문 상태 바꾸기(관리자) */
     @PutMapping("/{orderId}/status")
-    public ResponseEntity updateOrderStatus(@PathVariable("orderId")int orderId, @RequestBody @Valid OrderStatusReq orderStatusReq){
+    public ResponseEntity updateOrderStatus(@PathVariable("orderId")int orderId, @RequestBody @Valid OrderStatusReq orderStatusReq, BindingResult bindingResult){
+        if(bindingResult.hasErrors()) {
+            throw new OrderValidException(OrderExceptionType.INVALID_STATUS_FORM, bindingResult);
+        }
         orderService.updateOrderStatusApi(orderId, orderStatusReq);
         return new ResponseEntity(HttpStatus.OK);
     }

@@ -3,8 +3,12 @@ package com.internship.tmontica.order;
 import com.internship.tmontica.cart.CartMenu;
 import com.internship.tmontica.cart.CartMenuDao;
 import com.internship.tmontica.cart.CartMenuService;
+import com.internship.tmontica.cart.exception.CartExceptionType;
+import com.internship.tmontica.cart.exception.CartUserException;
 import com.internship.tmontica.menu.MenuDao;
 import com.internship.tmontica.order.exception.NotEnoughStockException;
+import com.internship.tmontica.order.exception.OrderExceptionType;
+import com.internship.tmontica.order.exception.OrderUserException;
 import com.internship.tmontica.order.exception.StockExceptionType;
 import com.internship.tmontica.order.model.request.OrderReq;
 import com.internship.tmontica.order.model.request.OrderStatusReq;
@@ -61,7 +65,7 @@ public class OrderService {
     }
 
     // 결제하기 api
-    @Transactional(rollbackFor = {NotEnoughStockException.class, UserException.class} )
+    @Transactional(rollbackFor = {NotEnoughStockException.class, CartUserException.class} )
     public Map<String, Integer> addOrderApi(OrderReq orderReq){
         //토큰에서 유저아이디
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
@@ -78,9 +82,9 @@ public class OrderService {
         for (Order_MenusReq menu: menus) {
             CartMenu cartMenu = cartMenuDao.getCartMenuByCartId(menu.getCartId());
 
-            // 로그인한 아이디와 디비의 아이디 다르면 rollback
+            // 로그인한 아이디와 해당 카트id의 userId가 다르면 rollback
             if(!userId.equals(cartMenu.getUserId())){
-                throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
+                throw new CartUserException(CartExceptionType.FORBIDDEN_ACCESS_CART_DATA);
             }
 
             int price = (menuDao.getMenuById(cartMenu.getMenuId()).getSellPrice()) + cartMenu.getPrice();// 옵션 + 메뉴 가격
@@ -115,7 +119,7 @@ public class OrderService {
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         // 유저 아이디 검사
         if(!userId.equals(order.getUserId())){
-            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
+            throw new OrderUserException(OrderExceptionType.FORBIDDEN_ACCESS_ORDER_DATA);
         }
 
         List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(orderId);
@@ -143,7 +147,7 @@ public class OrderService {
         String dbUserId = orderDao.getOrderByOrderId(orderId).getUserId();
         if(!userId.equals(dbUserId)){
             // 아이디 디비와 다를경우 예외처리
-            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
+            throw new OrderUserException(OrderExceptionType.FORBIDDEN_ACCESS_ORDER_DATA);
         }
         // orders 테이블에서 status 수정
         orderDao.updateOrderStatus(orderId, OrderStatusType.CANCEL.getStatus());

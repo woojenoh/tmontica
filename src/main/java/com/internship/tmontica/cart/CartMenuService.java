@@ -1,5 +1,7 @@
 package com.internship.tmontica.cart;
 
+import com.internship.tmontica.cart.exception.CartExceptionType;
+import com.internship.tmontica.cart.exception.CartUserException;
 import com.internship.tmontica.cart.model.request.CartReq;
 import com.internship.tmontica.cart.model.request.CartUpdateReq;
 import com.internship.tmontica.cart.model.request.Cart_OptionReq;
@@ -82,7 +84,7 @@ public class CartMenuService {
             }
 
             // direct : true 이면 userId 의 카트에서 direct = true 인 것을 삭제하기
-            if (cartReq.isDirect()) {
+            if (cartReq.getDirect()) {
                 cartMenuDao.deleteDirectCartMenu(userId);
             }
 
@@ -104,7 +106,7 @@ public class CartMenuService {
 
             // 카트 테이블에 추가하기
             CartMenu cartMenu = new CartMenu(cartReq.getQuantity(), optionStr.toString(), userId,
-                    optionPrice, cartReq.getMenuId(), cartReq.isDirect());
+                    optionPrice, cartReq.getMenuId(), cartReq.getDirect());
             int result = cartMenuDao.addCartMenu(cartMenu);
             int cartId = cartMenu.getId();
 
@@ -122,7 +124,7 @@ public class CartMenuService {
         String cartUserId = cartMenuDao.getCartMenuByCartId(id).getUserId();
         if(!userId.equals(cartUserId)){
             // 아이디 일치하지 않을 경우
-            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
+            throw new CartUserException(CartExceptionType.FORBIDDEN_ACCESS_CART_DATA);
         }
         int result = cartMenuDao.updateCartMenuQuantity(id, cartUpdateReq.getQuantity());
         return result;
@@ -135,7 +137,7 @@ public class CartMenuService {
         String cartUserId = cartMenuDao.getCartMenuByCartId(id).getUserId();
         if(!userId.equals(cartUserId)){
             // 아이디 일치하지 않을 경우
-            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
+            throw new CartUserException(CartExceptionType.FORBIDDEN_ACCESS_CART_DATA);
         }
         //카트에 담긴 정보 삭제하기
         int result = cartMenuDao.deleteCartMenu(id);
@@ -145,7 +147,6 @@ public class CartMenuService {
 
     // DB의 옵션 문자열을 변환
     public String convertOptionStringToCli(String option){
-        // 맵으로 만들어서 함수의 파라미터로 던지기...
         //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
         StringBuilder convert = new StringBuilder();
         String[] arrOption = option.split("/");
