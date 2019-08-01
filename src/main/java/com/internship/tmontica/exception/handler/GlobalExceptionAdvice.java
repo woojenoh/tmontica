@@ -35,6 +35,7 @@ public class GlobalExceptionAdvice {
 
     // 유저
     @ExceptionHandler(UserValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public TmonTicaExceptionFormat handleUserValidException(UserValidException e) {
         log.info("UserValidExceptionMessage : {}" , e.getMessage());
         return new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage(), e.getBindingResult());
