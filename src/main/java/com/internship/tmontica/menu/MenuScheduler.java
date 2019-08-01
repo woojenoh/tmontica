@@ -11,11 +11,16 @@ import java.util.List;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class MenuScheduler {
     private final MenuDao menuDao;
+    private static List<Menu> usableMenus;
 
-    @Scheduled(fixedDelay = 60000)
+    public MenuScheduler(MenuDao menuDao){
+        this.menuDao = menuDao;
+        usableMenus = new ArrayList<>();
+    }
+
+    @Scheduled(cron = "0 * * * * *")
     public void filteredMenu(){
         log.info("[scheduler] start scheduler");
         List<Menu> allMenus = menuDao.getAllMenus();
@@ -31,8 +36,15 @@ public class MenuScheduler {
             }
         }
 
-        MenuService.usableMenus = filteredMenus;
-        log.info("[scheduler] end scheduler , usableMenus size : {}", MenuService.usableMenus.size());
+//        filteredMenus = allMenus.stream().filter(menu -> menu.getStartDate() == null)
+//                                         .filter(menu -> )
+
+        usableMenus = filteredMenus;   // TODO : usableMenu --> scheduler에 , stream 적용
+        log.info("[scheduler] end scheduler , usableMenus size : {}", usableMenus.size());
+    }
+
+    public static List<Menu> getUsableMenus(){
+        return usableMenus;
     }
 
 }

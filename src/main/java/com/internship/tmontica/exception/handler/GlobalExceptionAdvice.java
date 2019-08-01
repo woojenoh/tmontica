@@ -2,11 +2,8 @@ package com.internship.tmontica.exception.handler;
 
 import com.internship.tmontica.exception.TmonTicaExceptionFormat;
 import com.internship.tmontica.menu.exception.MenuException;
-import com.internship.tmontica.menu.exception.SaveImgException;
-import com.internship.tmontica.menu.exception.MenuValidException;
 import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.exception.UserException;
-import com.internship.tmontica.user.exception.UserExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -43,19 +40,6 @@ public class GlobalExceptionAdvice {
     }
 
     // 메뉴
-    @ExceptionHandler(MenuValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public TmonTicaExceptionFormat handleMenuValidException(MenuValidException e) {
-        log.info("MenuExceptionMessage : {}" , e.getMessage());
-        return new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage(), e.getBindingResult());
-    }
-
-    @ExceptionHandler(SaveImgException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public TmonTicaExceptionFormat handleSaveImgException(SaveImgException e){
-        return new TmonTicaExceptionFormat("imgFile", "올바른 이미지 파일이 아닙니다.");
-    }
-
     @ExceptionHandler(MenuException.class)
     public ResponseEntity<TmonTicaExceptionFormat> handleMenuException(MenuException e){
         log.info("MenuException : {}" , e.getErrorMessage());

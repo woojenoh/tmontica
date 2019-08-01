@@ -2,15 +2,10 @@ package com.internship.tmontica.menu;
 
 import com.internship.tmontica.menu.exception.MenuException;
 import com.internship.tmontica.menu.exception.MenuExceptionType;
-import com.internship.tmontica.menu.exception.MenuValidException;
-import com.internship.tmontica.menu.model.request.MenuReq;
-import com.internship.tmontica.menu.model.request.MenuUpdateReq;
 import com.internship.tmontica.menu.model.response.MenuCategoryResp;
 import com.internship.tmontica.menu.model.response.MenuDetailResp;
 import com.internship.tmontica.menu.model.response.MenuMainResp;
 import com.internship.tmontica.menu.model.response.MenuSimpleResp;
-import com.internship.tmontica.menu.validaton.MenuValidator;
-import com.internship.tmontica.util.CategoryName;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -18,10 +13,8 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -34,10 +27,9 @@ public class MenuController {
 
     private final ModelMapper modelMapper;
 
-    private final MenuValidator menuValidator;
-
     @Value("${menu.imagepath}")
     private String location;
+
 
     /** 전체 메뉴 (메인 화면 ) **/
     @GetMapping
@@ -69,7 +61,7 @@ public class MenuController {
         menucategoryResp.setSize(size);
         menucategoryResp.setPage(page);
         menucategoryResp.setCategoryEng(category);
-        menucategoryResp.setCategoryKo(CategoryName.categoryEngToKo(category));
+        menucategoryResp.setCategoryKo(CategoryName.convertEngToKo(category));
 
         List<Menu> menus = menuService.getMenusByCategory(category, page, size);
         // 메뉴가 없는 경우
@@ -95,55 +87,5 @@ public class MenuController {
         }
         return new ResponseEntity<>(menuDetailResp, HttpStatus.OK);
     }
-
-    /** 메뉴 추가하기 **/
-    @PostMapping
-    public ResponseEntity addMenu(@ModelAttribute @Valid MenuReq menuReq,BindingResult bindingResult){
-        if(bindingResult.hasErrors()) {
-            throw new MenuValidException("Menu Create Form", "메뉴 추가 폼 데이터가 올바르지 않습니다.", bindingResult);
-        }
-        menuValidator.validate(menuReq, bindingResult);
-        if(bindingResult.hasErrors()) {
-            throw new MenuValidException("Menu Create Form", "메뉴 추가 폼 데이터가 올바르지 않습니다.", bindingResult);
-        }
-        log.info("[menu api] 메뉴 추가하기");
-        log.info("menuReq : {}", menuReq.toString());
-
-        Menu menu = new Menu();
-        modelMapper.map(menuReq, menu);
-
-        // 메뉴 저장
-        menuService.addMenu(menu, menuReq.getOptionIds(), menuReq.getImgFile());
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    /** 메뉴 수정하기 **/
-    @PutMapping
-    public ResponseEntity updateMenu(@ModelAttribute @Valid MenuUpdateReq menuReq, BindingResult bindingResult){
-        if(bindingResult.hasErrors()) {
-            throw new MenuValidException("Menu Update Form", "메뉴 수정 폼 데이터가 올바르지 않습니다.", bindingResult);
-        }
-        log.info("[menu api] 메뉴 수정하기");
-        log.info("menuReq : {}", menuReq.toString());
-
-        Menu menu = new Menu();
-        menu.setId(menuReq.getMenuId());
-        modelMapper.map(menuReq, menu);
-
-        menuService.updateMenu(menu, menuReq.getImgFile());
-
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
-    /** 메뉴 삭제하기 **/
-    @DeleteMapping("/{menuId}")
-    public ResponseEntity deleteMenu(@PathVariable("menuId")int menuId ){
-        log.info("[menu api] 메뉴 삭제하기");
-        log.info("menuId : {}", menuId);
-
-        menuService.deleteMenu(menuId);
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
 
 }
