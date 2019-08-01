@@ -20,7 +20,7 @@ class MenuItems extends React.Component<IMenuItemsProps> {
           <h1 className="menu__title">{categoryKo}</h1>
           {categoryEng ? (
             <Link to={`/menus/${categoryEng}`} className="menu__link">
-              <span className="menu__more">+</span>
+              {categoryKo !== "이달의 메뉴" && <span className="menu__more">+</span>}
             </Link>
           ) : (
             ""
