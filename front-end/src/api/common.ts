@@ -45,7 +45,7 @@ export function get<T, E extends TCommonError>(
   reqURL = attchParamsToURL(reqURL, params);
 
   const headers = getHeaders(jwt);
-  const requestConfig = Object.assign(headers, { method: "GET" });
+  const requestConfig = Object.assign(defaultRequestConfig, { headers }, { method: "GET" });
 
   return fetchTMON<T, E>(reqURL, requestConfig);
 }
@@ -57,20 +57,30 @@ export function del<T, E extends TCommonError>(
 ) {
   reqURL = attchParamsToURL(reqURL, params);
   const headers = getHeaders(jwt);
-  const requestConfig = Object.assign(headers, { method: "GET" });
+  const requestConfig = Object.assign(defaultRequestConfig, { headers }, { method: "DELETE" });
 
   return fetchTMON<T, E>(reqURL, requestConfig);
 }
 
 export function post<T, E extends TCommonError>(reqURL: string, data: any, jwt?: string) {
   const headers = getHeaders(jwt);
-  const requestConfig = Object.assign(headers, { method: "POST" }, { body: JSON.stringify(data) });
+  const requestConfig = Object.assign(
+    defaultRequestConfig,
+    { headers },
+    { method: "POST" },
+    { body: JSON.stringify(data) }
+  );
   return fetchTMON<T, E>(reqURL, requestConfig);
 }
 
 export function put<T, E extends TCommonError>(reqURL: string, data: any, jwt?: string) {
   const headers = getHeaders(jwt);
-  const requestConfig = Object.assign(headers, { method: "PUT" }, { body: JSON.stringify(data) });
+  const requestConfig = Object.assign(
+    defaultRequestConfig,
+    { headers },
+    { method: "PUT" },
+    { body: JSON.stringify(data) }
+  );
   return fetchTMON<T, E>(reqURL, requestConfig);
 }
 
