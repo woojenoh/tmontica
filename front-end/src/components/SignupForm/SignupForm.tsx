@@ -106,9 +106,9 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
   handleIsIdNotSame = async () => {
     try {
       const { id, isIdOk } = this.state;
-
       if (isIdOk) {
-        const a = await checkDuplicated(id);
+        await checkDuplicated(id);
+        alert("사용 가능한 아이디입니다.");
         this.setState({
           isIdNotSame: true
         });
