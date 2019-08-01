@@ -3,6 +3,7 @@ import _ from "underscore";
 import * as cartActionTypes from "../actionTypes/cart";
 import * as cartActionCreators from "../actionCreators/cart";
 import * as cartTypes from "../../types/cart";
+import * as userActionCreators from "../actionCreators/user";
 import { addCart, getCart, changeCart, removeCart } from "../../api/cart";
 
 function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
@@ -107,10 +108,15 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
       }
     }
 
-    const data = yield getCart();
+    const data = yield call(getCart);
     yield put(cartActionCreators.fetchSetCartFulfilled(data));
   } catch (error) {
-    alert(error.exceptionMessage);
+    if (error.status === 401) {
+      alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
+      yield put(userActionCreators.signout());
+    } else {
+      alert(error.exceptionMessage);
+    }
     yield put(cartActionCreators.fetchSetCartRejected(error));
   }
 }
@@ -147,7 +153,12 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
     alert("상품이 담겼습니다.");
     yield put(cartActionCreators.fetchAddCartFulfilled(newCart));
   } catch (error) {
-    alert(error.exceptionMessage);
+    if (error.status === 401) {
+      alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
+      yield put(userActionCreators.signout());
+    } else {
+      alert(error.exceptionMessage);
+    }
     yield put(cartActionCreators.fetchAddCartRejected(error));
   }
 }
@@ -170,7 +181,12 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
     });
     yield put(cartActionCreators.fetchRemoveCartFulfilled(newCart));
   } catch (error) {
-    alert(error.exceptionMessage);
+    if (error.status === 401) {
+      alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
+      yield put(userActionCreators.signout());
+    } else {
+      alert(error.exceptionMessage);
+    }
     yield put(cartActionCreators.fetchRemoveCartRejected(error));
   }
 }
@@ -204,7 +220,12 @@ function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
     newCart.menus = targetMenus;
     yield put(cartActionCreators.fetchChangeCartFulfilled(newCart));
   } catch (error) {
-    alert(error.exceptionMessage);
+    if (error.status === 401) {
+      alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
+      yield put(userActionCreators.signout());
+    } else {
+      alert(error.exceptionMessage);
+    }
     yield put(cartActionCreators.fetchChangeCartRejected(error));
   }
 }
