@@ -1,7 +1,12 @@
 package com.internship.tmontica.exception.handler;
 
+import com.internship.tmontica.cart.exception.CartUserException;
+import com.internship.tmontica.cart.exception.CartValidException;
 import com.internship.tmontica.exception.TmonTicaExceptionFormat;
 import com.internship.tmontica.menu.exception.MenuException;
+import com.internship.tmontica.order.exception.NotEnoughStockException;
+import com.internship.tmontica.order.exception.OrderUserException;
+import com.internship.tmontica.order.exception.OrderValidException;
 import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.exception.UserException;
 import org.slf4j.Logger;
@@ -45,4 +50,37 @@ public class GlobalExceptionAdvice {
         log.info("MenuException : {}" , e.getErrorMessage());
         return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), e.getMenuExceptionType().getResponseType());
     }
+
+    // 카트
+    @ExceptionHandler(CartValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public TmonTicaExceptionFormat handleCartValidException(CartValidException e){
+        return new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage(), e.getBindingResult());
+    }
+
+    @ExceptionHandler(CartUserException.class)
+    public ResponseEntity<TmonTicaExceptionFormat> handleCartUserException(CartUserException e){
+        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage()), e.getCartExceptionType().getResponseType());
+    }
+
+    // 재고
+    @ExceptionHandler(NotEnoughStockException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public TmonTicaExceptionFormat handleNotEnoughStockException(NotEnoughStockException e) {
+        log.info("stock is not enough exception");
+        return new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage());
+    }
+
+    // 오더
+    @ExceptionHandler(OrderValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public TmonTicaExceptionFormat handleOrderValidException(OrderValidException e){
+        return new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage(), e.getBindingResult());
+    }
+
+    @ExceptionHandler(OrderUserException.class)
+    public ResponseEntity<TmonTicaExceptionFormat> handleOrderUserException(OrderUserException e){
+        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage()), e.getOrderExceptionType().getResponseType());
+    }
+
 }

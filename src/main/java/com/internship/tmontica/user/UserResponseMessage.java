@@ -1,7 +1,9 @@
 package com.internship.tmontica.user;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
 public enum UserResponseMessage {
 
@@ -14,9 +16,4 @@ public enum UserResponseMessage {
     USABLE_ID("사용할 수 있는 아이디 입니다.");
 
     private String message;
-
-    UserResponseMessage(String message) {
-        this.message = message;
-    }
-
 }

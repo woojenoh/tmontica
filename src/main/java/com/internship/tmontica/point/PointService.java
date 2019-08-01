@@ -15,26 +15,21 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PointService {
 
-    private final PointDao pointDao;
-    private final ModelMapper modelMapper;
-    private final JwtService jwtService;
-
-    public boolean postPointLog(PointLogReqDTO pointLogReqDTO){
-
-
-        return true;
-    }
-
-    public boolean withdrawPointLogByUserId(String userId){
-
-        checkAdminRole();
-        return pointDao.withdrawPointLogByUserId(userId) > 0;
-    }
-
-    private void checkAdminRole(){
-
-        if(!JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "role").equals(UserRole.ADMIN.getRole())){
-            throw new UnauthorizedException();
-        }
-    }
+//    private final PointDao pointDao;
+//    private final JwtService jwtService;
+//
+//    public void withdrawPointLogByUserId(String userId){
+//
+//        checkAdminRole();
+//        if(pointDao.withdrawPointLogByUserId(userId) > 0){
+//            //do something..
+//        }
+//    }
+//
+//    private void checkAdminRole(){
+//
+//        if(!JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "role").equals(UserRole.ADMIN.getRole())){
+//            throw new UnauthorizedException();
+//        }
+//    }
 }

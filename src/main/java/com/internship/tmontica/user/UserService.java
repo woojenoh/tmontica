@@ -167,8 +167,8 @@ public class UserService {
         }
 
         UserMailForm userMailForm = new UserMailForm(MailType.FIND_ID, userList.get(0), key);
-
         if(findDao.addAuthCode(new FindId(key, userList.stream().
+                filter(User::isActive).
                 map(User :: getId).
                 collect(Collectors.toList()).
                 toString())) < 1){
