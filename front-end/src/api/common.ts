@@ -2,16 +2,12 @@ import { TMessageError, TExceptionError, TCommonError } from "../types/error";
 
 export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
 
-function transfromData(data: any) {
-  if (typeof data === "string") {
-    try {
-      data = JSON.parse(data);
-    } catch (e) {
-      /* Ignore */
-    }
+const defaultRequestConfig = {
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json"
   }
-  return data;
-}
+};
 
 async function fetchTMON<SuccessDataType, ErrorType extends TCommonError>(
   url: string,
@@ -20,7 +16,7 @@ async function fetchTMON<SuccessDataType, ErrorType extends TCommonError>(
   const res = await fetch(url, options);
 
   const text = await res.text();
-  const data = transfromData(text);
+  const data = transformData(text);
 
   if (res.ok) {
     return data as SuccessDataType;
@@ -35,33 +31,23 @@ function error(message: string | undefined): never {
   throw new Error(message);
 }
 
+function getHeaders(jwt?: string) {
+  return jwt
+    ? Object.assign(defaultRequestConfig["headers"], { Authorization: jwt })
+    : defaultRequestConfig["headers"];
+}
+
 export function get<T, E extends TCommonError>(
   reqURL: string,
   params?: Map<string, string> | Object | null,
   jwt?: string
 ) {
-  if (typeof params !== "undefined" && params !== null && !/[?]/.test(reqURL)) {
-    if (params instanceof Map) {
-      reqURL += `?${Array.from(params.entries())
-        .map(x => {
-          return `${x[0]}=${x[1]}`;
-        })
-        .join("&")}`;
-    } else {
-      reqURL += `?${Object.entries(params)
-        .map(([key, val]) => `${key}=${val}`)
-        .join("&")}`;
-    }
-  }
+  reqURL = attchParamsToURL(reqURL, params);
 
-  return fetchTMON<T, E>(reqURL, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: jwt || ""
-    },
-    method: "GET"
-  });
+  const headers = getHeaders(jwt);
+  const requestConfig = Object.assign(defaultRequestConfig, { headers }, { method: "GET" });
+
+  return fetchTMON<T, E>(reqURL, requestConfig);
 }
 
 export function del<T, E extends TCommonError>(
@@ -69,67 +55,47 @@ export function del<T, E extends TCommonError>(
   params?: Map<string, string> | Object | null,
   jwt?: string
 ) {
-  if (typeof params !== "undefined" && params !== null && !/[?]/.test(reqURL)) {
-    if (params instanceof Map) {
-      reqURL += `?${Array.from(params.entries())
-        .map(x => {
-          return `${x[0]}=${x[1]}`;
-        })
-        .join("&")}`;
-    } else {
-      reqURL += `?${Object.entries(params)
-        .map(([key, val]) => `${key}=${val}`)
-        .join("&")}`;
-    }
-  }
+  reqURL = attchParamsToURL(reqURL, params);
+  const headers = getHeaders(jwt);
+  const requestConfig = Object.assign(defaultRequestConfig, { headers }, { method: "DELETE" });
 
-  return fetchTMON<T, E>(reqURL, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: jwt || ""
-    },
-    method: "DELETE"
-  });
-}
-
-export function getWithJWT<T, E extends TCommonError>(
-  reqURL: string,
-  params?: Map<string, string> | null
-) {
-  const jwt = localStorage.getItem("jwt") || "";
-
-  return get<T, E>(reqURL, params, jwt);
+  return fetchTMON<T, E>(reqURL, requestConfig);
 }
 
 export function post<T, E extends TCommonError>(reqURL: string, data: any, jwt?: string) {
-  return fetchTMON<T, E>(reqURL, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: jwt || ""
-    },
-    method: "POST",
-    body: JSON.stringify(data)
-  });
+  const headers = getHeaders(jwt);
+  const requestConfig = Object.assign(
+    defaultRequestConfig,
+    { headers },
+    { method: "POST" },
+    { body: JSON.stringify(data) }
+  );
+  return fetchTMON<T, E>(reqURL, requestConfig);
 }
 
 export function put<T, E extends TCommonError>(reqURL: string, data: any, jwt?: string) {
-  return fetchTMON<T, E>(reqURL, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: jwt || ""
-    },
-    method: "PUT",
-    body: JSON.stringify(data)
-  });
+  const headers = getHeaders(jwt);
+  const requestConfig = Object.assign(
+    defaultRequestConfig,
+    { headers },
+    { method: "PUT" },
+    { body: JSON.stringify(data) }
+  );
+  return fetchTMON<T, E>(reqURL, requestConfig);
 }
 
 function withJWT(this: void, f: Function) {
   const jwt = localStorage.getItem("jwt") || "";
 
   return f.call(f, jwt);
+}
+
+export function getWithJWT<T, E extends TCommonError>(
+  this: void,
+  reqURL: string,
+  params?: Map<string, string> | null
+) {
+  return withJWT(get.bind(this, reqURL, params));
 }
 
 export function postWithJWT<T, E extends TCommonError>(this: void, reqURL: string, data: any) {
@@ -142,4 +108,33 @@ export function putWithJWT<T, E extends TCommonError>(this: void, reqURL: string
 
 export function delWithJWT<T, E extends TCommonError>(this: void, reqURL: string) {
   return withJWT(del.bind(this, reqURL, ""));
+}
+
+function transformData(data: any) {
+  if (typeof data === "string") {
+    try {
+      data = JSON.parse(data);
+    } catch (e) {
+      /* Ignore */
+    }
+  }
+  return data;
+}
+
+// 쿼리 파라미터 맵/객체를 URL에 붙여주는 함수
+function attchParamsToURL(url: string, params?: Map<string, string> | Object | null) {
+  if (typeof params !== "undefined" && params !== null && !/[?]/.test(url)) {
+    if (params instanceof Map) {
+      url += `?${Array.from(params.entries())
+        .map(x => {
+          return `${x[0]}=${x[1]}`;
+        })
+        .join("&")}`;
+    } else {
+      url += `?${Object.entries(params)
+        .map(([key, val]) => `${key}=${val}`)
+        .join("&")}`;
+    }
+  }
+  return url;
 }
