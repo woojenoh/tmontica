@@ -176,16 +176,15 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
             </section>
 
             <section className="price card">
-              <div className="d-flex">
+              <div className="d-flex price-row">
                 <div className="price--name">주문금액</div>
                 <div className="price--value">{orderPrice.toLocaleString()}원</div>
               </div>
-              <div className="d-flex">
+              <div className="d-flex price-row">
                 <div className="price--name">할인금액</div>
                 <div className="price--value">{this.state.usedPoint.toLocaleString()}원</div>
               </div>
-              <hr />
-              <div className="d-flex">
+              <div className="d-flex price-row">
                 <div className="price--name">최종 결제금액</div>
                 <div className="price--value">
                   {(this.state.totalPrice && this.state.totalPrice.toLocaleString()) ||
