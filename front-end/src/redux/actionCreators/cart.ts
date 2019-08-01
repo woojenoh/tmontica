@@ -49,11 +49,10 @@ export function removeLocalCartRejected(error: Error) {
   };
 }
 
-export function changeLocalCart(id: number, quantity: number) {
+export function changeLocalCart(payload: { id: number; quantity: number }) {
   return {
     type: actionTypes.CHANGE_LOCAL_CART,
-    id,
-    quantity
+    payload
   };
 }
 
@@ -133,11 +132,10 @@ export function fetchRemoveCartRejected(error: string) {
   };
 }
 
-export function fetchChangeCart(id: number, quantity: number) {
+export function fetchChangeCart(payload: { id: number; quantity: number }) {
   return {
     type: actionTypes.FETCH_CHANGE_CART,
-    id,
-    quantity
+    payload
   };
 }
 

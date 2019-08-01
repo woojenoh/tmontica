@@ -12,9 +12,9 @@ export interface ICartItemProps {
   imgUrl: string;
   isSignin: boolean;
   removeLocalCart(payload: number): void;
-  changeLocalCart(id: number, quantity: number): void;
+  changeLocalCart(payload: { id: number; quantity: number }): void;
   fetchRemoveCart(payload: number): void;
-  fetchChangeCart(id: number, quantity: number): void;
+  fetchChangeCart(payload: { id: number; quantity: number }): void;
 }
 
 export interface ICartItemState {
@@ -42,11 +42,11 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
     const { id, isSignin, changeLocalCart, fetchChangeCart } = this.props;
     if (isSignin) {
       if (id !== undefined) {
-        fetchChangeCart(id, Number(e.currentTarget.value));
+        fetchChangeCart({ id: id, quantity: Number(e.currentTarget.value) });
       }
     } else {
       if (id !== undefined) {
-        changeLocalCart(id, Number(e.currentTarget.value));
+        changeLocalCart({ id: id, quantity: Number(e.currentTarget.value) });
       }
     }
     this.setState({
