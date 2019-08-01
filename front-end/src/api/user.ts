@@ -1,8 +1,7 @@
 import { TCartAddReq, TCartId, ICart } from "../types/cart";
 import { post, postWithJWT, API_URL, getWithJWT, get } from "./common";
-import { TCommonError } from "../types/error";
-import { IUserSignupInfo, IUserSigninInfo, IJwtToken, IUserSigninActive } from "../types/user";
-import { string } from "prop-types";
+import { TCommonError, TExceptionError } from "../types/error";
+import { IUserSignupInfo, IUserSigninInfo, IUserSigninActive } from "../types/user";
 
 export function addCart(cartAddReqs: Array<TCartAddReq>) {
   return postWithJWT<TCartId[], TCommonError>(`${API_URL}/carts`, cartAddReqs);
@@ -17,7 +16,7 @@ export function signUp(data: IUserSignupInfo) {
 }
 
 export function signIn(data: IUserSigninInfo) {
-  return post<string, TCommonError>(`${API_URL}/users/signin`, data);
+  return post<{ authorization: string }, TCommonError>(`${API_URL}/users/signin`, data);
 }
 
 export function signInActive(params: IUserSigninActive) {
@@ -34,4 +33,9 @@ export function findIdConfirm(data: { authCode: string }) {
 
 export function findPassword(data: { email: string; id: string }) {
   return get<any, TCommonError>(`${API_URL}/users/findpw`, data);
+}
+
+// 중복 아이디 확인
+export function checkDuplicated(id: string) {
+  return get<string, TCommonError>(`${API_URL}/users/duplicate/${id}`);
 }

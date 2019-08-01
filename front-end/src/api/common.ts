@@ -1,28 +1,41 @@
-import { TMessageError } from "../types/error";
+import { TMessageError, TExceptionError, TCommonError } from "../types/error";
 
 export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
 
-async function fetchTMON<SuccessDataType, ErrorType extends TMessageError>(
+function transfromData(data: any) {
+  if (typeof data === "string") {
+    try {
+      data = JSON.parse(data);
+    } catch (e) {
+      /* Ignore */
+    }
+  }
+  return data;
+}
+
+async function fetchTMON<SuccessDataType, ErrorType extends TCommonError>(
   url: string,
   options: RequestInit
 ) {
   const res = await fetch(url, options);
 
-  const json = await res.json();
+  const text = await res.text();
+  const data = transfromData(text);
+
   if (res.ok) {
-    return json as SuccessDataType;
+    return data as SuccessDataType;
   }
 
-  const err = json as ErrorType;
+  const err = data as ErrorType;
 
-  error(err.message);
+  throw err;
 }
 
 function error(message: string | undefined): never {
   throw new Error(message);
 }
 
-export function get<T, E extends TMessageError>(
+export function get<T, E extends TCommonError>(
   reqURL: string,
   params?: Map<string, string> | Object | null,
   jwt?: string
@@ -51,7 +64,36 @@ export function get<T, E extends TMessageError>(
   });
 }
 
-export function getWithJWT<T, E extends TMessageError>(
+export function del<T, E extends TCommonError>(
+  reqURL: string,
+  params?: Map<string, string> | Object | null,
+  jwt?: string
+) {
+  if (typeof params !== "undefined" && params !== null && !/[?]/.test(reqURL)) {
+    if (params instanceof Map) {
+      reqURL += `?${Array.from(params.entries())
+        .map(x => {
+          return `${x[0]}=${x[1]}`;
+        })
+        .join("&")}`;
+    } else {
+      reqURL += `?${Object.entries(params)
+        .map(([key, val]) => `${key}=${val}`)
+        .join("&")}`;
+    }
+  }
+
+  return fetchTMON<T, E>(reqURL, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: jwt || ""
+    },
+    method: "GET"
+  });
+}
+
+export function getWithJWT<T, E extends TCommonError>(
   reqURL: string,
   params?: Map<string, string> | null
 ) {
@@ -60,7 +102,7 @@ export function getWithJWT<T, E extends TMessageError>(
   return get<T, E>(reqURL, params, jwt);
 }
 
-export function post<T, E extends TMessageError>(reqURL: string, data: any, jwt?: string) {
+export function post<T, E extends TCommonError>(reqURL: string, data: any, jwt?: string) {
   return fetchTMON<T, E>(reqURL, {
     headers: {
       Accept: "application/json",
@@ -72,8 +114,32 @@ export function post<T, E extends TMessageError>(reqURL: string, data: any, jwt?
   });
 }
 
-export function postWithJWT<T, E extends TMessageError>(reqURL: string, data: any) {
+export function put<T, E extends TCommonError>(reqURL: string, data: any, jwt?: string) {
+  return fetchTMON<T, E>(reqURL, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: jwt || ""
+    },
+    method: "PUT",
+    body: JSON.stringify(data)
+  });
+}
+
+function withJWT(this: void, f: Function) {
   const jwt = localStorage.getItem("jwt") || "";
 
-  return post<T, E>(reqURL, data, jwt);
+  return f.call(f, jwt);
+}
+
+export function postWithJWT<T, E extends TCommonError>(this: void, reqURL: string, data: any) {
+  return withJWT(post.bind(this, reqURL, data));
+}
+
+export function putWithJWT<T, E extends TCommonError>(this: void, reqURL: string, data: any) {
+  return withJWT(put.bind(this, reqURL, data));
+}
+
+export function delWithJWT<T, E extends TCommonError>(this: void, reqURL: string) {
+  return withJWT(del.bind(this, reqURL));
 }

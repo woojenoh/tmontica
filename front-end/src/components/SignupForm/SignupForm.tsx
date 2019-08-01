@@ -4,6 +4,7 @@ import axios from "axios";
 import * as userTypes from "../../types/user";
 import { API_URL } from "../../api/common";
 import "./styles.scss";
+import { checkDuplicated } from "../../api/user";
 
 export interface ISignupFormProps extends RouteComponentProps {
   fetchSignup(userInfo: userTypes.IUserSignupInfo): void;
@@ -103,26 +104,24 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
   };
 
   // 중복확인 API 호출 함수.
-  handleIsIdNotSame = () => {
-    const { id, isIdOk } = this.state;
+  handleIsIdNotSame = async () => {
+    try {
+      const { id, isIdOk } = this.state;
 
-    if (isIdOk) {
-      axios
-        .get(`${API_URL}/users/duplicate/${id}`)
-        .then(res => {
-          this.setState({
-            isIdNotSame: true
-          });
-          alert("사용 가능한 아이디입니다.");
-        })
-        .catch(error => {
-          this.setState({
-            isIdNotSame: false
-          });
-          alert(error.response.data.exceptionMessage);
+      if (isIdOk) {
+        const a = await checkDuplicated(id);
+        this.setState({
+          isIdNotSame: true
         });
-    } else {
-      alert("6~20자의 영문, 숫자만 사용 가능합니다.");
+      } else {
+        alert("6~20자의 영문, 숫자만 사용 가능합니다.");
+      }
+    } catch (err) {
+      debugger;
+      alert(err.exceptionMessage);
+      this.setState({
+        isIdNotSame: false
+      });
     }
   };
 

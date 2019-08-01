@@ -1,5 +1,4 @@
 import * as userActionTypes from "../redux/actionTypes/user";
-import { AxiosError } from "axios";
 
 export interface IUserSigninActive {
   id: string;

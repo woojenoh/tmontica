@@ -79,7 +79,6 @@ class App extends React.Component<IAppProps> {
   };
 
   render() {
-    const { location } = this.props;
     const { PrivateRoute, PublicRoute } = this;
 
     return (

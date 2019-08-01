@@ -1,11 +1,9 @@
 import { call, put, takeLatest, select } from "redux-saga/effects";
 import _ from "underscore";
-import axios from "axios";
 import * as cartActionTypes from "../actionTypes/cart";
 import * as cartActionCreators from "../actionCreators/cart";
 import * as cartTypes from "../../types/cart";
-import { API_URL } from "../../api/common";
-import { addCart, getCart } from "../../api/cart";
+import { addCart, getCart, changeCart, removeCart } from "../../api/cart";
 
 function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
   try {
@@ -112,7 +110,7 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
     const data = yield getCart();
     yield put(cartActionCreators.fetchSetCartFulfilled(data));
   } catch (error) {
-    alert(error);
+    alert(error.message);
     yield put(cartActionCreators.fetchSetCartRejected(error));
   }
 }
@@ -149,7 +147,7 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
     alert("상품이 담겼습니다.");
     yield put(cartActionCreators.fetchAddCartFulfilled(newCart));
   } catch (error) {
-    alert(error);
+    alert(error.message);
     yield put(cartActionCreators.fetchAddCartRejected(error));
   }
 }
@@ -157,12 +155,7 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
 function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
   try {
     // 카트 아이디로 디비에 있는 해당 메뉴를 삭제한다.
-    const jwtToken = localStorage.getItem("jwt");
-    yield call(axios.delete, `${API_URL}/carts/${action.payload}`, {
-      headers: {
-        Authorization: jwtToken
-      }
-    });
+    yield call(removeCart(action.payload));
 
     // 현재 카트 상태에서 해당 카트 아이디를 가진 메뉴를 삭제한다.
     const state = yield select();
@@ -177,7 +170,7 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
     });
     yield put(cartActionCreators.fetchRemoveCartFulfilled(newCart));
   } catch (error) {
-    alert(error);
+    alert(error.message);
     yield put(cartActionCreators.fetchRemoveCartRejected(error));
   }
 }
@@ -185,19 +178,7 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
 function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
   try {
     // 카트 아이디와 수량으로 디비에 있는 해당 메뉴를 삭제한다.
-    const jwtToken = localStorage.getItem("jwt");
-    yield call(
-      axios.put,
-      `${API_URL}/carts/${action.id}`,
-      {
-        quantity: action.quantity
-      },
-      {
-        headers: {
-          Authorization: jwtToken
-        }
-      }
-    );
+    yield call(changeCart(action.id, action.quantity));
 
     // 해당 아이디에 해당하는 메뉴의 개수를 변경하고, 그에 따라 전체 사이즈와 가격도 변경한다.
     const state = yield select();
@@ -223,7 +204,7 @@ function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
     newCart.menus = targetMenus;
     yield put(cartActionCreators.fetchChangeCartFulfilled(newCart));
   } catch (error) {
-    alert(error);
+    alert(error.message);
     yield put(cartActionCreators.fetchChangeCartRejected(error));
   }
 }
