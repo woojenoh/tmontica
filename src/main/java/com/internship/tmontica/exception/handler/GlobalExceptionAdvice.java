@@ -8,7 +8,7 @@ import com.internship.tmontica.menu.exception.MenuValidException;
 import com.internship.tmontica.order.exception.NotEnoughStockException;
 import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.exception.UserException;
-import com.internship.tmontica.user.exception.UserExceptionType;
+import com.internship.tmontica.user.exception.UserValidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,6 +23,7 @@ public class GlobalExceptionAdvice {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionAdvice.class);
 
+    // 권한
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public TmonTicaExceptionFormat handleUnauthorizedException(UnauthorizedException e) {
@@ -31,17 +32,25 @@ public class GlobalExceptionAdvice {
         return new TmonTicaExceptionFormat("authorization", "권한이 유효하지 않습니다.");
     }
 
+    // 유저
+    @ExceptionHandler(UserValidException.class)
+    public TmonTicaExceptionFormat handleUserValidException(UserValidException e) {
+        log.info("UserValidExceptionMessage : {}" , e.getMessage());
+        return new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage(), e.getBindingResult());
+    }
+
     @ExceptionHandler(UserException.class)
     public ResponseEntity<TmonTicaExceptionFormat> handleUserException(UserException e) {
         log.debug("UserExceptionMessage : {}", e.getErrorMessage());
         return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), e.getUserExceptionType().getResponseType());
     }
 
+    // 메일
     @ExceptionHandler(MailSendException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public TmonTicaExceptionFormat handleEmailSendException(){
-        log.info("fail to send email");
-        return new TmonTicaExceptionFormat("email sending", "이메일 전송 실패.");
+    public TmonTicaExceptionFormat handleEmailSendException(MailSendException e){
+        log.info("fail to send email : {}", e.getMessage());
+        return new TmonTicaExceptionFormat("email sending", e.getMessage());
     }
 
     // 메뉴

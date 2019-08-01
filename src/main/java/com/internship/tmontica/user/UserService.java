@@ -5,7 +5,6 @@ import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.exception.*;
 import com.internship.tmontica.user.find.FindDao;
 import com.internship.tmontica.user.find.FindId;
-import com.internship.tmontica.user.model.request.*;
 import com.internship.tmontica.user.model.response.*;
 import com.internship.tmontica.security.AuthenticationKey;
 import com.internship.tmontica.util.JsonUtil;
@@ -27,37 +26,39 @@ public class UserService {
 
     private final UserDao userDao;
     private final FindDao findDao;
-    private final ModelMapper modelMapper;
     private final MailSender sender;
     private final JwtService jwtService;
+    private final ModelMapper modelMapper;
 
-    public void signUp(UserSignUpReqDTO userSignUpReqDTO) throws MailSendException{
+    public void signUp(User user) throws MailSendException{
 
-        checkUserIdDuplicatedException(userSignUpReqDTO.getId());
-        checkPasswordMismatchException(userSignUpReqDTO.getPassword(), userSignUpReqDTO.getPasswordCheck());
-        setRoleAndCheck(userSignUpReqDTO);
-        String key = new AuthenticationKey().getAuthenticationKey();
-        User user = modelMapper.map(userSignUpReqDTO, User.class);
+        //회원가입 정보 예외검사 및 기본설정
+        checkUserIdDuplicatedException(user.getId());
+        checkPasswordMismatchException(user.getPassword(), user.getPasswordCheck());
+        setDefaultRole(user);
+        checkUserRoleMismatchException(user.getRole());
+
+        //문제없는 회원가입 정보가 왔다면 활성화 코드 설정
+       String key = new AuthenticationKey().getAuthenticationKey();
         setActivateCode(user, key);
 
         if(userDao.addUser(user) < 1){
             throw new UserException(UserExceptionType.DATABASE_FAIL_EXCEPTION);
         }
 
+        //Sign-up 메일 전송
         UserMailForm userMailForm = new UserMailForm(MailType.SIGN_UP, user, key);
         sender.send(userMailForm.getMsg());
     }
 
-    private void setRoleAndCheck(UserSignUpReqDTO userSignUpReqDTO){
+    // 권한 설정이 안되어 있는 경우 USER 을 기본 권한으로 설정
+    private void setDefaultRole(User user){
 
-        String role = userSignUpReqDTO.getRole();
+        String role = user.getRole();
 
         if(role == null){
-            userSignUpReqDTO.setRole("USER");
-            return;
+            user.setRole("USER");
         }
-
-        checkUserRoleMismatchException(role);
     }
 
     private void setActivateCode(User user, String activateCode){
@@ -65,6 +66,7 @@ public class UserService {
         user.setActivateCode(activateCode);
     }
 
+    // 신규 가입자 활성화해주는 메소드
     public void activateUser(String id, String code){
 
         checkUserIdNotFoundException(id);
@@ -92,12 +94,13 @@ public class UserService {
         return !(user == null);
     }
 
-    public void signIn(UserSignInReqDTO userSignInReqDTO) {
+    // Sign-in 관련 데이터 체크
+    public void signInCheck(User user) {
 
-        User user = userDao.getUserByUserId(userSignInReqDTO.getId());
-        checkUserIdNotFoundException(userSignInReqDTO.getId());
-        checkPasswordMismatchException(userSignInReqDTO.getPassword(), user.getPassword());
-        checkUserActivateException(user);
+        User data = userDao.getUserByUserId(user.getId());
+        checkUserIdNotFoundException(user.getId());
+        checkPasswordMismatchException(user.getPassword(), data.getPassword());
+        checkUserActivateException(data);
     }
 
     private void checkUserActivateException(User user){
@@ -108,9 +111,10 @@ public class UserService {
         throw new UserException(UserExceptionType.USER_NOT_ACTIVATE_EXCEPTION);
     }
 
-     public UserSignInRespDTO makeJwtToken(UserSignInReqDTO userSignInReqDTO){
+    // Sign-in시 발급할 JWT 토큰을 만드는 메소드
+    public UserSignInRespDTO makeJwtToken(User user){
 
-        return new UserSignInRespDTO(jwtService.getToken(makeTokenUser(userSignInReqDTO.getId())));
+        return new UserSignInRespDTO(jwtService.getToken(makeTokenUser(user.getId())));
     }
 
     private UserTokenInfoDTO makeTokenUser(String id){
@@ -119,24 +123,25 @@ public class UserService {
         return modelMapper.map(user, UserTokenInfoDTO.class);
     }
 
-    public void checkPassword(UserCheckPasswordReqDTO userCheckPasswordReqDTO){
+    public void checkPassword(User user){
 
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id");
-        checkPasswordMismatchException(userCheckPasswordReqDTO.getPassword(),
+        checkPasswordMismatchException(user.getPassword(),
                 userDao.getUserByUserId(userId).getPassword());
     }
 
-    public void changePassword(UserChangePasswordReqDTO userChangePasswordReqDTO){
+    public void changePassword(User user){
 
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id");
-        checkPasswordMismatchException(userChangePasswordReqDTO.getNewPassword(), userChangePasswordReqDTO.getNewPasswordCheck());
-        UserChangePasswordDTO userChangePasswordDTO = new UserChangePasswordDTO(userId, userChangePasswordReqDTO.getNewPassword());
+        checkPasswordMismatchException(user.getPassword(), user.getPasswordCheck());
+        UserChangePasswordDTO userChangePasswordDTO = new UserChangePasswordDTO(userId, user.getPassword());
 
-        if(userDao.updateUserPassword(userChangePasswordDTO) < 1){
+        if(userDao.updateUserPassword(modelMapper.map(userChangePasswordDTO, User.class)) < 1){
             throw new UserException(UserExceptionType.DATABASE_FAIL_EXCEPTION);
         }
     }
 
+    //JWT토큰에 담긴 유저와 삭제 요청을 한 유저의 아이디를 체크하고 삭제
     public void withdrawUser(String id){
 
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id");
@@ -161,12 +166,14 @@ public class UserService {
         AuthenticationKey authenticationKey = new AuthenticationKey();
         String key = authenticationKey.getAuthenticationKey();
 
-        //우연히 인증코드가 겹치는 경우 재발급
+        //우연히 인증코드가 겹치는 경우 인증키 재발급
         while(findDao.getAuthCode(key) != null){
             key = authenticationKey.getAuthenticationKey();
         }
 
         UserMailForm userMailForm = new UserMailForm(MailType.FIND_ID, userList.get(0), key);
+
+        // 인증코드와 아이디 찾기를 요청받은 아이디들을 DB에 등록하고 실패하면 DATABASE_FAIL예외 throw
         if(findDao.addAuthCode(new FindId(key, userList.stream().
                 filter(User::isActive).
                 map(User :: getId).
@@ -187,20 +194,21 @@ public class UserService {
 
         String tempPassword = new AuthenticationKey().getAuthenticationKey();
         UserChangePasswordDTO userChangePasswordDTO = new UserChangePasswordDTO(user.getId(), tempPassword);
-        userDao.updateUserPassword(userChangePasswordDTO);
+        userDao.updateUserPassword(modelMapper.map(userChangePasswordDTO, User.class));
 
         user.setPassword(tempPassword);
         UserMailForm userMailForm = new UserMailForm(MailType.FIND_PW, user, false);
         sender.send(userMailForm.getMsg());
     }
 
+    // 아이디 찾기 관련 인증코드 확인 메소드
     @Transactional
-    public UserFindIdRespDTO checkAuthCode(UserFindIdReqDTO userFindIdReqDTO){
+    public UserFindIdRespDTO checkAuthCode(FindId findId){
 
-        FindId findId = findDao.getAuthCode(userFindIdReqDTO.getAuthCode());
-        if(findId != null){
-            List<String> findIds = new ArrayList<>(Arrays.asList(findId.getFindIds().replace(" ","").replace("[","").replace("]","").split(",")));
-            findDao.withdrawAuthCode(userFindIdReqDTO.getAuthCode());
+        FindId data = findDao.getAuthCode(findId.getAuthCode());
+        if(data != null){
+            List<String> findIds = new ArrayList<>(Arrays.asList(data.getFindIds().replace(" ","").replace("[","").replace("]","").split(",")));
+            findDao.withdrawAuthCode(data.getAuthCode());
             return new UserFindIdRespDTO(findIds);
         }
 
