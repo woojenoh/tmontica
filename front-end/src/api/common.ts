@@ -26,8 +26,8 @@ async function fetchTMON<SuccessDataType, ErrorType extends TCommonError>(
     return data as SuccessDataType;
   }
 
-  const err = data as ErrorType;
-
+  const originErr = data as ErrorType;
+  const err = Object.assign(originErr, { status: res.status });
   throw err;
 }
 
