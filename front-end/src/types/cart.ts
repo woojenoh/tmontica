@@ -79,8 +79,10 @@ export interface IRemoveLocalCartRejected {
 
 export interface IChangeLocalCart {
   type: typeof cartActionTypes.CHANGE_LOCAL_CART;
-  id: number;
-  quantity: number;
+  payload: {
+    id: number;
+    quantity: number;
+  };
 }
 
 export interface IChangeLocalCartFulfilled {
@@ -139,8 +141,10 @@ export interface IFetchRemoveCartRejected {
 
 export interface IFetchChangeCart {
   type: typeof cartActionTypes.FETCH_CHANGE_CART;
-  id: number;
-  quantity: number;
+  payload: {
+    id: number;
+    quantity: number;
+  };
 }
 
 export interface IFetchChangeCartFulfilled {
