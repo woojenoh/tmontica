@@ -79,7 +79,7 @@ function* fetchFindIdConfirmSagas(action: userTypes.IFetchFindIdConfirm) {
     const response = yield call(findIdConfirm, {
       authCode: action.payload
     });
-    alert(`회원님의 아이디는 ${response.data.userIdList} 입니다.`);
+    alert(`회원님의 아이디는 ${response.userIdList} 입니다.`);
     yield put(userActionCreators.fetchFindIdConfirmFulfilled());
   } catch (error) {
     alert(error.exceptionMessage);
