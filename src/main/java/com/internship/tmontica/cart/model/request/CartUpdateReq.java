@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class CartUpdateReq {
-    @NotNull
+
     @Min(1)
     private int quantity;
 }

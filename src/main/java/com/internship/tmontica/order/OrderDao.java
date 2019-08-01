@@ -1,6 +1,5 @@
 package com.internship.tmontica.order;
 
-import com.internship.tmontica.order.model.response.OrderStatusLogResp;
 import com.internship.tmontica.order.model.response.Order_MenusResp;
 import org.apache.ibatis.annotations.*;
 
@@ -31,7 +30,7 @@ public interface OrderDao {
             "where order_details.order_id = #{orderId}")
     List<String> getMenuNamesByOrderId(int orderId);
 
-    // orderId로 주문상태를 주문취소로 바꾸기
+    // order의 주문 상태 변경
     @Update("update orders set status=#{status} where id=#{orderId}")
     void updateOrderStatus(int orderId, String status);
 
@@ -52,12 +51,6 @@ public interface OrderDao {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addOrderDetail(OrderDetail orderDetail);
 
-    // orderId로 order_status_log 내역 가져오기
-    @Select("select status, editor_id, modified_date from order_status_logs where order_id=#{orderId}")
-    List<OrderStatusLogResp> getOrderStatusLogByOrderId(int orderId);
 
-    // order Status로 주문정보 가져오기
-    @Select("select * from orders where status = #{status}")
-    List<Order> getOrderByStatus(String status);
 
 }
