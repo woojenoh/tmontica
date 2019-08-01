@@ -89,7 +89,7 @@ export function del<T, E extends TCommonError>(
       "Content-Type": "application/json",
       Authorization: jwt || ""
     },
-    method: "GET"
+    method: "DELETE"
   });
 }
 
@@ -141,5 +141,5 @@ export function putWithJWT<T, E extends TCommonError>(this: void, reqURL: string
 }
 
 export function delWithJWT<T, E extends TCommonError>(this: void, reqURL: string) {
-  return withJWT(del.bind(this, reqURL));
+  return withJWT(del.bind(this, reqURL, ""));
 }
