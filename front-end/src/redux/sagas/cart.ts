@@ -130,7 +130,7 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
 
     // 만든 형태를 API로 전송하고, 응답으로 받은 카트 아이디들을 저장한다.
     // API 요청 분리.
-    const data = yield addCart(cartReqs);
+    const data = yield call(addCart, cartReqs);
 
     // 현재 카트 상태에 새로운 카트 메뉴들을 추가한다.
     const state = yield select();
@@ -155,7 +155,7 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
 function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
   try {
     // 카트 아이디로 디비에 있는 해당 메뉴를 삭제한다.
-    yield call(removeCart(action.payload));
+    yield call(removeCart, action.payload);
 
     // 현재 카트 상태에서 해당 카트 아이디를 가진 메뉴를 삭제한다.
     const state = yield select();
@@ -178,7 +178,7 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
 function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
   try {
     // 카트 아이디와 수량으로 디비에 있는 해당 메뉴를 삭제한다.
-    yield call(changeCart(action.id, action.quantity));
+    yield call(changeCart, action.id, action.quantity);
 
     // 해당 아이디에 해당하는 메뉴의 개수를 변경하고, 그에 따라 전체 사이즈와 가격도 변경한다.
     const state = yield select();
