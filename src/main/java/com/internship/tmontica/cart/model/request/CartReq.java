@@ -1,8 +1,10 @@
 package com.internship.tmontica.cart.model.request;
 
-import com.internship.tmontica.cart.model.request.Cart_OptionReq;
 import lombok.Data;
+import org.hibernate.validator.constraints.Range;
 
+import javax.validation.Valid;
+import javax.validation.constraints.AssertFalse;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -10,12 +12,12 @@ import java.util.List;
 @Data
 public class CartReq {
 
-    @NotNull
+    @Min(1)
     private int menuId;
-    @NotNull
     @Min(1)
     private int quantity;
+    @Valid
     private List<Cart_OptionReq> option;
     @NotNull
-    private boolean direct;
+    private Boolean direct; // @NotNull 적용을 위해
 }

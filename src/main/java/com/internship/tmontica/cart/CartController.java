@@ -1,11 +1,12 @@
 package com.internship.tmontica.cart;
 
-import com.internship.tmontica.cart.exception.CartValidException;
 import com.internship.tmontica.cart.exception.CartExceptionType;
+import com.internship.tmontica.cart.exception.CartValidException;
 import com.internship.tmontica.cart.model.request.CartReq;
 import com.internship.tmontica.cart.model.request.CartUpdateReq;
 import com.internship.tmontica.cart.model.response.CartIdResp;
 import com.internship.tmontica.cart.model.response.CartResp;
+import com.internship.tmontica.cart.validator.CartValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +21,14 @@ import java.util.List;
 public class CartController {
     @Autowired
     private CartMenuService cartMenuService;
+    @Autowired
+    private CartValidator cartValidator;
 
     /** 카트에 추가하기 */
     @PostMapping
-    public ResponseEntity<?> addCart(@RequestBody @Valid List<CartReq> cartReqs, BindingResult bindingResult) {
+    public ResponseEntity<List<CartIdResp>> addCart(@RequestBody @Valid List<CartReq> cartReqs, BindingResult bindingResult) {
+        // 리스트를 validate
+        cartValidator.validate(cartReqs, bindingResult);
         if(bindingResult.hasErrors()) {
             throw new CartValidException(CartExceptionType.INVALID_CART_ADD_FORM, bindingResult);
         }
@@ -36,6 +41,9 @@ public class CartController {
     @GetMapping
     public ResponseEntity<CartResp> getCartMenu() {
         CartResp cartResp = cartMenuService.getCartMenuApi();
+        if(cartResp == null){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(cartResp, HttpStatus.OK);
     }
 

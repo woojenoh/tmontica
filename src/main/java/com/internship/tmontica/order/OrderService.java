@@ -3,17 +3,19 @@ package com.internship.tmontica.order;
 import com.internship.tmontica.cart.CartMenu;
 import com.internship.tmontica.cart.CartMenuDao;
 import com.internship.tmontica.cart.CartMenuService;
+import com.internship.tmontica.cart.exception.CartExceptionType;
+import com.internship.tmontica.cart.exception.CartUserException;
 import com.internship.tmontica.menu.MenuDao;
 import com.internship.tmontica.order.exception.NotEnoughStockException;
+import com.internship.tmontica.order.exception.OrderExceptionType;
+import com.internship.tmontica.order.exception.OrderUserException;
 import com.internship.tmontica.order.exception.StockExceptionType;
 import com.internship.tmontica.order.model.request.OrderReq;
-import com.internship.tmontica.order.model.request.OrderStatusReq;
 import com.internship.tmontica.order.model.request.Order_MenusReq;
-import com.internship.tmontica.order.model.response.*;
+import com.internship.tmontica.order.model.response.OrderListResp;
+import com.internship.tmontica.order.model.response.OrderResp;
+import com.internship.tmontica.order.model.response.Order_MenusResp;
 import com.internship.tmontica.security.JwtService;
-import com.internship.tmontica.user.UserRole;
-import com.internship.tmontica.user.exception.UserException;
-import com.internship.tmontica.user.exception.UserExceptionType;
 import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,7 +63,7 @@ public class OrderService {
     }
 
     // 결제하기 api
-    @Transactional(rollbackFor = {NotEnoughStockException.class, UserException.class} )
+    @Transactional(rollbackFor = {NotEnoughStockException.class, CartUserException.class} )
     public Map<String, Integer> addOrderApi(OrderReq orderReq){
         //토큰에서 유저아이디
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
@@ -78,9 +80,9 @@ public class OrderService {
         for (Order_MenusReq menu: menus) {
             CartMenu cartMenu = cartMenuDao.getCartMenuByCartId(menu.getCartId());
 
-            // 로그인한 아이디와 디비의 아이디 다르면 rollback
+            // 로그인한 아이디와 해당 카트id의 userId가 다르면 rollback
             if(!userId.equals(cartMenu.getUserId())){
-                throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
+                throw new CartUserException(CartExceptionType.FORBIDDEN_ACCESS_CART_DATA);
             }
 
             int price = (menuDao.getMenuById(cartMenu.getMenuId()).getSellPrice()) + cartMenu.getPrice();// 옵션 + 메뉴 가격
@@ -115,7 +117,7 @@ public class OrderService {
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         // 유저 아이디 검사
         if(!userId.equals(order.getUserId())){
-            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
+            throw new OrderUserException(OrderExceptionType.FORBIDDEN_ACCESS_ORDER_DATA);
         }
 
         List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(orderId);
@@ -143,7 +145,7 @@ public class OrderService {
         String dbUserId = orderDao.getOrderByOrderId(orderId).getUserId();
         if(!userId.equals(dbUserId)){
             // 아이디 디비와 다를경우 예외처리
-            throw new UserException(UserExceptionType.INVALID_USER_ID_EXCEPTION);
+            throw new OrderUserException(OrderExceptionType.FORBIDDEN_ACCESS_ORDER_DATA);
         }
         // orders 테이블에서 status 수정
         orderDao.updateOrderStatus(orderId, OrderStatusType.CANCEL.getStatus());
@@ -152,76 +154,7 @@ public class OrderService {
         orderDao.addOrderStatusLog(orderStatusLog);
     }
 
-    // 주문 상태 변경 api(관리자)
-    public void updateOrderStatusApi(int orderId, OrderStatusReq orderStatusReq){
-        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
-        // 관리자 권한 검사
-        String role = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"role");
-        if(!role.equals(UserRole.ADMIN.toString())){
-            throw new UserException(UserExceptionType.INVALID_USER_ROLE_EXCEPTION);
-        }
-        // orders 테이블에서 status 수정
-        orderDao.updateOrderStatus(orderId, orderStatusReq.getStatus());
-        // order_status_log 테이블에도 로그 추가
-        OrderStatusLog orderStatusLog = new OrderStatusLog(orderStatusReq.getStatus(), userId, orderId);
-        orderDao.addOrderStatusLog(orderStatusLog);
-    }
 
-    // 주문 상태별로 주문정보 가져오기 api(관리자)
-    public List<OrdersByStatusResp> getOrderByStatusApi(String status) {
-        // 관리자 권한 검사
-        String role = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"role");
-        if(!role.equals(UserRole.ADMIN.toString())){
-            throw new UserException(UserExceptionType.INVALID_USER_ROLE_EXCEPTION);
-        }
-
-        List<Order> orders = orderDao.getOrderByStatus(OrderStatusType.valueOf(status).getStatus());
-        List<OrdersByStatusResp> ordersByStatusResps = new ArrayList<>();
-        for(Order order : orders){
-            List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(order.getId());
-            for (Order_MenusResp menu : menus) {
-                //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
-                if(!menu.getOption().equals("")){
-                    String option = menu.getOption();
-                    String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
-                    menu.setOption(convert);
-                }
-
-                menu.setImgUrl("/images/".concat(menu.getImgUrl()));
-            }
-            OrdersByStatusResp obs = new OrdersByStatusResp(order.getId(), order.getOrderDate(), order.getPayment(),
-                    order.getTotalPrice(), order.getUsedPoint(), order.getRealPrice(), order.getStatus(), order.getUserId(), menus);
-
-            ordersByStatusResps.add(obs);
-        }
-        return ordersByStatusResps;
-    }
-
-
-    // 주문 상세정보 가져오기 api(관리자)
-    public OrderDetailResp getOrderDetailApi(int orderId){
-        // 관리자 권한 검사
-        String role = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"role");
-        if(!role.equals(UserRole.ADMIN.toString())){
-            throw new UserException(UserExceptionType.INVALID_USER_ROLE_EXCEPTION);
-        }
-
-        Order order = orderDao.getOrderByOrderId(orderId);
-        List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(orderId);
-        for (Order_MenusResp menu : menus) {
-            //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
-            if(!menu.getOption().equals("")){
-                String option = menu.getOption();
-                String convert = cartMenuService.convertOptionStringToCli(option); // 변환할 문자열
-                menu.setOption(convert);
-            }
-            menu.setImgUrl("/images/".concat(menu.getImgUrl()));
-        }
-        List<OrderStatusLogResp> orderStatusLogs = orderDao.getOrderStatusLogByOrderId(orderId);
-
-        OrderDetailResp orderDetailResp = new OrderDetailResp(order.getUserId(), orderId, order.getTotalPrice(),menus, orderStatusLogs);
-        return orderDetailResp;
-    }
 
 
 }
