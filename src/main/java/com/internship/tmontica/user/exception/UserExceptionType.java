@@ -22,6 +22,6 @@ public enum UserExceptionType {
     EMAIL_NOT_FOUND_EXCEPTION("email", "가입되지 않는 이메일 주소 입니다.", HttpStatus.BAD_REQUEST);
 
     private String field;
-    private String errorMessage;
+    private String message;
     private HttpStatus responseType;
 }

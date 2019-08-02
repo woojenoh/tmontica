@@ -42,8 +42,8 @@ public class GlobalExceptionAdvice {
 
     @ExceptionHandler(UserException.class)
     public ResponseEntity<TmonTicaExceptionFormat> handleUserException(UserException e) {
-        log.info("UserExceptionMessage : {}", e.getErrorMessage());
-        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), e.getUserExceptionType().getResponseType());
+        log.info("UserExceptionMessage : {}", e.getMessage());
+        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getMessage()), e.getUserExceptionType().getResponseType());
     }
 
     // 메일
@@ -96,8 +96,8 @@ public class GlobalExceptionAdvice {
     // 포인트
     @ExceptionHandler(PointException.class)
     public ResponseEntity<TmonTicaExceptionFormat> handlePointException(PointException e) {
-        log.info("PointExceptionMessage : {}", e.getErrorMessage());
-        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), e.getPointExceptionType().getResponseType());
+        log.info("PointExceptionMessage : {}", e.getMessage());
+        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getMessage()), e.getPointExceptionType().getResponseType());
     }
 
 }
