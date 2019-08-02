@@ -7,7 +7,6 @@ import com.internship.tmontica.user.find.FindDao;
 import com.internship.tmontica.user.find.FindId;
 import com.internship.tmontica.user.model.response.*;
 import com.internship.tmontica.security.AuthenticationKey;
-import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.MailSendException;
@@ -125,32 +124,28 @@ public class UserService {
 
     public void checkPassword(User user){
 
-        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id");
         checkPasswordMismatchException(user.getPassword(),
-                userDao.getUserByUserId(userId).getPassword());
+                userDao.getUserByUserId(user.getId()).getPassword());
     }
 
     public void changePassword(User user){
 
-        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id");
         checkPasswordMismatchException(user.getPassword(), user.getPasswordCheck());
-        UserChangePasswordDTO userChangePasswordDTO = new UserChangePasswordDTO(userId, user.getPassword());
+        UserChangePasswordDTO userChangePasswordDTO = new UserChangePasswordDTO(user.getId(), user.getPassword());
 
         if(userDao.updateUserPassword(modelMapper.map(userChangePasswordDTO, User.class)) < 1){
             throw new UserException(UserExceptionType.DATABASE_FAIL_EXCEPTION);
         }
     }
 
-    //JWT토큰에 담긴 유저와 삭제 요청을 한 유저의 아이디를 체크하고 삭제
-    public void withdrawUser(String id){
+    //JWT토큰에 담긴 유저아이디와 삭제 타겟 유저의 아이디를 체크하고 삭제
+    public void withdrawUser(String targetId, String currentId){
 
-        String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id");
-
-        if(!userId.equals(id)){
+        if(!currentId.equals(targetId)){
             throw new UnauthorizedException();
         }
 
-        if(userDao.deleteUser(id) < 1){
+        if(userDao.deleteUser(targetId) < 1){
             throw new UserException(UserExceptionType.DATABASE_FAIL_EXCEPTION);
         }
     }

@@ -14,5 +14,4 @@ public class UserException extends RuntimeException {
         this.errorMessage = userExceptionType.getErrorMessage();
         this.userExceptionType = userExceptionType;
     }
-
 }

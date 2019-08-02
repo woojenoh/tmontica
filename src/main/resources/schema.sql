@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `tmontica`.`points` (
   `type` CHAR(10) NOT NULL,
   `date` DATETIME NOT NULL,
   `amount` INT(11) NOT NULL,
-  `description` VARCHAR(100) NOT NULL,
+  `description` VARCHAR(255), NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_point_user1`
     FOREIGN KEY (`user_id`)
