@@ -1,10 +1,14 @@
 package com.internship.tmontica.banner;
 
+import com.internship.tmontica.banner.exception.BannerException;
+import com.internship.tmontica.banner.exception.BannerExceptionType;
 import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -13,18 +17,20 @@ public class BannerService {
 
     private final BannerDao bannerDao;
 
-    private final JwtService jwtService;
-
-    // 배너 등록하기
-    public int addBanner(Banner banner){
-        String role = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "role");
-        if(!role.equals("admin"))
-            return -1;  //TODO : 예외처리
-        banner.setCreatorId(JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id"));
-        return bannerDao.addBanner(banner);
+    // usePage로 배너 가져오기
+    public List<Banner> getBannersByPage(String usePage){
+        checkUsePageEng(usePage);
+        List<Banner> banners = bannerDao.getBannersByUsePage(usePage);
+        return banners;
     }
 
-    // 배너 가져오기
-    // 배너 수정하기
-    // 배너 삭제하기
+    public void checkUsePageEng(String usePageEng){
+
+        for(BannerUsePage bannerUsePage : BannerUsePage.values()){
+            if(bannerUsePage.getUsePageEng().equals(usePageEng)){
+                return;
+            }
+        }
+        throw new BannerException(BannerExceptionType.USEPAGE_MISMATCH_EXCEPTION);
+    }
 }
