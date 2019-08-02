@@ -36,6 +36,4 @@ public class PointService {
 
         return userDao.getUserPointByUserId(point.getUserId()) + PointLogType.getRealAmount(point.getAmount(), point.getType());
     }
-
-
 }
