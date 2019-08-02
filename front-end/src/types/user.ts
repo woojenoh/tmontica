@@ -9,6 +9,9 @@ export interface IUserState {
   user: IUser | null;
   isSignin: boolean;
   isAdmin: boolean;
+  isSignupLoading: boolean;
+  isFindIdLoading: boolean;
+  isFindPasswordLoading: boolean;
 }
 
 export interface IUser {
