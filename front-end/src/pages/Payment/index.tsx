@@ -75,7 +75,7 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
       });
       history.push(`/orders?orderId=${orderId}`);
     } catch (err) {
-      alert(err);
+      alert(err.message || err.exceptionMessage);
       history.push("/");
     }
   }

@@ -33,7 +33,7 @@ function error(message: string | undefined): never {
 
 function getHeaders(jwt?: string) {
   return jwt
-    ? Object.assign(defaultRequestConfig["headers"], { Authorization: jwt })
+    ? { ...defaultRequestConfig["headers"], Authorization: jwt }
     : defaultRequestConfig["headers"];
 }
 
@@ -44,8 +44,7 @@ export function get<T, E extends TCommonError>(
 ) {
   reqURL = attchParamsToURL(reqURL, params);
 
-  const headers = getHeaders(jwt);
-  const requestConfig = Object.assign(defaultRequestConfig, { headers }, { method: "GET" });
+  const requestConfig = { ...defaultRequestConfig, headers: getHeaders(jwt), method: "GET" };
 
   return fetchTMON<T, E>(reqURL, requestConfig);
 }
@@ -56,31 +55,29 @@ export function del<T, E extends TCommonError>(
   jwt?: string
 ) {
   reqURL = attchParamsToURL(reqURL, params);
-  const headers = getHeaders(jwt);
-  const requestConfig = Object.assign(defaultRequestConfig, { headers }, { method: "DELETE" });
+  const requestConfig = { ...defaultRequestConfig, headers: getHeaders(jwt), method: "DELETE" };
 
   return fetchTMON<T, E>(reqURL, requestConfig);
 }
 
 export function post<T, E extends TCommonError>(reqURL: string, data: any, jwt?: string) {
-  const headers = getHeaders(jwt);
-  const requestConfig = Object.assign(
-    defaultRequestConfig,
-    { headers },
-    { method: "POST" },
-    { body: JSON.stringify(data) }
-  );
+  const requestConfig = {
+    ...defaultRequestConfig,
+    headers: getHeaders(jwt),
+    method: "POST",
+    body: JSON.stringify(data)
+  };
+
   return fetchTMON<T, E>(reqURL, requestConfig);
 }
 
 export function put<T, E extends TCommonError>(reqURL: string, data: any, jwt?: string) {
-  const headers = getHeaders(jwt);
-  const requestConfig = Object.assign(
-    defaultRequestConfig,
-    { headers },
-    { method: "PUT" },
-    { body: JSON.stringify(data) }
-  );
+  const requestConfig = {
+    ...defaultRequestConfig,
+    headers: getHeaders(jwt),
+    method: "PUT",
+    body: JSON.stringify(data)
+  };
   return fetchTMON<T, E>(reqURL, requestConfig);
 }
 
