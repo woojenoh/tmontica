@@ -1,7 +1,7 @@
 package com.internship.tmontica.config;
+
 import com.internship.tmontica.security.JwtInterceptor;
 import com.internship.tmontica.security.JwtService;
-import com.internship.tmontica.util.UserConfigValueName;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

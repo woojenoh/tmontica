@@ -2,10 +2,11 @@ package com.internship.tmontica.menu;
 
 import com.internship.tmontica.option.Option;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+@Repository
 @Mapper
 public interface MenuDao {
 
@@ -54,35 +55,8 @@ public interface MenuDao {
     @Select("SELECT * FROM menus WHERE DATE(end_date) = CURDATE() AND usable = 1")
     List<Menu> getPeriodAfterMenu();
 
-
     @Update("UPDATE menus SET usable = #{usable} WHERE id = #{id}")
     void updateMenuUsable(int id, boolean usable);
-
-//    List<Option> getOptionsById(int id);
-
-//    @Select("SELECT * FROM menus")
-//    @Results(value = {
-//            @Result(property="id", column="id"),
-//            @Result(property="nameEng", column="name_eng"),
-//            @Result(property="productPrice", column="product_price"),
-//            @Result(property="categoryKo", column="categoryKo"),
-//            @Result(property="categoryEng", column="category_eng"),
-//            @Result(property="monthlyMenu", column="monthly_menu"),
-//            @Result(property="usable", column="usable"),
-//            @Result(property="img", column="img"),
-//            @Result(property="description", column="description"),
-//            @Result(property="discountRate", column="discount_rate"),
-//            @Result(property="createdDate", column="created_date"),
-//            @Result(property="updatedDate", column="updated_date"),
-//            @Result(property="creatorId", column="creator_id"),
-//            @Result(property="updaterId", column="updater_id"),
-//            @Result(property="stock", column="stock"),
-//            @Result(property="nameKo", column="name_ko"),
-//            @Result(property="options", javaType=List.class, column="id",
-//                    many=@Many(select="getOptionsById"))
-//    })
-//    List<Menu> getAllMenus();
-
 
     @Select("SELECT * FROM options INNER JOIN menu_options " +
             "ON menu_options.menu_id = #{id} WHERE menu_options.option_id = options.id")
