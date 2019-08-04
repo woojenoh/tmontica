@@ -65,12 +65,14 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(CartValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public TmonTicaExceptionFormat handleCartValidException(CartValidException e){
-        return new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage(), e.getBindingResult());
+        log.info("CartValidException : {}", e.getMessage());
+        return new TmonTicaExceptionFormat(e.getField(), e.getMessage(), e.getBindingResult());
     }
 
     @ExceptionHandler(CartUserException.class)
     public ResponseEntity<TmonTicaExceptionFormat> handleCartUserException(CartUserException e){
-        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage()), e.getCartExceptionType().getResponseType());
+        log.info("CartUserException : {}", e.getMessage());
+        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getMessage()), e.getCartExceptionType().getResponseType());
     }
 
     // 재고
@@ -78,19 +80,21 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public TmonTicaExceptionFormat handleNotEnoughStockException(NotEnoughStockException e) {
         log.info("stock is not enough exception");
-        return new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage());
+        return new TmonTicaExceptionFormat(e.getField(), e.getMessage());
     }
 
     // 오더
     @ExceptionHandler(OrderValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public TmonTicaExceptionFormat handleOrderValidException(OrderValidException e){
-        return new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage(), e.getBindingResult());
+        log.info("OrderValidException : {}", e.getMessage());
+        return new TmonTicaExceptionFormat(e.getField(), e.getMessage(), e.getBindingResult());
     }
 
     @ExceptionHandler(OrderUserException.class)
     public ResponseEntity<TmonTicaExceptionFormat> handleOrderUserException(OrderUserException e){
-        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage()), e.getOrderExceptionType().getResponseType());
+        log.info("OrderUserException : {}", e.getMessage());
+        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getMessage()), e.getOrderExceptionType().getResponseType());
     }
 
     // 포인트

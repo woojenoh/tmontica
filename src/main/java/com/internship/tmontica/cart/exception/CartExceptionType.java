@@ -13,6 +13,6 @@ public enum CartExceptionType {
 
 
     private String field;
-    private String errorMessage;
+    private String message;
     private HttpStatus responseType;
 }

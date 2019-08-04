@@ -6,13 +6,13 @@ import org.springframework.validation.BindingResult;
 @Getter
 public class CartValidException extends RuntimeException{
     private String field;
-    private String exceptionMessage;
+    private String message;
     private CartExceptionType cartExceptionType;
     private BindingResult bindingResult;
 
     public CartValidException(CartExceptionType cartExceptionType, BindingResult bindingResult){
         this.field = cartExceptionType.getField();
-        this.exceptionMessage = cartExceptionType.getErrorMessage();
+        this.message = cartExceptionType.getMessage();
         this.cartExceptionType = cartExceptionType;
         this.bindingResult = bindingResult;
     }
