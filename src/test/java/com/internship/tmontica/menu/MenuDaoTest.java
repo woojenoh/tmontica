@@ -18,7 +18,6 @@ import static org.junit.Assert.*;
 public class MenuDaoTest {
     @Autowired
     MenuDao menuDao;
-
     @Test
     public void 메뉴_가져오기(){
         Menu menu = menuDao.getMenuById(2);

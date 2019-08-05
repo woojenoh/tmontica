@@ -10,6 +10,6 @@ public enum StockExceptionType {
     NOT_ENOUGH_STOCK("menuId", "재고가 부족합니다", HttpStatus.BAD_REQUEST);
 
     private String field;
-    private String errorMessage;
+    private String message;
     private HttpStatus responseType;
 }

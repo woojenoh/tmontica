@@ -48,7 +48,7 @@ public class CartController {
     }
 
 
-    /** 카트 메뉴 수량, 가격 수정하기 */
+    /** 카트 메뉴 수량 수정하기 */
     @PutMapping("/{id}")
     public ResponseEntity updateCartMenuQuantity(@PathVariable("id") int id, @RequestBody @Valid CartUpdateReq cartUpdateReq, BindingResult bindingResult){
         if(bindingResult.hasErrors()) {

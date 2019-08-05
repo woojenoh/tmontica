@@ -5,12 +5,12 @@ import lombok.Getter;
 @Getter
 public class CartUserException extends RuntimeException{
     private String field;
-    private String exceptionMessage;
+    private String message;
     private CartExceptionType cartExceptionType;
 
     public CartUserException(CartExceptionType cartExceptionType){
         this.field = cartExceptionType.getField();
-        this.exceptionMessage = cartExceptionType.getErrorMessage();
+        this.message = cartExceptionType.getMessage();
         this.cartExceptionType = cartExceptionType;
     }
 }
