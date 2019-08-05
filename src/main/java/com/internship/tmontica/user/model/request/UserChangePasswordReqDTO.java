@@ -12,9 +12,9 @@ public class UserChangePasswordReqDTO {
 
     @Pattern(regexp="^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,19}")
     @NotNull
-    private String newPassword;
+    private String password;
     @Pattern(regexp="^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,19}")
     @NotNull
-    private String newPasswordCheck;
+    private String passwordCheck;
 
 }

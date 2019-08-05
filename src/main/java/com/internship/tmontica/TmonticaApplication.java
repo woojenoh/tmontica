@@ -16,7 +16,6 @@ public class TmonticaApplication {
 	@Bean
 	public ModelMapper modelMapper(){	return new ModelMapper(); }
 
-
 	@Bean
 	public JwtService jwtService() {
 		return new JwtServiceImpl();

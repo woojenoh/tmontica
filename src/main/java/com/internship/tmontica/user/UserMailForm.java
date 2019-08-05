@@ -60,7 +60,7 @@ class UserMailForm {
 
     private void makeFindPwEmail(){
 
-        msg.setText("임시 비밀번호는 "+user.getPassword()+"입니다. 임시비밀번호로 로그인한뒤 비밀번호를 변경해주세요.\n +" +
+        msg.setText("임시 비밀번호는 [ "+user.getPassword()+" ]입니다. 임시비밀번호로 로그인한뒤 비밀번호를 변경해주세요.\n " +
                 "본인과 관련없는 메일이라면 무시하시면 됩니다.");
     }
 

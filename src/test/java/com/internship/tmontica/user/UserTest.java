@@ -22,13 +22,6 @@ public class UserTest {
     private User user;
     private ModelMapper modelMapper;
 
-    @Before
-    public void setUp(){
-        user = new User("vndtjd1217", "Kim hyung seok", "vndtjd1217@naver.com",
-                Date.valueOf("1993-09-17"), "123qwe!", "ADMIN",
-                Date.valueOf("2019-09-17"), 0, true, "fdfqerqer");
-    }
-
     @Test
     public void signup() {
 

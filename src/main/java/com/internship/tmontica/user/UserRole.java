@@ -10,7 +10,7 @@ public enum UserRole {
     GOLD_USER("GOLD"),
     VIP_USER("VIP"),
     VVIP_USER("VVIP"),
-    ADMINISTRATOR("ADMIN");
+    ADMIN("ADMIN");
 
     private String role;
 

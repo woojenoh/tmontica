@@ -7,8 +7,10 @@ import com.internship.tmontica.menu.exception.MenuException;
 import com.internship.tmontica.order.exception.NotEnoughStockException;
 import com.internship.tmontica.order.exception.OrderUserException;
 import com.internship.tmontica.order.exception.OrderValidException;
+import com.internship.tmontica.point.exception.PointException;
 import com.internship.tmontica.security.exception.UnauthorizedException;
 import com.internship.tmontica.user.exception.UserException;
+import com.internship.tmontica.user.exception.UserValidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,25 +25,33 @@ public class GlobalExceptionAdvice {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionAdvice.class);
 
+    // 권한
     @ExceptionHandler(UnauthorizedException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public TmonTicaExceptionFormat handleUnauthorizedException(UnauthorizedException e) {
+    public ResponseEntity<TmonTicaExceptionFormat> handleUnauthorizedException(UnauthorizedException e) {
 
         log.info("need authorization");
-        return new TmonTicaExceptionFormat("authorization", "권한이 유효하지 않습니다.");
+        return new ResponseEntity<>(new TmonTicaExceptionFormat("authorization", "권한이 유효하지 않습니다."), HttpStatus.UNAUTHORIZED);
+    }
+
+    // 유저
+    @ExceptionHandler(UserValidException.class)
+    public ResponseEntity<TmonTicaExceptionFormat> handleUserValidException(UserValidException e) {
+        log.info("UserValidExceptionMessage : {}" , e.getMessage());
+        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage(), e.getBindingResult()),HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserException.class)
     public ResponseEntity<TmonTicaExceptionFormat> handleUserException(UserException e) {
-        log.debug("UserExceptionMessage : {}", e.getErrorMessage());
-        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), e.getUserExceptionType().getResponseType());
+        log.info("UserExceptionMessage : {}", e.getMessage());
+        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getMessage()), e.getUserExceptionType().getResponseType());
     }
 
+    // 메일
     @ExceptionHandler(MailSendException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public TmonTicaExceptionFormat handleEmailSendException(){
-        log.info("fail to send email");
-        return new TmonTicaExceptionFormat("email sending", "이메일 전송 실패.");
+    public TmonTicaExceptionFormat handleEmailSendException(MailSendException e){
+        log.info("fail to send email : {}", e.getMessage());
+        return new TmonTicaExceptionFormat("email sending", e.getMessage());
     }
 
     // 메뉴
@@ -81,6 +91,13 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(OrderUserException.class)
     public ResponseEntity<TmonTicaExceptionFormat> handleOrderUserException(OrderUserException e){
         return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getExceptionMessage()), e.getOrderExceptionType().getResponseType());
+    }
+
+    // 포인트
+    @ExceptionHandler(PointException.class)
+    public ResponseEntity<TmonTicaExceptionFormat> handlePointException(PointException e) {
+        log.info("PointExceptionMessage : {}", e.getMessage());
+        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getMessage()), e.getPointExceptionType().getResponseType());
     }
 
 }
