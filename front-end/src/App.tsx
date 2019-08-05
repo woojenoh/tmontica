@@ -18,6 +18,7 @@ import Signup from "./pages/Signup";
 import Orders from "./pages/Orders";
 import Payment from "./pages/Payment";
 import FindAccount from "./pages/FindAccount";
+import UserInfo from "./pages/UserInfo";
 
 export interface IAppProps extends RouteComponentProps {
   isSignin: boolean;
@@ -87,7 +88,7 @@ class App extends React.Component<IAppProps> {
         <Switch>
           <PrivateRoute exact path="/payment" component={Payment} />
           <PrivateRoute exact path="/orders" component={Orders} />
-          <PrivateRoute exact path="/user" component={Menus} />
+          <PrivateRoute exact path="/user" component={UserInfo} />
           <PublicRoute exact path="/menus/:menuId([0-9]+)" component={Menu} />
           <PublicRoute exact path="/menus/:categoryEng([a-zA-Z]+)" component={MenusSub} />
           <PublicRoute exact path="/signin" component={Signin} />

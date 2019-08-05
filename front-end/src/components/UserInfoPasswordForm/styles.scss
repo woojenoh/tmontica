@@ -1,0 +1,18 @@
+.user-info-password__form {
+  margin: 40px 0;
+  .input.user-info-password__input {
+    margin-bottom: 10px;
+  }
+  .button.user-info-password__button {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    margin-top: 12px;
+    margin-right: 10px;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
