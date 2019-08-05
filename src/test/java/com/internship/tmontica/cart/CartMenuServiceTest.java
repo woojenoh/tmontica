@@ -2,6 +2,7 @@ package com.internship.tmontica.cart;
 
 import com.internship.tmontica.cart.exception.CartUserException;
 import com.internship.tmontica.cart.model.request.CartUpdateReq;
+import com.internship.tmontica.cart.model.response.CartResp;
 import com.internship.tmontica.menu.Menu;
 import com.internship.tmontica.menu.MenuDao;
 import com.internship.tmontica.option.Option;
@@ -47,7 +48,7 @@ public class CartMenuServiceTest {
         cartMenu.setId(1);
         cartMenu.setMenuId(2);
         cartMenu.setOption("1__1/3__2");
-        cartMenu.setPrice(2100);
+        cartMenu.setPrice(600);
         cartMenu.setQuantity(2);
         cartMenu.setDirect(false);
         cartMenu.setUserId("testid");
@@ -64,11 +65,11 @@ public class CartMenuServiceTest {
     }
 
     @Test
-    public void 카트정보_가져오기_옵션있는것() {
+    public void 카트정보_가져오기() {
         // given
         List<CartMenu> cartMenus = new ArrayList<>();
         cartMenus.add(cartMenu);
-        cartMenus.add(cartMenu);
+        cartMenus.
         Menu menu = new Menu(2, "latte", 2000, "커피", "coffee",
                 false, true, "asdfa/asdfa.png", "맛있는 라떼", 1500,
                 10,new Date(),new Date() , "admin", "admin",100, "라떼",new Date() ,new Date() );
@@ -79,7 +80,11 @@ public class CartMenuServiceTest {
         Mockito.when(menuDao.getMenuById(cartMenu.getMenuId())).thenReturn(menu);
 
         // when
-        cartMenuService.getCartMenuApi();
+        CartResp cartResp = cartMenuService.getCartMenuApi();
+        System.out.println(cartResp);
+
+        // then
+
     }
 
     @Test
