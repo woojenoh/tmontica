@@ -5,6 +5,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { ICartMenu } from "../../types/cart";
 import { order } from "../../api/order";
 import { CDN } from "../../constants";
+import { CommonError } from "../../api/CommonError";
 
 interface MatchParams {
   categoryEng: string;
@@ -65,7 +66,7 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
 
   async order() {
     try {
-      const orderId = await order({
+      const data = await order({
         menus: this.state.orderCarts.map((c: ICartMenu) => {
           return { cartId: typeof c.cartId === "undefined" ? 0 : c.cartId };
         }),
@@ -73,9 +74,17 @@ export default class Payment extends React.PureComponent<IPaymentProps, IPayment
         totalPrice: this.state.totalPrice,
         payment: "현장결제"
       });
+      if (data instanceof CommonError) {
+        throw data;
+      }
+      const { orderId } = data;
       history.push(`/orders?orderId=${orderId}`);
-    } catch (err) {
-      alert(err.message || err.exceptionMessage);
+    } catch (error) {
+      if (!error.status) {
+        alert("네트워크 오류 발생");
+        return;
+      }
+      error.alertMessage();
       history.push("/");
     }
   }

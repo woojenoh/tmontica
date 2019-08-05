@@ -3,15 +3,13 @@ import { TCommonError } from "../types/error";
 import { TMenu, TMenuByCategory } from "../types/menu";
 
 export function getMenuAll() {
-  return get<Object, TCommonError>(`${API_URL}/menus`);
+  return get<Object>(`${API_URL}/menus`);
 }
 
 export function getMenuByCateory(categoryEng: string, page = 1, size = 4) {
-  return get<TMenuByCategory, TCommonError>(
-    `${API_URL}/menus/${categoryEng}?page=${page}&size=${size}`
-  );
+  return get<TMenuByCategory>(`${API_URL}/menus/${categoryEng}?page=${page}&size=${size}`);
 }
 
 export function getMenuById(menuId: number = 1) {
-  return get<TMenu, TCommonError>(`${API_URL}/menus/${menuId}`);
+  return get<TMenu>(`${API_URL}/menus/${menuId}`);
 }

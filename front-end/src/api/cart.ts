@@ -1,21 +1,24 @@
 import { TCartAddReq, TCartId, ICart } from "../types/cart";
-import { postWithJWT, putWithJWT, API_URL, getWithJWT, delWithJWT } from "./common";
-import { TCommonError } from "../types/error";
+import { API_URL, del, withJWT, post, get, put } from "./common";
 
 export function addCart(cartAddReqs: Array<TCartAddReq>) {
-  return postWithJWT<TCartId[], TCommonError>(`${API_URL}/carts`, cartAddReqs);
+  return post<TCartId[]>(`${API_URL}/carts`, cartAddReqs, withJWT());
 }
 
 export function getCart() {
-  return getWithJWT<ICart, TCommonError>(`${API_URL}/carts`);
+  return get<ICart>(`${API_URL}/carts`, withJWT());
 }
 
 export function changeCart(cartId: number, quantity: number) {
-  return putWithJWT<void, TCommonError>(`${API_URL}/carts/${cartId}`, {
-    quantity
-  });
+  return put<void>(
+    `${API_URL}/carts/${cartId}`,
+    {
+      quantity
+    },
+    withJWT()
+  );
 }
 
 export function removeCart(cartId: number) {
-  return delWithJWT<void, TCommonError>(`${API_URL}/carts/${cartId}`);
+  return del<void>(`${API_URL}/carts/${cartId}`, withJWT());
 }
