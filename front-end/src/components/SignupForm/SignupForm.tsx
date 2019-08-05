@@ -1,12 +1,13 @@
 import * as React from "react";
 import { Link, withRouter, RouteComponentProps } from "react-router-dom";
+import axios from "axios";
 import * as userTypes from "../../types/user";
+import { API_URL } from "../../api/common";
 import "./styles.scss";
 import { checkDuplicated } from "../../api/user";
 
 export interface ISignupFormProps extends RouteComponentProps {
   fetchSignup(userInfo: userTypes.IUserSignupInfo): void;
-  isSignupLoading: boolean;
 }
 
 export interface ISignupFormState {
@@ -106,9 +107,9 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
   handleIsIdNotSame = async () => {
     try {
       const { id, isIdOk } = this.state;
+
       if (isIdOk) {
-        await checkDuplicated(id);
-        alert("사용 가능한 아이디입니다.");
+        const a = await checkDuplicated(id);
         this.setState({
           isIdNotSame: true
         });
@@ -156,7 +157,6 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
 
   render() {
     const { isIdOk, isIdNotSame, isPasswordOk, isPasswordSame } = this.state;
-    const { isSignupLoading } = this.props;
     const { handleIdInputChange, handleInputChange, handleIsIdNotSame, handleSignupSubmit } = this;
 
     return (
@@ -248,17 +248,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
           <Link to="/signin" className="button signup__button">
             로그인
           </Link>
-          {isSignupLoading ? (
-            <button className="button button--orange signup__button" disabled>
-              <img src="/img/Loading.svg" alt="loading" />
-            </button>
-          ) : (
-            <input
-              type="submit"
-              className="button button--orange signup__button"
-              value="회원가입"
-            />
-          )}
+          <input type="submit" className="button button--orange signup__button" value="회원가입" />
         </div>
       </form>
     );

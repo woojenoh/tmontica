@@ -1,13 +1,8 @@
 import SignupForm from "./SignupForm";
 import { connect } from "react-redux";
-import { Dispatch } from "redux";
 import * as userActionCreators from "../../redux/actionCreators/user";
 import * as userTypes from "../../types/user";
-import * as rootTypes from "../../types";
-
-const mapStateToProps = (state: rootTypes.IRootState) => ({
-  isSignupLoading: state.user.isSignupLoading
-});
+import { Dispatch } from "redux";
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
@@ -17,6 +12,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(SignupForm);

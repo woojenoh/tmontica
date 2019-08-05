@@ -5,8 +5,6 @@ export interface IFindAccountFormProps {
   fetchFindId(payload: string): void;
   fetchFindPassword(payload: { email: string; id: string }): void;
   fetchFindIdConfirm(payload: string): void;
-  isFindIdLoading: boolean;
-  isFindPasswordLoading: boolean;
 }
 
 export interface IFindAccountFormState {
@@ -63,7 +61,6 @@ class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccoun
 
   render() {
     const { idEmail, idCode, passwordId, passwordEmail } = this.state;
-    const { isFindIdLoading, isFindPasswordLoading } = this.props;
     const {
       handleInputChange,
       handleFindIdSubmit,
@@ -83,17 +80,11 @@ class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccoun
             value={idEmail}
             required
           />
-          {isFindIdLoading ? (
-            <button className="button button--orange find-id__button" disabled>
-              <img src="/img/Loading.svg" alt="loading" />
-            </button>
-          ) : (
-            <input
-              type="submit"
-              className="button button--orange find-id__button"
-              value="아이디 찾기"
-            />
-          )}
+          <input
+            type="submit"
+            className="button button--orange find-id__button"
+            value="아이디 찾기"
+          />
         </form>
         <form className="find-id__code" onSubmit={e => handleFindIdConfirmSubmit(e)}>
           <input
@@ -126,17 +117,11 @@ class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccoun
             value={passwordEmail}
             required
           />
-          {isFindPasswordLoading ? (
-            <button className="button button--orange find-password__button" disabled>
-              <img src="/img/Loading.svg" alt="loading" />
-            </button>
-          ) : (
-            <input
-              type="submit"
-              className="button button--orange find-password__button"
-              value="비밀번호 찾기"
-            />
-          )}
+          <input
+            type="submit"
+            className="button button--orange find-password__button"
+            value="비밀번호 찾기"
+          />
         </form>
       </>
     );

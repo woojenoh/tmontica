@@ -14,30 +14,20 @@ if (localJwt) {
 const INITIAL_STATE = {
   isSignin: localJwt ? true : false,
   isAdmin: parsedUserInfo ? parsedUserInfo.role === "ADMIN" : false,
-  user: parsedUserInfo || null,
-  isSignupLoading: false,
-  isFindIdLoading: false,
-  isFindPasswordLoading: false
+  user: parsedUserInfo || null
 } as userTypes.IUserState;
 
 export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
   switch (action.type) {
     // FETCH_SIGNUP
     case actionTypes.FETCH_SIGNUP:
-      return {
-        ...state,
-        isSignupLoading: true
-      };
+      return state;
     case actionTypes.FETCH_SIGNUP_FULFILLED:
-      return {
-        ...state,
-        isSignupLoading: false
-      };
+      return state;
     case actionTypes.FETCH_SIGNUP_REJECTED:
       return {
         ...state,
-        error: action.error,
-        isSignupLoading: false
+        error: action.error
       };
     // FETCH_SIGNIN
     case actionTypes.FETCH_SIGNIN:
@@ -74,20 +64,13 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
       };
     // FETCH_FIND_ID
     case actionTypes.FETCH_FIND_ID:
-      return {
-        ...state,
-        isFindIdLoading: true
-      };
+      return state;
     case actionTypes.FETCH_FIND_ID_FULFILLED:
-      return {
-        ...state,
-        isFindIdLoading: false
-      };
+      return state;
     case actionTypes.FETCH_FIND_ID_REJECTED:
       return {
         ...state,
-        error: action.error,
-        isFindIdLoading: false
+        error: action.error
       };
     // FETCH_FIND_ID_CONFIRM
     case actionTypes.FETCH_FIND_ID_CONFIRM:
@@ -101,20 +84,13 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
       };
     // FETCH_FIND_PASSWORD
     case actionTypes.FETCH_FIND_PASSWORD:
-      return {
-        ...state,
-        isFindPasswordLoading: true
-      };
+      return state;
     case actionTypes.FETCH_FIND_PASSWORD_FULFILLED:
-      return {
-        ...state,
-        isFindPasswordLoading: false
-      };
+      return state;
     case actionTypes.FETCH_FIND_PASSWORD_REJECTED:
       return {
         ...state,
-        error: action.error,
-        isFindPasswordLoading: false
+        error: action.error
       };
     default:
       return state;

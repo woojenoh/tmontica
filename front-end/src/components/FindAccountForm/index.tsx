@@ -1,13 +1,7 @@
 import FindAccountForm from "./FindAccountForm";
 import { connect } from "react-redux";
-import { Dispatch } from "redux";
 import * as userActionCreators from "../../redux/actionCreators/user";
-import * as rootTypes from "../../types/index";
-
-const mapStateToProps = (state: rootTypes.IRootState) => ({
-  isFindIdLoading: state.user.isFindIdLoading,
-  isFindPasswordLoading: state.user.isFindPasswordLoading
-});
+import { Dispatch } from "redux";
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
@@ -20,6 +14,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(FindAccountForm);
