@@ -6,7 +6,8 @@ insert into options(type, name, price) values('Syrup', 'AddSyrup', 300);
 insert into options(type , name, price) values('Size', 'SizeUp', 500);
 
 -- user sql
-insert into users(name, id, email, birth_date, password role) values("")
+insert into users(id, name, email, birth_date, password, role, activate_code, is_active) values('samkko', 'hyung seok kim', 'vndtjd1217@naver.com', '1993-09-17', 'tmon123!', 'ADMIN', 'test123', 1);
+insert into users(id, name, email, birth_date, password, role, activate_code, is_active) values('vndtjd1217', 'hyung seok kim', 'vndtjd1217@naver.com', '1993-09-17', 'tmon123!', 'USER', 'test123', 0);
 -- -- users 임시 데이터
 -- insert into users values('김현정', 'testid', 'test@tmoncorp.com', '1994-11-11', '1234', 'user', sysdate(), 5000);
 -- -- orders 임시 데이터

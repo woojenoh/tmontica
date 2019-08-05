@@ -23,7 +23,7 @@ public interface MenuDao {
     @Select("SELECT * FROM menus WHERE id = #{id}")
     Menu getMenuById(int id);
 
-    @Select("SELECT * FROM menus")
+    @Select("SELECT * FROM menus ORDER BY created_date DESC")
     List<Menu> getAllMenus();
 
     @Select("SELECT * FROM menus WHERE category_eng = #{category} AND usable = 1 LIMIT #{limit} OFFSET #{offset}")
