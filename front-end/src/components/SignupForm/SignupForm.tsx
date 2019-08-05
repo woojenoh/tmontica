@@ -5,6 +5,8 @@ import * as userTypes from "../../types/user";
 import { API_URL } from "../../api/common";
 import "./styles.scss";
 import { checkDuplicated } from "../../api/user";
+import { CommonError } from "../../api/CommonError";
+import { de } from "date-fns/esm/locale";
 
 export interface ISignupFormProps extends RouteComponentProps {
   fetchSignup(userInfo: userTypes.IUserSignupInfo): void;
@@ -109,7 +111,10 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
       const { id, isIdOk } = this.state;
 
       if (isIdOk) {
-        const a = await checkDuplicated(id);
+        const data = await checkDuplicated(id);
+        if (data instanceof CommonError) {
+          throw data;
+        }
         this.setState({
           isIdNotSame: true
         });
@@ -121,8 +126,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
         alert("네트워크 오류 발생");
         return;
       }
-
-      alert(error.message);
+      error.alertMessage();
       this.setState({
         isIdNotSame: false
       });

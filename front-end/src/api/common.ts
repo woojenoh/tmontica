@@ -25,34 +25,58 @@ export function withJWT(header: AxiosRequestConfig = {}) {
   return { ...header, headers: { Authorization: localStorage.getItem("jwt") || "" } };
 }
 
-function handleResponse<SuccessDataType>(res: AxiosResponse) {
-  if (res.status === 200) {
-    return res.data as SuccessDataType;
-  } else {
-    return new CommonError({ status: res.status, message: res.data.message });
-  }
+export function get<SuccessDataType>(url: string, config?: AxiosRequestConfig) {
+  return axios
+    .get(url, config)
+    .then(res => {
+      return res.data as SuccessDataType;
+    })
+    .catch(error => {
+      return new CommonError({
+        ...error.response,
+        ...error.response.data
+      });
+    });
 }
 
-export async function get<SuccessDataType>(url: string, config?: AxiosRequestConfig) {
-  const res = await axios.get(url, config);
-
-  return handleResponse<SuccessDataType>(res);
+export function post<SuccessDataType>(url: string, data?: any, config?: AxiosRequestConfig) {
+  return axios
+    .post(url, data, config)
+    .then(res => {
+      return res.data as SuccessDataType;
+    })
+    .catch(error => {
+      return new CommonError({
+        ...error.response,
+        ...error.response.data
+      });
+    });
 }
 
-export async function post<SuccessDataType>(url: string, data?: any, config?: AxiosRequestConfig) {
-  const res = await axios.post(url, data, config);
-
-  return handleResponse<SuccessDataType>(res);
+export function put<SuccessDataType>(url: string, data?: any, config?: AxiosRequestConfig) {
+  return axios
+    .put(url, data, config)
+    .then(res => {
+      return res.data as SuccessDataType;
+    })
+    .catch(error => {
+      return new CommonError({
+        ...error.response,
+        ...error.response.data
+      });
+    });
 }
 
-export async function put<SuccessDataType>(url: string, data?: any, config?: AxiosRequestConfig) {
-  const res = await axios.put(url, data, config);
-
-  return handleResponse<SuccessDataType>(res);
-}
-
-export async function del<SuccessDataType>(url: string, config?: AxiosRequestConfig) {
-  const res = await axios.delete(url, config);
-
-  return handleResponse<SuccessDataType>(res);
+export function del<SuccessDataType>(url: string, config?: AxiosRequestConfig) {
+  return axios
+    .delete(url, config)
+    .then(res => {
+      return res.data as SuccessDataType;
+    })
+    .catch(error => {
+      return new CommonError({
+        ...error.response,
+        ...error.response.data
+      });
+    });
 }
