@@ -6,7 +6,7 @@ export function addCart(cartAddReqs: Array<TCartAddReq>) {
 }
 
 export function getCart() {
-  return get<ICart>(`${API_URL}/carts`);
+  return get<ICart>(`${API_URL}/carts`, withJWT());
 }
 
 export function changeCart(cartId: number, quantity: number) {

@@ -5,6 +5,7 @@ import * as cartActionCreators from "../actionCreators/cart";
 import * as cartTypes from "../../types/cart";
 import * as userActionCreators from "../actionCreators/user";
 import { addCart, getCart, changeCart, removeCart } from "../../api/cart";
+import { CommonError } from "../../api/CommonError";
 
 function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
   try {
@@ -109,13 +110,21 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
     }
 
     const data = yield call(getCart);
+    if (data instanceof CommonError) {
+      throw data;
+    }
+
     yield put(cartActionCreators.fetchSetCartFulfilled(data));
   } catch (error) {
+    if (!error.status) {
+      alert("네트워크 오류 발생");
+      return;
+    }
     if (error.status === 401) {
       alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
       yield put(userActionCreators.signout());
     } else {
-      alert(error.message);
+      error.alertMessage();
     }
     yield put(cartActionCreators.fetchSetCartRejected(error));
   }
@@ -137,6 +146,9 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
     // 만든 형태를 API로 전송하고, 응답으로 받은 카트 아이디들을 저장한다.
     // API 요청 분리.
     const data = yield call(addCart, cartReqs);
+    if (data instanceof CommonError) {
+      throw data;
+    }
 
     // 현재 카트 상태에 새로운 카트 메뉴들을 추가한다.
     const state = yield select();
@@ -157,7 +169,7 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
       alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
       yield put(userActionCreators.signout());
     } else {
-      alert(error.message);
+      error.alertMessage();
     }
     yield put(cartActionCreators.fetchAddCartRejected(error));
   }
@@ -166,7 +178,10 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
 function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
   try {
     // 카트 아이디로 디비에 있는 해당 메뉴를 삭제한다.
-    yield call(removeCart, action.payload);
+    const data = yield call(removeCart, action.payload);
+    if (data instanceof CommonError) {
+      throw data;
+    }
 
     // 현재 카트 상태에서 해당 카트 아이디를 가진 메뉴를 삭제한다.
     const state = yield select();
@@ -185,7 +200,7 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
       alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
       yield put(userActionCreators.signout());
     } else {
-      alert(error.message);
+      error.alertMessage();
     }
     yield put(cartActionCreators.fetchRemoveCartRejected(error));
   }
@@ -194,7 +209,10 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
 function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
   try {
     // 카트 아이디와 수량으로 디비에 있는 해당 메뉴를 삭제한다.
-    yield call(changeCart, action.payload.id, action.payload.quantity);
+    const data = yield call(changeCart, action.payload.id, action.payload.quantity);
+    if (data instanceof CommonError) {
+      throw data;
+    }
 
     // 해당 아이디에 해당하는 메뉴의 개수를 변경하고, 그에 따라 전체 사이즈와 가격도 변경한다.
     const state = yield select();
@@ -224,7 +242,7 @@ function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
       alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
       yield put(userActionCreators.signout());
     } else {
-      alert(error.message);
+      error.alertMessage();
     }
     yield put(cartActionCreators.fetchChangeCartRejected(error));
   }

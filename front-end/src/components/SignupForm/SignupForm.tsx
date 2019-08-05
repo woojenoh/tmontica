@@ -115,8 +115,13 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
       } else {
         alert("6~20자의 영문, 숫자만 사용 가능합니다.");
       }
-    } catch (err) {
-      alert(err.message);
+    } catch (error) {
+      if (!error.status) {
+        alert("네트워크 오류 발생");
+        return;
+      }
+
+      alert(error.message);
       this.setState({
         isIdNotSame: false
       });

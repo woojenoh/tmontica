@@ -1,15 +1,14 @@
-import { postWithJWT, API_URL, getWithJWT } from "./common";
+import { API_URL, withJWT, attchParamsToURL, post, get } from "./common";
 import { TOrderReq, TAddOrderRes, TOrder, TOrderAllRes } from "../types/order";
-import { TCommonError } from "../types/error";
 
 export function order(data: TOrderReq) {
-  return postWithJWT<TAddOrderRes, TCommonError>(`${API_URL}/orders`, data);
+  return post<TAddOrderRes>(`${API_URL}/orders`, data, withJWT());
 }
 
 export function getOrderById(orderId: number) {
-  return getWithJWT<TOrder, TCommonError>(`${API_URL}/orders/${orderId}`);
+  return get<TOrder>(attchParamsToURL(`${API_URL}/orders/${orderId}`), withJWT());
 }
 
 export function getOrderAll() {
-  return getWithJWT<TOrderAllRes, TCommonError>(`${API_URL}/orders`);
+  return get<TOrderAllRes>(attchParamsToURL(`${API_URL}/orders`), withJWT());
 }

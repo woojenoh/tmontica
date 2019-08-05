@@ -4,6 +4,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { getMenuAll } from "../../api/menu";
 import MenuItems from "../../components/MenusItems";
 import { IMenuItemsProps } from "../../components/MenusItems";
+import { CommonError } from "../../api/CommonError";
 
 interface MatchParams {
   categoryEng: string;
@@ -23,13 +24,21 @@ export default class Menus extends React.Component<IMenusProps, IMenusState> {
   async getMenuAll() {
     try {
       const menuAll = await getMenuAll();
+      if (menuAll instanceof CommonError) {
+        throw menuAll;
+      }
 
       if (!menuAll) throw new Error("메뉴 정보가 없습니다.");
       this.setState({
         menuAll
       });
-    } catch (err) {
-      alert(err);
+    } catch (error) {
+      if (!error.status) {
+        alert("네트워크 오류 발생");
+        return;
+      }
+
+      error.alertMessage();
     }
   }
 

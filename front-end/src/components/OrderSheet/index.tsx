@@ -7,6 +7,7 @@ import _ from "underscore";
 import history from "../../history";
 import { PureComponent } from "react";
 import { TOrder } from "../../types/order";
+import { CommonError } from "../../api/CommonError";
 
 export interface IOrderSheetProps {
   orderId: number;
@@ -31,7 +32,8 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
 
       let order = await getOrderById(this.props.orderId);
 
-      if (typeof order === "undefined") throw new Error("주문정보가 없습니다.");
+      if (!order) throw new Error("주문정보가 없습니다.");
+      if (order instanceof CommonError) throw order;
 
       if (this.state.order["status"] && this.state.order.status === order.status) {
         return;
@@ -40,8 +42,13 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
       this.setState({
         order
       });
-    } catch (err) {
-      alert(err);
+    } catch (error) {
+      if (!error.status) {
+        alert("네트워크 오류 발생");
+        return;
+      }
+
+      error.alertMessage();
       history.push("/");
     }
   }

@@ -4,6 +4,7 @@ import { RouteComponentProps } from "react-router-dom";
 import MenuItems from "../../components/MenusItems";
 import { getMenuByCateory } from "../../api/menu";
 import { TMenuByCategory } from "../../types/menu";
+import { CommonError } from "../../api/CommonError";
 
 interface MatchParams {
   categoryEng: string;
@@ -25,15 +26,25 @@ export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubS
     try {
       const categoryMenus = await getMenuByCateory(this.props.match.params.categoryEng);
 
-      if (typeof categoryMenus === "undefined") throw new Error("메뉴 정보를 불러오지 못했습니다.");
+      if (typeof categoryMenus === "undefined" || categoryMenus === null) {
+        throw new CommonError({ message: "메뉴 정보를 불러오지 못했습니다." });
+      }
+      if (categoryMenus instanceof CommonError) {
+        throw categoryMenus;
+      }
 
       const { categoryKo, menus } = categoryMenus;
       this.setState({
         categoryKo,
         menus
       });
-    } catch (err) {
-      alert(err);
+    } catch (error) {
+      if (!error.status) {
+        alert("네트워크 오류 발생");
+        return;
+      }
+
+      alert(error.message);
     }
   }
 

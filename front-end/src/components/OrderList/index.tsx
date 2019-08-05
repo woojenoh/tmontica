@@ -5,6 +5,7 @@ import { getOrderAll } from "../../api/order";
 import _ from "underscore";
 import { TOrderAllRes, IOrder } from "../../types/order";
 import { TCommonError } from "../../types/error";
+import { CommonError } from "../../api/CommonError";
 
 export interface IOrderListProps {
   handleOrderListItemClick(orderId: number): void;
@@ -21,7 +22,8 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
     try {
       const data = await getOrderAll();
 
-      if (typeof data === "undefined") throw new Error("주문 내역이 존재하지 않습니다.");
+      if (!data) throw new Error("주문 내역이 존재하지 않습니다.");
+      if (data instanceof CommonError) throw data;
 
       const { orders } = data;
       _.sortBy(orders, "orderId");
@@ -30,8 +32,13 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
       this.setState({
         orders
       });
-    } catch (err) {
-      alert(err);
+    } catch (error) {
+      if (!error.status) {
+        alert("네트워크 오류 발생");
+        return;
+      }
+
+      error.alertMessage();
     }
   }
 

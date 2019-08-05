@@ -11,6 +11,8 @@ import history from "../../history";
 import { ICartMenu } from "../../types/cart";
 import { CDN } from "../../constants";
 import MenuOption from "../MenuOptionList";
+import { CommonError } from "../../api/CommonError";
+import Menus from "../../pages/Menus";
 
 const getOptionById = (options: Array<TMenuOption>, id: number) => {
   return _.chain(options)
@@ -103,8 +105,8 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
     try {
       const data = await addCart([cartAddReq]);
 
-      if (!data) {
-        return;
+      if (data instanceof CommonError) {
+        throw data;
       }
 
       if (cartAddReq.direct) {
@@ -120,8 +122,13 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
       localStorage.setItem("orderCart", JSON.stringify([orderPreparedCart]));
 
       history.push("/payment");
-    } catch (err) {
-      alert(err);
+    } catch (error) {
+      if (!error.status) {
+        alert("네트워크 오류 발생");
+        return;
+      }
+
+      error.alertMessage();
       history.push("/");
     }
   }
@@ -216,6 +223,10 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
       const menu = await getMenuById(parseInt(menuId));
 
       if (!menu) return Promise.reject("메뉴가 없습니다.");
+      if (menu instanceof CommonError) {
+        throw menu;
+      }
+
       this.setState(
         {
           menu
@@ -227,8 +238,13 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
       }
 
       return Promise.resolve();
-    } catch (err) {
-      alert(err);
+    } catch (error) {
+      if (!error.status) {
+        alert("네트워크 오류 발생");
+        return;
+      }
+
+      error.alertMessage();
     }
   }
 
