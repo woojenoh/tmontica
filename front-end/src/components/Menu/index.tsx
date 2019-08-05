@@ -103,7 +103,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
     try {
       const data = await addCart([cartAddReq]);
 
-      if (typeof data === "undefined") {
+      if (!data) {
         return;
       }
 
@@ -215,7 +215,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
 
       const menu = await getMenuById(parseInt(menuId));
 
-      if (typeof menu === "undefined") return Promise.reject("메뉴가 없습니다.");
+      if (!menu) return Promise.reject("메뉴가 없습니다.");
       this.setState(
         {
           menu

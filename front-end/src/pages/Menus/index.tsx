@@ -24,7 +24,7 @@ export default class Menus extends React.Component<IMenusProps, IMenusState> {
     try {
       const menuAll = await getMenuAll();
 
-      if (typeof menuAll === "undefined") throw new Error("메뉴 정보가 없습니다.");
+      if (!menuAll) throw new Error("메뉴 정보가 없습니다.");
       this.setState({
         menuAll
       });
