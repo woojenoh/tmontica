@@ -115,7 +115,7 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
       alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
       yield put(userActionCreators.signout());
     } else {
-      alert(error.exceptionMessage);
+      alert(error.message);
     }
     yield put(cartActionCreators.fetchSetCartRejected(error));
   }
@@ -157,7 +157,7 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
       alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
       yield put(userActionCreators.signout());
     } else {
-      alert(error.exceptionMessage);
+      alert(error.message);
     }
     yield put(cartActionCreators.fetchAddCartRejected(error));
   }
@@ -185,7 +185,7 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
       alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
       yield put(userActionCreators.signout());
     } else {
-      alert(error.exceptionMessage);
+      alert(error.message);
     }
     yield put(cartActionCreators.fetchRemoveCartRejected(error));
   }
@@ -224,7 +224,7 @@ function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
       alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
       yield put(userActionCreators.signout());
     } else {
-      alert(error.exceptionMessage);
+      alert(error.message);
     }
     yield put(cartActionCreators.fetchChangeCartRejected(error));
   }

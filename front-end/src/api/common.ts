@@ -1,4 +1,4 @@
-import { TMessageError, TExceptionError, TCommonError } from "../types/error";
+import { TCommonError } from "../types/error";
 
 export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
 
