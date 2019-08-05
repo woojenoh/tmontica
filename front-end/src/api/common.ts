@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { CommonError } from "./CommonError";
 
 export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
@@ -25,42 +25,34 @@ export function withJWT(header: AxiosRequestConfig = {}) {
   return { ...header, headers: { Authorization: localStorage.getItem("jwt") || "" } };
 }
 
-export async function get<SuccessDataType>(url: string, config?: AxiosRequestConfig) {
-  const res = await axios.get(url, config);
-
+function handleResponse<SuccessDataType>(res: AxiosResponse) {
   if (res.status === 200) {
     return res.data as SuccessDataType;
   } else {
     return new CommonError({ status: res.status, message: res.data.message });
   }
+}
+
+export async function get<SuccessDataType>(url: string, config?: AxiosRequestConfig) {
+  const res = await axios.get(url, config);
+
+  return handleResponse<SuccessDataType>(res);
 }
 
 export async function post<SuccessDataType>(url: string, data?: any, config?: AxiosRequestConfig) {
   const res = await axios.post(url, data, config);
 
-  if (res.status === 200) {
-    return res.data as SuccessDataType;
-  } else {
-    return new CommonError({ status: res.status, message: res.data.message });
-  }
+  return handleResponse<SuccessDataType>(res);
 }
 
 export async function put<SuccessDataType>(url: string, data?: any, config?: AxiosRequestConfig) {
   const res = await axios.put(url, data, config);
 
-  if (res.status === 200) {
-    return res.data as SuccessDataType;
-  } else {
-    return new CommonError({ status: res.status, message: res.data.message });
-  }
+  return handleResponse<SuccessDataType>(res);
 }
 
 export async function del<SuccessDataType>(url: string, config?: AxiosRequestConfig) {
   const res = await axios.delete(url, config);
 
-  if (res.status === 200) {
-    return res.data as SuccessDataType;
-  } else {
-    return new CommonError({ status: res.status, message: res.data.message });
-  }
+  return handleResponse<SuccessDataType>(res);
 }
