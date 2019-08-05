@@ -17,7 +17,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final JwtService jwtService;
     private static final String[] EXCLUDE_PATH = {
-            "/api/orders/**", "/api/carts/**",
             "/api/users/signin", "/api/users/signup", "/api/users/duplicate/**",
             "/api/menus/**", "/api/options/**", "/api/users/findid/*", "/api/users/findpw","/swagger*/**", "/resources/**" , "/images/**"
             , "/**/*.jpg", "/**/*.js", "/**/*.css", "/error/**", "/api/users/findid**", "/api/users/active/**",
@@ -34,7 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new JwtInterceptor(jwtService))
-                .addPathPatterns("*")
+                .addPathPatterns("/**")
                 .excludePathPatterns(EXCLUDE_PATH);
     }
 
