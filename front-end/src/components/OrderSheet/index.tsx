@@ -36,10 +36,6 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
       if (!order) throw new CommonError({ status: 500, message: "주문정보가 없습니다." });
       if (order instanceof CommonError) throw order;
 
-      if (this.state.order["status"] && this.state.order.status === order.status) {
-        return;
-      }
-
       this.setState({
         order
       });
@@ -58,11 +54,13 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
 
   componentDidMount() {
     if (this.props.orderId > 0) {
+      // startTimer();
       this.getOrder();
     }
     this.intervalId = setInterval(() => {
+      // resetTimer()
       this.getOrder();
-    }, 1000);
+    }, 10000);
   }
 
   componentDidUpdate(prevProps: IOrderSheetProps) {
@@ -118,6 +116,7 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
       <section className={`orders ${!Number.isInteger(order.orderId) ? "hide" : ""}`}>
         <div className={`orders__top`}>
           <h1 className="orders__top-title">주문서({order.orderId})</h1>
+          {}
           <span
             className="orders__top-cancel"
             onClick={e => {

@@ -10,7 +10,8 @@ export interface IOrdersProps {}
 
 class Orders extends PureComponent<IOrdersProps> {
   state = {
-    orderId: 0
+    orderId: 0,
+    initLoaded: false
   };
 
   handleOrderListItemClick(orderId: number) {
@@ -19,6 +20,7 @@ class Orders extends PureComponent<IOrdersProps> {
       left: 0,
       behavior: "smooth"
     });
+
     this.setState({ orderId: orderId });
   }
 
@@ -40,6 +42,18 @@ class Orders extends PureComponent<IOrdersProps> {
       }
       return Promise.reject();
     }
+  }
+
+  componentDidMount() {
+    const parsedUrl = new URL(window.location.href);
+    const orderId = parsedUrl.searchParams.get("orderId");
+
+    if (!orderId) {
+      return;
+    }
+    this.setState({
+      orderId: parseInt(orderId)
+    });
   }
 
   render() {

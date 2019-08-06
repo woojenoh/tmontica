@@ -17,6 +17,7 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
   state = {
     orders: []
   };
+  intervalId = {} as NodeJS.Timeout;
 
   async getOrderAll() {
     try {
@@ -44,6 +45,14 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
 
   componentDidMount() {
     this.getOrderAll();
+    this.intervalId = setInterval(() => {
+      // resetTimer()
+      this.getOrderAll();
+    }, 10000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
   }
 
   render() {
