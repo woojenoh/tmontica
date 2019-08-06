@@ -1,7 +1,7 @@
 package com.internship.tmontica.cart;
 
 import com.internship.tmontica.cart.exception.CartExceptionType;
-import com.internship.tmontica.cart.exception.CartUserException;
+import com.internship.tmontica.cart.exception.CartException;
 import com.internship.tmontica.cart.model.request.CartReq;
 import com.internship.tmontica.cart.model.request.CartUpdateReq;
 import com.internship.tmontica.cart.model.request.Cart_OptionReq;
@@ -124,7 +124,7 @@ public class CartMenuService {
         String cartUserId = cartMenuDao.getCartMenuByCartId(id).getUserId();
         if(!userId.equals(cartUserId)){
             // 아이디 일치하지 않을 경우
-            throw new CartUserException(CartExceptionType.FORBIDDEN_ACCESS_CART_DATA);
+            throw new CartException(CartExceptionType.FORBIDDEN_ACCESS_CART_DATA);
         }
         int result = cartMenuDao.updateCartMenuQuantity(id, cartUpdateReq.getQuantity());
         return result;
@@ -137,7 +137,7 @@ public class CartMenuService {
         String cartUserId = cartMenuDao.getCartMenuByCartId(id).getUserId();
         if(!userId.equals(cartUserId)){
             // 아이디 일치하지 않을 경우
-            throw new CartUserException(CartExceptionType.FORBIDDEN_ACCESS_CART_DATA);
+            throw new CartException(CartExceptionType.FORBIDDEN_ACCESS_CART_DATA);
         }
         //카트에 담긴 정보 삭제하기
         int result = cartMenuDao.deleteCartMenu(id);

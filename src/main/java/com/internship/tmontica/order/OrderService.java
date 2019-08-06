@@ -4,20 +4,27 @@ import com.internship.tmontica.cart.CartMenu;
 import com.internship.tmontica.cart.CartMenuDao;
 import com.internship.tmontica.cart.CartMenuService;
 import com.internship.tmontica.cart.exception.CartExceptionType;
-import com.internship.tmontica.cart.exception.CartUserException;
+import com.internship.tmontica.cart.exception.CartException;
 import com.internship.tmontica.menu.MenuDao;
 import com.internship.tmontica.order.exception.NotEnoughStockException;
 import com.internship.tmontica.order.exception.OrderExceptionType;
-import com.internship.tmontica.order.exception.OrderUserException;
+import com.internship.tmontica.order.exception.OrderException;
 import com.internship.tmontica.order.exception.StockExceptionType;
 import com.internship.tmontica.order.model.request.OrderReq;
 import com.internship.tmontica.order.model.request.Order_MenusReq;
 import com.internship.tmontica.order.model.response.OrderListResp;
 import com.internship.tmontica.order.model.response.OrderResp;
 import com.internship.tmontica.order.model.response.Order_MenusResp;
+import com.internship.tmontica.point.Point;
+import com.internship.tmontica.point.PointDao;
+import com.internship.tmontica.point.PointLogType;
+import com.internship.tmontica.point.exception.PointException;
+import com.internship.tmontica.point.exception.PointExceptionType;
 import com.internship.tmontica.security.JwtService;
+import com.internship.tmontica.user.UserDao;
 import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mobile.device.Device;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +35,13 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class OrderService {
 
     private final OrderDao orderDao;
     private final CartMenuDao cartMenuDao;
     private final MenuDao menuDao;
+    private final UserDao userDao;
+    private final PointDao pointDao;
     private final JwtService jwtService;
     private final CartMenuService cartMenuService;
 
@@ -62,14 +70,37 @@ public class OrderService {
         return map;
     }
 
+
     // 결제하기 api
-    @Transactional(rollbackFor = {NotEnoughStockException.class, CartUserException.class} )
-    public Map<String, Integer> addOrderApi(OrderReq orderReq){
+    @Transactional(rollbackFor = {NotEnoughStockException.class, CartException.class} )
+    public Map<String, Integer> addOrderApi(OrderReq orderReq, Device device){
         //토큰에서 유저아이디
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         // TODO: totalprice 여기서 한번더 계산이 필요한가?
+        int userPoint = userDao.getUserPointByUserId(userId);
+        // 가지고 있는 포인트보다 더 사용하려고 할 때 예외처리
+        if(userPoint < orderReq.getUsedPoint()){
+            throw new PointException(PointExceptionType.POINT_LESS_THEN_ZERO_EXCEPTION);
+        }
+
+        // user 테이블에 사용한 포인트 차감하기
+        userDao.updateUserPoint(userPoint-orderReq.getUsedPoint(), userId);
+
+        // point 테이블에 사용 로그 추가하기
+        pointDao.addPoint(new Point(userId, PointLogType.USE_POINT.getType() ,orderReq.getUsedPoint(), "결제시 사용"));
+
+        // device 종류 검사
+        String userAgent = "";
+        if (device.isMobile()) {
+            userAgent = UserAgentType.MOBILE.toString();
+        } else if (device.isTablet()) {
+            userAgent = UserAgentType.TABLET.toString();
+        } else {
+            userAgent = UserAgentType.PC.toString();
+        }
+
         Order order = new Order(0,orderReq.getPayment(),orderReq.getTotalPrice(),orderReq.getUsedPoint(),
-                orderReq.getTotalPrice()-orderReq.getUsedPoint(), OrderStatusType.BEFORE_PAYMENT.getStatus(), userId);
+                orderReq.getTotalPrice()-orderReq.getUsedPoint(), OrderStatusType.BEFORE_PAYMENT.getStatus(), userId, userAgent);
         // 주문테이블에 추가
         orderDao.addOrder(order);
         int orderId = order.getId();
@@ -82,7 +113,7 @@ public class OrderService {
 
             // 로그인한 아이디와 해당 카트id의 userId가 다르면 rollback
             if(!userId.equals(cartMenu.getUserId())){
-                throw new CartUserException(CartExceptionType.FORBIDDEN_ACCESS_CART_DATA);
+                throw new CartException(CartExceptionType.FORBIDDEN_ACCESS_CART_DATA);
             }
 
             int price = (menuDao.getMenuById(cartMenu.getMenuId()).getSellPrice()) + cartMenu.getPrice();// 옵션 + 메뉴 가격
@@ -111,13 +142,15 @@ public class OrderService {
         return map;
     }
 
+
+
     // 주문 정보 1개 가져오기(상세내역 포함) api
     public OrderResp getOneOrderApi(int orderId){
         Order order = orderDao.getOrderByOrderId(orderId);
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         // 유저 아이디 검사
         if(!userId.equals(order.getUserId())){
-            throw new OrderUserException(OrderExceptionType.FORBIDDEN_ACCESS_ORDER_DATA);
+            throw new OrderException(OrderExceptionType.FORBIDDEN_ACCESS_ORDER_DATA);
         }
 
         List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(orderId);
@@ -139,14 +172,24 @@ public class OrderService {
         return orderResp;
     }
 
+
     // 주문 취소 api(사용자)
+    @Transactional
     public void cancelOrderApi(int orderId){
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         String dbUserId = orderDao.getOrderByOrderId(orderId).getUserId();
         if(!userId.equals(dbUserId)){
             // 아이디 디비와 다를경우 예외처리
-            throw new OrderUserException(OrderExceptionType.FORBIDDEN_ACCESS_ORDER_DATA);
+            throw new OrderException(OrderExceptionType.FORBIDDEN_ACCESS_ORDER_DATA);
         }
+
+        Order order = orderDao.getOrderByOrderId(orderId);
+        // 주문 상태가 '미결제' 나 '결제완료' 상태가 아니면 예외처리
+        if(!order.getStatus().equals(OrderStatusType.BEFORE_PAYMENT.getStatus())
+                && !order.getStatus().equals(OrderStatusType.AFTER_PAYMENT)){
+            throw new OrderException(OrderExceptionType.CANNOT_CANCEL_ORDER);
+        }
+
         // orders 테이블에서 status 수정
         orderDao.updateOrderStatus(orderId, OrderStatusType.CANCEL.getStatus());
         // order_status_log 테이블에도 주문취소 로그 추가

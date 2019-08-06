@@ -7,6 +7,7 @@ import com.internship.tmontica.order.model.response.OrderResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mobile.device.Device;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +23,12 @@ public class OrderController {
 
     /** 주문 받기(결제하기) */
     @PostMapping
-    public ResponseEntity<Map<String, Integer>> addOrder(@RequestBody @Valid OrderReq orderReq, BindingResult bindingResult){
+    public ResponseEntity<Map<String, Integer>> addOrder(Device device,@RequestBody @Valid OrderReq orderReq, BindingResult bindingResult){
         if(bindingResult.hasErrors()) {
             throw new OrderValidException(OrderExceptionType.INVALID_ORDER_ADD_FORM, bindingResult);
         }
-        Map<String, Integer> map = orderService.addOrderApi(orderReq);
+
+        Map<String, Integer> map = orderService.addOrderApi(orderReq, device);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 

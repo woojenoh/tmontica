@@ -1,11 +1,11 @@
 package com.internship.tmontica.exception.handler;
 
-import com.internship.tmontica.cart.exception.CartUserException;
+import com.internship.tmontica.cart.exception.CartException;
 import com.internship.tmontica.cart.exception.CartValidException;
 import com.internship.tmontica.exception.TmonTicaExceptionFormat;
 import com.internship.tmontica.menu.exception.MenuException;
 import com.internship.tmontica.order.exception.NotEnoughStockException;
-import com.internship.tmontica.order.exception.OrderUserException;
+import com.internship.tmontica.order.exception.OrderException;
 import com.internship.tmontica.order.exception.OrderValidException;
 import com.internship.tmontica.point.exception.PointException;
 import com.internship.tmontica.security.exception.UnauthorizedException;
@@ -69,9 +69,9 @@ public class GlobalExceptionAdvice {
         return new TmonTicaExceptionFormat(e.getField(), e.getMessage(), e.getBindingResult());
     }
 
-    @ExceptionHandler(CartUserException.class)
-    public ResponseEntity<TmonTicaExceptionFormat> handleCartUserException(CartUserException e){
-        log.info("CartUserException : {}", e.getMessage());
+    @ExceptionHandler(CartException.class)
+    public ResponseEntity<TmonTicaExceptionFormat> handleCartUserException(CartException e){
+        log.info("CartException : {}", e.getMessage());
         return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getMessage()), e.getCartExceptionType().getResponseType());
     }
 
@@ -91,9 +91,9 @@ public class GlobalExceptionAdvice {
         return new TmonTicaExceptionFormat(e.getField(), e.getMessage(), e.getBindingResult());
     }
 
-    @ExceptionHandler(OrderUserException.class)
-    public ResponseEntity<TmonTicaExceptionFormat> handleOrderUserException(OrderUserException e){
-        log.info("OrderUserException : {}", e.getMessage());
+    @ExceptionHandler(OrderException.class)
+    public ResponseEntity<TmonTicaExceptionFormat> handleOrderUserException(OrderException e){
+        log.info("OrderException : {}", e.getMessage());
         return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getMessage()), e.getOrderExceptionType().getResponseType());
     }
 
