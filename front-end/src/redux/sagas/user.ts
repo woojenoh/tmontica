@@ -19,7 +19,9 @@ function* fetchSignupSagas(action: userTypes.IFetchSignup) {
     alert("가입 인증 메일이 발송되었습니다.");
     history.push("/signin");
   } catch (error) {
-    error.alertMessage();
+    if (error instanceof CommonError) {
+      error.alertMessage();
+    }
     yield put(userActionCreators.fetchSignupRejected(error));
   }
 }
@@ -52,7 +54,9 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
       history.push("/");
     }
   } catch (error) {
-    error.alertMessage();
+    if (error instanceof CommonError) {
+      error.alertMessage();
+    }
     yield put(userActionCreators.fetchSigninRejected(error));
   }
 }
@@ -70,7 +74,9 @@ function* fetchSigninActiveSagas(action: userTypes.IFetchSigninActive) {
     alert("인증이 완료되었습니다. 이제 로그인이 가능합니다.");
     yield put(userActionCreators.fetchSigninActiveFulfilled());
   } catch (error) {
-    error.alertMessage();
+    if (error instanceof CommonError) {
+      error.alertMessage();
+    }
     yield put(userActionCreators.fetchSigninActiveRejected(error));
   }
 }
@@ -87,7 +93,9 @@ function* fetchFindIdSagas(action: userTypes.IFetchFindId) {
     alert("입력하신 이메일로 인증코드가 전송되었습니다.");
     yield put(userActionCreators.fetchFindIdFulfilled());
   } catch (error) {
-    error.alertMessage();
+    if (error instanceof CommonError) {
+      error.alertMessage();
+    }
     yield put(userActionCreators.fetchFindIdRejected(error));
   }
 }
@@ -104,7 +112,10 @@ function* fetchFindIdConfirmSagas(action: userTypes.IFetchFindIdConfirm) {
     alert(`회원님의 아이디는 ${data.userIdList} 입니다.`);
     yield put(userActionCreators.fetchFindIdConfirmFulfilled());
   } catch (error) {
-    error.alertMessage();
+    if (error instanceof CommonError) {
+      error.alertMessage();
+    }
+
     yield put(userActionCreators.fetchFindIdConfirmRejected(error));
   }
 }
@@ -122,7 +133,9 @@ function* fetchFindPasswordSagas(action: userTypes.IFetchFindPassword) {
     alert("입력하신 이메일로 임시 비밀번호가 전송되었습니다.");
     yield put(userActionCreators.fetchFindPasswordFulfilled());
   } catch (error) {
-    error.alertMessage();
+    if (error instanceof CommonError) {
+      error.alertMessage();
+    }
     yield put(userActionCreators.fetchFindPasswordRejected(error));
   }
 }

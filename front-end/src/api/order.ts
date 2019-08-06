@@ -1,4 +1,4 @@
-import { API_URL, withJWT, attchParamsToURL, post, get, del } from "./common";
+import { API_URL, withJWT, post, get, del } from "./common";
 import { TOrderReq, TAddOrderRes, TOrder, TOrderAllRes } from "../types/order";
 
 export function order(data: TOrderReq) {
@@ -6,11 +6,11 @@ export function order(data: TOrderReq) {
 }
 
 export function getOrderById(orderId: number) {
-  return get<TOrder>(attchParamsToURL(`${API_URL}/orders/${orderId}`), withJWT());
+  return get<TOrder>(`${API_URL}/orders/${orderId}`, withJWT());
 }
 
 export function getOrderAll() {
-  return get<TOrderAllRes>(attchParamsToURL(`${API_URL}/orders`), withJWT());
+  return get<TOrderAllRes>(`${API_URL}/orders`, withJWT());
 }
 
 export function cancleOrderById(orderId: number) {

@@ -20,19 +20,19 @@ export function signIn(data: IUserSigninInfo) {
 }
 
 export function signInActive(params: IUserSigninActive) {
-  return get<any>(attchParamsToURL(`${API_URL}/users/active`, params));
+  return get<any>(`${API_URL}/users/active`, { params });
 }
 
 export function findId(params: { email: string }) {
-  return get<any>(attchParamsToURL(`${API_URL}/users/findid`, params));
+  return get<any>(`${API_URL}/users/findid`, { params });
 }
 
 export function findIdConfirm(data: { authCode: string }) {
   return post<string>(`${API_URL}/users/findid/confirm`, data);
 }
 
-export function findPassword(data: { email: string; id: string }) {
-  return get<any>(attchParamsToURL(`${API_URL}/users/findpw`, data));
+export function findPassword(params: { email: string; id: string }) {
+  return get<any>(`${API_URL}/users/findpw`, { params });
 }
 
 // 중복 아이디 확인
