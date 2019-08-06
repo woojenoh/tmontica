@@ -1,7 +1,7 @@
 import * as React from "react";
 import OrderSheetItem from "../OrderSheetItem";
 import "./styles.scss";
-import { getOrderById } from "../../api/order";
+import { getOrderById, cancleOrderById } from "../../api/order";
 import { TOrderDetail } from "../../types/menu";
 import _ from "underscore";
 import history from "../../history";
@@ -11,6 +11,7 @@ import { CommonError } from "../../api/CommonError";
 
 export interface IOrderSheetProps {
   orderId: number;
+  handleOrderCancle(order: TOrder): Promise<any>;
 }
 
 export interface IOrderSheetState {
@@ -32,7 +33,7 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
 
       let order = await getOrderById(this.props.orderId);
 
-      if (!order) throw new Error("주문정보가 없습니다.");
+      if (!order) throw new CommonError({ status: 500, message: "주문정보가 없습니다." });
       if (order instanceof CommonError) throw order;
 
       if (this.state.order["status"] && this.state.order.status === order.status) {
@@ -48,7 +49,9 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
         return;
       }
 
-      error.alertMessage();
+      if (error instanceof CommonError) {
+        error.alertMessage();
+      }
       history.push("/");
     }
   }
@@ -78,7 +81,8 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     준비중: 2,
     준비완료: 3,
     READY: 3,
-    픽업완료: 4
+    픽업완료: 4,
+    주문취ㅅ: 5
   } as { [key: string]: number };
 
   fromStatusCode = {
@@ -86,7 +90,8 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     1: "결제완료",
     2: "준비중",
     3: "준비완료",
-    4: "픽업완료"
+    4: "픽업완료",
+    5: "주문취소"
   } as { [key: number]: string };
 
   render() {
@@ -113,7 +118,20 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
       <section className={`orders ${!Number.isInteger(order.orderId) ? "hide" : ""}`}>
         <div className={`orders__top`}>
           <h1 className="orders__top-title">주문서({order.orderId})</h1>
-          <span className="orders__top-cancel">주문취소</span>
+          <span
+            className="orders__top-cancel"
+            onClick={e => {
+              if (window.confirm("취소하시겠습니까?")) {
+                this.props.handleOrderCancle(this.state.order).then(order => {
+                  this.setState({
+                    order
+                  });
+                });
+              }
+            }}
+          >
+            주문취소
+          </span>
         </div>
         <div className="orders__content">
           <ul className="orders__status-container">

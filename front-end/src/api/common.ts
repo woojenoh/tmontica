@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import { CommonError } from "./CommonError";
 
 export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
@@ -31,10 +31,10 @@ export function get<SuccessDataType>(url: string, config?: AxiosRequestConfig) {
     .then(res => {
       return res.data as SuccessDataType;
     })
-    .catch(error => {
+    .catch((error: AxiosError) => {
       return new CommonError({
         ...error.response,
-        ...error.response.data
+        ...error.response!.data
       });
     });
 }
@@ -45,10 +45,10 @@ export function post<SuccessDataType>(url: string, data?: any, config?: AxiosReq
     .then(res => {
       return res.data as SuccessDataType;
     })
-    .catch(error => {
+    .catch((error: AxiosError) => {
       return new CommonError({
         ...error.response,
-        ...error.response.data
+        ...error.response!.data
       });
     });
 }
@@ -59,10 +59,10 @@ export function put<SuccessDataType>(url: string, data?: any, config?: AxiosRequ
     .then(res => {
       return res.data as SuccessDataType;
     })
-    .catch(error => {
+    .catch((error: AxiosError) => {
       return new CommonError({
         ...error.response,
-        ...error.response.data
+        ...error.response!.data
       });
     });
 }
@@ -73,10 +73,10 @@ export function del<SuccessDataType>(url: string, config?: AxiosRequestConfig) {
     .then(res => {
       return res.data as SuccessDataType;
     })
-    .catch(error => {
+    .catch((error: AxiosError) => {
       return new CommonError({
         ...error.response,
-        ...error.response.data
+        ...error.response!.data
       });
     });
 }
