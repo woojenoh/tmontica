@@ -155,3 +155,10 @@ export function fetchChangeCartRejected(error: AxiosError) {
     error
   };
 }
+
+export function setOrderCart(payload: cartTypes.ICartMenu[]) {
+  return {
+    type: actionTypes.SET_ORDER_CART,
+    payload
+  };
+}

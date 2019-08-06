@@ -1,5 +1,6 @@
 import * as React from "react";
 import { numberCommaRegex } from "../../../utils";
+import { CDN } from "../../../constants";
 import "./styles.scss";
 
 export interface ICartItemProps {
@@ -69,22 +70,26 @@ class CartItem extends React.Component<ICartItemProps, ICartItemState> {
 
     return (
       <li className="cart__item">
-        <img src={imgUrl} alt="Coffee Sample" className="cart__item-img" />
+        <img src={`${CDN}${imgUrl}`} alt={name} className="cart__item-img" />
         <div className="cart__item-info">
           <span className="cart__item-name">
-            {name} - {numberCommaRegex(price)}원
+            <div className="cart__item-name-span">
+              {`${name} / ${numberCommaRegex(price * quantity)}원`}
+            </div>
             <span
               className="cart__item-delete"
               onClick={() =>
-                isSignin
-                  ? id !== undefined && fetchRemoveCart(id)
-                  : id !== undefined && removeLocalCart(id)
+                window.confirm(`${name} 메뉴를 삭제하시겠습니까?`)
+                  ? isSignin
+                    ? id !== undefined && fetchRemoveCart(id)
+                    : id !== undefined && removeLocalCart(id)
+                  : ""
               }
             >
               &times;
             </span>
           </span>
-          <span className="cart__item-option">{option}</span>
+          <span className="cart__item-option">{option || "옵션이 없습니다."}</span>
         </div>
         <div className="cart__item-quantity">
           <select

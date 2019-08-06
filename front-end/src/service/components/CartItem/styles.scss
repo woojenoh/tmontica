@@ -32,6 +32,9 @@
       @include mobile {
         font-size: 15px;
       }
+      .cart__item-name-span {
+        word-break: break-all;
+      }
       .cart__item-delete {
         font-size: 20px;
         margin-left: 10px;

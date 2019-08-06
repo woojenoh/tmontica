@@ -1,4 +1,5 @@
 import * as React from "react";
+import history from "../../../history";
 import CartItem from "../CartItem";
 import { numberCommaRegex } from "../../../utils";
 import * as cartTypes from "../../../types/cart";
@@ -10,9 +11,11 @@ export interface ICartProps {
   localCart: cartTypes.ICart | null;
   cart: cartTypes.ICart | null;
   handleCartClose(): void;
+  initializeLocalCart(): void;
   addLocalCart(payload: cartTypes.ICartMenu): void;
   fetchSetCart(): void;
   fetchAddCart(payload: cartTypes.ICartMenu[]): void;
+  setOrderCart(payload: cartTypes.ICartMenu[]): void;
 }
 
 export interface ICartState {
@@ -21,65 +24,20 @@ export interface ICartState {
 
 class Cart extends React.Component<ICartProps, ICartState> {
   componentDidMount() {
-    const { isSignin, addLocalCart, fetchSetCart, fetchAddCart } = this.props;
+    const { isSignin, initializeLocalCart, fetchSetCart } = this.props;
     if (isSignin) {
       fetchSetCart();
-      // fetchAddCart([
-      //   {
-      //     menuId: 6,
-      //     nameEng: "Caramel Maki",
-      //     nameKo: "카라멜 마끼아또",
-      //     imgUrl: "/img/coffee-sample.png",
-      //     option: "HOT/샷추가(1개)/사이즈업",
-      //     optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
-      //     quantity: 1,
-      //     price: 2600,
-      //     stock: 100,
-      //     direct: false
-      //   },
-      //   {
-      //     menuId: 6,
-      //     nameEng: "Caramel Maki",
-      //     nameKo: "카라멜 마끼아또",
-      //     imgUrl: "/img/coffee-sample.png",
-      //     option: "HOT/샷추가(1개)/사이즈업",
-      //     optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
-      //     quantity: 2,
-      //     price: 2600,
-      //     stock: 100,
-      //     direct: false
-      //   }
-      // ]);
     } else {
-      // addLocalCart({
-      //   menuId: 2,
-      //   nameEng: "americano",
-      //   nameKo: "아메리카노",
-      //   imgUrl: "/img/coffee-sample.png",
-      //   option: "HOT/샷추가(1개)/사이즈업",
-      //   optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
-      //   quantity: 1,
-      //   price: 1500,
-      //   stock: 100,
-      //   direct: false
-      // });
-      // addLocalCart({
-      //   menuId: 2,
-      //   nameEng: "americano",
-      //   nameKo: "카페라떼",
-      //   imgUrl: "/img/coffee-sample.png",
-      //   option: "HOT/샷추가(1개)/사이즈업",
-      //   optionArray: [{ id: 1, quantity: 1 }, { id: 3, quantity: 1 }, { id: 5, quantity: 1 }],
-      //   quantity: 2,
-      //   price: 2500,
-      //   stock: 100,
-      //   direct: false
-      // });
+      const localCart = localStorage.getItem("localCart");
+      // 만약 로컬카트가 생성된게 없으면 생성한다.
+      if (!localCart) {
+        initializeLocalCart();
+      }
     }
   }
 
   render() {
-    const { isCartOpen, handleCartClose, isSignin, localCart, cart } = this.props;
+    const { isCartOpen, handleCartClose, isSignin, localCart, cart, setOrderCart } = this.props;
 
     return (
       <section className={isCartOpen ? "cart" : "cart cart--close"}>
@@ -157,7 +115,22 @@ class Cart extends React.Component<ICartProps, ICartState> {
                 원
               </span>
             </div>
-            <button className="button cart__button">결제 및 주문하기</button>
+            <button
+              className="button cart__button"
+              onClick={() =>
+                isSignin
+                  ? cart
+                    ? cart.size
+                      ? window.confirm("주문하시겠습니까?")
+                        ? setOrderCart(cart.menus)
+                        : ""
+                      : alert("장바구니가 비었습니다.")
+                    : alert("문제가 발생했습니다.")
+                  : (alert("로그인 후 주문하세요."), history.push("/signin"))
+              }
+            >
+              결제 및 주문하기
+            </button>
           </div>
         </div>
       </section>

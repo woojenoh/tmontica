@@ -1,7 +1,8 @@
+import history from "../../history";
 import * as actionTypes from "../actionTypes/cart";
 import * as cartTypes from "../../types/cart";
 
-const localCart = localStorage.getItem("LocalCart");
+const localCart = localStorage.getItem("localCart");
 
 const INITIAL_STATE = {
   cart: null,
@@ -16,7 +17,7 @@ export default function(state = INITIAL_STATE, action: cartTypes.TCartAction) {
         totalPrice: 0,
         menus: []
       } as cartTypes.ICart;
-      localStorage.setItem("LocalCart", JSON.stringify(initCart));
+      localStorage.setItem("localCart", JSON.stringify(initCart));
       return {
         ...state,
         localCart: initCart
@@ -112,6 +113,11 @@ export default function(state = INITIAL_STATE, action: cartTypes.TCartAction) {
         ...state,
         error: action.error
       };
+    case actionTypes.SET_ORDER_CART:
+      localStorage.setItem("orderCart", JSON.stringify(action.payload));
+      localStorage.setItem("isDirect", "N");
+      history.push("/payment");
+      return state;
     default:
       return state;
   }

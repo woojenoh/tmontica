@@ -4,6 +4,9 @@
   border: 1px solid $border-gray;
   height: 150px;
   background-color: white;
+  .banner__img {
+    display: none;
+  }
 }
 
 .main {
@@ -91,14 +94,6 @@
   right: 0;
   background-size: cover;
   opacity: 0.3;
-}
-
-.menu__name {
-  display: block;
-  font-size: 20px;
-  text-align: center;
-  margin-top: 40px;
-  margin-bottom: 15px;
 }
 
 .menu__buy {

@@ -1,46 +1,88 @@
 import * as React from "react";
 import OrderSheetItem from "../OrderSheetItem";
-import { numberCommaRegex } from "../../../utils";
 import "./styles.scss";
+import { getOrderById } from "../../../api/order";
+import { TOrderDetail } from "../../../types/menu";
+import _ from "underscore";
+import history from "../../../history";
+import { PureComponent } from "react";
 
-export interface IOrderSheetProps {}
+export interface IOrderSheetProps {
+  orderId: number;
+}
 
-export interface IOrderSheetState {}
+interface TOrder {
+  orderId: number;
+  payment: string;
+  status: string;
+  totalPrice: number;
+  realPrice: number;
+  usedPoint: number;
+  orderDate: string;
+  menus: Array<TOrderDetail>;
+}
+
+export interface IOrderSheetState {
+  order: TOrder;
+}
 
 class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
-  tempData = {
-    orderId: 10,
-    payment: "현장결제",
-    status: "결제완료",
-    totalPrice: 3000,
-    realPrice: 2000,
-    usedPoint: 1000,
-    orderDate: "2019-07-19 11:12:40",
-    menus: [
-      {
-        menuId: 1,
-        NameEng: "americano",
-        NameKo: "아메리카노",
-        option: "HOT/샷추가(1개)/사이즈추가",
-        quantity: 1,
-        price: 1000
-      },
-      {
-        menuId: 2,
-        NameEng: "garlic bread",
-        NameKo: "갈릭퐁당브레드",
-        option: "",
-        quantity: 1,
-        price: 3000
-      }
-    ]
+  state = {
+    order: {} as TOrder
   };
+
+  intervalId = {} as NodeJS.Timeout;
+
+  async getOrder() {
+    try {
+      if (this.props.orderId <= 0) {
+        return;
+      }
+
+      let order = await getOrderById(this.props.orderId);
+
+      if (order === "") {
+        order = {} as TOrder;
+      }
+
+      if (this.state.order["status"] && this.state.order.status === order.status) {
+        return;
+      }
+
+      this.setState({
+        order
+      });
+    } catch (err) {
+      alert(err);
+      history.push("/");
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.orderId > 0) {
+      this.getOrder();
+    }
+    this.intervalId = setInterval(() => {
+      this.getOrder();
+    }, 1000);
+  }
+
+  componentDidUpdate(prevProps: IOrderSheetProps) {
+    if (this.props.orderId !== prevProps.orderId) {
+      this.getOrder();
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
+  }
 
   statusCode = {
     미결제: 0,
     결제완료: 1,
     준비중: 2,
     준비완료: 3,
+    READY: 3,
     픽업완료: 4
   } as { [key: string]: number };
 
@@ -52,79 +94,101 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     4: "픽업완료"
   } as { [key: number]: string };
 
-  public render() {
-    const { tempData, statusCode, fromStatusCode } = this;
-
-    // 현재 상태와 5가지 상태를 비교해 색상 배열 생성
+  render() {
+    const { statusCode, fromStatusCode } = this;
+    const { order } = this.state;
+    const { orderId } = this.props;
+    const isReadyOrder = orderId > 0;
     const statusArray = [];
-    for (let i = 0; i < 5; i++) {
-      if (i < statusCode[tempData.status]) {
-        statusArray.push(0);
-      } else if (i === statusCode[tempData.status]) {
-        statusArray.push(1);
-      } else {
-        statusArray.push(2);
+
+    if (isReadyOrder) {
+      // 현재 상태와 5가지 상태를 비교해 색상 배열 생성
+      for (let i = 0; i < 5; i++) {
+        if (i < statusCode[order.status]) {
+          statusArray.push(0);
+        } else if (i === statusCode[order.status]) {
+          statusArray.push(1);
+        } else {
+          statusArray.push(2);
+        }
       }
     }
 
     return (
-      <>
-        <div className="orders__top">
-          <h1 className="orders__top-title">주문서({tempData.orderId})</h1>
+      <section className={`orders ${!Number.isInteger(order.orderId) ? "hide" : ""}`}>
+        <div className={`orders__top`}>
+          <h1 className="orders__top-title">주문서({order.orderId})</h1>
           <span className="orders__top-cancel">주문취소</span>
         </div>
         <div className="orders__content">
           <ul className="orders__status-container">
-            {statusArray.map((s, index) => {
-              if (s === 0) {
-                return (
-                  <li key={index} className="orders__status orders__status--gray">
-                    {fromStatusCode[index]}
-                  </li>
-                );
-              } else if (s === 1) {
-                return (
-                  <li key={index} className="orders__status orders__status--green">
-                    {fromStatusCode[index]}
-                  </li>
-                );
-              } else {
-                return (
-                  <li key={index} className="orders__status">
-                    {fromStatusCode[index]}
-                  </li>
-                );
-              }
-            })}
+            {isReadyOrder
+              ? statusArray.map((s, index) => {
+                  if (s === 0) {
+                    return (
+                      <li key={index} className="orders__status orders__status--gray">
+                        {fromStatusCode[index]}
+                      </li>
+                    );
+                  } else if (s === 1) {
+                    return (
+                      <li key={index} className="orders__status orders__status--green">
+                        {fromStatusCode[index]}
+                      </li>
+                    );
+                  } else {
+                    return (
+                      <li key={index} className="orders__status">
+                        {fromStatusCode[index]}
+                      </li>
+                    );
+                  }
+                })
+              : ""}
           </ul>
           <ul className="orders__items">
-            {tempData.menus.map(m => {
-              return (
-                <OrderSheetItem
-                  key={m.menuId}
-                  name={m.NameKo}
-                  price={m.price}
-                  options={m.option}
-                  quantity={m.quantity}
-                />
-              );
-            })}
+            <OrderSheetList order={order} />
           </ul>
           <div className="orders__total">
             <div className="orders__total-price">
-              주문금액 - {numberCommaRegex(tempData.totalPrice)}원
+              주문금액 - {Number(order.totalPrice).toLocaleString()}원
             </div>
             <div className="orders__total-discount">
-              할인금액 - {numberCommaRegex(tempData.usedPoint)}원
+              할인금액 - {Number(order.usedPoint).toLocaleString()}원
             </div>
             <div className="orders__total-result">
-              최종금액 - {numberCommaRegex(tempData.realPrice)}원
+              최종금액 - {Number(order.realPrice).toLocaleString()}원
             </div>
           </div>
         </div>
-      </>
+      </section>
     );
   }
 }
 
+interface IOrderSheetListProps {
+  order: TOrder;
+}
+
+class OrderSheetList extends PureComponent<IOrderSheetListProps> {
+  render() {
+    const { order } = this.props;
+
+    return (
+      <ul className="orders__items">
+        {_(order.menus).map((m: TOrderDetail, i) => {
+          return (
+            <OrderSheetItem
+              key={`${order.orderId}_${i}`}
+              name={m.nameKo}
+              price={m.sellPrice}
+              option={m.option}
+              quantity={m.quantity}
+            />
+          );
+        })}
+      </ul>
+    );
+  }
+}
 export default OrderSheet;

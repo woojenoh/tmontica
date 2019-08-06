@@ -4,7 +4,7 @@ import * as actionTypes from "../actionTypes/user";
 import * as userTypes from "../../types/user";
 
 // 토큰이 있을 경우 토큰에서 유저 정보를 가져온다.
-const localJwt = localStorage.getItem("JWT");
+const localJwt = localStorage.getItem("jwt");
 let jwtToken, parsedUserInfo;
 if (localJwt) {
   jwtToken = jwt(localJwt) as userTypes.IJwtToken;
@@ -43,7 +43,7 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
         error: action.error
       };
     case actionTypes.SIGNOUT:
-      localStorage.removeItem("JWT");
+      localStorage.removeItem("jwt");
       history.push("/");
       return {
         ...state,

@@ -13,11 +13,15 @@ const mapStateToProps = (state: rootTypes.IRootState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
+    initializeLocalCart: () => dispatch(cartActionCreators.initializeLocalCart()),
     addLocalCart: (payload: cartTypes.ICartMenu) =>
       dispatch(cartActionCreators.addLocalCart(payload)),
     fetchSetCart: () => dispatch(cartActionCreators.fetchSetCart()),
     fetchAddCart: (payload: cartTypes.ICartMenu[]) => {
       dispatch(cartActionCreators.fetchAddCart(payload));
+    },
+    setOrderCart: (payload: cartTypes.ICartMenu[]) => {
+      dispatch(cartActionCreators.setOrderCart(payload));
     }
   };
 };

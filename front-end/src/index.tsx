@@ -4,8 +4,6 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { Router } from "react-router-dom";
 import history from "./history";
-import "./assets/scss/service.scss";
-import "./assets/scss/reset.scss";
 
 // redux
 import { createStore, applyMiddleware } from "redux";

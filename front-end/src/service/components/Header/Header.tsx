@@ -23,7 +23,8 @@ class Header extends React.Component<IHeaderProps, IHeaderState> {
         body.style.overflow = "auto";
       }
       this.setState({
-        isNavOpen: false
+        isNavOpen: false,
+        isCartOpen: false
       });
     }
   }

@@ -2,7 +2,7 @@ import * as React from "react";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import MenuItems from "../../components/MenusItems";
-import { MenuAPI } from "../../../API";
+import { getMenuByCateory } from "../../../api/menu";
 import { TMenusItem } from "../../../types/menu";
 
 interface MatchParams {
@@ -25,12 +25,16 @@ export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubS
   };
 
   async getMenuByCateory(categoryEng?: string) {
-    const categoryMenus = await MenuAPI.getMenuByCateory(this.props.match.params.categoryEng);
-    const { categoryKo, menus } = categoryMenus;
-    this.setState({
-      categoryKo,
-      menus
-    });
+    try {
+      const categoryMenus = await getMenuByCateory(this.props.match.params.categoryEng);
+      const { categoryKo, menus } = categoryMenus;
+      this.setState({
+        categoryKo,
+        menus
+      });
+    } catch (err) {
+      alert(err);
+    }
   }
 
   componentDidMount() {
