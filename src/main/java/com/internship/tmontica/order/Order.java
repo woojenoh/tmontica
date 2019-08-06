@@ -1,5 +1,6 @@
 package com.internship.tmontica.order;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
@@ -10,6 +11,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class Order {
     private int id;            // 주문번호
 

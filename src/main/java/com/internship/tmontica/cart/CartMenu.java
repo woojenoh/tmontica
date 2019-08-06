@@ -21,11 +21,11 @@ public class CartMenu {
     @NotEmpty
     private String userId;
     @NotNull
-    private int price;  // 옵션의 가격...
+    private int price;      // 옵션의 가격 (수량, 제품가격 미적용)
     @NotNull
     private int menuId;
     @NotNull
-    private boolean direct;
+    private boolean direct; // false : 장바구니, true : 바로주문
 
     public CartMenu(@NotNull int quantity, String option, @NotEmpty String userId, @NotNull int price, @NotNull int menuId, @NotNull boolean direct) {
         this.quantity = quantity;
