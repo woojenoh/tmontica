@@ -27,7 +27,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CartMenuService {
 
     private final CartMenuDao cartMenuDao;
@@ -71,6 +70,7 @@ public class CartMenuService {
 
 
     // 카트에 추가하기 api
+    @Transactional
     public List<CartIdResp> addCartApi(List<CartReq> cartReqs){
         List<CartIdResp> cartIds = new ArrayList<>();
         // 토큰에서 userId 가져오기
