@@ -18,7 +18,7 @@ export interface IOrderSheetState {
   order: TOrder;
 }
 
-class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
+class OrderSheet extends PureComponent<IOrderSheetProps, IOrderSheetState> {
   state = {
     order: {} as TOrder
   };
@@ -54,22 +54,23 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
 
   componentDidMount() {
     if (this.props.orderId > 0) {
-      // startTimer();
       this.getOrder();
     }
+    // 10초마다 주문정보 갱신
     this.intervalId = setInterval(() => {
-      // resetTimer()
       this.getOrder();
     }, 10000);
   }
 
   componentDidUpdate(prevProps: IOrderSheetProps) {
+    // 주문번호가 다른 경우 요청
     if (this.props.orderId !== prevProps.orderId) {
       this.getOrder();
     }
   }
 
   componentWillUnmount() {
+    // 나갈 때 인터벌 제거
     clearInterval(this.intervalId);
   }
 
@@ -80,7 +81,7 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     준비완료: 3,
     READY: 3,
     픽업완료: 4,
-    주문취ㅅ: 5
+    주문취소: 5
   } as { [key: string]: number };
 
   fromStatusCode = {
@@ -100,8 +101,8 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
     const statusArray = [];
 
     if (isReadyOrder) {
-      // 현재 상태와 5가지 상태를 비교해 색상 배열 생성
-      for (let i = 0; i < 5; i++) {
+      // 현재 상태와 6가지 상태를 비교해 색상 배열 생성
+      for (let i = 0; i < 6; i++) {
         if (i < statusCode[order.status]) {
           statusArray.push(0);
         } else if (i === statusCode[order.status]) {
@@ -123,7 +124,7 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
               if (window.confirm("취소하시겠습니까?")) {
                 this.props.handleOrderCancle(this.state.order).then(order => {
                   this.setState({
-                    order
+                    order: { ...order }
                   });
                 });
               }
@@ -144,7 +145,12 @@ class OrderSheet extends React.Component<IOrderSheetProps, IOrderSheetState> {
                     );
                   } else if (s === 1) {
                     return (
-                      <li key={index} className="orders__status orders__status--green">
+                      <li
+                        key={index}
+                        className={`orders__status orders__status--${
+                          statusCode[order.status] === 5 ? "red" : "green"
+                        }`}
+                      >
                         {fromStatusCode[index]}
                       </li>
                     );
@@ -196,6 +202,7 @@ class OrderSheetList extends PureComponent<IOrderSheetListProps> {
               price={m.sellPrice}
               option={m.option}
               quantity={m.quantity}
+              imgUrl={m.imgUrl}
             />
           );
         })}

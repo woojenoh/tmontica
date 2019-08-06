@@ -20,8 +20,10 @@ function OrderListItem(props: IOrderListItemProps) {
       className={
         /준비완료|READY/.test(status)
           ? "orders-list__item orders-list__item--ready"
-          : status === "픽업완료" || status === "주문취소"
+          : status === "픽업완료"
           ? "orders-list__item orders-list__item--pickuped"
+          : status === "주문취소"
+          ? "orders-list__item orders-list__item--cancle"
           : "orders-list__item"
       }
     >

@@ -4,7 +4,7 @@ import history from "../../history";
 import { RouteComponentProps } from "react-router-dom";
 import { ICartMenu } from "../../types/cart";
 import { order } from "../../api/order";
-import { CDN } from "../../constants";
+import { BASE_URL } from "../../constants";
 import { CommonError } from "../../api/CommonError";
 
 interface MatchParams {
@@ -36,7 +36,7 @@ const OrderMenu = ({
   return (
     <li className="order__menu">
       <div className="order__menu-img">
-        <img src={`${CDN}${imgUrl}`} alt={nameKo} />
+        <img src={`${BASE_URL}${imgUrl}`} alt={nameKo} />
       </div>
       <div className="order__menu-description">
         <div className="order__menu-title-wrap">

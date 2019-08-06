@@ -15,7 +15,7 @@ export interface IOrderListState extends TOrderAllRes {}
 
 class OrderList extends React.Component<IOrderListProps, IOrderListState> {
   state = {
-    orders: []
+    orders: [] as IOrder[]
   };
   intervalId = {} as NodeJS.Timeout;
 
@@ -41,6 +41,19 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
 
       error.alertMessage();
     }
+  }
+
+  // 주문취소 즉시 목록에 상태 반영
+  updateOrderStatus(orderId: number, status: string) {
+    const orders = this.state.orders.map((o, i) => {
+      if (o.orderId === orderId) {
+        o.status = status;
+      }
+      return o;
+    });
+    this.setState({
+      orders: [...orders]
+    });
   }
 
   componentDidMount() {

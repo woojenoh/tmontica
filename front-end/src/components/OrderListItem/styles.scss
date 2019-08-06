@@ -26,6 +26,10 @@
     background-color: grey;
     color: white;
   }
+  &.orders-list__item--cancle {
+    background-color: #d9534f;
+    color: white;
+  }
   .orders-list__item-left {
     flex: 1;
     .orders-list__item-number {

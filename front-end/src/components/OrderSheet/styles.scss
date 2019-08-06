@@ -74,6 +74,11 @@
         border: none;
         color: black;
       }
+      &.orders__status--red {
+        background-color: #d9534f;
+        border: none;
+        color: white;
+      }
       @include mobile {
         text-align: center;
         margin-bottom: 10px;

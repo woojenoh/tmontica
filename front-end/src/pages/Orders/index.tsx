@@ -1,18 +1,24 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent, RefObject } from "react";
 import OrderSheet from "../../components/OrderSheet";
 import OrderList from "../../components/OrderList";
 import "./styles.scss";
 import { cancleOrderById } from "../../api/order";
-import { TOrder } from "../../types/order";
+import { TOrder, IOrder } from "../../types/order";
 import { CommonError } from "../../api/CommonError";
 
 export interface IOrdersProps {}
 
 class Orders extends PureComponent<IOrdersProps> {
+  orderList: RefObject<OrderList>;
   state = {
     orderId: 0,
     initLoaded: false
   };
+
+  constructor(props: IOrdersProps) {
+    super(props);
+    this.orderList = React.createRef();
+  }
 
   handleOrderListItemClick(orderId: number) {
     window.scrollTo({
@@ -32,6 +38,10 @@ class Orders extends PureComponent<IOrdersProps> {
       }
       alert("주문이 취소되었습니다.");
       order.status = "주문취소";
+
+      // 주문취소 즉시 목록에 상태 반영 함수 호출
+      this.orderList.current!.updateOrderStatus(this.state.orderId, order.status);
+
       return Promise.resolve(order);
     } catch (error) {
       if (!error.status) {
@@ -62,7 +72,10 @@ class Orders extends PureComponent<IOrdersProps> {
       <main className="main">
         <OrderSheet orderId={orderId} handleOrderCancle={this.handleOrderCancle.bind(this)} />
         <section className="orders-list">
-          <OrderList handleOrderListItemClick={this.handleOrderListItemClick.bind(this)} />
+          <OrderList
+            ref={this.orderList}
+            handleOrderListItemClick={this.handleOrderListItemClick.bind(this)}
+          />
         </section>
       </main>
     );

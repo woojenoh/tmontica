@@ -9,7 +9,7 @@ import { TMenuOption, TMenu, TMenuOptionMap } from "../../types/menu";
 import { createCartAddReq, goToSignin, optionToString, convertOptionMapToArray } from "../../utils";
 import history from "../../history";
 import { ICartMenu } from "../../types/cart";
-import { CDN } from "../../constants";
+import { BASE_URL } from "../../constants";
 import MenuOption from "../MenuOptionList";
 import { CommonError } from "../../api/CommonError";
 import Menus from "../../pages/Menus";
@@ -305,7 +305,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
         <main className="main">
           <section className="detail">
             <div className="detail__left">
-              <img src={`${CDN}${menu.imgUrl}`} alt={menu.nameKo} className="detail__img" />
+              <img src={`${BASE_URL}${menu.imgUrl}`} alt={menu.nameKo} className="detail__img" />
             </div>
             <div className="detail__right">
               <div className="detail__right-container">
