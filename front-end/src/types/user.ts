@@ -17,6 +17,7 @@ export interface IUser {
   email: string;
   birthDate: string;
   point: number;
+  role: string;
 }
 
 export interface IUserSignupInfo {

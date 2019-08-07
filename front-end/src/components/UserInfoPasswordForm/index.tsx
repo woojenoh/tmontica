@@ -2,6 +2,8 @@ import * as React from "react";
 import "./styles.scss";
 
 export interface IUserInfoPasswordFormProps {
+  password: string;
+  handlePasswordInputChange(e: React.FormEvent<HTMLInputElement>): void;
   handleIsPasswordTrueChange(e: React.FormEvent<HTMLFormElement>): void;
 }
 
@@ -12,7 +14,7 @@ export default class UserInfoPasswordForm extends React.Component<
   IUserInfoPasswordFormState
 > {
   render() {
-    const { handleIsPasswordTrueChange } = this.props;
+    const { password, handlePasswordInputChange, handleIsPasswordTrueChange } = this.props;
 
     return (
       <form className="user-info-password__form" onSubmit={e => handleIsPasswordTrueChange(e)}>
@@ -21,6 +23,8 @@ export default class UserInfoPasswordForm extends React.Component<
           name="password"
           className="input user-info-password__input"
           placeholder="비밀번호"
+          value={password}
+          onChange={e => handlePasswordInputChange(e)}
           required
         />
         <input
