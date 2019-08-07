@@ -71,7 +71,7 @@ public class CartMenuServiceTest {
         menu = new Menu(2, "latte", 2000, "커피", "coffee",
                 false, true, "asdfa/asdfa.png", "맛있는 라떼", 1500,
                 10,new Date(),new Date() , "admin", "admin",100, "라떼",
-                new Date() ,new Date() );
+                new Date() ,new Date(), false );
 
 
     }

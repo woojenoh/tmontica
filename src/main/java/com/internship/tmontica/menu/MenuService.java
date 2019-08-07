@@ -28,8 +28,6 @@ public class MenuService {
 
     private final ModelMapper modelMapper;
 
-    private final JwtService jwtService;
-
     @Value("${menu.imagepath}")
     private String location;
 

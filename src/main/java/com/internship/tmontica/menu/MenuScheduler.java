@@ -28,10 +28,11 @@ public class MenuScheduler {
         List<Menu> filteredMenus = new ArrayList<>();
         Date now = new Date();
 
+        Predicate<Menu> isDeleted= menu -> menu.isDeleted();
         Predicate<Menu> con1 = menu -> menu.getStartDate() == null && menu.getEndDate() == null;
         Predicate<Menu> con2 = menu -> menu.getStartDate().before(now) && menu.getEndDate().after(now);
 
-        filteredMenus = allMenus.stream().filter(Menu::isUsable)
+        filteredMenus = allMenus.stream().filter(Menu::isUsable).filter(isDeleted.negate())
                 .filter(con1.or(con2)).collect(Collectors.toList());
 
         usableMenus = filteredMenus;
