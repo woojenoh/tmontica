@@ -1,5 +1,6 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosError } from "axios";
 import { CommonError } from "./CommonError";
+import * as userActionCreators from "../redux/actionCreators/user";
 
 export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
 
@@ -19,6 +20,24 @@ export function attchParamsToURL(url: string, params?: Map<string, string> | Obj
     }
   }
   return url;
+}
+
+export function handleError(error: CommonError | AxiosError | string) {
+  if (error instanceof CommonError) {
+    if (!error.status) {
+      alert("네트워크 오류 발생");
+    } else if (error["status"] === 401) {
+      alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
+      return Promise.resolve("signout");
+    } else if (error.message && /No message/.test(error.message)) {
+      console.log(error);
+    } else {
+      error.alertMessage();
+    }
+  } else {
+    console.dir(error);
+  }
+  return Promise.resolve(error);
 }
 
 export function withJWT(header: AxiosRequestConfig = {}) {

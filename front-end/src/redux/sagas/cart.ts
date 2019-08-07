@@ -6,6 +6,7 @@ import * as cartTypes from "../../types/cart";
 import * as userActionCreators from "../actionCreators/user";
 import { addCart, getCart, changeCart, removeCart } from "../../api/cart";
 import { CommonError } from "../../api/CommonError";
+import { handleError } from "../../api/common";
 
 function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
   try {
@@ -113,18 +114,11 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
     if (data instanceof CommonError) {
       throw data;
     }
-
     yield put(cartActionCreators.fetchSetCartFulfilled(data));
   } catch (error) {
-    if (!error.status) {
-      alert("네트워크 오류 발생");
-      return;
-    }
-    if (error.status === 401) {
-      alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
+    const result = yield handleError(error);
+    if (result === "string") {
       yield put(userActionCreators.signout());
-    } else {
-      error.alertMessage();
     }
     yield put(cartActionCreators.fetchSetCartRejected(error));
   }
