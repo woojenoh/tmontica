@@ -1,5 +1,6 @@
 package com.internship.tmontica.cart.model.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class CartReq {
 
     @Min(1)

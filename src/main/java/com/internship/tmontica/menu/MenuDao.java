@@ -20,7 +20,7 @@ public interface MenuDao {
     @Insert("INSERT INTO menu_options(menu_id, option_id) VALUES (#{menuId}, #{optionId})")
     int addMenuOption(@Param("menuId")int menuId, @Param("optionId")int optionId);
 
-    @Select("SELECT * FROM menus WHERE id = #{id}")
+    @Select("SELECT * FROM menus WHERE id = #{id} AND deleted = 0")
     Menu getMenuById(int id);
 
     @Select("SELECT * FROM menus ORDER BY created_date DESC")
