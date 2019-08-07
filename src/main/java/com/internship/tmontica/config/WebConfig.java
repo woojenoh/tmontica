@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.mobile.device.DeviceHandlerMethodArgumentResolver;
 import org.springframework.mobile.device.DeviceResolverHandlerInterceptor;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -25,7 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final JwtService jwtService;
     private static final String[] EXCLUDE_PATH = {
-            "/api/carts/**", "/api/orders/**",
+            "/webjars/springfox-swagger-ui/**" , "/", "/csrf",
             "/api/users/signin", "/api/users/signup", "/api/users/duplicate/**",
             "/api/menus/**", "/api/options/**", "/api/users/findid/*", "/api/users/findpw","/swagger*/**", "/resources/**" , "/images/**"
             , "/**/*.jpg", "/**/*.js", "/**/*.css", "/error/**", "/api/users/findid**", "/api/users/active/**",
