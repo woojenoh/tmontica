@@ -2,9 +2,8 @@ package com.internship.tmontica.order;
 
 import com.internship.tmontica.cart.CartMenuDao;
 import com.internship.tmontica.cart.CartMenuService;
-import com.internship.tmontica.cart.CartMenuServiceTest;
 import com.internship.tmontica.menu.MenuDao;
-import com.internship.tmontica.order.exception.OrderUserException;
+import com.internship.tmontica.order.exception.OrderException;
 import com.internship.tmontica.order.model.response.OrderResp;
 import com.internship.tmontica.order.model.response.Order_MenusResp;
 import com.internship.tmontica.security.JwtService;
@@ -22,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+
+;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrderServiceTest {
@@ -93,7 +94,7 @@ public class OrderServiceTest {
         System.out.println(orderResp);
     }
 
-    @Test(expected = OrderUserException.class)
+    @Test(expected = OrderException.class)
     public void 주문정보가져오기_아이디불일치(){
         // given
         Mockito.when(orderDao.getOrderByOrderId(1)).thenReturn(order1);

@@ -1,6 +1,6 @@
 package com.internship.tmontica.cart;
 
-import com.internship.tmontica.cart.exception.CartUserException;
+import com.internship.tmontica.cart.exception.CartException;
 import com.internship.tmontica.cart.model.request.CartReq;
 import com.internship.tmontica.cart.model.request.CartUpdateReq;
 import com.internship.tmontica.cart.model.request.Cart_OptionReq;
@@ -183,7 +183,7 @@ public class CartMenuServiceTest {
         Mockito.verify(cartMenuDao, Mockito.times(1)).updateCartMenuQuantity(id, cartUpdateReq.getQuantity());
     }
 
-    @Test(expected = CartUserException.class)
+    @Test(expected = CartException.class)
     public void 카트_수정하기_아이디불일치(){
         // given
         int id = cartMenu.getId();
@@ -211,7 +211,7 @@ public class CartMenuServiceTest {
         Mockito.verify(cartMenuDao, Mockito.times(1)).deleteCartMenu(id);
     }
 
-    @Test(expected = CartUserException.class)
+    @Test(expected = CartException.class)
     public void 카트_삭제하기_아이디불일치(){
         // given
         int id = cartMenu.getId();

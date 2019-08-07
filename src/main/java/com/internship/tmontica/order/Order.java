@@ -32,7 +32,8 @@ public class Order {
     private String userAgent;  // 주문자의 기기환경?(모바일/웹)
 
 
-    public Order(int id, @NotEmpty String payment, @NotNull int totalPrice, int usedPoint, @NotNull int realPrice, @NotEmpty String status, @NotEmpty String userId) {
+    public Order(int id, @NotEmpty String payment, @NotNull int totalPrice, int usedPoint, @NotNull int realPrice,
+                 @NotEmpty String status, @NotEmpty String userId, String userAgent) {
         this.id = id;
         this.payment = payment;
         this.totalPrice = totalPrice;
@@ -40,5 +41,6 @@ public class Order {
         this.realPrice = realPrice;
         this.status = status;
         this.userId = userId;
+        this.userAgent = userAgent;
     }
 }
