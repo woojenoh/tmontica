@@ -77,17 +77,20 @@ public class OrderService {
         //토큰에서 유저아이디
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         // TODO: totalprice 여기서 한번더 계산이 필요한가?
-        int userPoint = userDao.getUserPointByUserId(userId);
-        // 가지고 있는 포인트보다 더 사용하려고 할 때 예외처리
-        if(userPoint < orderReq.getUsedPoint()){
-            throw new PointException(PointExceptionType.POINT_LESS_THEN_ZERO_EXCEPTION);
+
+        // 포인트를 사용했을 경우
+        if (orderReq.getUsedPoint() > 0){
+            int userPoint = userDao.getUserPointByUserId(userId);
+            // 가지고 있는 포인트보다 더 사용하려고 할 때 예외처리
+            if(userPoint < orderReq.getUsedPoint()){
+                throw new PointException(PointExceptionType.POINT_LESS_THEN_ZERO_EXCEPTION);
+            }
+            // user 테이블에 사용한 포인트 차감하기
+            userDao.updateUserPoint(userPoint-orderReq.getUsedPoint(), userId);
+
+            // point 테이블에 사용 로그 추가하기
+            pointDao.addPoint(new Point(userId, PointLogType.USE_POINT.getType() ,orderReq.getUsedPoint(), "결제시 사용"));
         }
-
-        // user 테이블에 사용한 포인트 차감하기
-        userDao.updateUserPoint(userPoint-orderReq.getUsedPoint(), userId);
-
-        // point 테이블에 사용 로그 추가하기
-        pointDao.addPoint(new Point(userId, PointLogType.USE_POINT.getType() ,orderReq.getUsedPoint(), "결제시 사용"));
 
         // device 종류 검사
         String userAgent = "";
