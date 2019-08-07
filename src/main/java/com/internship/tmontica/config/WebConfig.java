@@ -33,12 +33,12 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*");
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new JwtInterceptor(jwtService))
-                .addPathPatterns("/**")
-                .excludePathPatterns(EXCLUDE_PATH);
-    }
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(new JwtInterceptor(jwtService))
+//                .addPathPatterns("/**")
+//                .excludePathPatterns(EXCLUDE_PATH);
+//    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
