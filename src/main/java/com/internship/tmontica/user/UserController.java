@@ -93,6 +93,7 @@ public class UserController {
             throw new UserValidException("User Change-password Form", "비밀번호 변경 폼 데이터가 올바르지 않습니다.", bindingResult);
         }
         User user = modelMapper.map(userChangePasswordReqDTO, User.class);
+        user.setId(JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id"));
         userService.changePassword(user);
         return new ResponseEntity<>(UserResponseMessage.PASSWORD_CHANGE_SUCCESS.getMessage(), HttpStatus.OK);
     }
