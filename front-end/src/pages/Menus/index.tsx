@@ -5,6 +5,9 @@ import { getMenuAll } from "../../api/menu";
 import MenuItems from "../../components/MenusItems";
 import { IMenuItemsProps } from "../../components/MenusItems";
 import { CommonError } from "../../api/CommonError";
+import { getBannerByUsePageEng } from "../../api/banner";
+import { IBanner } from "../../types/banner";
+import { BannerSlider } from "../../components/BannerSlider";
 
 interface MatchParams {
   categoryEng: string;
@@ -14,11 +17,13 @@ interface IMenusProps extends RouteComponentProps<MatchParams> {}
 
 interface IMenusState {
   menuAll: Object;
+  mainTopBanners: IBanner[];
 }
 
 export default class Menus extends React.Component<IMenusProps, IMenusState> {
   state = {
-    menuAll: []
+    menuAll: [],
+    mainTopBanners: [] as IBanner[]
   };
 
   async getMenuAll() {
@@ -42,17 +47,40 @@ export default class Menus extends React.Component<IMenusProps, IMenusState> {
     }
   }
 
+  // 메인 상단 배너 요청
+  async getMainTopBanner() {
+    try {
+      const usePageEng = "main-top";
+      const mainTopBanners = await getBannerByUsePageEng(usePageEng);
+      if (mainTopBanners instanceof CommonError) {
+        throw mainTopBanners;
+      }
+
+      this.setState({
+        mainTopBanners
+      });
+    } catch (error) {
+      if (error instanceof CommonError) {
+        // error.alertMessage();
+        console.dir(error);
+      } else {
+        console.dir(error);
+      }
+    }
+  }
+
   componentDidMount() {
     this.getMenuAll();
+    this.getMainTopBanner();
   }
 
   render() {
+    const { mainTopBanners } = this.state;
+
     return (
       <>
         <main className="main">
-          <section className="banner">
-            {<img src="" alt="Banner" className="banner__img" />}
-          </section>
+          <BannerSlider banners={mainTopBanners} />
 
           {this.state.menuAll
             ? Array.from(this.state.menuAll).map((menu: IMenuItemsProps, i: number) => (
