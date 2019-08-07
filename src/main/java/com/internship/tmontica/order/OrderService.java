@@ -11,10 +11,10 @@ import com.internship.tmontica.order.exception.OrderExceptionType;
 import com.internship.tmontica.order.exception.OrderException;
 import com.internship.tmontica.order.exception.StockExceptionType;
 import com.internship.tmontica.order.model.request.OrderReq;
-import com.internship.tmontica.order.model.request.Order_MenusReq;
+import com.internship.tmontica.order.model.request.OrderMenusReq;
 import com.internship.tmontica.order.model.response.OrderListResp;
 import com.internship.tmontica.order.model.response.OrderResp;
-import com.internship.tmontica.order.model.response.Order_MenusResp;
+import com.internship.tmontica.order.model.response.OrderMenusResp;
 import com.internship.tmontica.point.Point;
 import com.internship.tmontica.point.PointDao;
 import com.internship.tmontica.point.PointLogType;
@@ -110,8 +110,8 @@ public class OrderService {
 
         // 주문상세테이블에 추가
         // 카트 아이디로 정보를 가져와서 order_details 에 추가
-        List<Order_MenusReq> menus = orderReq.getMenus();
-        for (Order_MenusReq menu: menus) {
+        List<OrderMenusReq> menus = orderReq.getMenus();
+        for (OrderMenusReq menu: menus) {
             CartMenu cartMenu = cartMenuDao.getCartMenuByCartId(menu.getCartId());
 
             // 로그인한 아이디와 해당 카트id의 userId가 다르면 rollback
@@ -156,9 +156,9 @@ public class OrderService {
             throw new OrderException(OrderExceptionType.FORBIDDEN_ACCESS_ORDER_DATA);
         }
 
-        List<Order_MenusResp> menus = orderDao.getOrderDetailByOrderId(orderId);
+        List<OrderMenusResp> menus = orderDao.getOrderDetailByOrderId(orderId);
 
-        for (Order_MenusResp menu : menus) {
+        for (OrderMenusResp menu : menus) {
             //메뉴 옵션 "1__1/4__2" => "HOT/샷추가(2개)" 로 바꾸는 작업
             if(!menu.getOption().equals("")){
                 String option = menu.getOption();

@@ -4,10 +4,10 @@ import com.internship.tmontica.cart.exception.CartExceptionType;
 import com.internship.tmontica.cart.exception.CartException;
 import com.internship.tmontica.cart.model.request.CartReq;
 import com.internship.tmontica.cart.model.request.CartUpdateReq;
-import com.internship.tmontica.cart.model.request.Cart_OptionReq;
+import com.internship.tmontica.cart.model.request.CartOptionReq;
 import com.internship.tmontica.cart.model.response.CartIdResp;
 import com.internship.tmontica.cart.model.response.CartResp;
-import com.internship.tmontica.cart.model.response.Cart_MenusResp;
+import com.internship.tmontica.cart.model.response.CartMenusResp;
 import com.internship.tmontica.menu.Menu;
 import com.internship.tmontica.menu.MenuDao;
 import com.internship.tmontica.option.Option;
@@ -15,8 +15,6 @@ import com.internship.tmontica.option.OptionDao;
 import com.internship.tmontica.order.exception.NotEnoughStockException;
 import com.internship.tmontica.order.exception.StockExceptionType;
 import com.internship.tmontica.security.JwtService;
-import com.internship.tmontica.user.exception.UserException;
-import com.internship.tmontica.user.exception.UserExceptionType;
 import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,7 +37,7 @@ public class CartMenuService {
         // 토큰에서 아이디 가져오기
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id");
 
-        List<Cart_MenusResp> menus = new ArrayList<>(); // 반환할 객체 안의 menus에 들어갈 리스트
+        List<CartMenusResp> menus = new ArrayList<>(); // 반환할 객체 안의 menus에 들어갈 리스트
 
         // userId로 카트메뉴 정보 가져오기
         List<CartMenu> cartMenus = cartMenuDao.getCartMenuByUserId(userId);
@@ -55,11 +53,11 @@ public class CartMenuService {
             Menu menu = menuDao.getMenuById(cartMenu.getMenuId());
             int price = menu.getSellPrice()+cartMenu.getPrice(); // 메뉴가격 + 옵션가격
 
-            // List<Cart_MenusResp> 에 넣기
-            Cart_MenusResp cart_menusResp = new Cart_MenusResp(cartMenu.getId(), cartMenu.getMenuId(), menu.getNameEng(),
+            // List<CartMenusResp> 에 넣기
+            CartMenusResp cartMenusResp = new CartMenusResp(cartMenu.getId(), cartMenu.getMenuId(), menu.getNameEng(),
                                                                 menu.getNameKo(),"/images/".concat(menu.getImgUrl()), option ,
                                                                 cartMenu.getQuantity(), price, menu.getStock());
-            menus.add(cart_menusResp);
+            menus.add(cartMenusResp);
             // totalPrice 에 가격 누적
             totalPrice += (price *  cartMenu.getQuantity());
             // size에 quantity 누적
@@ -88,10 +86,10 @@ public class CartMenuService {
                 cartMenuDao.deleteDirectCartMenu(userId);
             }
 
-            List<Cart_OptionReq> options = cartReq.getOption();
+            List<CartOptionReq> options = cartReq.getOption();
             StringBuilder optionStr = new StringBuilder();
             int optionPrice = 0;
-            for (Cart_OptionReq option : options) {
+            for (CartOptionReq option : options) {
                 // DB에 들어갈 옵션 문자열 만들기
                 if (option.getId() > 2) {
                     optionStr.append("/");
@@ -107,12 +105,12 @@ public class CartMenuService {
             // 카트 테이블에 추가하기
             CartMenu cartMenu = new CartMenu(cartReq.getQuantity(), optionStr.toString(), userId,
                     optionPrice, cartReq.getMenuId(), cartReq.getDirect());
-            int result = cartMenuDao.addCartMenu(cartMenu);
+            cartMenuDao.addCartMenu(cartMenu);
             int cartId = cartMenu.getId();
 
             cartIds.add(new CartIdResp(cartId));
 
-        }//List for end
+        }//List forEach end
 
         return cartIds;
     }

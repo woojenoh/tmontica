@@ -12,5 +12,5 @@ import java.util.List;
 public class CartResp {
     private int size;
     private int totalPrice;
-    private List<Cart_MenusResp> menus;
+    private List<CartMenusResp> menus;
 }

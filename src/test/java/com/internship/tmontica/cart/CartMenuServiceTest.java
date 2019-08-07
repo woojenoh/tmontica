@@ -3,7 +3,7 @@ package com.internship.tmontica.cart;
 import com.internship.tmontica.cart.exception.CartException;
 import com.internship.tmontica.cart.model.request.CartReq;
 import com.internship.tmontica.cart.model.request.CartUpdateReq;
-import com.internship.tmontica.cart.model.request.Cart_OptionReq;
+import com.internship.tmontica.cart.model.request.CartOptionReq;
 import com.internship.tmontica.cart.model.response.CartIdResp;
 import com.internship.tmontica.cart.model.response.CartResp;
 import com.internship.tmontica.menu.Menu;
@@ -105,9 +105,9 @@ public class CartMenuServiceTest {
     public void 카트추가하기() {
         // given
         List<CartReq> cartReqs = new ArrayList<>();
-        List<Cart_OptionReq> option = new ArrayList<>();
-        option.add(new Cart_OptionReq(1,1));
-        option.add(new Cart_OptionReq(3,2));
+        List<CartOptionReq> option = new ArrayList<>();
+        option.add(new CartOptionReq(1,1));
+        option.add(new CartOptionReq(3,2));
         CartReq cartReq = new CartReq(cartMenu.getMenuId(),cartMenu.getQuantity(),option,false);
         cartReqs.add(cartReq);
         cartReqs.add(cartReq);
@@ -129,9 +129,9 @@ public class CartMenuServiceTest {
     public void 카트추가하기_바로구매(){
         // given
         List<CartReq> cartReqs = new ArrayList<>();
-        List<Cart_OptionReq> option = new ArrayList<>();
-        option.add(new Cart_OptionReq(1,1));
-        option.add(new Cart_OptionReq(3,2));
+        List<CartOptionReq> option = new ArrayList<>();
+        option.add(new CartOptionReq(1,1));
+        option.add(new CartOptionReq(3,2));
         CartReq cartReq = new CartReq(cartMenu.getMenuId(),cartMenu.getQuantity(),option,true);
         cartReqs.add(cartReq);
         DB옵션문자열변환();
@@ -150,9 +150,9 @@ public class CartMenuServiceTest {
     public void 카트추가하기_재고부족(){
         // given
         List<CartReq> cartReqs = new ArrayList<>();
-        List<Cart_OptionReq> option = new ArrayList<>();
-        option.add(new Cart_OptionReq(1,1));
-        option.add(new Cart_OptionReq(3,2));
+        List<CartOptionReq> option = new ArrayList<>();
+        option.add(new CartOptionReq(1,1));
+        option.add(new CartOptionReq(3,2));
         CartReq cartReq = new CartReq(2,200,option,true);
         cartReqs.add(cartReq);
 

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
-public class Order_MenusReq {
+public class OrderMenusReq {
 
     @Min(1)
     private int cartId;
