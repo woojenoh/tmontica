@@ -4,7 +4,6 @@ import "./styles.scss";
 import { getOrderAll } from "../../api/order";
 import _ from "underscore";
 import { TOrderAllRes, IOrder } from "../../types/order";
-import { TCommonError } from "../../types/error";
 import { CommonError } from "../../api/CommonError";
 
 export interface IOrderListProps {

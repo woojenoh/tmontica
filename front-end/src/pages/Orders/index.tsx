@@ -3,7 +3,7 @@ import OrderSheet from "../../components/OrderSheet";
 import OrderList from "../../components/OrderList";
 import "./styles.scss";
 import { cancleOrderById } from "../../api/order";
-import { TOrder, IOrder } from "../../types/order";
+import { TOrder } from "../../types/order";
 import { CommonError } from "../../api/CommonError";
 
 export interface IOrdersProps {}

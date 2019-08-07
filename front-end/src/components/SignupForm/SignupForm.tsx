@@ -1,12 +1,9 @@
 import * as React from "react";
 import { Link, withRouter, RouteComponentProps } from "react-router-dom";
-import axios from "axios";
 import * as userTypes from "../../types/user";
-import { API_URL } from "../../api/common";
 import "./styles.scss";
 import { checkDuplicated } from "../../api/user";
 import { CommonError } from "../../api/CommonError";
-import { de } from "date-fns/esm/locale";
 
 export interface ISignupFormProps extends RouteComponentProps {
   fetchSignup(userInfo: userTypes.IUserSignupInfo): void;

@@ -1,5 +1,4 @@
 import { get, API_URL } from "./common";
-import { TCommonError } from "../types/error";
 import { TMenu, TMenuByCategory } from "../types/menu";
 
 export function getMenuAll() {

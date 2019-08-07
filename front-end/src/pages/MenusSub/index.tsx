@@ -1,5 +1,4 @@
 import * as React from "react";
-import history from "../../history";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import MenuItems from "../../components/MenusItems";

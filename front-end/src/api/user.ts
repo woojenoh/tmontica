@@ -1,6 +1,5 @@
 import { TCartAddReq, TCartId, ICart } from "../types/cart";
-import { post, API_URL, get, withJWT, attchParamsToURL } from "./common";
-import { TCommonError, TExceptionError } from "../types/error";
+import { post, API_URL, get, withJWT } from "./common";
 import { IUserSignupInfo, IUserSigninInfo, IUserSigninActive } from "../types/user";
 
 export function addCart(cartAddReqs: Array<TCartAddReq>) {

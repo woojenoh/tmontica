@@ -1,7 +1,7 @@
 import * as React from "react";
 import OrderSheetItem from "../OrderSheetItem";
 import "./styles.scss";
-import { getOrderById, cancleOrderById } from "../../api/order";
+import { getOrderById } from "../../api/order";
 import { TOrderDetail } from "../../types/menu";
 import _ from "underscore";
 import history from "../../history";

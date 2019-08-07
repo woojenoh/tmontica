@@ -12,7 +12,6 @@ import { ICartMenu } from "../../types/cart";
 import { BASE_URL } from "../../constants";
 import MenuOption from "../MenuOptionList";
 import { CommonError } from "../../api/CommonError";
-import Menus from "../../pages/Menus";
 
 const getOptionById = (options: Array<TMenuOption>, id: number) => {
   return _.chain(options)

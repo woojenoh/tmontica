@@ -1,5 +1,4 @@
 import { TCommonError } from "../types/error";
-import { type } from "os";
 
 export class CommonError implements TCommonError {
   timestamp?: string;
