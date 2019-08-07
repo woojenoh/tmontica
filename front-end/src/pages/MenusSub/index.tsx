@@ -1,4 +1,5 @@
 import * as React from "react";
+import history from "../../history";
 import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import MenuItems from "../../components/MenusItems";
@@ -50,6 +51,12 @@ export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubS
 
   componentDidMount() {
     this.getMenuByCateory();
+  }
+
+  componentDidUpdate(prevProps: IMenusSubProps) {
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.getMenuByCateory();
+    }
   }
 
   render() {

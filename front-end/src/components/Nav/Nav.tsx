@@ -60,11 +60,14 @@ function Nav(props: INavigationProps) {
           )}
           <li className="nav__item">
             <h2 className="nav__item-title">MENU</h2>
-            <Link to="/categories/beverage" className="nav__item-link">
-              음료
+            <Link to="/menus/coffee" className="nav__item-link">
+              커피
             </Link>
-            <Link to="/categories/dessert" className="nav__item-link">
-              디저트
+            <Link to="/menus/ade" className="nav__item-link">
+              에이드
+            </Link>
+            <Link to="/menus/bread" className="nav__item-link">
+              빵
             </Link>
           </li>
         </ul>
