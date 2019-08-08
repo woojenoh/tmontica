@@ -221,10 +221,8 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
 
       const menu = await getMenuById(parseInt(menuId));
 
-      if (!menu) return Promise.reject("메뉴가 없습니다.");
-      if (menu instanceof CommonError) {
-        throw menu;
-      }
+      if (!menu) throw new CommonError({ status: 1, message: "메뉴가 없습니다." });
+      if (menu instanceof CommonError) throw menu;
 
       this.setState(
         {
@@ -232,37 +230,24 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
         },
         this.updateTotalPrice
       );
-      if (menu.stock <= 0) {
-        return Promise.reject("품절된 상품입니다.");
-      }
 
-      return Promise.resolve();
+      if (menu.stock <= 0) throw new CommonError({ status: 1, message: "품절된 상품입니다." });
+
+      // HOT/ICE 옵션 디폴트로 하나 선택
+      const defaultSelectedTemperatureOption = Array.from(
+        document.querySelectorAll(".temperature")
+      )[0] as HTMLElement;
+      if (typeof defaultSelectedTemperatureOption !== "undefined") {
+        defaultSelectedTemperatureOption.click();
+      }
     } catch (error) {
-      if (!error.status) {
-        alert("네트워크 오류 발생");
-        return;
-      }
-
-      error.alertMessage();
+      const result = await handleError(error);
+      history.push("/");
     }
   }
 
   componentDidMount() {
-    this.getMenu().then(
-      () => {
-        // HOT/ICE 옵션 디폴트로 하나 선택
-        const defaultSelectedTemperatureOption = Array.from(
-          document.querySelectorAll(".temperature")
-        )[0] as HTMLElement;
-        if (typeof defaultSelectedTemperatureOption !== "undefined") {
-          defaultSelectedTemperatureOption.click();
-        }
-      },
-      errMsg => {
-        alert(errMsg);
-        history.push("/");
-      }
-    );
+    this.getMenu();
   }
 
   updateTotalPrice() {
