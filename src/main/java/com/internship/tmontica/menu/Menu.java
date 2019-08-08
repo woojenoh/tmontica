@@ -62,7 +62,7 @@ public class  Menu {
 
     private Date endDate;
 
-    private boolean deleted;
+    private boolean deleted = false;
 
 
 

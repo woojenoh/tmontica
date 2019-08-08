@@ -7,7 +7,6 @@ import com.internship.tmontica.menu.model.response.MenuMainResp;
 import com.internship.tmontica.menu.model.response.MenuOptionResp;
 import com.internship.tmontica.menu.model.response.MenuSimpleResp;
 import com.internship.tmontica.option.Option;
-import com.internship.tmontica.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -59,7 +58,10 @@ public class MenuService {
                 break;
             }
         }
-        if(menu == null) return null;
+
+        if(menu == null){
+            throw new MenuException(MenuExceptionType.MENU_NO_CONTENT_EXCEPTION);
+        }
 
         // 메뉴의 옵션 정보 가져오기
         List<Option> options = menuDao.getOptionsById(id);
@@ -132,7 +134,7 @@ public class MenuService {
 
     // 메뉴 존재하는지 확인
     public boolean existMenu(int id){
-        return (menuDao.getMenuById(id) == null) ? false : true;
+        return menuDao.getMenuById(id) != null;
     }
 
     // 메인 화면에 필요한 메뉴정보 가져오기.
