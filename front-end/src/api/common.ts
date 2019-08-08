@@ -1,26 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosError } from "axios";
 import { CommonError } from "./CommonError";
-import * as userActionCreators from "../redux/actionCreators/user";
 
 export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
-
-// 쿼리 파라미터 맵/객체를 URL에 붙여주는 함수
-export function attchParamsToURL(url: string, params?: Map<string, string> | Object | null) {
-  if (typeof params !== "undefined" && params !== null && !/[?]/.test(url)) {
-    if (params instanceof Map) {
-      url += `?${Array.from(params.entries())
-        .map(x => {
-          return `${x[0]}=${x[1]}`;
-        })
-        .join("&")}`;
-    } else {
-      url += `?${Object.entries(params)
-        .map(([key, val]) => `${key}=${val}`)
-        .join("&")}`;
-    }
-  }
-  return url;
-}
 
 export function handleError(error: CommonError | AxiosError | string) {
   if (error instanceof CommonError) {
@@ -49,6 +30,13 @@ export async function get<SuccessDataType>(url: string, config?: AxiosRequestCon
     const res = await axios.get(url, config);
     return res.data as SuccessDataType;
   } catch (error) {
+    if (!error.response || /JWT/.test(error.response.message)) {
+      return new CommonError({
+        status: 401,
+        message: "다시 로그인 해주시기 바랍니다."
+      });
+    }
+
     return new CommonError({
       ...error.response,
       ...error.response!.data
@@ -61,6 +49,13 @@ export async function post<SuccessDataType>(url: string, data?: any, config?: Ax
     const res = await axios.post(url, data, config);
     return res.data as SuccessDataType;
   } catch (error) {
+    if (!error.response || /JWT/.test(error.response.message)) {
+      return new CommonError({
+        status: 401,
+        message: "다시 로그인 해주시기 바랍니다."
+      });
+    }
+
     return new CommonError({
       ...error.response,
       ...error.response!.data
@@ -73,6 +68,13 @@ export async function put<SuccessDataType>(url: string, data?: any, config?: Axi
     const res = await axios.put(url, data, config);
     return res.data as SuccessDataType;
   } catch (error) {
+    if (!error.response || /JWT/.test(error.response.message)) {
+      return new CommonError({
+        status: 401,
+        message: "다시 로그인 해주시기 바랍니다."
+      });
+    }
+
     return new CommonError({
       ...error.response,
       ...error.response!.data
@@ -85,6 +87,13 @@ export async function del<SuccessDataType>(url: string, config?: AxiosRequestCon
     const res = await axios.delete(url, config);
     return res.data as SuccessDataType;
   } catch (error) {
+    if (!error.response || /JWT/.test(error.response.message)) {
+      return new CommonError({
+        status: 401,
+        message: "다시 로그인 해주시기 바랍니다."
+      });
+    }
+
     return new CommonError({
       ...error.response,
       ...error.response!.data
