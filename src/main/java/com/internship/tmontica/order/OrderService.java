@@ -72,11 +72,10 @@ public class OrderService {
 
 
     // 결제하기 api
-    @Transactional(rollbackFor = {NotEnoughStockException.class, CartException.class} )
+    @Transactional(rollbackFor = {NotEnoughStockException.class, CartException.class, OrderException.class} )
     public Map<String, Integer> addOrderApi(OrderReq orderReq, Device device){
         //토큰에서 유저아이디
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
-        // TODO: totalprice 여기서 한번더 계산이 필요한가?
 
         // 포인트를 사용했을 경우
         if (orderReq.getUsedPoint() > 0){
@@ -107,7 +106,7 @@ public class OrderService {
         // 주문테이블에 추가
         orderDao.addOrder(order);
         int orderId = order.getId();
-
+        int totalPrice = 0; // 금액 체크를 위한 변수
         // 주문상세테이블에 추가
         // 카트 아이디로 정보를 가져와서 order_details 에 추가
         List<OrderMenusReq> menus = orderReq.getMenus();
@@ -121,6 +120,8 @@ public class OrderService {
 
             int price = (menuDao.getMenuById(cartMenu.getMenuId()).getSellPrice()) + cartMenu.getPrice();// 옵션 + 메뉴 가격
             OrderDetail orderDetail = new OrderDetail(0, orderId, cartMenu.getOption(), price, cartMenu.getQuantity(),cartMenu.getMenuId());
+
+            totalPrice += (price * cartMenu.getQuantity());
 
             int stock = menuDao.getMenuById(orderDetail.getMenuId()).getStock(); // 메뉴의 현재 재고량
             int quantity = orderDetail.getQuantity(); // 차감할 메뉴의 수량
@@ -137,6 +138,12 @@ public class OrderService {
             cartMenuDao.deleteCartMenu(menu.getCartId());
 
         }
+
+        // totalPrice 맞는지 체크
+        if (totalPrice != orderReq.getTotalPrice()){
+            throw new OrderException(OrderExceptionType.INVALID_TOTALPRICE);
+        }
+
         // 주문상태로그테이블에 "미결제" 상태로 추가
         orderDao.addOrderStatusLog(new OrderStatusLog(OrderStatusType.BEFORE_PAYMENT.getStatus(), userId, orderId));
 
@@ -189,7 +196,7 @@ public class OrderService {
         Order order = orderDao.getOrderByOrderId(orderId);
         // 주문 상태가 '미결제' 나 '결제완료' 상태가 아니면 예외처리
         if(!order.getStatus().equals(OrderStatusType.BEFORE_PAYMENT.getStatus())
-                && !order.getStatus().equals(OrderStatusType.AFTER_PAYMENT)){
+                && !order.getStatus().equals(OrderStatusType.AFTER_PAYMENT.getStatus())){
             throw new OrderException(OrderExceptionType.CANNOT_CANCEL_ORDER);
         }
 

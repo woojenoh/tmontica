@@ -51,6 +51,13 @@ public class CartMenuService {
             }
             // 메뉴아이디로 메뉴정보 가져오기
             Menu menu = menuDao.getMenuById(cartMenu.getMenuId());
+
+            // 삭제된 메뉴일 경우 카트에서 삭제하고 continue!
+            if(menu == null){
+                cartMenuDao.deleteCartMenu(cartMenu.getId());
+                continue;
+            }
+
             int price = menu.getSellPrice()+cartMenu.getPrice(); // 메뉴가격 + 옵션가격
 
             // List<CartMenusResp> 에 넣기
