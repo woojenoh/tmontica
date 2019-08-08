@@ -3,7 +3,7 @@ package com.internship.tmontica.cart;
 import com.internship.tmontica.cart.exception.CartException;
 import com.internship.tmontica.cart.model.request.CartReq;
 import com.internship.tmontica.cart.model.request.CartUpdateReq;
-import com.internship.tmontica.cart.model.request.Cart_OptionReq;
+import com.internship.tmontica.cart.model.request.CartOptionReq;
 import com.internship.tmontica.cart.model.response.CartIdResp;
 import com.internship.tmontica.cart.model.response.CartResp;
 import com.internship.tmontica.menu.Menu;
@@ -15,9 +15,7 @@ import com.internship.tmontica.security.JwtService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -25,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CartMenuServiceTest {
@@ -40,11 +39,9 @@ public class CartMenuServiceTest {
     private MenuDao menuDao;
     @Mock
     private JwtService jwtService;
-    @Mock
+
     private CartMenu cartMenu;
-    @Mock
     private CartMenu cartMenu2;
-    @Mock
     private Menu menu;
 
 
@@ -83,10 +80,10 @@ public class CartMenuServiceTest {
         cartMenus.add(cartMenu);
         cartMenus.add(cartMenu2);
 
-        Mockito.when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
-        Mockito.when(cartMenuDao.getCartMenuByUserId("testid")).thenReturn(cartMenus);
+        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
+        when(cartMenuDao.getCartMenuByUserId("testid")).thenReturn(cartMenus);
         DB옵션문자열변환();
-        Mockito.when(menuDao.getMenuById(cartMenu.getMenuId())).thenReturn(menu);
+        when(menuDao.getMenuById(cartMenu.getMenuId())).thenReturn(menu);
 
         // when
         CartResp cartResp = cartMenuService.getCartMenuApi();
@@ -108,16 +105,16 @@ public class CartMenuServiceTest {
     public void 카트추가하기() {
         // given
         List<CartReq> cartReqs = new ArrayList<>();
-        List<Cart_OptionReq> option = new ArrayList<>();
-        option.add(new Cart_OptionReq(1,1));
-        option.add(new Cart_OptionReq(3,2));
+        List<CartOptionReq> option = new ArrayList<>();
+        option.add(new CartOptionReq(1,1));
+        option.add(new CartOptionReq(3,2));
         CartReq cartReq = new CartReq(cartMenu.getMenuId(),cartMenu.getQuantity(),option,false);
         cartReqs.add(cartReq);
         cartReqs.add(cartReq);
         DB옵션문자열변환();
 
-        Mockito.when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
-        Mockito.when(menuDao.getMenuById(cartReq.getMenuId())).thenReturn(menu);
+        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
+        when(menuDao.getMenuById(cartReq.getMenuId())).thenReturn(menu);
 
         // when
         List<CartIdResp> cartIds = cartMenuService.addCartApi(cartReqs);
@@ -125,42 +122,42 @@ public class CartMenuServiceTest {
 
         // then
         cartMenu.setId(0); // 추가할 때는 0으로 들어감
-        Mockito.verify(cartMenuDao, Mockito.atLeastOnce()).addCartMenu(cartMenu);
+        verify(cartMenuDao, atLeastOnce()).addCartMenu(cartMenu);
     }
 
     @Test
     public void 카트추가하기_바로구매(){
         // given
         List<CartReq> cartReqs = new ArrayList<>();
-        List<Cart_OptionReq> option = new ArrayList<>();
-        option.add(new Cart_OptionReq(1,1));
-        option.add(new Cart_OptionReq(3,2));
+        List<CartOptionReq> option = new ArrayList<>();
+        option.add(new CartOptionReq(1,1));
+        option.add(new CartOptionReq(3,2));
         CartReq cartReq = new CartReq(cartMenu.getMenuId(),cartMenu.getQuantity(),option,true);
         cartReqs.add(cartReq);
         DB옵션문자열변환();
 
-        Mockito.when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
-        Mockito.when(menuDao.getMenuById(cartReq.getMenuId())).thenReturn(menu);
+        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
+        when(menuDao.getMenuById(cartReq.getMenuId())).thenReturn(menu);
 
         // when
         cartMenuService.addCartApi(cartReqs);
 
         // then
-        Mockito.verify(cartMenuDao, Mockito.times(1)).deleteDirectCartMenu("testid");
+        verify(cartMenuDao, times(1)).deleteDirectCartMenu("testid");
     }
 
     @Test(expected = NotEnoughStockException.class)
     public void 카트추가하기_재고부족(){
         // given
         List<CartReq> cartReqs = new ArrayList<>();
-        List<Cart_OptionReq> option = new ArrayList<>();
-        option.add(new Cart_OptionReq(1,1));
-        option.add(new Cart_OptionReq(3,2));
+        List<CartOptionReq> option = new ArrayList<>();
+        option.add(new CartOptionReq(1,1));
+        option.add(new CartOptionReq(3,2));
         CartReq cartReq = new CartReq(2,200,option,true);
         cartReqs.add(cartReq);
 
-        Mockito.when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
-        Mockito.when(menuDao.getMenuById(cartReq.getMenuId())).thenReturn(menu);
+        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
+        when(menuDao.getMenuById(cartReq.getMenuId())).thenReturn(menu);
 
         // when
         cartMenuService.addCartApi(cartReqs);
@@ -174,13 +171,13 @@ public class CartMenuServiceTest {
         CartUpdateReq cartUpdateReq = new CartUpdateReq();
         cartUpdateReq.setQuantity(1);
 
-        Mockito.when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
-        Mockito.when(cartMenuDao.getCartMenuByCartId(id)).thenReturn(cartMenu);
+        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
+        when(cartMenuDao.getCartMenuByCartId(id)).thenReturn(cartMenu);
 
         // when
         cartMenuService.updateCartApi(id, cartUpdateReq);
         // then
-        Mockito.verify(cartMenuDao, Mockito.times(1)).updateCartMenuQuantity(id, cartUpdateReq.getQuantity());
+        verify(cartMenuDao, times(1)).updateCartMenuQuantity(id, cartUpdateReq.getQuantity());
     }
 
     @Test(expected = CartException.class)
@@ -190,8 +187,8 @@ public class CartMenuServiceTest {
         CartUpdateReq cartUpdateReq = new CartUpdateReq();
         cartUpdateReq.setQuantity(1);
 
-        Mockito.when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"notvalidId\"}");
-        Mockito.when(cartMenuDao.getCartMenuByCartId(id)).thenReturn(cartMenu);
+        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"notvalidId\"}");
+        when(cartMenuDao.getCartMenuByCartId(id)).thenReturn(cartMenu);
 
         // when
         cartMenuService.updateCartApi(id, cartUpdateReq);
@@ -202,13 +199,13 @@ public class CartMenuServiceTest {
         // given
         int id = cartMenu.getId();
 
-        Mockito.when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
-        Mockito.when(cartMenuDao.getCartMenuByCartId(id)).thenReturn(cartMenu);
+        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
+        when(cartMenuDao.getCartMenuByCartId(id)).thenReturn(cartMenu);
 
         // when
         cartMenuService.deleteCartApi(id);
         // then
-        Mockito.verify(cartMenuDao, Mockito.times(1)).deleteCartMenu(id);
+        verify(cartMenuDao, times(1)).deleteCartMenu(id);
     }
 
     @Test(expected = CartException.class)
@@ -216,8 +213,8 @@ public class CartMenuServiceTest {
         // given
         int id = cartMenu.getId();
 
-        Mockito.when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"notvalidId\"}");
-        Mockito.when(cartMenuDao.getCartMenuByCartId(id)).thenReturn(cartMenu);
+        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"notvalidId\"}");
+        when(cartMenuDao.getCartMenuByCartId(id)).thenReturn(cartMenu);
 
         // when
         cartMenuService.deleteCartApi(id);
@@ -226,11 +223,11 @@ public class CartMenuServiceTest {
     @Test
     public void DB옵션문자열변환() {
         //given
-        Mockito.when(optionDao.getOptionById(1)).thenReturn(new Option("HOT", 0, "Temperature"));
-        Mockito.when(optionDao.getOptionById(2)).thenReturn(new Option("ICE", 0, "Temperature"));
-        Mockito.when(optionDao.getOptionById(3)).thenReturn(new Option("AddShot", 300, "Shot"));
-        Mockito.when(optionDao.getOptionById(4)).thenReturn(new Option("AddSyrup", 300, "Syrup"));
-        Mockito.when(optionDao.getOptionById(5)).thenReturn(new Option("SizeUp", 500, "Size"));
+        when(optionDao.getOptionById(1)).thenReturn(new Option("HOT", 0, "Temperature"));
+        when(optionDao.getOptionById(2)).thenReturn(new Option("ICE", 0, "Temperature"));
+        when(optionDao.getOptionById(3)).thenReturn(new Option("AddShot", 300, "Shot"));
+        when(optionDao.getOptionById(4)).thenReturn(new Option("AddSyrup", 300, "Syrup"));
+        when(optionDao.getOptionById(5)).thenReturn(new Option("SizeUp", 500, "Size"));
 
         // when
         String str = cartMenuService.convertOptionStringToCli("1__1/3__2/4__1");
