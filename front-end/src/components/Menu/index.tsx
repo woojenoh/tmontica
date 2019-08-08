@@ -13,7 +13,7 @@ import { BASE_URL } from "../../constants";
 import MenuOption from "../MenuOptionList";
 import { CommonError } from "../../api/CommonError";
 import { handleError } from "../../api/common";
-import { ISignOut } from "../../types/user";
+import { ISignoutFunction } from "../../types/user";
 
 const getOptionById = (options: Array<TMenuOption>, id: number) => {
   return _.chain(options)
@@ -26,7 +26,7 @@ interface MatchParams {
   menuId: string;
 }
 
-interface IMenuProps extends RouteComponentProps<MatchParams>, ISignOut {
+interface IMenuProps extends RouteComponentProps<MatchParams>, ISignoutFunction {
   isSignin: boolean;
   fetchAddCart(payload: ICartMenu[]): void;
   addLocalCart(payload: ICartMenu): void;

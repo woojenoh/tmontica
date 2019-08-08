@@ -3,13 +3,11 @@ import { Link } from "react-router-dom";
 import * as userTypes from "../../types/user";
 import { numberCommaRegex } from "../../utils";
 import "./styles.scss";
-import { ISignOut } from "../../types/user";
 
-export interface INavigationProps extends ISignOut {
+export interface INavigationProps extends userTypes.ISignoutFunction {
   isNavOpen: boolean;
   isSignin: boolean;
   user: userTypes.IUser | null;
-  signout(): void;
   handleNavClose(): void;
 }
 

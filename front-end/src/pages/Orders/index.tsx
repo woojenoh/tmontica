@@ -9,9 +9,9 @@ import { handleError } from "../../api/common";
 import { connect } from "react-redux";
 import { signout } from "../../redux/actionCreators/user";
 import { Dispatch } from "redux";
-import { ISignOut } from "../../types/user";
+import { ISignoutFunction } from "../../types/user";
 
-export interface IOrdersProps extends ISignOut {}
+export interface IOrdersProps extends ISignoutFunction {}
 
 class Orders extends PureComponent<IOrdersProps> {
   orderList: RefObject<OrderList>;

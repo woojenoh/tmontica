@@ -12,13 +12,13 @@ import { handleError } from "../../api/common";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { signout } from "../../redux/actionCreators/user";
-import { ISignout } from "../../types/user";
+import { ISignoutFunction } from "../../types/user";
 
 interface MatchParams {
   categoryEng: string;
 }
 
-interface IMenusProps extends RouteComponentProps<MatchParams>, ISignout {}
+interface IMenusProps extends RouteComponentProps<MatchParams>, ISignoutFunction {}
 
 interface IMenusState {
   menuAll: Object;

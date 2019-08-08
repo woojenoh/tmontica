@@ -10,14 +10,14 @@ import { handleError } from "../../api/common";
 import { signout } from "../../redux/actionCreators/user";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { ISignOut } from "../../types/user";
 import { BaseSyntheticEvent } from "react";
+import { ISignoutFunction } from "../../types/user";
 
 interface MatchParams {
   categoryEng: string;
 }
 
-interface IPaymentProps extends RouteComponentProps<MatchParams>, ISignOut {}
+interface IPaymentProps extends RouteComponentProps<MatchParams>, ISignoutFunction {}
 
 interface IPaymentState {
   totalPrice: number;

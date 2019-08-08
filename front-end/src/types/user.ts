@@ -1,6 +1,6 @@
 import * as userActionTypes from "../redux/actionTypes/user";
 
-export interface ISignOut {
+export interface ISignoutFunction {
   signout(): void;
 }
 

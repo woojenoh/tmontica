@@ -8,10 +8,10 @@ import history from "../../history";
 import { PureComponent } from "react";
 import { TOrder } from "../../types/order";
 import { CommonError } from "../../api/CommonError";
-import { ISignOut } from "../../types/user";
 import { handleError } from "../../api/common";
+import { ISignoutFunction } from "../../types/user";
 
-export interface IOrderSheetProps extends ISignOut {
+export interface IOrderSheetProps extends ISignoutFunction {
   orderId: number;
   handleOrderCancle(order: TOrder): Promise<any>;
 }
