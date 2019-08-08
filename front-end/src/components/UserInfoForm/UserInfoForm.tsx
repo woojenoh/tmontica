@@ -1,9 +1,10 @@
 import * as React from "react";
-import axios, { AxiosError } from "axios";
 import history from "../../history";
 import * as userTypes from "../../types/user";
-import { API_URL } from "../../api/common";
+import { handleError } from "../../api/common";
 import "./styles.scss";
+import { updateUser } from "../../api/user";
+import { CommonError } from "../../api/CommonError";
 
 export interface IUserInfoFormProps {
   user: userTypes.IUser | null;
@@ -14,7 +15,7 @@ export interface IUserInfoFormState {
   passwordCheck: string;
 }
 
-class UserInfoForm extends React.Component<IUserInfoFormProps, IUserInfoFormState> {
+class UserInfoForm extends React.PureComponent<IUserInfoFormProps, IUserInfoFormState> {
   state = {
     password: "",
     passwordCheck: ""
@@ -26,35 +27,23 @@ class UserInfoForm extends React.Component<IUserInfoFormProps, IUserInfoFormStat
     } as { [K in keyof IUserInfoFormState]: IUserInfoFormState[K] });
   };
 
-  handleInputSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  handleInputSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const { password, passwordCheck } = this.state;
     e.preventDefault();
 
     if (password === passwordCheck) {
-      axios
-        .put(
-          `${API_URL}/users`,
-          {
-            password: password,
-            passwordCheck: passwordCheck
-          },
-          {
-            headers: {
-              Authorization: localStorage.getItem("jwt")
-            }
-          }
-        )
-        .then(() => {
-          alert("회원정보가 정상적으로 수정되었습니다.");
-          history.push("/");
-        })
-        .catch((err: AxiosError) => {
-          if (err.response) {
-            alert(err.response.data.message);
-          } else {
-            alert("네트워크 오류 발생.");
-          }
+      try {
+        const result = await updateUser({
+          password: password,
+          passwordCheck: passwordCheck
         });
+        if (result instanceof CommonError) throw result;
+
+        alert("회원정보가 정상적으로 수정되었습니다.");
+        history.push("/");
+      } catch (error) {
+        await handleError(error);
+      }
     } else {
       alert("변경 비밀번호와 변경 비밀번호 확인은 일치해야 합니다.");
     }

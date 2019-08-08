@@ -38,3 +38,11 @@ export function findPassword(params: { email: string; id: string }) {
 export function checkDuplicated(id: string) {
   return get<string>(`${API_URL}/users/duplicate/${id}`);
 }
+
+export function checkPassword(data: { password: string }) {
+  return post<true>(`${API_URL}/users/checkpw`, data, withJWT());
+}
+
+export function updateUser(user: { password: string; passwordCheck: string }) {
+  return post<true>(`${API_URL}/users`, user, withJWT());
+}

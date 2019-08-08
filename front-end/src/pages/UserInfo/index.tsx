@@ -1,15 +1,16 @@
 import * as React from "react";
-import axios, { AxiosError } from "axios";
-import { API_URL } from "../../api/common";
+import { handleError } from "../../api/common";
 import UserInfoPasswordForm from "../../components/UserInfoPasswordForm";
 import UserInfoForm from "../../components/UserInfoForm";
 import "./styles.scss";
+import { checkPassword } from "../../api/user";
+import { CommonError } from "../../api/CommonError";
 
 export interface IUserInfoProps {}
 
 export interface IUserInfoState {}
 
-export default class UserInfo extends React.Component<IUserInfoProps, IUserInfoState> {
+export default class UserInfo extends React.PureComponent<IUserInfoProps, IUserInfoState> {
   state = {
     isPasswordTrue: false,
     password: ""
@@ -21,33 +22,21 @@ export default class UserInfo extends React.Component<IUserInfoProps, IUserInfoS
     });
   };
 
-  handleIsPasswordTrueChange = (e: React.FormEvent<HTMLFormElement>) => {
+  handleIsPasswordTrueChange = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios
-      .post(
-        `${API_URL}/users/checkpw`,
-        {
-          password: this.state.password
-        },
-        {
-          headers: {
-            Authorization: localStorage.getItem("jwt")
-          }
-        }
-      )
-      .then(() => {
-        alert("인증되었습니다.");
-        this.setState({
-          isPasswordTrue: true
-        });
-      })
-      .catch((err: AxiosError) => {
-        if (err.response) {
-          alert(err.response.data.message);
-        } else {
-          alert("네트워크 오류 발생.");
-        }
+    try {
+      const result = await checkPassword({
+        password: this.state.password
       });
+      if (result instanceof CommonError) throw result;
+
+      alert("인증되었습니다.");
+      this.setState({
+        isPasswordTrue: true
+      });
+    } catch (error) {
+      await handleError(error);
+    }
   };
 
   render() {
