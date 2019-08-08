@@ -10,7 +10,7 @@ export interface IOrderSheetItemProps {
   imgUrl: string;
 }
 
-function OrderSheetItem(props: IOrderSheetItemProps) {
+const OrderSheetItem = React.memo((props: IOrderSheetItemProps) => {
   const { name, price, option, quantity, imgUrl } = props;
 
   return (
@@ -27,6 +27,6 @@ function OrderSheetItem(props: IOrderSheetItemProps) {
       </div>
     </li>
   );
-}
+});
 
 export default OrderSheetItem;

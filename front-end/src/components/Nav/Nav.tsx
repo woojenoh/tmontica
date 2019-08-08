@@ -9,10 +9,11 @@ export interface INavigationProps extends ISignOut {
   isNavOpen: boolean;
   isSignin: boolean;
   user: userTypes.IUser | null;
+  signout(): void;
   handleNavClose(): void;
 }
 
-function Nav(props: INavigationProps) {
+const Nav = React.memo((props: INavigationProps) => {
   const { isNavOpen, handleNavClose, isSignin, signout, user } = props;
 
   return (
@@ -74,6 +75,6 @@ function Nav(props: INavigationProps) {
       </div>
     </section>
   );
-}
+});
 
 export default Nav;

@@ -4,7 +4,7 @@ import "./styles.scss";
 
 export interface IFindAccountProps {}
 
-function FindAccount(props: IFindAccountProps) {
+const FindAccount = React.memo((props: IFindAccountProps) => {
   return (
     <main className="main">
       <section className="find-account">
@@ -16,6 +16,6 @@ function FindAccount(props: IFindAccountProps) {
       </section>
     </main>
   );
-}
+});
 
 export default FindAccount;
