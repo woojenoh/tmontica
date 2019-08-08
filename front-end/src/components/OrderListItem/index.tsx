@@ -9,7 +9,7 @@ export interface IOrderListItemProps {
   handleOrderListItemClick(orderId: number): void;
 }
 
-function OrderListItem(props: IOrderListItemProps) {
+const OrderListItem = React.memo((props: IOrderListItemProps) => {
   const { orderId, name, date, status, handleOrderListItemClick } = props;
 
   return (
@@ -37,6 +37,6 @@ function OrderListItem(props: IOrderListItemProps) {
       </div>
     </li>
   );
-}
+});
 
 export default OrderListItem;

@@ -4,7 +4,7 @@ import "./styles.scss";
 
 export interface ISignupProps {}
 
-function Signup(props: ISignupProps) {
+const Signup = React.memo((props: ISignupProps) => {
   return (
     <main className="main">
       <section className="signup">
@@ -16,6 +16,6 @@ function Signup(props: ISignupProps) {
       </section>
     </main>
   );
-}
+});
 
 export default Signup;
