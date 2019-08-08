@@ -117,10 +117,10 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
     yield put(cartActionCreators.fetchSetCartFulfilled(data));
   } catch (error) {
     const result = yield handleError(error);
-    if (result === "string") {
+    if (result === "signout") {
       yield put(userActionCreators.signout());
     }
-    yield put(cartActionCreators.fetchSetCartRejected(error));
+    yield put(cartActionCreators.fetchSetCartRejected(result));
   }
 }
 
