@@ -25,7 +25,7 @@ export interface IAppProps extends RouteComponentProps {
   isAdmin: boolean;
 }
 
-class App extends React.Component<IAppProps> {
+class App extends React.PureComponent<IAppProps> {
   PrivateRoute = ({ component: Component, ...rest }: RouteProps) => {
     const { isSignin } = this.props;
 

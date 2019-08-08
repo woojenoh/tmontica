@@ -1,5 +1,9 @@
 import * as userActionTypes from "../redux/actionTypes/user";
 
+export interface ISignOut {
+  signout(): void;
+}
+
 export interface IUserSigninActive {
   id: string;
   token: string;

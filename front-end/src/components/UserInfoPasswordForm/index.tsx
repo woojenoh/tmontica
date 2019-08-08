@@ -9,7 +9,7 @@ export interface IUserInfoPasswordFormProps {
 
 export interface IUserInfoPasswordFormState {}
 
-export default class UserInfoPasswordForm extends React.Component<
+export default class UserInfoPasswordForm extends React.PureComponent<
   IUserInfoPasswordFormProps,
   IUserInfoPasswordFormState
 > {

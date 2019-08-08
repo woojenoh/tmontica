@@ -5,24 +5,29 @@ import MenuItems from "../../components/MenusItems";
 import { getMenuByCateory } from "../../api/menu";
 import { TMenuByCategory } from "../../types/menu";
 import { CommonError } from "../../api/CommonError";
+import { handleError } from "../../api/common";
+import { Dispatch } from "redux";
+import { signout } from "../../redux/actionCreators/user";
+import { connect } from "react-redux";
+import { ISignout } from "../../types/user";
 
 interface MatchParams {
   categoryEng: string;
 }
 
-interface IMenusSubProps extends RouteComponentProps<MatchParams> {
+interface IMenusSubProps extends RouteComponentProps<MatchParams>, ISignout {
   categoryKo: string;
 }
 
 interface IMenusSubState extends TMenuByCategory {}
 
-export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubState> {
+class MenusSub extends React.PureComponent<IMenusSubProps, IMenusSubState> {
   state = {
     categoryKo: "",
     menus: []
   };
 
-  async getMenuByCateory(categoryEng?: string) {
+  async getMenuByCateory() {
     try {
       const categoryMenus = await getMenuByCateory(this.props.match.params.categoryEng);
 
@@ -39,12 +44,7 @@ export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubS
         menus
       });
     } catch (error) {
-      if (!error.status) {
-        alert("네트워크 오류 발생");
-        return;
-      }
-
-      alert(error.message);
+      await handleError(error);
     }
   }
 
@@ -62,9 +62,9 @@ export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubS
     return (
       <>
         <main className="main">
-          <section className="banner">
+          {/* <section className="banner">
             {<img src="" alt="Banner" className="banner__img" />}
-          </section>
+          </section> */}
 
           {this.state.menus ? (
             <MenuItems categoryKo={this.state.categoryKo} menus={this.state.menus} />
@@ -79,3 +79,14 @@ export default class MenusSub extends React.Component<IMenusSubProps, IMenusSubS
     );
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    signout: () => dispatch(signout())
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(MenusSub);

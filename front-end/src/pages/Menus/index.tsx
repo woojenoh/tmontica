@@ -8,19 +8,24 @@ import { CommonError } from "../../api/CommonError";
 import { getBannerByUsePageEng } from "../../api/banner";
 import { IBanner } from "../../types/banner";
 import { BannerSlider } from "../../components/BannerSlider";
+import { handleError } from "../../api/common";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import { signout } from "../../redux/actionCreators/user";
+import { ISignout } from "../../types/user";
 
 interface MatchParams {
   categoryEng: string;
 }
 
-interface IMenusProps extends RouteComponentProps<MatchParams> {}
+interface IMenusProps extends RouteComponentProps<MatchParams>, ISignout {}
 
 interface IMenusState {
   menuAll: Object;
   mainTopBanners: IBanner[];
 }
 
-export default class Menus extends React.Component<IMenusProps, IMenusState> {
+class Menus extends React.PureComponent<IMenusProps, IMenusState> {
   state = {
     menuAll: [],
     mainTopBanners: [] as IBanner[]
@@ -38,12 +43,7 @@ export default class Menus extends React.Component<IMenusProps, IMenusState> {
         menuAll
       });
     } catch (error) {
-      if (!error.status) {
-        alert("네트워크 오류 발생");
-        return;
-      }
-
-      error.alertMessage();
+      await handleError(error);
     }
   }
 
@@ -80,7 +80,7 @@ export default class Menus extends React.Component<IMenusProps, IMenusState> {
     return (
       <>
         <main className="main">
-          <BannerSlider banners={mainTopBanners} />
+          {mainTopBanners.length > 0 ? <BannerSlider banners={mainTopBanners} /> : ""}
 
           {this.state.menuAll
             ? Array.from(this.state.menuAll).map((menu: IMenuItemsProps, i: number) => (
@@ -100,3 +100,14 @@ export default class Menus extends React.Component<IMenusProps, IMenusState> {
     );
   }
 }
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    signout: () => dispatch(signout())
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Menus);

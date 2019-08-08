@@ -8,8 +8,10 @@ import history from "../../history";
 import { PureComponent } from "react";
 import { TOrder } from "../../types/order";
 import { CommonError } from "../../api/CommonError";
+import { ISignOut } from "../../types/user";
+import { handleError } from "../../api/common";
 
-export interface IOrderSheetProps {
+export interface IOrderSheetProps extends ISignOut {
   orderId: number;
   handleOrderCancle(order: TOrder): Promise<any>;
 }
@@ -40,13 +42,9 @@ class OrderSheet extends PureComponent<IOrderSheetProps, IOrderSheetState> {
         order
       });
     } catch (error) {
-      if (!error.status) {
-        alert("네트워크 오류 발생");
-        return;
-      }
-
-      if (error instanceof CommonError) {
-        error.alertMessage();
+      const result = await handleError(error);
+      if (result === "signout") {
+        this.props.signout();
       }
       history.push("/");
     }
@@ -73,6 +71,18 @@ class OrderSheet extends PureComponent<IOrderSheetProps, IOrderSheetState> {
     // 나갈 때 인터벌 제거
     clearInterval(this.intervalId);
   }
+
+  handleCancle = async () => {
+    if (window.confirm("취소하시겠습니까?")) {
+      try {
+        const order = await this.props.handleOrderCancle(this.state.order);
+
+        this.setState({
+          order: { ...order }
+        });
+      } catch (error) {}
+    }
+  };
 
   statusCode = {
     미결제: 0,
@@ -118,18 +128,7 @@ class OrderSheet extends PureComponent<IOrderSheetProps, IOrderSheetState> {
         <div className={`orders__top`}>
           <h1 className="orders__top-title">주문서({order.orderId})</h1>
           {}
-          <span
-            className="orders__top-cancel"
-            onClick={e => {
-              if (window.confirm("취소하시겠습니까?")) {
-                this.props.handleOrderCancle(this.state.order).then(order => {
-                  this.setState({
-                    order: { ...order }
-                  });
-                });
-              }
-            }}
-          >
+          <span className="orders__top-cancel" onClick={this.handleCancle}>
             주문취소
           </span>
         </div>

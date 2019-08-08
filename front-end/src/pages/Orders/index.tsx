@@ -5,8 +5,13 @@ import "./styles.scss";
 import { cancleOrderById } from "../../api/order";
 import { TOrder } from "../../types/order";
 import { CommonError } from "../../api/CommonError";
+import { handleError } from "../../api/common";
+import { connect } from "react-redux";
+import { signout } from "../../redux/actionCreators/user";
+import { Dispatch } from "redux";
+import { ISignOut } from "../../types/user";
 
-export interface IOrdersProps {}
+export interface IOrdersProps extends ISignOut {}
 
 class Orders extends PureComponent<IOrdersProps> {
   orderList: RefObject<OrderList>;
@@ -44,11 +49,9 @@ class Orders extends PureComponent<IOrdersProps> {
 
       return Promise.resolve(order);
     } catch (error) {
-      if (!error.status) {
-        alert("네트워크 오류 발생");
-      }
-      if (error instanceof CommonError) {
-        error.alertMessage();
+      const result = await handleError(error);
+      if (result === "signout") {
+        this.props.signout();
       }
       return Promise.reject();
     }
@@ -70,11 +73,16 @@ class Orders extends PureComponent<IOrdersProps> {
     const { orderId } = this.state;
     return (
       <main className="main">
-        <OrderSheet orderId={orderId} handleOrderCancle={this.handleOrderCancle.bind(this)} />
+        <OrderSheet
+          orderId={orderId}
+          handleOrderCancle={this.handleOrderCancle.bind(this)}
+          signout={this.props.signout}
+        />
         <section className="orders-list">
           <OrderList
             ref={this.orderList}
             handleOrderListItemClick={this.handleOrderListItemClick.bind(this)}
+            signout={this.props.signout}
           />
         </section>
       </main>
@@ -82,4 +90,13 @@ class Orders extends PureComponent<IOrdersProps> {
   }
 }
 
-export default Orders;
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    signout: () => dispatch(signout())
+  };
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Orders);

@@ -13,7 +13,7 @@ export interface ISigninFormState {
   password: string;
 }
 
-class SigninForm extends React.Component<ISigninFormProps, ISigninFormState> {
+class SigninForm extends React.PureComponent<ISigninFormProps, ISigninFormState> {
   state = {
     id: "",
     password: ""

@@ -5,6 +5,7 @@ import { withRouter, RouteComponentProps, Link } from "react-router-dom";
 import Nav from "../Nav";
 import Cart from "../Cart";
 import "./styles.scss";
+import { PureComponent } from "react";
 
 export interface IHeaderProps extends RouteComponentProps {
   isSignin: boolean;
@@ -15,7 +16,7 @@ export interface IHeaderState {
   isCartOpen: boolean;
 }
 
-class Header extends React.Component<IHeaderProps, IHeaderState> {
+class Header extends PureComponent<IHeaderProps, IHeaderState> {
   componentDidUpdate(prevProps: RouteComponentProps) {
     if (prevProps.location.pathname !== this.props.location.pathname) {
       const body = document.querySelector("body");

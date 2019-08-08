@@ -4,7 +4,7 @@ import { IMenuOptionCommonProps, ISelectableOptionEventProp } from "../../types/
 export interface IMenuRadioOptionProps extends ISelectableOptionEventProp, IMenuOptionCommonProps {}
 
 export default class MenuRadioOption extends PureComponent<IMenuRadioOptionProps> {
-  public render() {
+  render() {
     const { id, title, handleSelectableOption } = this.props;
 
     return (

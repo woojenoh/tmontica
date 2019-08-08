@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 import history from "../../history";
 import CartItem from "../CartItem";
 import { numberCommaRegex } from "../../utils";
@@ -22,7 +22,7 @@ export interface ICartState {
   cart: cartTypes.ICart | null;
 }
 
-class Cart extends React.Component<ICartProps, ICartState> {
+class Cart extends PureComponent<ICartProps, ICartState> {
   componentDidMount() {
     const { isSignin, initializeLocalCart, fetchSetCart } = this.props;
     if (isSignin) {
@@ -36,8 +36,30 @@ class Cart extends React.Component<ICartProps, ICartState> {
     }
   }
 
+  handleOrder = () => {
+    const { isSignin, cart, setOrderCart } = this.props;
+
+    if (!isSignin) {
+      alert("로그인 후 주문하세요.");
+      history.push("/signin");
+      return;
+    }
+    if (!cart) {
+      alert("문제가 발생했습니다.");
+      return;
+    }
+    if (!cart.size) {
+      alert("장바구니가 비었습니다.");
+      return;
+    }
+    if (window.confirm("주문하시겠습니까?")) {
+      setOrderCart(cart.menus);
+    }
+    return;
+  };
+
   render() {
-    const { isCartOpen, handleCartClose, isSignin, localCart, cart, setOrderCart } = this.props;
+    const { isCartOpen, handleCartClose, isSignin, localCart, cart } = this.props;
 
     return (
       <section className={isCartOpen ? "cart" : "cart cart--close"}>
@@ -115,20 +137,7 @@ class Cart extends React.Component<ICartProps, ICartState> {
                 원
               </span>
             </div>
-            <button
-              className="button cart__button"
-              onClick={() =>
-                isSignin
-                  ? cart
-                    ? cart.size
-                      ? window.confirm("주문하시겠습니까?")
-                        ? setOrderCart(cart.menus)
-                        : ""
-                      : alert("장바구니가 비었습니다.")
-                    : alert("문제가 발생했습니다.")
-                  : (alert("로그인 후 주문하세요."), history.push("/signin"))
-              }
-            >
+            <button className="button cart__button" onClick={this.handleOrder}>
               결제 및 주문하기
             </button>
           </div>

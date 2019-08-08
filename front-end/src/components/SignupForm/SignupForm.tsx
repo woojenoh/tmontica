@@ -4,6 +4,7 @@ import * as userTypes from "../../types/user";
 import "./styles.scss";
 import { checkDuplicated } from "../../api/user";
 import { CommonError } from "../../api/CommonError";
+import { handleError } from "../../api/common";
 
 export interface ISignupFormProps extends RouteComponentProps {
   fetchSignup(userInfo: userTypes.IUserSignupInfo): void;
@@ -31,7 +32,7 @@ export interface InputState {
   birthDate: string;
 }
 
-class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
+class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState> {
   state = {
     id: "",
     password: "",
@@ -119,11 +120,7 @@ class SignupForm extends React.Component<ISignupFormProps, ISignupFormState> {
         alert("6~20자의 영문, 숫자만 사용 가능합니다.");
       }
     } catch (error) {
-      if (!error.status) {
-        alert("네트워크 오류 발생");
-        return;
-      }
-      error.alertMessage();
+      await handleError(error);
       this.setState({
         isIdNotSame: false
       });

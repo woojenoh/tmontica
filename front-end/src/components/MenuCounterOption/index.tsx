@@ -1,4 +1,4 @@
-import React, { Fragment, PureComponent } from "react";
+import React, { PureComponent } from "react";
 import { ICountableOptionEventProp, IMenuOptionCommonProps } from "../../types/option";
 
 export interface IMenuCounterProps extends ICountableOptionEventProp, IMenuOptionCommonProps {}
@@ -8,7 +8,7 @@ export default class MenuCounter extends PureComponent<IMenuCounterProps> {
     const { option, title, handleCountableOptionClick } = this.props;
 
     return (
-      <Fragment>
+      <>
         <span className="option__title">{title}</span>
         <div className="option__counter">
           <div className="counter__minus" onClick={e => handleCountableOptionClick(false, option)}>
@@ -25,7 +25,7 @@ export default class MenuCounter extends PureComponent<IMenuCounterProps> {
             +
           </div>
         </div>
-      </Fragment>
+      </>
     );
   }
 }

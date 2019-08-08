@@ -7,6 +7,7 @@ import * as userActionCreators from "../actionCreators/user";
 import * as userTypes from "../../types/user";
 import * as cartActionCreators from "../actionCreators/cart";
 import { CommonError } from "../../api/CommonError";
+import { handleError } from "../../api/common";
 
 function* fetchSignupSagas(action: userTypes.IFetchSignup) {
   try {
@@ -19,10 +20,11 @@ function* fetchSignupSagas(action: userTypes.IFetchSignup) {
     alert("가입 인증 메일이 발송되었습니다.");
     history.push("/signin");
   } catch (error) {
-    if (error instanceof CommonError) {
-      error.alertMessage();
+    const result = yield handleError(error);
+    if (result === "signout") {
+      yield put(userActionCreators.signout());
     }
-    yield put(userActionCreators.fetchSignupRejected(error));
+    yield put(userActionCreators.fetchSignupRejected(result));
   }
 }
 
@@ -54,10 +56,11 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
       history.push("/");
     }
   } catch (error) {
-    if (error instanceof CommonError) {
-      error.alertMessage();
+    const result = yield handleError(error);
+    if (result === "signout") {
+      yield put(userActionCreators.signout());
     }
-    yield put(userActionCreators.fetchSigninRejected(error));
+    yield put(userActionCreators.fetchSigninRejected(result));
   }
 }
 
@@ -74,10 +77,11 @@ function* fetchSigninActiveSagas(action: userTypes.IFetchSigninActive) {
     alert("인증이 완료되었습니다. 이제 로그인이 가능합니다.");
     yield put(userActionCreators.fetchSigninActiveFulfilled());
   } catch (error) {
-    if (error instanceof CommonError) {
-      error.alertMessage();
+    const result = yield handleError(error);
+    if (result === "signout") {
+      yield put(userActionCreators.signout());
     }
-    yield put(userActionCreators.fetchSigninActiveRejected(error));
+    yield put(userActionCreators.fetchSigninActiveRejected(result));
   }
 }
 
@@ -93,10 +97,11 @@ function* fetchFindIdSagas(action: userTypes.IFetchFindId) {
     alert("입력하신 이메일로 인증코드가 전송되었습니다.");
     yield put(userActionCreators.fetchFindIdFulfilled());
   } catch (error) {
-    if (error instanceof CommonError) {
-      error.alertMessage();
+    const result = yield handleError(error);
+    if (result === "signout") {
+      yield put(userActionCreators.signout());
     }
-    yield put(userActionCreators.fetchFindIdRejected(error));
+    yield put(userActionCreators.fetchFindIdRejected(result));
   }
 }
 
@@ -112,11 +117,11 @@ function* fetchFindIdConfirmSagas(action: userTypes.IFetchFindIdConfirm) {
     alert(`회원님의 아이디는 ${data.userIdList} 입니다.`);
     yield put(userActionCreators.fetchFindIdConfirmFulfilled());
   } catch (error) {
-    if (error instanceof CommonError) {
-      error.alertMessage();
+    const result = yield handleError(error);
+    if (result === "signout") {
+      yield put(userActionCreators.signout());
     }
-
-    yield put(userActionCreators.fetchFindIdConfirmRejected(error));
+    yield put(userActionCreators.fetchFindIdConfirmRejected(result));
   }
 }
 
@@ -133,10 +138,11 @@ function* fetchFindPasswordSagas(action: userTypes.IFetchFindPassword) {
     alert("입력하신 이메일로 임시 비밀번호가 전송되었습니다.");
     yield put(userActionCreators.fetchFindPasswordFulfilled());
   } catch (error) {
-    if (error instanceof CommonError) {
-      error.alertMessage();
+    const result = yield handleError(error);
+    if (result === "signout") {
+      yield put(userActionCreators.signout());
     }
-    yield put(userActionCreators.fetchFindPasswordRejected(error));
+    yield put(userActionCreators.fetchFindPasswordRejected(result));
   }
 }
 

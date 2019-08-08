@@ -159,13 +159,11 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
     alert("상품이 담겼습니다.");
     yield put(cartActionCreators.fetchAddCartFulfilled(newCart));
   } catch (error) {
-    if (error.status === 401) {
-      alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
+    const result = yield handleError(error);
+    if (result === "signout") {
       yield put(userActionCreators.signout());
-    } else {
-      error.alertMessage();
     }
-    yield put(cartActionCreators.fetchAddCartRejected(error));
+    yield put(cartActionCreators.fetchAddCartRejected(result));
   }
 }
 
@@ -190,13 +188,11 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
     });
     yield put(cartActionCreators.fetchRemoveCartFulfilled(newCart));
   } catch (error) {
-    if (error.status === 401) {
-      alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
+    const result = yield handleError(error);
+    if (result === "signout") {
       yield put(userActionCreators.signout());
-    } else {
-      error.alertMessage();
     }
-    yield put(cartActionCreators.fetchRemoveCartRejected(error));
+    yield put(cartActionCreators.fetchRemoveCartRejected(result));
   }
 }
 
@@ -232,13 +228,11 @@ function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
     newCart.menus = targetMenus;
     yield put(cartActionCreators.fetchChangeCartFulfilled(newCart));
   } catch (error) {
-    if (error.status === 401) {
-      alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
+    const result = yield handleError(error);
+    if (result === "signout") {
       yield put(userActionCreators.signout());
-    } else {
-      error.alertMessage();
     }
-    yield put(cartActionCreators.fetchChangeCartRejected(error));
+    yield put(cartActionCreators.fetchChangeCartRejected(result));
   }
 }
 

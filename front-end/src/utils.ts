@@ -57,7 +57,7 @@ export const createCartAddReq = ({
 };
 
 // export function handleInputChangeCommon(e: ChangeEvent<HTMLInputElement>) {
-//   const self = this as React.Component;
+//   const self = this as React.PureComponent;
 //   const target = e.target;
 //   const value = target.type === "checkbox" ? target.checked : target.value;
 //   const name = target.name;

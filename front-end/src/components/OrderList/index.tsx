@@ -5,14 +5,16 @@ import { getOrderAll } from "../../api/order";
 import _ from "underscore";
 import { TOrderAllRes, IOrder } from "../../types/order";
 import { CommonError } from "../../api/CommonError";
+import { handleError } from "../../api/common";
 
 export interface IOrderListProps {
   handleOrderListItemClick(orderId: number): void;
+  signout(): void;
 }
 
 export interface IOrderListState extends TOrderAllRes {}
 
-class OrderList extends React.Component<IOrderListProps, IOrderListState> {
+export default class OrderList extends React.PureComponent<IOrderListProps, IOrderListState> {
   state = {
     orders: [] as IOrder[]
   };
@@ -33,12 +35,10 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
         orders
       });
     } catch (error) {
-      if (!error.status) {
-        alert("네트워크 오류 발생");
-        return;
+      const result = await handleError(error);
+      if (result === "signout") {
+        this.props.signout();
       }
-
-      error.alertMessage();
     }
   }
 
@@ -58,7 +58,6 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
   componentDidMount() {
     this.getOrderAll();
     this.intervalId = setInterval(() => {
-      // resetTimer()
       this.getOrderAll();
     }, 10000);
   }
@@ -103,5 +102,3 @@ class OrderList extends React.Component<IOrderListProps, IOrderListState> {
     );
   }
 }
-
-export default OrderList;

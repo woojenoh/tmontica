@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 import { numberCommaRegex } from "../../utils";
 import { BASE_URL } from "../../constants";
 import "./styles.scss";
@@ -21,7 +21,7 @@ export interface ICartItemState {
   quantity: number;
 }
 
-class CartItem extends React.Component<ICartItemProps, ICartItemState> {
+class CartItem extends PureComponent<ICartItemProps, ICartItemState> {
   state = {
     quantity: this.props.quantity
   };

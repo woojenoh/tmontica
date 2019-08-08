@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 import "./styles.scss";
 
 export interface IFindAccountFormProps {
@@ -14,7 +14,7 @@ export interface IFindAccountFormState {
   passwordEmail: string;
 }
 
-class FindAccountForm extends React.Component<IFindAccountFormProps, IFindAccountFormState> {
+class FindAccountForm extends PureComponent<IFindAccountFormProps, IFindAccountFormState> {
   state = {
     idEmail: "",
     idCode: "",

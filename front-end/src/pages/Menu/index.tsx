@@ -5,6 +5,7 @@ import * as rootTypes from "../../types/index";
 import * as cartActionCreators from "../../redux/actionCreators/cart";
 import Menu from "../../components/Menu";
 import { Dispatch } from "redux";
+import { signout } from "../../redux/actionCreators/user";
 
 const mapStateToProps = (state: rootTypes.IRootState) => ({
   isSignin: state.user.isSignin
@@ -16,7 +17,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       dispatch(cartActionCreators.addLocalCart(payload)),
     fetchAddCart: (payload: cartTypes.ICartMenu[]) => {
       dispatch(cartActionCreators.fetchAddCart(payload));
-    }
+    },
+    signout: () => dispatch(signout())
   };
 };
 

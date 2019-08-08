@@ -12,6 +12,8 @@ import { ICartMenu } from "../../types/cart";
 import { BASE_URL } from "../../constants";
 import MenuOption from "../MenuOptionList";
 import { CommonError } from "../../api/CommonError";
+import { handleError } from "../../api/common";
+import { ISignOut } from "../../types/user";
 
 const getOptionById = (options: Array<TMenuOption>, id: number) => {
   return _.chain(options)
@@ -24,7 +26,7 @@ interface MatchParams {
   menuId: string;
 }
 
-interface IMenuProps extends RouteComponentProps<MatchParams> {
+interface IMenuProps extends RouteComponentProps<MatchParams>, ISignOut {
   isSignin: boolean;
   fetchAddCart(payload: ICartMenu[]): void;
   addLocalCart(payload: ICartMenu): void;
@@ -122,12 +124,10 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
 
       history.push("/payment");
     } catch (error) {
-      if (!error.status) {
-        alert("네트워크 오류 발생");
-        return;
+      const result = await handleError(error);
+      if (result === "signout") {
+        this.props.signout();
       }
-
-      error.alertMessage();
       history.push("/");
     }
   }

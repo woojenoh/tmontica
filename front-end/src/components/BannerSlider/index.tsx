@@ -15,7 +15,7 @@ interface Props {
 
 const Image = ({ src }: { src: string }) => <img src={src} alt="배너" />;
 
-export class BannerSlider extends React.Component<Props> {
+export class BannerSlider extends React.PureComponent<Props> {
   render() {
     const { banners } = this.props;
 
@@ -30,7 +30,7 @@ export class BannerSlider extends React.Component<Props> {
       <Slider {...settings} className="banner">
         {banners.map((banner, i) => {
           if (!banner.imgUrl || typeof banner.imgUrl === "undefined") {
-            return;
+            return "";
           }
 
           return (

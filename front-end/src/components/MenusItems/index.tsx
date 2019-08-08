@@ -11,7 +11,7 @@ export interface IMenuItemsProps extends RouteComponentProps {
   menus: Array<TMenusItem>;
 }
 
-class MenuItems extends React.Component<IMenuItemsProps> {
+class MenuItems extends React.PureComponent<IMenuItemsProps> {
   render() {
     const { categoryKo, categoryEng, menus } = this.props;
     return (

@@ -8,7 +8,7 @@ interface IMenuItemProps extends RouteComponentProps {
   categoryEng: string | undefined;
   menu: TMenusItem;
 }
-class MenuItem extends React.Component<IMenuItemProps> {
+class MenuItem extends React.PureComponent<IMenuItemProps> {
   render() {
     const { id, nameKo, imgUrl, stock } = this.props.menu;
     return stock > 0 ? (
