@@ -45,8 +45,9 @@ class OrderSheet extends PureComponent<IOrderSheetProps, IOrderSheetState> {
       const result = await handleError(error);
       if (result === "signout") {
         this.props.signout();
+      } else {
+        history.push("/");
       }
-      history.push("/");
     }
   }
 

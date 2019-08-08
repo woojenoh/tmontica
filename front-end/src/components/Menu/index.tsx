@@ -127,8 +127,9 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
       const result = await handleError(error);
       if (result === "signout") {
         this.props.signout();
+      } else {
+        history.push("/");
       }
-      history.push("/");
     }
   }
 

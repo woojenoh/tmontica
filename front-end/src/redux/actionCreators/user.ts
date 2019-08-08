@@ -68,6 +68,12 @@ export function signout() {
   };
 }
 
+export function signoutFulfilled() {
+  return {
+    type: actionTypes.SIGNOUT_FULFILLED
+  };
+}
+
 export function fetchFindId(payload: string) {
   return {
     type: actionTypes.FETCH_FIND_ID,

@@ -36,7 +36,12 @@ const Nav = React.memo((props: INavigationProps) => {
         {isSignin ? (
           <div className="nav__top">
             <div className="nav__top-point">{user && numberCommaRegex(user.point)}P</div>
-            <div className="nav__top-logout" onClick={() => signout()}>
+            <div
+              className="nav__top-logout"
+              onClick={() => {
+                signout();
+              }}
+            >
               로그아웃
             </div>
           </div>

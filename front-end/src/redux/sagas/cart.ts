@@ -119,6 +119,7 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
+      yield put(userActionCreators.signout());
       yield call(signout);
     }
     yield put(cartActionCreators.fetchSetCartRejected(result));
@@ -162,6 +163,7 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
+      yield put(userActionCreators.signout());
       yield call(signout);
     }
     yield put(cartActionCreators.fetchAddCartRejected(result));
@@ -191,6 +193,7 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
+      yield put(userActionCreators.signout());
       yield call(signout);
     }
     yield put(cartActionCreators.fetchRemoveCartRejected(result));
@@ -231,6 +234,7 @@ function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
+      yield put(userActionCreators.signout());
       yield call(signout);
     }
     yield put(cartActionCreators.fetchChangeCartRejected(result));

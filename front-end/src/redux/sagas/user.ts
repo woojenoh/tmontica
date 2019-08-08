@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest, takeEvery } from "redux-saga/effects";
 import { signUp, signIn, findPassword, findIdConfirm, findId, signInActive } from "../../api/user";
 import history from "../../history";
 import jwt from "jwt-decode";
@@ -10,10 +10,9 @@ import { CommonError } from "../../api/CommonError";
 import { handleError } from "../../api/common";
 
 export function* signout() {
-  yield put(userActionCreators.signout());
-
   localStorage.removeItem("jwt");
   history.push("/signin");
+  yield put(userActionCreators.signoutFulfilled());
 }
 
 function* fetchSignupSagas(action: userTypes.IFetchSignup) {
@@ -29,6 +28,7 @@ function* fetchSignupSagas(action: userTypes.IFetchSignup) {
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
+      yield put(userActionCreators.signout());
       yield call(signout);
     }
     yield put(userActionCreators.fetchSignupRejected(result));
@@ -65,6 +65,7 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
+      yield put(userActionCreators.signout());
       yield call(signout);
     }
     yield put(userActionCreators.fetchSigninRejected(result));
@@ -86,6 +87,7 @@ function* fetchSigninActiveSagas(action: userTypes.IFetchSigninActive) {
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
+      yield put(userActionCreators.signout());
       yield call(signout);
     }
     yield put(userActionCreators.fetchSigninActiveRejected(result));
@@ -106,6 +108,7 @@ function* fetchFindIdSagas(action: userTypes.IFetchFindId) {
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
+      yield put(userActionCreators.signout());
       yield call(signout);
     }
     yield put(userActionCreators.fetchFindIdRejected(result));
@@ -126,6 +129,7 @@ function* fetchFindIdConfirmSagas(action: userTypes.IFetchFindIdConfirm) {
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
+      yield put(userActionCreators.signout());
       yield call(signout);
     }
     yield put(userActionCreators.fetchFindIdConfirmRejected(result));
@@ -147,6 +151,7 @@ function* fetchFindPasswordSagas(action: userTypes.IFetchFindPassword) {
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
+      yield put(userActionCreators.signout());
       yield call(signout);
     }
     yield put(userActionCreators.fetchFindPasswordRejected(result));
@@ -160,4 +165,5 @@ export default function* userSagas() {
   yield takeLatest(userActionTypes.FETCH_FIND_ID, fetchFindIdSagas);
   yield takeLatest(userActionTypes.FETCH_FIND_ID_CONFIRM, fetchFindIdConfirmSagas);
   yield takeLatest(userActionTypes.FETCH_FIND_PASSWORD, fetchFindPasswordSagas);
+  yield takeEvery(userActionTypes.SIGNOUT, signout);
 }

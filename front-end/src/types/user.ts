@@ -98,6 +98,10 @@ export interface ISignout {
   type: typeof userActionTypes.SIGNOUT;
 }
 
+export interface ISignoutFulfilled {
+  type: typeof userActionTypes.SIGNOUT_FULFILLED;
+}
+
 export interface IFetchFindId {
   type: typeof userActionTypes.FETCH_FIND_ID;
   payload: string;

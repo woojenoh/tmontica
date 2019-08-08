@@ -90,8 +90,9 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
       const result = await handleError(error);
       if (result === "signout") {
         this.props.signout();
+      } else {
+        history.push("/");
       }
-      history.push("/");
     }
   }
 
