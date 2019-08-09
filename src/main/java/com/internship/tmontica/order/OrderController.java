@@ -3,6 +3,7 @@ package com.internship.tmontica.order;
 import com.internship.tmontica.order.exception.OrderExceptionType;
 import com.internship.tmontica.order.exception.OrderValidException;
 import com.internship.tmontica.order.model.request.OrderReq;
+import com.internship.tmontica.order.model.response.OrderListByUserIdResp;
 import com.internship.tmontica.order.model.response.OrderResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,10 +50,10 @@ public class OrderController {
 
     /** 사용자 한명의 주문 전체 내역 가져오기 */
     @GetMapping
-    public ResponseEntity<Map<String, List>> getOrderList(@RequestParam(value = "page", required = false) int page,
-                                                          @RequestParam(value = "size", required = false) int size){
-        Map<String, List> map = orderService.getOrderListApi(page, size);
-        return new ResponseEntity<>(map, HttpStatus.OK);
+    public ResponseEntity<OrderListByUserIdResp> getOrderList(@RequestParam(value = "page", required = false) int page,
+                                                              @RequestParam(value = "size", required = false) int size){
+        OrderListByUserIdResp orderListByUserIdResp = orderService.getOrderListApi(page, size);
+        return new ResponseEntity<>(orderListByUserIdResp, HttpStatus.OK);
     }
 
 

@@ -13,10 +13,14 @@ public interface OrderDao {
     List<Order> getAllOrderByUserId(String userId);
 
     // userId로 주문 정보 가져오기 (페이징)
-    @Select("select * from orders where user_id = #{userId} " +
+    @Select("select SQL_CALC_FOUND_ROWS * from orders where user_id = #{userId} " +
             "order by order_date desc " +
             "limit #{startList}, #{size}")
     List<Order> getOrderByUserId(String userId, int startList, int size);
+
+    // 직전에 실행됐던 select 쿼리문의 개수 (limit 적용 안된것)
+    @Select("SELECT FOUND_ROWS()")
+    int getPrevResultCnt();
 
     // orderId로 주문 정보 가져오기
     @Select("select * from orders where id = #{orderId}")

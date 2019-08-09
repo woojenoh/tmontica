@@ -10,6 +10,7 @@ import com.internship.tmontica.order.exception.NotEnoughStockException;
 import com.internship.tmontica.order.exception.OrderException;
 import com.internship.tmontica.order.model.request.OrderReq;
 import com.internship.tmontica.order.model.request.OrderMenusReq;
+import com.internship.tmontica.order.model.response.OrderListByUserIdResp;
 import com.internship.tmontica.order.model.response.OrderResp;
 import com.internship.tmontica.order.model.response.OrderMenusResp;
 import com.internship.tmontica.point.PointDao;
@@ -85,11 +86,10 @@ public class OrderServiceTest {
         when(orderDao.getMenuNamesByOrderId(anyInt())).thenReturn(menuNames);
 
         // when
-        Map map = orderService.getOrderListApi(1, 10);
-        System.out.println(map.toString());
+        OrderListByUserIdResp orderListByUserIdResp = orderService.getOrderListApi(1, 10);
 
         // then
-        List list = (List) map.get("orders");
+        List list = orderListByUserIdResp.getOrders();
         assertTrue(list.size() <= 10);
     }
 

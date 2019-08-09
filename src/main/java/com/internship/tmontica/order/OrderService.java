@@ -12,6 +12,7 @@ import com.internship.tmontica.order.exception.OrderException;
 import com.internship.tmontica.order.exception.StockExceptionType;
 import com.internship.tmontica.order.model.request.OrderReq;
 import com.internship.tmontica.order.model.request.OrderMenusReq;
+import com.internship.tmontica.order.model.response.OrderListByUserIdResp;
 import com.internship.tmontica.order.model.response.OrderListResp;
 import com.internship.tmontica.order.model.response.OrderResp;
 import com.internship.tmontica.order.model.response.OrderMenusResp;
@@ -47,13 +48,15 @@ public class OrderService {
 
 
     // 주문내역 가져오기 api
-    public Map<String, List> getOrderListApi(int page, int size){
+    public OrderListByUserIdResp getOrderListApi(int page, int size){
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
-        List<OrderListResp> orderListResps = new ArrayList<>(); // 최종 반환할 리스트
+        List<OrderListResp> orderListResps = new ArrayList<>(); // orders
 
         int startList = (page - 1) * size; // 게시물의 시작번호 (DB의 offset)
 
+        // userId로 주문정보 가져오기
         List<Order> orders = orderDao.getOrderByUserId(userId, startList, size);
+        int totalCnt = orderDao.getPrevResultCnt(); // userId의 전체 주문 개수
         for (Order order: orders) {
             OrderListResp orderListResp = new OrderListResp();
 
@@ -65,11 +68,9 @@ public class OrderService {
             orderListResps.add(orderListResp);
         }
 
-        Map<String, List> map = new HashMap<>();
+        OrderListByUserIdResp orderListByUserIdResp = new OrderListByUserIdResp(totalCnt, orderListResps);
 
-        map.put("orders", orderListResps);
-
-        return map;
+        return orderListByUserIdResp;
     }
 
 
