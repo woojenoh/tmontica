@@ -1,13 +1,14 @@
 package com.internship.tmontica.cart;
 
-import com.internship.tmontica.cart.exception.CartExceptionType;
 import com.internship.tmontica.cart.exception.CartException;
+import com.internship.tmontica.cart.exception.CartExceptionType;
+import com.internship.tmontica.cart.model.request.CartOptionReq;
 import com.internship.tmontica.cart.model.request.CartReq;
 import com.internship.tmontica.cart.model.request.CartUpdateReq;
-import com.internship.tmontica.cart.model.request.CartOptionReq;
 import com.internship.tmontica.cart.model.response.CartIdResp;
-import com.internship.tmontica.cart.model.response.CartResp;
 import com.internship.tmontica.cart.model.response.CartMenusResp;
+import com.internship.tmontica.cart.model.response.CartResp;
+import com.internship.tmontica.menu.CategoryName;
 import com.internship.tmontica.menu.Menu;
 import com.internship.tmontica.menu.MenuDao;
 import com.internship.tmontica.option.Option;
@@ -82,7 +83,8 @@ public class CartMenuService {
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
 
         for (CartReq cartReq: cartReqs) {
-            int stock = menuDao.getMenuById(cartReq.getMenuId()).getStock(); // 메뉴의 현재 재고량
+            Menu menu = menuDao.getMenuById(cartReq.getMenuId());
+            int stock = menu.getStock(); // 메뉴의 현재 재고량
             int quantity = cartReq.getQuantity(); // 차감할 메뉴의 수량
             if(stock-quantity < 0){ // 재고가 모자랄 경우 rollback
                 throw new NotEnoughStockException(cartReq.getMenuId(), StockExceptionType.NOT_ENOUGH_STOCK);
@@ -94,6 +96,11 @@ public class CartMenuService {
             }
 
             List<CartOptionReq> options = cartReq.getOption();
+            // 음료의 옵션에 HOT/ICE 선택이 안들어가있을때 익셉션 처리
+            if(!menu.getCategoryEng().equals(CategoryName.CATEGORY_BREAD.getCategoryEng()) && (options.size()==0 || options.get(0).getId() > 2)){
+                throw new CartException(CartExceptionType.DEFAULT_OPTION_NOT_SELECTED);
+            }
+
             StringBuilder optionStr = new StringBuilder();
             int optionPrice = 0;
             for (CartOptionReq option : options) {

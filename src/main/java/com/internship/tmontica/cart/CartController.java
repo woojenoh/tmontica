@@ -26,7 +26,7 @@ public class CartController {
 
     /** 카트에 추가하기 */
     @PostMapping
-    public ResponseEntity<List<CartIdResp>> addCart(@RequestBody @Valid List<CartReq> cartReqs, BindingResult bindingResult) {
+    public ResponseEntity<List<CartIdResp>> addCart(@RequestBody List<CartReq> cartReqs, BindingResult bindingResult) {
         // 리스트를 validate
         cartValidator.validate(cartReqs, bindingResult);
         if(bindingResult.hasErrors()) {

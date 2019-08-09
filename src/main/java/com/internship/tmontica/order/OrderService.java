@@ -72,7 +72,7 @@ public class OrderService {
 
 
     // 결제하기 api
-    @Transactional(rollbackFor = {NotEnoughStockException.class, CartException.class, OrderException.class} )
+    @Transactional(rollbackFor = {NotEnoughStockException.class, CartException.class, OrderException.class, Exception.class} )
     public Map<String, Integer> addOrderApi(OrderReq orderReq, Device device){
         //토큰에서 유저아이디
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
