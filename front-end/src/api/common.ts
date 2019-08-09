@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosError } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { CommonError } from "./CommonError";
 
 export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
