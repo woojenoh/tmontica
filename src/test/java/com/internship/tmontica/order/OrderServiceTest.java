@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -70,27 +71,27 @@ public class OrderServiceTest {
                 new Date() ,new Date(), false );
     }
 
-//    @Test
-//    public void 주문내역_여러개가져오기(){
-//        // given
-//        List<Order> orders = new ArrayList<>();
-//        orders.add(order1);
-//        orders.add(order2);
-//        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
-//        when(orderDao.getOrderByUserId("testid")).thenReturn(orders);
-//        List<String> menuNames = new ArrayList<>();
-//        menuNames.add("아메리카노");
-//        menuNames.add("카페라떼");
-//        when(orderDao.getMenuNamesByOrderId(anyInt())).thenReturn(menuNames);
-//
-//        // when
-//        Map map = orderService.getOrderListApi();
-//        System.out.println(map.toString());
-//
-//        // then
-//        List list = (List) map.get("orders");
-//        assertEquals(list.size(), orders.size());
-//    }
+    @Test
+    public void 주문내역_여러개가져오기(){
+        // given
+        List<Order> orders = new ArrayList<>();
+        orders.add(order1);
+        orders.add(order2);
+        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
+        when(orderDao.getOrderByUserId("testid", 0, 10)).thenReturn(orders);
+        List<String> menuNames = new ArrayList<>();
+        menuNames.add("아메리카노");
+        menuNames.add("카페라떼");
+        when(orderDao.getMenuNamesByOrderId(anyInt())).thenReturn(menuNames);
+
+        // when
+        Map map = orderService.getOrderListApi(1, 10);
+        System.out.println(map.toString());
+
+        // then
+        List list = (List) map.get("orders");
+        assertTrue(list.size() <= 10);
+    }
 
 
     @Test
@@ -119,7 +120,8 @@ public class OrderServiceTest {
         verify(orderDao, times(1)).addOrderStatusLog(any()); //OrderStatusLog
     }
 
-    @Test(expected = PointException.class)
+
+   @Test(expected = PointException.class)
     public void 결제하기_포인트익셉션(){
         // given
         when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
