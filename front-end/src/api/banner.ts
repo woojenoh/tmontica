@@ -6,5 +6,5 @@ import { IBanner } from "../types/banner";
 // };
 
 export function getBannerByUsePageEng(usePageEng: string) {
-  return get<IBanner[]>(`${API_URL}/banners/${usePageEng}`, withJWT());
+  return get<IBanner[]>(`${API_URL}/banners/${usePageEng}`);
 }
