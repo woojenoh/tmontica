@@ -13,6 +13,15 @@ export function getOrderAll() {
   return get<TOrderAllRes>(`${API_URL}/orders`, withJWT());
 }
 
+export function getOrderByPaging(page: number = 1, size: number = 8) {
+  return get<TOrderAllRes>(
+    `${API_URL}/orders`,
+    withJWT({
+      params: { page, size }
+    })
+  );
+}
+
 export function cancleOrderById(orderId: number) {
   return del<void>(`${API_URL}/orders/${orderId}`, withJWT());
 }
