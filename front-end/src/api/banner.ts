@@ -1,4 +1,4 @@
-import { get, withJWT, API_URL } from "./common";
+import { get, API_URL } from "./common";
 import { IBanner } from "../types/banner";
 
 // const multipartHeader = {

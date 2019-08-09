@@ -242,7 +242,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
         defaultSelectedTemperatureOption.click();
       }
     } catch (error) {
-      const result = await handleError(error);
+      await handleError(error);
       history.push("/");
     }
   }
