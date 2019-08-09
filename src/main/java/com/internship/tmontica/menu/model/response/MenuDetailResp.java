@@ -26,4 +26,8 @@ public class MenuDetailResp {
     private int stock;
     private boolean monthlyMenu;
     private List<MenuOptionResp> option;
+
+    public void setImgUrl(String imgUrl){
+        this.imgUrl = "/images/".concat(imgUrl);
+    }
 }
