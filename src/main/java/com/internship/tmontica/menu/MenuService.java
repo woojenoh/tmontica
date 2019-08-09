@@ -35,10 +35,9 @@ public class MenuService {
 
         List<MenuMainResp> allMenus = new ArrayList<>();
         // 이달의 메뉴 , 커피 , 에이드 , 빵
-        allMenus.add(getMenuMainResp(CategoryName.CATEGORY_MONTHLY.getCategoryEng()));
-        allMenus.add(getMenuMainResp(CategoryName.CATEGORY_COFFEE.getCategoryEng()));
-        allMenus.add(getMenuMainResp(CategoryName.CATEGORY_ADE.getCategoryEng()));
-        allMenus.add(getMenuMainResp(CategoryName.CATEGORY_BREAD.getCategoryEng()));
+        for(CategoryName categoryName : CategoryName.values()){
+            allMenus.add(getMenuMainResp(categoryName.getCategoryEng()));
+        }
 
         return allMenus;
     }
@@ -70,7 +69,6 @@ public class MenuService {
         List<MenuOptionResp> menuOptions = modelMapper.map(options, new TypeToken<List<MenuOptionResp>>(){}.getType());
 
         menuDetailResp.setOption(menuOptions);
-        menuDetailResp.setImgUrl("/images/".concat(menuDetailResp.getImgUrl()));
 
         return menuDetailResp;
     }
@@ -116,26 +114,6 @@ public class MenuService {
         return menus.subList(startIndex, endIndex);
     }
 
-    // 메뉴 옵션 추가
-    public int addMenuOption(int menuId, int optionId){
-        return menuDao.addMenuOption(menuId, optionId);
-    }
-
-    // 하나의 메뉴 정보 가져오기
-    public Menu getMenuById(int id){
-        return menuDao.getMenuById(id);
-    }
-
-
-    // 수량 수정하기
-    public void updateMenuStock(int id, int stock){
-        menuDao.updateMenuStock(id, stock);
-    }
-
-    // 메뉴 존재하는지 확인
-    public boolean existMenu(int id){
-        return menuDao.getMenuById(id) != null;
-    }
 
     // 메인 화면에 필요한 메뉴정보 가져오기.
     private MenuMainResp getMenuMainResp(String categoryEng){
@@ -173,9 +151,6 @@ public class MenuService {
         }
 
         List<MenuSimpleResp> menuSimpleList = modelMapper.map(menus, new TypeToken<List<MenuSimpleResp>>(){}.getType());
-
-        for(MenuSimpleResp menu : menuSimpleList)
-            menu.setImgUrl("/images/".concat(menu.getImgUrl()));
 
         menuMainResp.setMenus(menuSimpleList);
         return menuMainResp;

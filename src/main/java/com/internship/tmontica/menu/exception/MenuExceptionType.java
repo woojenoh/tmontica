@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum MenuExceptionType {
 
-    MENU_NO_CONTENT_EXCEPTION("menu" , "메뉴가 존재하지 않습니다." , HttpStatus.OK),
+    MENU_NO_CONTENT_EXCEPTION("menu" , "",HttpStatus.NO_CONTENT),
     CATEGORY_NAME_MISMATCH_EXCEPTION("category", "존재하지 않는 카테고리명 입니다.", HttpStatus.BAD_REQUEST);
 
     private String field;
