@@ -100,10 +100,10 @@ public class OrderServiceTest {
         List<OrderMenusReq> menus = new ArrayList<>();
         menus.add(new OrderMenusReq(1));
         menus.add(new OrderMenusReq(2));
-        OrderReq orderReq = new OrderReq(menus, 1000, 2600, "현장결제");
+        OrderReq orderReq = new OrderReq(menus, 1000, 3600, "현장결제");
 
         when(userDao.getUserPointByUserId("testid")).thenReturn(3000);
-        when(cartMenuDao.getCartMenuByCartId(anyInt())).thenReturn(new CartMenu(1, "2__1/3__1", "testid",1800, 2, false));
+        when(cartMenuDao.getCartMenuByCartId(anyInt())).thenReturn(new CartMenu(1, "2__1/3__1", "testid",300, 2, false));
         when(menuDao.getMenuById(anyInt())).thenReturn(menu);
 
         // when
@@ -161,6 +161,23 @@ public class OrderServiceTest {
 
         when(userDao.getUserPointByUserId("testid")).thenReturn(3000);
         when(cartMenuDao.getCartMenuByCartId(anyInt())).thenReturn(new CartMenu(101, "2__1/3__1", "testid",1800, 2, false));
+        when(menuDao.getMenuById(anyInt())).thenReturn(menu);
+
+        // when
+        orderService.addOrderApi(orderReq, device);
+    }
+
+    @Test(expected = OrderException.class)
+    public void 결제하기_주문금액불일치(){
+        // given
+        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
+        List<OrderMenusReq> menus = new ArrayList<>();
+        menus.add(new OrderMenusReq(1));
+        menus.add(new OrderMenusReq(2));
+        OrderReq orderReq = new OrderReq(menus, 1000, 1500, "현장결제");
+
+        when(userDao.getUserPointByUserId("testid")).thenReturn(3000);
+        when(cartMenuDao.getCartMenuByCartId(anyInt())).thenReturn(new CartMenu(1, "2__1/3__1", "testid",300, 2, false));
         when(menuDao.getMenuById(anyInt())).thenReturn(menu);
 
         // when

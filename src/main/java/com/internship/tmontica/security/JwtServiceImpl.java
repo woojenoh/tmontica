@@ -66,5 +66,4 @@ public class JwtServiceImpl implements JwtService{
 
         return jws.getBody().get(key, String.class);
     }
-
 }

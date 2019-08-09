@@ -287,3 +287,17 @@ CREATE TABLE `tmontica`.`sales_menu_data` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
+-- -----------------------------------------------------
+-- Table `tmontica`.`order_useragent_data`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tmontica`.`order_useragent_data` ;
+
+CREATE TABLE `tmontica`.`order_useragent_data` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `reg_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `user_agent` VARCHAR(45) NOT NULL,
+  `count` INT NOT NULL,
+  PRIMARY KEY (`id`));
+
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;

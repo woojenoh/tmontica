@@ -99,7 +99,23 @@ public class CartMenuServiceTest {
         assertEquals(cartResp.getTotalPrice(), totalPrice);
     }
 
+    @Test
+    public void 카트정보_가져올때_삭제된메뉴_카트에서삭제하기() {
+        // given
+        List<CartMenu> cartMenus = new ArrayList<>();
+        cartMenus.add(cartMenu);
 
+        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
+        when(cartMenuDao.getCartMenuByUserId("testid")).thenReturn(cartMenus);
+        DB옵션문자열변환();
+        when(menuDao.getMenuById(anyInt())).thenReturn(null);
+
+        // when
+        cartMenuService.getCartMenuApi();
+
+        // then
+        verify(cartMenuDao, atLeastOnce()).deleteCartMenu(1);
+    }
 
     @Test
     public void 카트추가하기() {
@@ -163,6 +179,22 @@ public class CartMenuServiceTest {
         cartMenuService.addCartApi(cartReqs);
     }
 
+    @Test(expected = CartException.class)
+    public void 카트추가하기_디폴트옵션_선택없을때(){
+        // given
+        List<CartReq> cartReqs = new ArrayList<>();
+        List<CartOptionReq> option = new ArrayList<>();
+        option.add(new CartOptionReq(3,1));
+        option.add(new CartOptionReq(4,2));
+        CartReq cartReq = new CartReq(2,1,option,true);
+        cartReqs.add(cartReq);
+
+        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
+        when(menuDao.getMenuById(cartReq.getMenuId())).thenReturn(menu);
+
+        // when
+        cartMenuService.addCartApi(cartReqs);
+    }
 
     @Test
     public void 카트_수정하기() {
