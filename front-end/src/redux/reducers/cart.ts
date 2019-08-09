@@ -11,7 +11,7 @@ const INITIAL_STATE = {
 
 export default function(state = INITIAL_STATE, action: cartTypes.TCartAction) {
   switch (action.type) {
-    case actionTypes.INITIALIZE_LOCAL_CART:
+    case actionTypes.INITIALIZE_LOCAL_CART: {
       const initCart = {
         size: 0,
         totalPrice: 0,
@@ -22,6 +22,18 @@ export default function(state = INITIAL_STATE, action: cartTypes.TCartAction) {
         ...state,
         localCart: initCart
       };
+    }
+    case actionTypes.INITIALIZE_CART: {
+      const initCart = {
+        size: 0,
+        totalPrice: 0,
+        menus: []
+      } as cartTypes.ICart;
+      return {
+        ...state,
+        cart: initCart
+      };
+    }
     // ADD_LOCAL_CART
     case actionTypes.ADD_LOCAL_CART:
       return state;

@@ -8,16 +8,21 @@ import { BASE_URL } from "../../constants";
 import { CommonError } from "../../api/CommonError";
 import { handleError } from "../../api/common";
 import { signout } from "../../redux/actionCreators/user";
+import { initializeCart } from "../../redux/actionCreators/cart";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { BaseSyntheticEvent } from "react";
 import { ISignoutFunction } from "../../types/user";
+import { IInitializeCartFunction } from "../../types/cart";
 
 interface MatchParams {
   categoryEng: string;
 }
 
-interface IPaymentProps extends RouteComponentProps<MatchParams>, ISignoutFunction {}
+interface IPaymentProps
+  extends RouteComponentProps<MatchParams>,
+    ISignoutFunction,
+    IInitializeCartFunction {}
 
 interface IPaymentState {
   totalPrice: number;
@@ -87,6 +92,7 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
       if (data instanceof CommonError) {
         throw data;
       }
+      this.props.initializeCart();
       const { orderId } = data;
       history.push(`/orders?orderId=${orderId}`);
     } catch (error) {
@@ -253,7 +259,8 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    signout: () => dispatch(signout())
+    signout: () => dispatch(signout()),
+    initializeCart: () => dispatch(initializeCart())
   };
 };
 

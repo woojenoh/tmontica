@@ -7,6 +7,12 @@ export function initializeLocalCart() {
   };
 }
 
+export function initializeCart() {
+  return {
+    type: actionTypes.INITIALIZE_CART
+  };
+}
+
 export function addLocalCart(payload: cartTypes.ICartMenu) {
   return {
     type: actionTypes.ADD_LOCAL_CART,

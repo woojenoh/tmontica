@@ -43,8 +43,16 @@ export interface ICartState {
   localCart: ICart | null;
 }
 
+export interface IInitializeCartFunction {
+  initializeCart(): void;
+}
+
 export interface IInitializeLocalCart {
   type: typeof cartActionTypes.INITIALIZE_LOCAL_CART;
+}
+
+export interface IInitializeCart {
+  type: typeof cartActionTypes.INITIALIZE_CART;
 }
 
 export interface IAddLocalCart {
@@ -164,6 +172,7 @@ export interface ISetOrderCart {
 
 export type TCartAction =
   | IInitializeLocalCart
+  | IInitializeCart
   | IAddLocalCart
   | IAddLocalCartFulfilled
   | IAddLocalCartRejected
