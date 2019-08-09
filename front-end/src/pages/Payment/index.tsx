@@ -7,7 +7,7 @@ import { order } from "../../api/order";
 import { BASE_URL } from "../../constants";
 import { CommonError } from "../../api/CommonError";
 import { handleError } from "../../api/common";
-import { signout } from "../../redux/actionCreators/user";
+import { signout, fetchSetPoint } from "../../redux/actionCreators/user";
 import { initializeCart } from "../../redux/actionCreators/cart";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
@@ -25,6 +25,7 @@ interface IPaymentProps
     ISignoutFunction,
     IInitializeCartFunction {
   point: number;
+  setPoint(): void;
 }
 
 interface IPaymentState {
@@ -96,7 +97,9 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
       if (data instanceof CommonError) {
         throw data;
       }
-      this.props.initializeCart();
+      await this.props.initializeCart();
+      await this.props.setPoint();
+
       const { orderId } = data;
       history.push(`/orders?orderId=${orderId}`);
     } catch (error) {
@@ -130,7 +133,7 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
   }
 
   handlePay = () => {
-    if (window.confirm("결제하시겠습니까?")) {
+    if (window.confirm("제하시겠습니까?")) {
       // TODO: 결제하기 API 호출
       this.order();
       // 내 주문 페이지로 이동
@@ -266,7 +269,8 @@ const mapStateToProps = (state: IRootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     signout: () => dispatch(signout()),
-    initializeCart: () => dispatch(initializeCart())
+    initializeCart: () => dispatch(initializeCart()),
+    setPoint: () => dispatch(fetchSetPoint())
   };
 };
 
