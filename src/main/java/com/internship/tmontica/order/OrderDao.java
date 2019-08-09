@@ -14,6 +14,7 @@ public interface OrderDao {
 
     // userId로 주문 정보 가져오기 (페이징)
     @Select("select * from orders where user_id = #{userId} " +
+            "order by order_date desc " +
             "limit #{startList}, #{size}")
     List<Order> getOrderByUserId(String userId, int startList, int size);
 
