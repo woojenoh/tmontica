@@ -89,9 +89,6 @@ class MenusSub extends React.PureComponent<IMenusSubProps, IMenusSubState> {
             />
           </InfiniteScroll>
         </main>
-        <footer className="footer">
-          <div className="footer__container" />
-        </footer>
       </>
     );
   }

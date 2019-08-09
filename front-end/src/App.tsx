@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { lazy, Suspense } from "react";
 import {
   Switch,
   Route,
@@ -10,15 +10,8 @@ import {
 import { connect } from "react-redux";
 import * as rootTypes from "./types/index";
 import Header from "./components/Header";
-import Menu from "./pages/Menu";
-import Menus from "./pages/Menus";
-import MenusSub from "./pages/MenusSub";
-import Signin from "./pages/Signin";
-import Signup from "./pages/Signup";
-import Orders from "./pages/Orders";
-import Payment from "./pages/Payment";
-import FindAccount from "./pages/FindAccount";
-import UserInfo from "./pages/UserInfo";
+import "./assets/scss/service.scss";
+import "./assets/scss/reset.scss";
 
 export interface IAppProps extends RouteComponentProps {
   isSignin: boolean;
@@ -81,9 +74,18 @@ class App extends React.PureComponent<IAppProps> {
 
   render() {
     const { PrivateRoute, PublicRoute } = this;
+    const Menus = lazy(() => import("./pages/Menus"));
+    const FindAccount = lazy(() => import("./pages/FindAccount"));
+    const Signup = lazy(() => import("./pages/Signup"));
+    const Signin = lazy(() => import("./pages/Signin"));
+    const MenusSub = lazy(() => import("./pages/MenusSub"));
+    const Menu = lazy(() => import("./pages/Menu"));
+    const UserInfo = lazy(() => import("./pages/UserInfo"));
+    const Orders = lazy(() => import("./pages/Orders"));
+    const Payment = lazy(() => import("./pages/Payment"));
 
     return (
-      <>
+      <Suspense fallback={<div>로딩 중입니다.</div>}>
         <Header />
         <Switch>
           <PrivateRoute exact path="/payment" component={Payment} />
@@ -97,7 +99,7 @@ class App extends React.PureComponent<IAppProps> {
           <PublicRoute exact path="/" component={Menus} />
           <PublicRoute path="*" component={Menus} />
         </Switch>
-      </>
+      </Suspense>
     );
   }
 }

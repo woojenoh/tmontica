@@ -364,9 +364,6 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
             </div>
           </section>
         </main>
-        <footer className="footer">
-          <div className="footer__container" />
-        </footer>
       </>
     ) : (
       <></>
