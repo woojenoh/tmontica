@@ -9,8 +9,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 public class UserCheckPasswordReqDTO{
-
-    @Pattern(regexp="^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,19}")
+    
     @NotNull
     private String password;
 }

@@ -69,8 +69,7 @@ public class UserServiceTest {
         // when
         userService.checkUserIdDuplicatedException(id);
 
-        // then
-
+        // then void method..? 어떻게 처리하는지?
     }
 
     //** checkPasswordMismatchException **//
