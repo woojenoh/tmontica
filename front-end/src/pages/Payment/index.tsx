@@ -29,6 +29,7 @@ interface IPaymentProps
 
 interface IPaymentState {
   totalPrice: number;
+  orderPrice: number;
   usedPoint: number;
   usablePoint: number;
   orderCarts: Array<ICartMenu>;
@@ -78,9 +79,9 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
     totalPrice: 0,
     usedPoint: 0,
     usablePoint: this.props.point,
-    orderCarts: []
+    orderCarts: [],
+    orderPrice: 0
   };
-  orderPrice: number = 0;
 
   async order() {
     try {
@@ -89,7 +90,7 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
           return { cartId: typeof c.cartId === "undefined" ? 0 : c.cartId };
         }),
         usedPoint: this.state.usedPoint,
-        totalPrice: this.orderPrice,
+        totalPrice: this.state.orderPrice,
         payment: "현장결제"
       });
       if (data instanceof CommonError) {
@@ -116,9 +117,10 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
       history.push("/");
       return;
     }
-
+    const orderPrice = this.getOrderPrice(orderCarts);
     this.setState({
       orderCarts,
+      orderPrice,
       totalPrice: this.getOrderPrice(orderCarts)
     });
   }
@@ -147,9 +149,7 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
   handlePoint = (e: BaseSyntheticEvent) => {
     let willUsedPoint = parseInt(e.currentTarget.value) || 0;
 
-    this.orderPrice = this.getOrderPrice(this.state.orderCarts);
-
-    if (this.orderPrice - willUsedPoint < 0) {
+    if (this.state.orderPrice - willUsedPoint < 0) {
       alert("주문금액 보다 많이 입력할 수 없습니다.");
       this.setState(
         {
@@ -157,7 +157,7 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
         },
         () => {
           this.setState({
-            totalPrice: this.orderPrice - this.state.usedPoint
+            totalPrice: this.state.orderPrice - this.state.usedPoint
           });
         }
       );
@@ -169,14 +169,14 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
       },
       () => {
         this.setState({
-          totalPrice: this.orderPrice - this.state.usedPoint
+          totalPrice: this.state.orderPrice - this.state.usedPoint
         });
       }
     );
   };
 
   render() {
-    const { orderCarts } = this.state;
+    const { orderCarts, orderPrice } = this.state;
 
     return (
       <>
@@ -228,7 +228,7 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
             <section className="price card">
               <div className="d-flex price-row">
                 <div className="price--name">주문금액</div>
-                <div className="price--value">{this.orderPrice.toLocaleString()}원</div>
+                <div className="price--value">{orderPrice.toLocaleString()}원</div>
               </div>
               <div className="d-flex price-row">
                 <div className="price--name">할인금액</div>
@@ -237,7 +237,7 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
               <div className="d-flex price-row">
                 <div className="price--name">최종 결제금액</div>
                 <div className="price--value">
-                  {this.state.totalPrice.toLocaleString() || this.orderPrice.toLocaleString()}원
+                  {this.state.totalPrice.toLocaleString() || orderPrice.toLocaleString()}원
                 </div>
               </div>
               <div className="button--group">
