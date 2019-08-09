@@ -11,7 +11,8 @@ const mapStateToProps = (state: rootTypes.IRootState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    signout: () => dispatch(userActionCreators.signout())
+    signout: () => dispatch(userActionCreators.signout()),
+    fetchSetPoint: () => dispatch(userActionCreators.fetchSetPoint())
   };
 };
 

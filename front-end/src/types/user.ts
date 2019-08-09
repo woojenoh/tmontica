@@ -147,6 +147,22 @@ export interface IFetchFindPasswordRejected {
   error: string;
 }
 
+export interface IFetchSetPoint {
+  type: typeof userActionTypes.FETCH_SET_POINT;
+}
+
+export interface IFetchSetPointFulfilled {
+  type: typeof userActionTypes.FETCH_SET_POINT_FULFILLED;
+  payload: {
+    point: number;
+  };
+}
+
+export interface IFetchSetPointRejected {
+  type: typeof userActionTypes.FETCH_SET_POINT_REJECTED;
+  error: string;
+}
+
 export type TUserAction =
   | IFetchSignup
   | IFetchSignupFulfilled
@@ -166,4 +182,7 @@ export type TUserAction =
   | IFetchFindIdConfirmRejected
   | IFetchSigninActive
   | IFetchSigninActiveFulfilled
-  | IFetchSigninActiveRejected;
+  | IFetchSigninActiveRejected
+  | IFetchSetPoint
+  | IFetchSetPointFulfilled
+  | IFetchSetPointRejected;

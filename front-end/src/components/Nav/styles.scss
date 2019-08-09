@@ -76,6 +76,9 @@
         font-weight: bold;
         border-right: 1px solid $border-gray;
         cursor: pointer;
+        .nav__top-point-span {
+          margin-right: 5px;
+        }
       }
       .nav__top-logout {
         flex: 1;

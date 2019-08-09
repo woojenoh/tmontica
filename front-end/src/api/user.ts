@@ -46,3 +46,7 @@ export function checkPassword(data: { password: string }) {
 export function updateUser(user: { password: string; passwordCheck: string }) {
   return post<true>(`${API_URL}/users`, user, withJWT());
 }
+
+export function setPoint() {
+  return get<any>(`${API_URL}/points`, withJWT());
+}

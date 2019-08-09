@@ -1,4 +1,5 @@
 import jwt from "jwt-decode";
+import _ from "underscore";
 import * as actionTypes from "../actionTypes/user";
 import * as userTypes from "../../types/user";
 
@@ -7,7 +8,7 @@ const localJwt = localStorage.getItem("jwt");
 let jwtToken, parsedUserInfo;
 if (localJwt) {
   jwtToken = jwt(localJwt) as userTypes.IJwtToken;
-  parsedUserInfo = JSON.parse(jwtToken.userInfo);
+  parsedUserInfo = JSON.parse(jwtToken.userInfo) as userTypes.IUser;
 }
 
 const INITIAL_STATE = {
@@ -85,6 +86,23 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
     case actionTypes.FETCH_FIND_PASSWORD_FULFILLED:
       return state;
     case actionTypes.FETCH_FIND_PASSWORD_REJECTED:
+      return {
+        ...state,
+        error: action.error
+      };
+    // FETCH_SET_POINT
+    case actionTypes.FETCH_SET_POINT:
+      return state;
+    case actionTypes.FETCH_SET_POINT_FULFILLED:
+      const newUser = _(state.user).clone();
+      if (newUser) {
+        newUser.point = action.payload.point;
+      }
+      return {
+        ...state,
+        user: newUser
+      };
+    case actionTypes.FETCH_SET_POINT_REJECTED:
       return {
         ...state,
         error: action.error
