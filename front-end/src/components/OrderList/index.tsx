@@ -139,7 +139,7 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
 
     return (
       <>
-        <h1 className="orders-list__title">주문내역({orders.length})</h1>
+        <h1 className="orders-list__title">주문내역{/*orders.length*/}</h1>
         <div className="orders-list__content">
           <ul className="orders-list__items">
             <InfiniteScroll
