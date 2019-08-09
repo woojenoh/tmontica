@@ -47,11 +47,13 @@ public class OrderService {
 
 
     // 주문내역 가져오기 api
-    public Map<String, List> getOrderListApi(){
+    public Map<String, List> getOrderListApi(int page, int size){
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
         List<OrderListResp> orderListResps = new ArrayList<>(); // 최종 반환할 리스트
 
-        List<Order> orders = orderDao.getOrderByUserId(userId);
+        int startList = (page - 1) * size; // 게시물의 시작번호 (DB의 offset)
+
+        List<Order> orders = orderDao.getOrderByUserId(userId, startList, size);
         for (Order order: orders) {
             OrderListResp orderListResp = new OrderListResp();
 
@@ -103,9 +105,19 @@ public class OrderService {
 
         Order order = new Order(0,orderReq.getPayment(),orderReq.getTotalPrice(),orderReq.getUsedPoint(),
                 orderReq.getTotalPrice()-orderReq.getUsedPoint(), OrderStatusType.BEFORE_PAYMENT.getStatus(), userId, userAgent);
+
+        // 포인트로 전액을 결제 했을 경우는 status 결제완료
+        if (orderReq.getTotalPrice() == orderReq.getUsedPoint()){
+            order.setStatus(OrderStatusType.AFTER_PAYMENT.getStatus());
+        }
+
         // 주문테이블에 추가
         orderDao.addOrder(order);
         int orderId = order.getId();
+
+        // 주문상태로그테이블에 추가
+        orderDao.addOrderStatusLog(new OrderStatusLog(order.getStatus(), userId, orderId));
+
         int totalPrice = 0; // 금액 체크를 위한 변수
         // 주문상세테이블에 추가
         // 카트 아이디로 정보를 가져와서 order_details 에 추가
@@ -143,9 +155,6 @@ public class OrderService {
         if (totalPrice != orderReq.getTotalPrice()){
             throw new OrderException(OrderExceptionType.INVALID_TOTALPRICE);
         }
-
-        // 주문상태로그테이블에 "미결제" 상태로 추가
-        orderDao.addOrderStatusLog(new OrderStatusLog(OrderStatusType.BEFORE_PAYMENT.getStatus(), userId, orderId));
 
         Map<String, Integer> map = new HashMap<>(); // 리턴할 객체
         map.put("orderId", orderId); // 반환값 orderId

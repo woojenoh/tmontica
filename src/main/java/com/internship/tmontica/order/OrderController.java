@@ -49,8 +49,9 @@ public class OrderController {
 
     /** 사용자 한명의 주문 전체 내역 가져오기 */
     @GetMapping
-    public ResponseEntity<Map<String, List>> getOrderList(){
-        Map<String, List> map = orderService.getOrderListApi();
+    public ResponseEntity<Map<String, List>> getOrderList(@RequestParam(value = "page", required = false) int page,
+                                                          @RequestParam(value = "size", required = false) int size){
+        Map<String, List> map = orderService.getOrderListApi(page, size);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
