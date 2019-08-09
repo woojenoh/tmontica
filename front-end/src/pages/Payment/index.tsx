@@ -14,6 +14,7 @@ import { Dispatch } from "redux";
 import { BaseSyntheticEvent } from "react";
 import { ISignoutFunction } from "../../types/user";
 import { IInitializeCartFunction } from "../../types/cart";
+import { IRootState } from "../../types";
 
 interface MatchParams {
   categoryEng: string;
@@ -22,7 +23,9 @@ interface MatchParams {
 interface IPaymentProps
   extends RouteComponentProps<MatchParams>,
     ISignoutFunction,
-    IInitializeCartFunction {}
+    IInitializeCartFunction {
+  point: number;
+}
 
 interface IPaymentState {
   totalPrice: number;
@@ -74,7 +77,7 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
   state = {
     totalPrice: 0,
     usedPoint: 0,
-    usablePoint: 0,
+    usablePoint: this.props.point,
     orderCarts: []
   };
   orderPrice: number = 0;
@@ -86,7 +89,7 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
           return { cartId: typeof c.cartId === "undefined" ? 0 : c.cartId };
         }),
         usedPoint: this.state.usedPoint,
-        totalPrice: this.state.totalPrice,
+        totalPrice: this.orderPrice,
         payment: "현장결제"
       });
       if (data instanceof CommonError) {
@@ -216,7 +219,8 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
                   onChange={this.handlePoint}
                 />
                 <div>
-                  사용가능한 포인트: <span>0</span>P
+                  사용가능한 포인트:
+                  <span>{(this.state.usablePoint - this.state.usedPoint).toLocaleString()}</span>P
                 </div>
               </div>
             </section>
@@ -233,9 +237,7 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
               <div className="d-flex price-row">
                 <div className="price--name">최종 결제금액</div>
                 <div className="price--value">
-                  {(this.state.totalPrice && this.state.totalPrice.toLocaleString()) ||
-                    this.orderPrice.toLocaleString()}
-                  원
+                  {this.state.totalPrice.toLocaleString() || this.orderPrice.toLocaleString()}원
                 </div>
               </div>
               <div className="button--group">
@@ -257,6 +259,13 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
   }
 }
 
+const mapStateToProps = (state: IRootState) => ({
+  isSignin: state.user.isSignin,
+  localCart: state.cart.localCart,
+  cart: state.cart.cart,
+  point: state.user.user ? state.user.user.point : 0
+});
+
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     signout: () => dispatch(signout()),
@@ -265,6 +274,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Payment);
