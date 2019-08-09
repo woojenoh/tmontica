@@ -5,7 +5,7 @@ export function getMenuAll() {
   return get<Object>(`${API_URL}/menus`);
 }
 
-export function getMenuByCateory(categoryEng: string, page = 1, size = 4) {
+export function getMenuByCateory(categoryEng: string, page = 1, size = 8) {
   return get<TMenuByCategory>(`${API_URL}/menus/${categoryEng}?page=${page}&size=${size}`);
 }
 

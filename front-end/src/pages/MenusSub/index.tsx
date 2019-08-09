@@ -3,13 +3,14 @@ import "./styles.scss";
 import { RouteComponentProps } from "react-router-dom";
 import MenuItems from "../../components/MenusItems";
 import { getMenuByCateory } from "../../api/menu";
-import { TMenuByCategory } from "../../types/menu";
+import { TMenuByCategory, TMenusItem } from "../../types/menu";
 import { CommonError } from "../../api/CommonError";
 import { handleError } from "../../api/common";
 import { Dispatch } from "redux";
 import { signout } from "../../redux/actionCreators/user";
 import { connect } from "react-redux";
 import { ISignoutFunction } from "../../types/user";
+import InfiniteScroll from "react-infinite-scroller";
 
 interface MatchParams {
   categoryEng: string;
@@ -19,17 +20,27 @@ interface IMenusSubProps extends RouteComponentProps<MatchParams>, ISignoutFunct
   categoryKo: string;
 }
 
-interface IMenusSubState extends TMenuByCategory {}
+interface IMenusSubState extends TMenuByCategory {
+  page: number;
+  hasMore: boolean;
+}
 
 class MenusSub extends React.PureComponent<IMenusSubProps, IMenusSubState> {
   state = {
     categoryKo: "",
-    menus: []
+    menus: [] as TMenusItem[],
+    hasMore: true,
+    page: 1
   };
 
   async getMenuByCateory() {
     try {
-      const categoryMenus = await getMenuByCateory(this.props.match.params.categoryEng);
+      const size = 8;
+      const categoryMenus = await getMenuByCateory(
+        this.props.match.params.categoryEng,
+        this.state.page,
+        size
+      );
 
       if (typeof categoryMenus === "undefined" || categoryMenus === null) {
         throw new CommonError({ message: "메뉴 정보를 불러오지 못했습니다." });
@@ -39,9 +50,12 @@ class MenusSub extends React.PureComponent<IMenusSubProps, IMenusSubState> {
       }
 
       const { categoryKo, menus } = categoryMenus;
+
       this.setState({
         categoryKo,
-        menus
+        menus: [...this.state.menus, ...menus] as TMenusItem[],
+        page: this.state.page + 1,
+        hasMore: menus.length === size ? true : false
       });
     } catch (error) {
       await handleError(error);
@@ -49,7 +63,7 @@ class MenusSub extends React.PureComponent<IMenusSubProps, IMenusSubState> {
   }
 
   componentDidMount() {
-    this.getMenuByCateory();
+    // this.getMenuByCateory();
   }
 
   componentDidUpdate(prevProps: IMenusSubProps) {
@@ -62,15 +76,18 @@ class MenusSub extends React.PureComponent<IMenusSubProps, IMenusSubState> {
     return (
       <>
         <main className="main">
-          {/* <section className="banner">
-            {<img src="" alt="Banner" className="banner__img" />}
-          </section> */}
-
-          {this.state.menus ? (
-            <MenuItems categoryKo={this.state.categoryKo} menus={this.state.menus} />
-          ) : (
-            "Loading..."
-          )}
+          <InfiniteScroll
+            pageStart={1}
+            loadMore={this.getMenuByCateory.bind(this)}
+            hasMore={this.state.hasMore}
+            loader={<div className="loader">Loading ...</div>}
+          >
+            <MenuItems
+              key={this.state.page}
+              categoryKo={this.state.categoryKo}
+              menus={this.state.menus}
+            />
+          </InfiniteScroll>
         </main>
         <footer className="footer">
           <div className="footer__container" />
