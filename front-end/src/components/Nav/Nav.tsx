@@ -1,5 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRedo } from "@fortawesome/free-solid-svg-icons";
 import * as userTypes from "../../types/user";
 import { numberCommaRegex } from "../../utils";
 import "./styles.scss";
@@ -9,10 +11,11 @@ export interface INavigationProps extends userTypes.ISignoutFunction {
   isSignin: boolean;
   user: userTypes.IUser | null;
   handleNavClose(): void;
+  fetchSetPoint(): void;
 }
 
 const Nav = React.memo((props: INavigationProps) => {
-  const { isNavOpen, handleNavClose, isSignin, signout, user } = props;
+  const { isNavOpen, handleNavClose, isSignin, signout, user, fetchSetPoint } = props;
 
   return (
     <section className={isNavOpen ? "nav" : "nav nav--close"}>
@@ -35,7 +38,10 @@ const Nav = React.memo((props: INavigationProps) => {
         </span>
         {isSignin ? (
           <div className="nav__top">
-            <div className="nav__top-point">{user && numberCommaRegex(user.point)}P</div>
+            <div className="nav__top-point" onClick={() => fetchSetPoint()}>
+              <span className="nav__top-point-span">{user && numberCommaRegex(user.point)}P</span>
+              <FontAwesomeIcon icon={faRedo} />
+            </div>
             <div
               className="nav__top-logout"
               onClick={() => {

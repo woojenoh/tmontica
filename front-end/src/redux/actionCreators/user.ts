@@ -133,3 +133,23 @@ export function fetchFindPasswordRejected(error: string) {
     error
   };
 }
+
+export function fetchSetPoint() {
+  return {
+    type: actionTypes.FETCH_SET_POINT
+  };
+}
+
+export function fetchSetPointFulfilled(payload: { point: number }) {
+  return {
+    type: actionTypes.FETCH_SET_POINT_FULFILLED,
+    payload
+  };
+}
+
+export function fetchSetPointRejected(error: string) {
+  return {
+    type: actionTypes.FETCH_SET_POINT_REJECTED,
+    error
+  };
+}

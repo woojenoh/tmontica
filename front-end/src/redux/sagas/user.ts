@@ -1,5 +1,13 @@
 import { call, put, takeLatest, takeEvery } from "redux-saga/effects";
-import { signUp, signIn, findPassword, findIdConfirm, findId, signInActive } from "../../api/user";
+import {
+  signUp,
+  signIn,
+  findPassword,
+  findIdConfirm,
+  findId,
+  signInActive,
+  setPoint
+} from "../../api/user";
 import history from "../../history";
 import jwt from "jwt-decode";
 import * as userActionTypes from "../actionTypes/user";
@@ -158,6 +166,20 @@ function* fetchFindPasswordSagas(action: userTypes.IFetchFindPassword) {
   }
 }
 
+function* fetchSetPointSagas(action: userTypes.IFetchSetPoint) {
+  try {
+    const data = yield call(setPoint);
+    yield put(userActionCreators.fetchSetPointFulfilled({ point: data }));
+  } catch (error) {
+    const result = yield handleError(error);
+    if (result === "signout") {
+      yield put(userActionCreators.signout());
+      yield call(signout);
+    }
+    yield put(userActionCreators.fetchSetPointRejected(result));
+  }
+}
+
 export default function* userSagas() {
   yield takeLatest(userActionTypes.FETCH_SIGNUP, fetchSignupSagas);
   yield takeLatest(userActionTypes.FETCH_SIGNIN, fetchSigninSagas);
@@ -165,5 +187,6 @@ export default function* userSagas() {
   yield takeLatest(userActionTypes.FETCH_FIND_ID, fetchFindIdSagas);
   yield takeLatest(userActionTypes.FETCH_FIND_ID_CONFIRM, fetchFindIdConfirmSagas);
   yield takeLatest(userActionTypes.FETCH_FIND_PASSWORD, fetchFindPasswordSagas);
+  yield takeLatest(userActionTypes.FETCH_SET_POINT, fetchSetPointSagas);
   yield takeEvery(userActionTypes.SIGNOUT, signout);
 }
