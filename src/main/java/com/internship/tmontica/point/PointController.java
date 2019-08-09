@@ -12,9 +12,9 @@ public class PointController {
 
       private final PointService pointService;
 
-      @PostMapping
-      public ResponseEntity<String> test(@RequestBody Point point){
-          pointService.updateUserPoint(point);
-          return new ResponseEntity<>("dd", HttpStatus.OK);
+      @GetMapping
+      public ResponseEntity<Integer> getUserPoint(){
+
+          return new ResponseEntity<>(pointService.getUserPoint(), HttpStatus.OK);
       }
 }

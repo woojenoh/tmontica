@@ -46,19 +46,39 @@ public class UserServiceTest {
                 birthDate, "tmon123!", "tmon123!", "ADMIN", regDate,0, true, "abcdefg");
     }
 
+    //** checkUserIdDuplicatedException **//
     @Test(expected = UserException.class)
-    public void 아이디_중복체크(){
+    public void 아이디_중복체크_중복(){
 
-        String id = "I'm DUPLICATED ID";
+        String id = willSignUpUser.getId();
         // given
-        doThrow(new UserException(UserExceptionType.USER_ID_DUPLICATED_EXCEPTION)).when(userService).checkUserIdDuplicatedException(id);
+        when(userDao.getUserByUserId(id)).thenReturn(alreadySignUpUser);
 
         // when
-
-        // then
-        verify(userService, times(1)).checkUserIdDuplicatedException(id);
+        userService.checkUserIdDuplicatedException(id);
     }
 
+    //** checkUserIdDuplicatedException **//
+    @Test
+    public void 아이디_중복체크_중복아님(){
+
+        String id = willSignUpUser.getId();
+        // given
+        when(userDao.getUserByUserId(id)).thenReturn(null);
+
+        // when
+        userService.checkUserIdDuplicatedException(id);
+
+        // then
+
+    }
+
+    //** checkPasswordMismatchException **//
+    @Test(expected = UserException.class)
+    public void 비밀번호_비밀번호확인_불일치체크(){
+
+
+    }
     @Test
     public void 회원가입() {
 
