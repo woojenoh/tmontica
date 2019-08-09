@@ -251,9 +251,6 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
             </section>
           </div>
         </main>
-        <footer className="footer">
-          <div className="footer__container" />
-        </footer>
       </>
     );
   }

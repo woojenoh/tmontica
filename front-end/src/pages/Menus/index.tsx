@@ -93,9 +93,6 @@ class Menus extends React.PureComponent<IMenusProps, IMenusState> {
               ))
             : "Loading..."}
         </main>
-        <footer className="footer">
-          <div className="footer__container" />
-        </footer>
       </>
     );
   }
