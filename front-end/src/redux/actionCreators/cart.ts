@@ -8,6 +8,7 @@ export function initializeLocalCart() {
 }
 
 export function initializeCart() {
+  localStorage.removeItem("orderCart");
   return {
     type: actionTypes.INITIALIZE_CART
   };
