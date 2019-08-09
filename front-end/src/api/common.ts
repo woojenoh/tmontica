@@ -3,14 +3,15 @@ import { CommonError } from "./CommonError";
 
 export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
 
-export function handleError(error: CommonError | AxiosError | string) {
+export function handleError(error: CommonError | string) {
   if (error instanceof CommonError) {
     if (!error.status) {
       alert("네트워크 오류 발생");
-    } else if (error["status"] === 401) {
-      alert("유효하지 않은 토큰입니다. 다시 로그인하세요.");
+    } else if (error["status"] === 401 || (error.message && /JWT/.test(error.message))) {
+      alert("권한이 필요한 요청입니다. 다시 로그인 해주세요.");
       return Promise.resolve("signout");
     } else if (error.message && /No message/.test(error.message)) {
+      // 알 수 없는 오류
       console.log(error);
     } else {
       error.alertMessage();
