@@ -26,41 +26,44 @@ interface IPaymentState {
   orderCarts: Array<ICartMenu>;
 }
 
-const OrderMenu = ({
-  nameKo,
-  imgUrl,
-  quantity,
-  price,
-  option
-}: {
-  nameKo: string;
-  imgUrl: string;
-  quantity: number;
-  price: number;
-  option: string;
-}) => {
-  return (
-    <li className="order__menu">
-      <div className="order__menu-img">
-        <img src={`${BASE_URL}${imgUrl}`} alt={nameKo} />
-      </div>
-      <div className="order__menu-description">
-        <div className="order__menu-title-wrap">
-          <h3 className="order__menu-title">{nameKo}</h3>
-          <div className="order__menu-options">{option}</div>
+const OrderMenu = React.memo(
+  ({
+    nameKo,
+    imgUrl,
+    quantity,
+    price,
+    option
+  }: {
+    nameKo: string;
+    imgUrl: string;
+    quantity: number;
+    price: number;
+    option: string;
+  }) => {
+    return (
+      <li className="order__menu">
+        <div className="order__menu-img">
+          <img src={`${BASE_URL}${imgUrl}`} alt={nameKo} />
         </div>
-        <div className="order__menu-cnt-price-wrap">
-          <div className="order__menu-cnt-wrap d-inline-b">
-            <span className="order__menu-cnt">{quantity}</span>개
+        <div className="order__menu-description">
+          <div className="order__menu-title-wrap">
+            <h3 className="order__menu-title">{nameKo}</h3>
+            <div className="order__menu-options">{option}</div>
           </div>
-          <div className="order__menu-price-wrap d-inline-b">
-            <span className="order__menu-price">{Number(price * quantity).toLocaleString()}</span>원
+          <div className="order__menu-cnt-price-wrap">
+            <div className="order__menu-cnt-wrap d-inline-b">
+              <span className="order__menu-cnt">{quantity}</span>개
+            </div>
+            <div className="order__menu-price-wrap d-inline-b">
+              <span className="order__menu-price">{Number(price * quantity).toLocaleString()}</span>
+              원
+            </div>
           </div>
         </div>
-      </div>
-    </li>
-  );
-};
+      </li>
+    );
+  }
+);
 
 class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
   state = {

@@ -15,6 +15,14 @@ export interface IOrderListProps {
 export interface IOrderListState extends TOrderAllRes {}
 
 export default class OrderList extends React.PureComponent<IOrderListProps, IOrderListState> {
+  shouldComponentUpdate(nextProps: IOrderListProps, nextState: IOrderListState) {
+    if (_.isEqual(this.state.orders, nextState.orders)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   state = {
     orders: [] as IOrder[]
   };
