@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { CommonError } from "./CommonError";
+import { BASE_URL } from "../constants";
 
-export const API_URL = "http://tmontica-idev.tmon.co.kr/api";
+export const API_URL = `${BASE_URL}/api`;
 
 export function handleError(error: CommonError | string) {
   if (error instanceof CommonError) {
