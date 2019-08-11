@@ -1,4 +1,22 @@
-.slick-prev:before,
-.slick-next:before {
-  color: black;
+.slick-prev {
+  left: -45px;
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: black;
+    font-size: 30px;
+    opacity: 0.6;
+  }
+}
+.slick-next {
+  right: -45px;
+  &:before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: black;
+    font-size: 30px;
+    opacity: 0.6;
+  }
 }
