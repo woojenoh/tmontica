@@ -11,4 +11,8 @@ public class MenuSimpleResp {
     private String nameKo;
     private String imgUrl;
     private int stock;
+
+    public void setImgUrl(String imgUrl){
+        this.imgUrl = "/images/".concat(imgUrl);
+    }
 }

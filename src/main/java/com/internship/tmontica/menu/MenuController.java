@@ -54,8 +54,8 @@ public class MenuController {
     /** 카테고리 별 메뉴 가져오기 **/
     @GetMapping("/{category:[a-z-]+}")
     public ResponseEntity<MenuCategoryResp> getMenusByCategory(@PathVariable("category")String category,
-                                                               @RequestParam(value = "page", required = false) int page,
-                                                               @RequestParam(value = "size", required = false) int size){
+                                                               @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                               @RequestParam(value = "size", required = false, defaultValue = "10") int size){
 
         MenuCategoryResp menucategoryResp = new MenuCategoryResp();
         menucategoryResp.setSize(size);
@@ -69,9 +69,6 @@ public class MenuController {
             throw new MenuException(MenuExceptionType.MENU_NO_CONTENT_EXCEPTION);
         }
         List<MenuSimpleResp> categoryMenus = modelMapper.map(menus, new TypeToken<List<MenuSimpleResp>>(){}.getType());
-
-        for(MenuSimpleResp menu : categoryMenus)
-            menu.setImgUrl("/images/".concat(menu.getImgUrl()));
 
         menucategoryResp.setMenus(categoryMenus);
         return new ResponseEntity<>(menucategoryResp, HttpStatus.OK);

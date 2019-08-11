@@ -7,7 +7,7 @@ import javax.validation.constraints.Min;
 
 @Data
 @AllArgsConstructor
-public class Cart_OptionReq {
+public class CartOptionReq {
     @Min(1)
     private int id;
     @Min(1)

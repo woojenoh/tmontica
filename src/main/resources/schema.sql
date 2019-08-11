@@ -256,3 +256,48 @@ CREATE TABLE IF NOT EXISTS `tmontica`.`points` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `tmontica`.`sales_agegroup_data`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tmontica`.`sales_agegroup_data` ;
+
+CREATE TABLE `tmontica`.`sales_agegroup_data` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `reg_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `age_group` VARCHAR(45) NOT NULL,
+  `total_price` INT NOT NULL,
+  PRIMARY KEY (`idnew_table`));
+
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `tmontica`.`sales_menu_data`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tmontica`.`sales_menu_data` ;
+
+CREATE TABLE `tmontica`.`sales_menu_data` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `reg_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `menu_id` INT NOT NULL,
+  `total_price` INT NOT NULL,
+  PRIMARY KEY (`idnew_table`));
+
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- -----------------------------------------------------
+-- Table `tmontica`.`order_useragent_data`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `tmontica`.`order_useragent_data` ;
+
+CREATE TABLE `tmontica`.`order_useragent_data` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `reg_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `user_agent` VARCHAR(45) NOT NULL,
+  `count` INT NOT NULL,
+  PRIMARY KEY (`id`));
+
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;

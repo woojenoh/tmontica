@@ -3,6 +3,7 @@ package com.internship.tmontica.user.model.response;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Getter
@@ -22,7 +23,7 @@ public class UserTokenInfoDTO {
         makeJsonObjectStart("id", id, stringBuilder, false);
         makeJsonElement("name", name, stringBuilder, false, false);
         makeJsonElement("email", email, stringBuilder, false, false);
-        makeJsonElement("birthDate", birthDate.toString(), stringBuilder, false, false);
+        makeJsonElement("birthDate", new SimpleDateFormat("yyyy-MM-dd").format(birthDate), stringBuilder, false, false);
         makeJsonElement("role", role, stringBuilder, false, false);
         makeJsonElement("point",Integer.toString(point), stringBuilder, true, true);
 
