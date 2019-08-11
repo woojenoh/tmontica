@@ -20,7 +20,7 @@ public class BannerController {
 
     private final ModelMapper modelMapper;
 
-    // usePage에 맞는 banner 가져오기.
+    /** usePage에 맞는 banner 가져오기.**/
     @GetMapping("/{usePageEng}")
     public ResponseEntity<List<Banner>> getBannerByUsePage(@PathVariable String usePageEng){
         List<Banner> banners = bannerService.getBannersByPage(usePageEng);

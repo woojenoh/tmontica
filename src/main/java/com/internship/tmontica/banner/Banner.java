@@ -17,8 +17,8 @@ public class Banner {
     private boolean usable;
     private String imgUrl;
     private String link;
-    private Date start_date;
-    private Date end_date;
+    private Date startDate;
+    private Date endDate;
     private String creatorId;
     private int number;
 }
