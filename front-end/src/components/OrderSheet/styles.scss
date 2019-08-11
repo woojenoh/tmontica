@@ -37,6 +37,9 @@
     justify-content: space-between;
     flex-wrap: wrap;
     padding: 0 20px;
+    @include tablet {
+      display: block;
+    }
     @include mobile {
       display: block;
     }
@@ -57,6 +60,9 @@
         right: -29px;
         top: 10px;
         z-index: 0;
+        @include tablet {
+          display: none;
+        }
         @include mobile {
           display: none;
         }
@@ -79,6 +85,10 @@
         border: none;
         color: white;
       }
+      @include tablet {
+        text-align: center;
+        margin-bottom: 10px;
+      }
       @include mobile {
         text-align: center;
         margin-bottom: 10px;
@@ -91,6 +101,9 @@
   .orders__total {
     text-align: right;
     line-height: 1.2em;
+    @include tablet {
+      font-size: 15px;
+    }
     @include mobile {
       font-size: 15px;
     }

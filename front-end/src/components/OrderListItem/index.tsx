@@ -23,7 +23,7 @@ const OrderListItem = React.memo((props: IOrderListItemProps) => {
           : status === "픽업완료"
           ? "orders-list__item orders-list__item--pickuped"
           : status === "주문취소"
-          ? "orders-list__item orders-list__item--cancle"
+          ? "orders-list__item orders-list__item--cancel"
           : "orders-list__item"
       }
     >
