@@ -136,7 +136,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
   handleQuantity(isPlus: boolean) {
     let { quantity } = this.state;
     if (isPlus) {
-      if (quantity <= 30) {
+      if (quantity < 30) {
         quantity = quantity + 1;
       } else {
         alert("최대 30개까지만 한 번에 구매 가능합니다.");
