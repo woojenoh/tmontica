@@ -138,6 +138,15 @@ public class CartMenuService {
             // 아이디 일치하지 않을 경우
             throw new CartException(CartExceptionType.FORBIDDEN_ACCESS_CART_DATA);
         }
+        // 재고 체크하기
+        int menuId = cartMenuDao.getCartMenuByCartId(id).getMenuId();
+        int stock = menuDao.getMenuById(menuId).getStock(); // 현재 메뉴의 재고량
+        int quantity = cartUpdateReq.getQuantity();
+        // 재고가 모자랄 경우
+        if(stock - quantity < 0){
+            throw new NotEnoughStockException(id, StockExceptionType.NOT_ENOUGH_STOCK);
+        }
+
         int result = cartMenuDao.updateCartMenuQuantity(id, cartUpdateReq.getQuantity());
         return result;
     }

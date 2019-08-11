@@ -205,11 +205,27 @@ public class CartMenuServiceTest {
 
         when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
         when(cartMenuDao.getCartMenuByCartId(id)).thenReturn(cartMenu);
+        when(menuDao.getMenuById(2)).thenReturn(menu);
 
         // when
         cartMenuService.updateCartApi(id, cartUpdateReq);
         // then
         verify(cartMenuDao, times(1)).updateCartMenuQuantity(id, cartUpdateReq.getQuantity());
+    }
+
+    @Test(expected = NotEnoughStockException.class)
+    public void 카트_수정하기_재고부족() {
+        // given
+        int id = cartMenu.getId();
+        CartUpdateReq cartUpdateReq = new CartUpdateReq();
+        cartUpdateReq.setQuantity(1000);
+
+        when(jwtService.getUserInfo("userInfo")).thenReturn("{\"id\":\"testid\"}");
+        when(cartMenuDao.getCartMenuByCartId(id)).thenReturn(cartMenu);
+        when(menuDao.getMenuById(2)).thenReturn(menu);
+
+        // when
+        cartMenuService.updateCartApi(id, cartUpdateReq);
     }
 
     @Test(expected = CartException.class)
