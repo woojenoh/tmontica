@@ -1,7 +1,7 @@
 import * as React from "react";
 import OrderListItem from "../OrderListItem";
 import "./styles.scss";
-import { getOrderAll, getOrderByPaging } from "../../api/order";
+import { getOrderByPaging } from "../../api/order";
 import _ from "underscore";
 import { TOrderAllRes, IOrder } from "../../types/order";
 import { CommonError } from "../../api/CommonError";
