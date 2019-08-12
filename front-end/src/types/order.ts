@@ -24,6 +24,7 @@ export interface TOrder {
 
 export interface TOrderAllRes {
   orders: Array<IOrder>;
+  totalCnt: number;
 }
 
 export interface IOrder {

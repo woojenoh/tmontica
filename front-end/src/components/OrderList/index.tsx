@@ -32,7 +32,8 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
     orders: [] as IOrder[],
     hasMore: true,
     page: 1,
-    size: 8
+    size: 8,
+    totalCnt: 0
   };
   intervalId = {} as NodeJS.Timeout;
 
@@ -43,19 +44,20 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
       if (!data) throw new Error("주문 내역이 존재하지 않습니다.");
       if (data instanceof CommonError) throw data;
 
-      const { orders } = data;
+      const { orders, totalCnt } = data;
       const combinedOrders = [...this.state.orders, ...orders];
       // _.sortBy(combinedOrders, "orderId");
       // combinedOrders.reverse();
 
       this.setState({
+        totalCnt,
         orders: combinedOrders,
         page: this.state.page + 1,
-        hasMore: orders.length < this.state.size ? false : true
+        hasMore: totalCnt > combinedOrders.length ? true : false
       });
     } catch (error) {
       const result = await handleError(error);
-      if (result === "signout") { 
+      if (result === "signout") {
         this.props.signout();
       }
     }
@@ -68,13 +70,14 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
       if (!data) throw new Error("주문 내역이 존재하지 않습니다.");
       if (data instanceof CommonError) throw data;
 
-      const { orders } = data;
+      const { orders, totalCnt } = data;
 
       // _.sortBy(orders, "orderId");
       // orders.reverse();
 
       this.setState({
         orders,
+        totalCnt,
         hasMore: !this.state.hasMore ? false : true
       });
     } catch (error) {
