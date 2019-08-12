@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.mail.MailSender;
 
 import java.util.Date;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.will;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,7 +32,9 @@ public class UserServiceTest {
     private UserDao userDao;
     @Mock
     private JwtService jwtService;
-
+    @Mock
+    private MailSender sender;
+    private User badUser;
     private User willSignUpUser;
     private User alreadySignUpUser;
 
@@ -44,6 +48,8 @@ public class UserServiceTest {
                 birthDate, "tmon123!", "tmon123!", "USER", regDate,0, false, "abcdefg");
         alreadySignUpUser = new User("vndtjd1217", "산체스", "vndtjd1217@naver.com",
                 birthDate, "tmon123!", "tmon123!", "ADMIN", regDate,0, true, "abcdefg");
+        badUser = new User("1", "1", "1",
+                birthDate, "1", "3", "x", regDate,0, false, "abcdefg");
     }
 
     //** checkUserIdDuplicatedException **//
@@ -52,10 +58,12 @@ public class UserServiceTest {
 
         String id = willSignUpUser.getId();
         // given
-        when(userDao.getUserByUserId(id)).thenReturn(alreadySignUpUser);
+        given(userDao.getUserByUserId(id)).willReturn(alreadySignUpUser);
 
         // when
         userService.checkUserIdDuplicatedException(id);
+
+        // then  UserException 발생.
     }
 
     //** checkUserIdDuplicatedException **//
@@ -64,23 +72,35 @@ public class UserServiceTest {
 
         String id = willSignUpUser.getId();
         // given
-        when(userDao.getUserByUserId(id)).thenReturn(null);
+        given(userDao.getUserByUserId(id)).willReturn(null);
 
         // when
         userService.checkUserIdDuplicatedException(id);
 
-        // then void method..? 어떻게 처리하는지?
+        // then  아무 예외도 발생하지 않았으면 OK
     }
 
-    //** checkPasswordMismatchException **//
+    @Test
+    public void 유저_권한체크_통과(){
+
+        userService.checkUserRoleMismatchException(willSignUpUser.getRole());
+    }
+
     @Test(expected = UserException.class)
-    public void 비밀번호_비밀번호확인_불일치체크(){
+    public void 유저_권한체크_실패(){
 
-
+        userService.checkUserRoleMismatchException(badUser.getRole());
     }
+
     @Test
     public void 회원가입() {
 
-
+        // given
+        아이디_중복체크_중복아님();
+        // 비밀번호 / 비밀번호 확인 일치
+        //when(willSignUpUser.getPassword().equals(willSignUpUser.getPasswordCheck())).thenReturn(true);
+        유저_권한체크_통과();
+        when(userDao.addUser(willSignUpUser)).thenReturn(1);
+        userService.signUp(willSignUpUser);
     }
 }
