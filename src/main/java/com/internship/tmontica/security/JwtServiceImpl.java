@@ -54,11 +54,16 @@ public class JwtServiceImpl implements JwtService{
 
         String jwtToken = request.getHeader(UserConfigValueName.JWT_TOKEN_HEADER_KEY);
 
-        Jws<Claims> jws = Jwts.parser()
+        Jws<Claims> jws;
+
+        try{
+        jws = Jwts.parser()
                 .setSigningKey(KEY)
                 .parseClaimsJws(jwtToken);
+        } catch (Exception e) {
+            throw new UnauthorizedException();
+        }
 
         return jws.getBody().get(key, String.class);
     }
-
 }

@@ -1,11 +1,14 @@
 package com.internship.tmontica.user;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.*;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Pattern(regexp="^[a-z0-9]{6,19}$")
@@ -20,6 +23,7 @@ public class User {
     @NotNull
     @Pattern(regexp="^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{6,19}")
     private String password;
+    private String passwordCheck;
     private String role;
     private Date createdDate;
     @Min(0)

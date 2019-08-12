@@ -1,6 +1,6 @@
 package com.internship.tmontica.order;
 
-import com.internship.tmontica.order.model.response.Order_MenusResp;
+import com.internship.tmontica.order.model.response.OrderMenusResp;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -10,7 +10,17 @@ public interface OrderDao {
 
     // userId로 주문 정보 가져오기
     @Select("select * from orders where user_id = #{userId}")
-    List<Order> getOrderByUserId(String userId);
+    List<Order> getAllOrderByUserId(String userId);
+
+    // userId로 주문 정보 가져오기 (페이징)
+    @Select("select SQL_CALC_FOUND_ROWS * from orders where user_id = #{userId} " +
+            "order by order_date desc " +
+            "limit #{startList}, #{size}")
+    List<Order> getOrderByUserId(String userId, int startList, int size);
+
+    // 직전에 실행됐던 select 쿼리문의 개수 (limit 적용 안된것)
+    @Select("SELECT FOUND_ROWS()")
+    int getPrevResultCnt();
 
     // orderId로 주문 정보 가져오기
     @Select("select * from orders where id = #{orderId}")
@@ -21,7 +31,7 @@ public interface OrderDao {
             "from order_details as A inner join menus as B " +
             "   on A.menu_id = B.id " +
             "where A.order_id = #{orderId}")
-    List<Order_MenusResp> getOrderDetailByOrderId(int orderId);
+    List<OrderMenusResp> getOrderDetailByOrderId(int orderId);
 
     // orderId로 주문의 메뉴 이름들만 가져오기
     @Select("select name_ko " +
@@ -30,13 +40,13 @@ public interface OrderDao {
             "where order_details.order_id = #{orderId}")
     List<String> getMenuNamesByOrderId(int orderId);
 
-    // orderId로 주문상태를 주문취소로 바꾸기
+    // order의 주문 상태 변경
     @Update("update orders set status=#{status} where id=#{orderId}")
     void updateOrderStatus(int orderId, String status);
 
     // order_status_log 추가
     @Insert("insert into order_status_logs " +
-            "values(0, #{statusType}, #{editorId}, #{orderId}, sysdate())")
+            "values(0, #{status}, #{editorId}, #{orderId}, sysdate())")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int addOrderStatusLog(OrderStatusLog orderStatusLog);
 

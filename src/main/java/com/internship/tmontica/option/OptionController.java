@@ -27,19 +27,4 @@ public class OptionController {
         return new ResponseEntity<>(optionService.getAllOptions(), HttpStatus.OK);
     }
 
-    @PostMapping
-    public void addOption(@RequestBody @Valid Option option){
-        optionService.addOption(option);
-    }
-
-    @PutMapping
-    public void updateOption(@RequestBody @Valid Option option){
-        optionService.updateOption(option);
-    }
-
-    @DeleteMapping("/{optionId}")
-    public void deleteOption(@PathVariable("optionId")int id){
-        optionService.deleteOption(id);
-    }
-
 }

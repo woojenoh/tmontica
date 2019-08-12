@@ -3,6 +3,7 @@ package com.internship.tmontica.order;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -10,17 +11,17 @@ import java.util.Date;
 @NoArgsConstructor
 public class OrderStatusLog {
     private int id;
-    @NotNull
-    private String statusType;
-    @NotNull
+    @NotEmpty
+    private String status;
+    @NotEmpty
     private String editorId;
     @NotNull
     private int orderId;
-    @NotNull
+
     private Date modifiedDate;
 
-    public OrderStatusLog(@NotNull String statusType, @NotNull String editorId, @NotNull int orderId) {
-        this.statusType = statusType;
+    public OrderStatusLog(@NotEmpty String status, @NotEmpty String editorId, @NotNull int orderId) {
+        this.status = status;
         this.editorId = editorId;
         this.orderId = orderId;
     }

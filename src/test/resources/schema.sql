@@ -18,28 +18,35 @@ CREATE TABLE IF NOT EXISTS `banners` (
   PRIMARY KEY (`id`));
 
 
-
-
 -- -----------------------------------------------------
--- Table `tmontica`.`users`
+-- Table `users`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `users` ;
 
-
-
 CREATE TABLE IF NOT EXISTS `users` (
-  `name` VARCHAR(45) NOT NULL,
   `id` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `birth_date` DATETIME NOT NULL,
   `password` VARCHAR(100) NOT NULL,
-  `role` CHAR(10) NOT NULL DEFAULT 'user',
+  `role` CHAR(10) NOT NULL DEFAULT 'USER',
   `created_date` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `point` INT(11) NOT NULL DEFAULT '0',
+  `is_active` TINYINT(1) NOT NULL DEFAULT 0,
+  `activate_code` VARCHAR(45) NULL,
   PRIMARY KEY (`id`));
 
 
+-- -----------------------------------------------------
+-- Table `find_id`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `find_id` ;
 
+CREATE TABLE `find_id` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `auth_code` VARCHAR(45) NULL,
+  `find_ids` VARCHAR (255) NULL,
+  PRIMARY KEY (`id`));
 
 -- -----------------------------------------------------
 -- Table `tmontica`.`menus`
@@ -233,7 +240,7 @@ CREATE TABLE IF NOT EXISTS `points` (
   `type` CHAR(10) NOT NULL,
   `date` DATETIME NOT NULL,
   `amount` INT(11) NOT NULL,
-  `description` VARCHAR(100) NOT NULL,
+  `description` VARCHAR(255),
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_point_user1`
     FOREIGN KEY (`user_id`)

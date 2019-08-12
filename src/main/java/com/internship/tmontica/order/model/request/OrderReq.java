@@ -1,18 +1,23 @@
 package com.internship.tmontica.order.model.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class OrderReq {
-    @NotNull
-    private List<Order_MenusReq> menus;
+    @NotEmpty
+    @Valid
+    private List<OrderMenusReq> menus;
     private int usedPoint;
-    @NotNull
+    @Min(1000)
     private int totalPrice;
-    @NotNull
+    @NotEmpty
     private String payment;
 
 }

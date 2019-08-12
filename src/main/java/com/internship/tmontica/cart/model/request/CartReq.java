@@ -1,19 +1,23 @@
 package com.internship.tmontica.cart.model.request;
 
-import com.internship.tmontica.cart.model.request.Cart_OptionReq;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class CartReq {
 
-    @NotNull
+    @Min(1)
     private int menuId;
-    @NotNull
+    @Min(1)
     private int quantity;
-    private List<Cart_OptionReq> option;
+    @Valid
+    private List<CartOptionReq> option;
     @NotNull
-    private boolean direct;
+    private Boolean direct; // @NotNull 적용을 위해
 }
