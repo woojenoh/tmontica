@@ -1,5 +1,5 @@
 import { TCartAddReq, TCartId, ICart } from "../types/cart";
-import { post, API_URL, get, withJWT } from "./common";
+import { put, post, API_URL, get, withJWT } from "./common";
 import { IUserSignupInfo, IUserSigninInfo, IUserSigninActive } from "../types/user";
 
 export function addCart(cartAddReqs: Array<TCartAddReq>) {
@@ -44,7 +44,7 @@ export function checkPassword(data: { password: string }) {
 }
 
 export function updateUser(user: { password: string; passwordCheck: string }) {
-  return post<true>(`${API_URL}/users`, user, withJWT());
+  return put<true>(`${API_URL}/users`, user, withJWT());
 }
 
 export function setPoint() {
