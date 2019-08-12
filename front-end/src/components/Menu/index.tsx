@@ -162,7 +162,11 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
     } else {
       return;
     }
-    stateOption.set(option.type, option);
+    if (option.quantity === 0) {
+      stateOption.delete(option.type);
+    } else {
+      stateOption.set(option.type, option);
+    }
     this.updateOptionAndTotalPrice(stateOption);
   }
 

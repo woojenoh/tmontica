@@ -55,7 +55,7 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
       });
     } catch (error) {
       const result = await handleError(error);
-      if (result === "signout") {
+      if (result === "signout") { 
         this.props.signout();
       }
     }
