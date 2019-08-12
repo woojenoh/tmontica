@@ -133,7 +133,7 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
   }
 
   handlePay = () => {
-    if (window.confirm("제하시겠습니까?")) {
+    if (window.confirm("결제하시겠습니까?")) {
       // TODO: 결제하기 API 호출
       this.order();
       // 내 주문 페이지로 이동
