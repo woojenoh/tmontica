@@ -50,7 +50,7 @@ class Menus extends React.PureComponent<IMenusProps, IMenusState> {
   // 메인 상단 배너 요청
   async getMainTopBanner() {
     try {
-      const usePageEng = "main-top";
+      const usePageEng = "main_top";
       const mainTopBanners = await getBannerByUsePageEng(usePageEng);
       if (mainTopBanners instanceof CommonError) {
         throw mainTopBanners;
