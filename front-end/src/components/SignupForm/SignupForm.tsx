@@ -118,7 +118,7 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
           isIdNotSame: true
         });
       } else {
-        alert("6~20자의 영문, 숫자만 사용 가능합니다.");
+        alert("6~20자의 영문 소문자, 숫자만 사용 가능합니다.");
       }
     } catch (error) {
       await handleError(error);
@@ -197,7 +197,7 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
             ? isIdNotSame
               ? "사용 가능한 아이디입니다."
               : "아이디가 중복인지 확인하세요."
-            : "6~20자의 영문, 숫자만 사용 가능합니다."}
+            : "6~20자의 영문 소문자, 숫자만 사용 가능합니다."}
         </span>
         <input
           type="password"
