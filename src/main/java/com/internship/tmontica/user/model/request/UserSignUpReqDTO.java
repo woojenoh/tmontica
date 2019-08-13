@@ -17,7 +17,7 @@ public class UserSignUpReqDTO{
     private String id;
     @NotNull
     private String name;
-    @Email
+    @Pattern(regexp = "^[_a-zA-Z0-9-\\\\.]+@[\\\\.a-zA-Z0-9-]+\\\\.[a-zA-Z]+$")
     @NotNull
     private String email;
     @NotNull
