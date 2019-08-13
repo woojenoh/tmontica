@@ -34,17 +34,17 @@ public class BannerServiceTest {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         Banner banner1 = Banner.builder().id(1).link("http://tmontica-idev.tmon.co.kr/")
-                .usePage(BannerUsePage.BANNER_MAIN_TOP.getUsePageEng()).creatorId("admin")
+                .usePage(UsePage.main_top.toString()).creatorId("admin")
                 .imgUrl("/imagefiles/2019/10/1/banner1.png").startDate(sdf.parse("2018-08-28 17:22:21"))
                 .endDate(sdf.parse("2020-08-28 17:22:21")).number(1).build();
 
         Banner banner2 = Banner.builder().id(2).link("http://tmontica-idev.tmon.co.kr/")
-                .usePage(BannerUsePage.BANNER_MAIN_TOP.getUsePageEng()).creatorId("admin")
+                .usePage(UsePage.main_top.toString()).creatorId("admin")
                 .imgUrl("/imagefiles/2019/10/1/banner2.png").startDate(sdf.parse("2018-08-28 17:22:21"))
                 .endDate(sdf.parse("2020-08-28 17:22:21")).number(2).build();
 
         Banner banner3 = Banner.builder().id(3).link("http://tmontica-idev.tmon.co.kr/")
-                .usePage(BannerUsePage.BANNER_MAIN_BOTTOM.getUsePageEng()).creatorId("admin")
+                .usePage(UsePage.main_top.toString()).creatorId("admin")
                 .imgUrl("/imagefiles/2019/10/1/banner3.png").startDate(sdf.parse("2018-08-28 17:22:21"))
                 .endDate(sdf.parse("2020-08-28 17:22:21")).number(1).build();
 
@@ -56,13 +56,13 @@ public class BannerServiceTest {
 
     @Test
     public void userPage로_배너_가져오기() {
-        List<Banner> mainTopBanners = banners.stream().filter(b -> b.getUsePage().equals(BannerUsePage.BANNER_MAIN_TOP.getUsePageEng())).collect(Collectors.toList());
+        List<Banner> mainTopBanners = banners.stream().filter(b -> b.getUsePage().equals(UsePage.main_top.toString())).collect(Collectors.toList());
 
         //given
-        given(bannerDao.getBannersByUsePage(BannerUsePage.BANNER_MAIN_TOP.getUsePageEng())).willReturn(mainTopBanners);
+        given(bannerDao.getBannersByUsePage(UsePage.main_top.toString())).willReturn(mainTopBanners);
 
         //when
-        List<Banner> result = bannerService.getBannersByPage(BannerUsePage.BANNER_MAIN_TOP.getUsePageEng());
+        List<Banner> result = bannerService.getBannersByPage(UsePage.main_top);
 
         //then
         verify(bannerDao, atLeastOnce()).getBannersByUsePage(anyString());
