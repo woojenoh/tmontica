@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Link, withRouter, RouteComponentProps } from "react-router-dom";
+import moment from "moment";
 import * as userTypes from "../../types/user";
 import "./styles.scss";
 import { checkDuplicated } from "../../api/user";
@@ -118,7 +119,7 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
           isIdNotSame: true
         });
       } else {
-        alert("6~20자의 영문, 숫자만 사용 가능합니다.");
+        alert("6~20자의 영문 소문자, 숫자만 사용 가능합니다.");
       }
     } catch (error) {
       await handleError(error);
@@ -176,7 +177,11 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
             autoComplete="off"
             required
           />
-          <button className="button signup__id-button" onClick={() => handleIsIdNotSame()}>
+          <button
+            type="button"
+            className="button signup__id-button"
+            onClick={() => handleIsIdNotSame()}
+          >
             중복확인
           </button>
         </div>
@@ -193,7 +198,7 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
             ? isIdNotSame
               ? "사용 가능한 아이디입니다."
               : "아이디가 중복인지 확인하세요."
-            : "6~20자의 영문, 숫자만 사용 가능합니다."}
+            : "6~20자의 영문 소문자, 숫자만 사용 가능합니다."}
         </span>
         <input
           type="password"
@@ -246,6 +251,7 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
             name="birthDate"
             className="input signup__input signup__birthday-input"
             onChange={e => handleInputChange(e)}
+            max={moment().format("YYYY-MM-DD")}
             required
           />
         </div>

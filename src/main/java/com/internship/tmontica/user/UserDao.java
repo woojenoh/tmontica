@@ -23,8 +23,8 @@ public interface UserDao {
     // Update
     @Update("UPDATE users SET password = #{password} WHERE id = #{id}")
     int updateUserPassword(User user);
-    @Update("UPDATE users SET is_active = #{isActive}")
-    int updateActivateStatus(int isActive);
+    @Update("UPDATE users SET is_active = #{isActive} WHERE id = #{id}")
+    int updateActivateStatus(int isActive, String id);
     @Update("UPDATE users SET point = #{point} where id = #{id}")
     int updateUserPoint(int point, String id);
     // Delete

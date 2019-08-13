@@ -19,7 +19,8 @@ public enum UserExceptionType {
     ACTIVATE_CODE_MISMATCH_EXCEPTION("activeCode", "활성화 코드가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     AUTHCODE_NOT_FOUND_EXCEPTION("authCode", "인증 코드가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     DATABASE_FAIL_EXCEPTION("dataBase", "잠시후 다시 시도해주세요.", HttpStatus.INTERNAL_SERVER_ERROR),
-    EMAIL_NOT_FOUND_EXCEPTION("email", "가입되지 않는 이메일 주소 입니다.", HttpStatus.BAD_REQUEST);
+    EMAIL_NOT_FOUND_EXCEPTION("email", "가입되지 않는 이메일 주소 입니다.", HttpStatus.BAD_REQUEST),
+    SEND_MAIL_FAIL_EXCEPTION("email", "부적절한 이메일 주소입니다", HttpStatus.BAD_REQUEST );
 
     private String field;
     private String message;
