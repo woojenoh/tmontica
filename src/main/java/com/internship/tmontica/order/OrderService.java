@@ -197,17 +197,26 @@ public class OrderService {
     @Transactional
     public void cancelOrderApi(int orderId){
         String userId = JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"),"id");
-        String dbUserId = orderDao.getOrderByOrderId(orderId).getUserId();
+        Order order = orderDao.getOrderByOrderId(orderId);
+        String dbUserId = order.getUserId();
         if(!userId.equals(dbUserId)){
             // 아이디 디비와 다를경우 예외처리
             throw new OrderException(OrderExceptionType.FORBIDDEN_ACCESS_ORDER_DATA);
         }
 
-        Order order = orderDao.getOrderByOrderId(orderId);
+
         // 주문 상태가 '미결제' 나 '결제완료' 상태가 아니면 예외처리
         if(!order.getStatus().equals(OrderStatusType.BEFORE_PAYMENT.getStatus())
                 && !order.getStatus().equals(OrderStatusType.AFTER_PAYMENT.getStatus())){
             throw new OrderException(OrderExceptionType.CANNOT_CANCEL_ORDER);
+        }
+
+        // 포인트 돌려주기
+        if(order.getUsedPoint() > 0){
+            // 포인트 반환
+            userDao.updateUserPoint(userDao.getUserPointByUserId(userId)+order.getUsedPoint(), userId);
+            // 포인트 사용 로그에 추가
+            pointDao.addPoint(new Point(userId, PointLogType.GET_POINT.getType(), order.getUsedPoint(), "주문취소 환불"));
         }
 
         // orders 테이블에서 status 수정
