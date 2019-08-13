@@ -97,7 +97,10 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
       if (data instanceof CommonError) {
         throw data;
       }
-      await this.props.initializeCart();
+      // 바로구매가 아닌 장바구니 구매일 때만 장바구니 상태 초기화
+      if (window.localStorage.getItem("isDirect") === "N") {
+        await this.props.initializeCart();
+      }
       await this.props.setPoint();
 
       const { orderId } = data;
