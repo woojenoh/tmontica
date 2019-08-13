@@ -25,11 +25,12 @@ public class UserService {
 
     private final UserDao userDao;
     private final FindDao findDao;
-    private final MailSender sender;
     private final JwtService jwtService;
+    private final MailSender sender;
     private final ModelMapper modelMapper;
 
-    public void signUp(User user) throws MailSendException{
+    @Transactional
+    public void signUp(User user) throws MailSendException {
 
         //회원가입 정보 예외검사 및 기본설정
         checkUserIdDuplicatedException(user.getId());
@@ -75,7 +76,7 @@ public class UserService {
             throw new UserException(UserExceptionType.ACTIVATE_CODE_MISMATCH_EXCEPTION);
         }
 
-        if(userDao.updateActivateStatus(1) < 1){
+        if(userDao.updateActivateStatus(1, id) < 1){
             throw new UserException(UserExceptionType.DATABASE_FAIL_EXCEPTION);
         }
     }
@@ -166,8 +167,6 @@ public class UserService {
             key = authenticationKey.getAuthenticationKey();
         }
 
-        UserMailForm userMailForm = new UserMailForm(MailType.FIND_ID, userList.get(0), key);
-
         // 인증코드와 아이디 찾기를 요청받은 아이디들을 DB에 등록하고 실패하면 DATABASE_FAIL예외 throw
         if(findDao.addAuthCode(new FindId(key, userList.stream().
                 filter(User::isActive).
@@ -177,6 +176,7 @@ public class UserService {
             throw new UserException(UserExceptionType.DATABASE_FAIL_EXCEPTION);
         }
 
+        UserMailForm userMailForm = new UserMailForm(MailType.FIND_ID, userList.get(0), key);
         sender.send(userMailForm.getMsg());
     }
 
