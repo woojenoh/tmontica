@@ -15,7 +15,7 @@ public class OrderReq {
     @Valid
     private List<OrderMenusReq> menus;
     private int usedPoint;
-    @Min(1000)
+    @Min(0)
     private int totalPrice;
     @NotEmpty
     private String payment;
