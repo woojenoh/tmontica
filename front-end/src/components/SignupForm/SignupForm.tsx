@@ -176,7 +176,11 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
             autoComplete="off"
             required
           />
-          <button className="button signup__id-button" onClick={() => handleIsIdNotSame()}>
+          <button
+            type="button"
+            className="button signup__id-button"
+            onClick={() => handleIsIdNotSame()}
+          >
             중복확인
           </button>
         </div>
