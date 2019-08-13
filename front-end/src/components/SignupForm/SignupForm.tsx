@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Link, withRouter, RouteComponentProps } from "react-router-dom";
+import moment from "moment";
 import * as userTypes from "../../types/user";
 import "./styles.scss";
 import { checkDuplicated } from "../../api/user";
@@ -250,6 +251,7 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
             name="birthDate"
             className="input signup__input signup__birthday-input"
             onChange={e => handleInputChange(e)}
+            max={moment().format("YYYY-MM-DD")}
             required
           />
         </div>
