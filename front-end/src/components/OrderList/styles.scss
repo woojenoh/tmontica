@@ -10,4 +10,10 @@
   min-height: 80px;
   border: 1px solid $border-gray;
   background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .orders-list__items {
+    width: 100%;
+  }
 }

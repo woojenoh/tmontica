@@ -2,25 +2,23 @@ package com.internship.tmontica.user;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Setter
 @Getter
 class UserMailForm {
 
-    private SimpleMailMessage msg;
-    private static final String ADMIN_ADDRESS = "tmontica701@gmail.com";
+    private MailType mailType;
     private User user;
     private String authenticationKey;
+    private SimpleMailMessage msg;
     //private static final String ACTIVE_API_LINK = "http://localhost:3000/signin?active=true&";
     private static final String ACTIVE_API_LINK = "http://tmontica-idev.tmon.co.kr/signin?active=true&";
+    private static final String ADMIN_ADDRESS = "tmontica701@gmail.com";
     private static final String ID_PARAM = "id=";
     private static final String TOKEN_PARAM = "&token=";
-    private MailType mailType;
 
-     UserMailForm(MailType mailType, User user, boolean isNeedAuthKey) {
+    UserMailForm(MailType mailType, User user, boolean isNeedAuthKey) {
          setUser(user);
          setMailType(mailType);
          msg = new SimpleMailMessage();
@@ -38,7 +36,7 @@ class UserMailForm {
         makeMail();
     }
 
-     private void makeMail(){
+    private void makeMail(){
 
          switch (mailType){
 

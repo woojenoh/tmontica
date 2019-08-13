@@ -28,10 +28,10 @@ interface IMenusSubState extends TMenuByCategory {
 class MenusSub extends React.PureComponent<IMenusSubProps, IMenusSubState> {
   state = {
     categoryKo: "",
-    menus: [] as TMenusItem[],
-    hasMore: true,
+    menus: null as TMenusItem[] | null,
+    hasMore: false,
     page: 1
-  };
+  } as IMenusSubState;
 
   async getMenuByCateory() {
     try {
@@ -53,7 +53,7 @@ class MenusSub extends React.PureComponent<IMenusSubProps, IMenusSubState> {
 
       this.setState({
         categoryKo,
-        menus: [...this.state.menus, ...menus] as TMenusItem[],
+        menus: this.state.menus !== null ? [...this.state.menus, ...menus] : [...menus],
         page: this.state.page + 1,
         hasMore: menus.length === size ? true : false
       });
@@ -63,7 +63,7 @@ class MenusSub extends React.PureComponent<IMenusSubProps, IMenusSubState> {
   }
 
   componentDidMount() {
-    // this.getMenuByCateory();
+    this.getMenuByCateory();
   }
 
   componentDidUpdate(prevProps: IMenusSubProps) {
@@ -73,21 +73,26 @@ class MenusSub extends React.PureComponent<IMenusSubProps, IMenusSubState> {
   }
 
   render() {
+    const { menus } = this.state;
+
     return (
       <>
         <main className="main">
-          <InfiniteScroll
-            pageStart={1}
-            loadMore={this.getMenuByCateory.bind(this)}
-            hasMore={this.state.hasMore}
-            loader={<div className="loader">Loading ...</div>}
-          >
-            <MenuItems
-              key={this.state.page}
-              categoryKo={this.state.categoryKo}
-              menus={this.state.menus}
-            />
-          </InfiniteScroll>
+          {menus ? (
+            <InfiniteScroll
+              pageStart={1}
+              loadMore={this.getMenuByCateory.bind(this)}
+              hasMore={this.state.hasMore}
+            >
+              <MenuItems
+                key={this.state.page}
+                categoryKo={this.state.categoryKo}
+                menus={this.state.menus}
+              />
+            </InfiniteScroll>
+          ) : (
+            "로딩 중입니다."
+          )}
         </main>
       </>
     );

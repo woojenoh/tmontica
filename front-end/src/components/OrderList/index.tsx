@@ -29,12 +29,12 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
   }
 
   state = {
-    orders: [] as IOrder[],
-    hasMore: true,
+    orders: null as IOrder[] | null,
+    hasMore: false,
     page: 1,
     size: 8,
     totalCnt: 0
-  };
+  } as IOrderListState;
   intervalId = {} as NodeJS.Timeout;
 
   async getOrderByPaging() {
@@ -45,9 +45,8 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
       if (data instanceof CommonError) throw data;
 
       const { orders, totalCnt } = data;
-      const combinedOrders = [...this.state.orders, ...orders];
-      // _.sortBy(combinedOrders, "orderId");
-      // combinedOrders.reverse();
+      const combinedOrders =
+        this.state.orders !== null ? [...this.state.orders, ...orders] : [...orders];
 
       this.setState({
         totalCnt,
@@ -55,6 +54,8 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
         page: this.state.page + 1,
         hasMore: totalCnt > combinedOrders.length ? true : false
       });
+
+      return Promise.resolve();
     } catch (error) {
       const result = await handleError(error);
       if (result === "signout") {
@@ -102,10 +103,12 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
   }
 
   componentDidMount() {
-    // this.getOrderByPaging();
-    this.intervalId = setInterval(() => {
-      this.getOrderAll();
-    }, 10000);
+    this.getOrderByPaging().then(
+      () =>
+        (this.intervalId = setInterval(() => {
+          this.getOrderAll();
+        }, 10000))
+    );
   }
 
   componentWillUnmount() {
@@ -117,7 +120,7 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
     const { orders } = this.state;
 
     const orderListItems =
-      orders.length > 0
+      orders && orders.length > 0
         ? _.map(orders, (o: IOrder) => {
             const name =
               o.menuNames.length > 0
@@ -144,16 +147,23 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
       <>
         <h1 className="orders-list__title">주문내역{/*orders.length*/}</h1>
         <div className="orders-list__content">
-          <ul className="orders-list__items">
-            <InfiniteScroll
-              pageStart={1}
-              loadMore={this.getOrderByPaging.bind(this)}
-              hasMore={this.state.hasMore}
-              loader={<div className="loader">Loading ...</div>}
-            >
-              {orderListItems}
-            </InfiniteScroll>
-          </ul>
+          {orders ? (
+            orders.length ? (
+              <ul className="orders-list__items">
+                <InfiniteScroll
+                  pageStart={1}
+                  loadMore={this.getOrderByPaging.bind(this)}
+                  hasMore={this.state.hasMore}
+                >
+                  {orderListItems}
+                </InfiniteScroll>
+              </ul>
+            ) : (
+              "주문내역이 존재하지 않습니다."
+            )
+          ) : (
+            "로딩 중입니다."
+          )}
         </div>
       </>
     );
