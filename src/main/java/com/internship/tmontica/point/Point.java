@@ -32,9 +32,9 @@ public class Point {
 
     public Point(String type, String amount){
 
-        checkPointType();
         this.type = type;
         this.amount = Integer.parseInt(amount);
+        checkPointType();
     }
 
     public Point(String userId, String type, String amount){
