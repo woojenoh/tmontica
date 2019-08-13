@@ -15,7 +15,7 @@ public enum UserExceptionType {
     PASSWORD_MISMATCH_EXCEPTION("password", "비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     USER_ID_DUPLICATED_EXCEPTION("userId", "중복된 아이디 입니다.", HttpStatus.CONFLICT),
     USER_ID_NOT_FOUND_EXCEPTION("userId", "아이디를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
-    USER_NOT_ACTIVATE_EXCEPTION("isActive", "비활성화된 유저 입니다.", HttpStatus.UNAUTHORIZED),
+    USER_NOT_ACTIVATE_EXCEPTION("isActive", "비활성화된 유저 입니다.", HttpStatus.BAD_REQUEST),
     ACTIVATE_CODE_MISMATCH_EXCEPTION("activeCode", "활성화 코드가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     AUTHCODE_NOT_FOUND_EXCEPTION("authCode", "인증 코드가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
     DATABASE_FAIL_EXCEPTION("dataBase", "잠시후 다시 시도해주세요.", HttpStatus.INTERNAL_SERVER_ERROR),
