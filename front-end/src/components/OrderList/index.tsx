@@ -117,7 +117,7 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
 
   render() {
     const { handleOrderListItemClick } = this.props;
-    const { orders } = this.state;
+    const { orders, totalCnt } = this.state;
 
     const orderListItems =
       orders && orders.length > 0
@@ -125,7 +125,7 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
             const name =
               o.menuNames.length > 0
                 ? `${o.menuNames[0]}${
-                    o.menuNames.length > 1 ? `외 ${o.menuNames.length - 1}개` : ``
+                    o.menuNames.length > 1 ? ` 외 ${o.menuNames.length - 1}개` : ``
                   }`
                 : "";
 
@@ -145,7 +145,7 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
 
     return (
       <>
-        <h1 className="orders-list__title">주문내역{/*orders.length*/}</h1>
+        <h1 className="orders-list__title">주문내역({totalCnt})</h1>
         <div className="orders-list__content">
           {orders ? (
             orders.length ? (
