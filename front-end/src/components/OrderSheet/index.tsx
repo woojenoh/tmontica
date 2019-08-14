@@ -164,9 +164,7 @@ class OrderSheet extends PureComponent<IOrderSheetProps, IOrderSheetState> {
                 })
               : ""}
           </ul>
-          <ul className="orders__items">
-            <OrderSheetList order={order} />
-          </ul>
+          <OrderSheetList order={order} />
           <div className="orders__total">
             <div className="orders__total-price">
               주문금액 - {Number(order.totalPrice).toLocaleString()}원
