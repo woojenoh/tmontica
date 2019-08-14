@@ -19,7 +19,11 @@ class MenuItems extends React.PureComponent<IMenuItemsProps> {
         <div className="menu__top">
           <h1 className="menu__title">{categoryKo}</h1>
           {categoryEng ? (
-            <Link to={`/menus/${categoryEng}`} className="menu__link">
+            <Link
+              to={`/menus/${categoryEng}`}
+              aria-label={`${categoryKo} 메뉴 더 보기`}
+              className="menu__link"
+            >
               {categoryKo !== "이달의 메뉴" && <span className="menu__more">+</span>}
             </Link>
           ) : (

@@ -21,7 +21,9 @@
       .header__item {
         margin-left: 40px;
         cursor: pointer;
-        color: black;
+        a {
+          color: black;
+        }
         svg {
           font-size: 1.75em;
         }

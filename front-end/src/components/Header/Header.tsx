@@ -84,17 +84,27 @@ class Header extends PureComponent<IHeaderProps, IHeaderState> {
       <>
         <header className="header">
           <div className="header__container">
-            <Link to="/">
+            <Link to="/" aria-label="메인 페이지 이동">
               <img src="/img/tmon-logo.png" alt="Tmontica Logo" className="header__logo" />
             </Link>
             <ul className="header__items">
-              <Link to={isSignin ? "/orders" : "/signin"} className="header__item">
-                <FontAwesomeIcon icon={isSignin ? faReceipt : faUser} size="2x" />
-              </Link>
-              <li className="header__item" onClick={() => handleCartOpen()}>
+              <li className="header__item">
+                <Link aria-label="로그인 페이지 이동" to={isSignin ? "/orders" : "/signin"}>
+                  <FontAwesomeIcon icon={isSignin ? faReceipt : faUser} size="2x" />
+                </Link>
+              </li>
+              <li
+                className="header__item"
+                aria-label="장바구니 열기"
+                onClick={() => handleCartOpen()}
+              >
                 <FontAwesomeIcon icon={faShoppingCart} size="2x" />
               </li>
-              <li className="header__item" onClick={() => handleNavOpen()}>
+              <li
+                className="header__item"
+                aria-label="네비게이션 열기"
+                onClick={() => handleNavOpen()}
+              >
                 <FontAwesomeIcon icon={faBars} size="2x" />
               </li>
             </ul>

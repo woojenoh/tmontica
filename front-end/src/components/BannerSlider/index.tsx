@@ -49,7 +49,7 @@ export class BannerSlider extends React.PureComponent<Props> {
                   <Image src={`${IMAGE_URL}/${banner.imgUrl}`} />
                 </a>
               ) : (
-                <Link to={banner.link}>
+                <Link aria-label={`${banner.link}로 이동`} to={banner.link}>
                   <Image src={`${IMAGE_URL}/${banner.imgUrl}`} />
                 </Link>
               )}
