@@ -149,15 +149,15 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
         <div className="orders-list__content">
           {orders ? (
             orders.length ? (
-              <ul className="orders-list__items">
-                <InfiniteScroll
-                  pageStart={1}
-                  loadMore={this.getOrderByPaging.bind(this)}
-                  hasMore={this.state.hasMore}
-                >
-                  {orderListItems}
-                </InfiniteScroll>
-              </ul>
+              <InfiniteScroll
+                element="ul"
+                className="orders-list__items"
+                pageStart={1}
+                loadMore={this.getOrderByPaging.bind(this)}
+                hasMore={this.state.hasMore}
+              >
+                {orderListItems}
+              </InfiniteScroll>
             ) : (
               "주문내역이 존재하지 않습니다."
             )
