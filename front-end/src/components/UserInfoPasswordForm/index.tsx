@@ -25,6 +25,7 @@ export default class UserInfoPasswordForm extends React.PureComponent<
           placeholder="비밀번호"
           value={password}
           onChange={e => handlePasswordInputChange(e)}
+          aria-label="비밀번호"
           required
         />
         <input

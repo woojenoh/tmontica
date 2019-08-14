@@ -319,6 +319,7 @@ export default class Menu extends Component<IMenuProps, IMenuState> {
                         name="quantity"
                         className="counter__number"
                         value={this.state.quantity}
+                        aria-label="메뉴 수량"
                         readOnly
                       />
                       <div className="counter__plus" onClick={e => this.handleQuantity(true)}>

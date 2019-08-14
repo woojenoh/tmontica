@@ -19,6 +19,7 @@ export default class MenuCounter extends PureComponent<IMenuCounterProps> {
             name={option.name}
             className="counter__number"
             value={option.quantity}
+            aria-label={`${title} 수량`}
             readOnly
           />
           <div className="counter__plus" onClick={e => handleCountableOptionClick(true, option)}>

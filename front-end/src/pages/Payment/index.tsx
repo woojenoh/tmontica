@@ -223,6 +223,7 @@ class Payment extends React.PureComponent<IPaymentProps, IPaymentState> {
                   name="point"
                   value={this.state.usedPoint}
                   onChange={this.handlePoint}
+                  aria-label="구매에 사용할 포인트"
                 />
                 <div>
                   사용가능한 포인트:

@@ -54,6 +54,7 @@ class SigninForm extends React.PureComponent<ISigninFormProps, ISigninFormState>
           className="input signin__input"
           placeholder="아이디"
           onChange={e => handleInputChange(e)}
+          aria-label="아이디"
           required
         />
         <input
@@ -62,6 +63,7 @@ class SigninForm extends React.PureComponent<ISigninFormProps, ISigninFormState>
           className="input signin__input"
           placeholder="비밀번호"
           onChange={e => handleInputChange(e)}
+          aria-label="비밀번호"
           required
         />
         <Link to="/find" className="signin__find">

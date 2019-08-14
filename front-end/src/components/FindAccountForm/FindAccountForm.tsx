@@ -81,6 +81,7 @@ class FindAccountForm extends PureComponent<IFindAccountFormProps, IFindAccountF
             placeholder="이메일"
             onChange={e => handleInputChange(e)}
             value={idEmail}
+            aria-label="이메일"
             required
           />
           {isFindIdLoading ? (
@@ -103,6 +104,7 @@ class FindAccountForm extends PureComponent<IFindAccountFormProps, IFindAccountF
             placeholder="인증코드"
             onChange={e => handleInputChange(e)}
             value={idCode}
+            aria-label="인증코드"
             required
           />
           <input type="submit" className="button find-id__code-button" />
@@ -115,6 +117,7 @@ class FindAccountForm extends PureComponent<IFindAccountFormProps, IFindAccountF
             placeholder="아이디"
             onChange={e => handleInputChange(e)}
             value={passwordId}
+            aria-label="아이디"
             required
           />
           <input
@@ -124,6 +127,7 @@ class FindAccountForm extends PureComponent<IFindAccountFormProps, IFindAccountF
             placeholder="이메일"
             onChange={e => handleInputChange(e)}
             value={passwordEmail}
+            aria-label="이메일"
             required
           />
           {isFindPasswordLoading ? (

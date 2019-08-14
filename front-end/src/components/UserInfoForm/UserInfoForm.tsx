@@ -63,6 +63,7 @@ class UserInfoForm extends React.PureComponent<IUserInfoFormProps, IUserInfoForm
               name="id"
               className="input user-info__input"
               value={user.id}
+              aria-label="아이디"
               required
               disabled
             />
@@ -71,6 +72,7 @@ class UserInfoForm extends React.PureComponent<IUserInfoFormProps, IUserInfoForm
               name="name"
               className="input user-info__input"
               value={user.name}
+              aria-label="이름"
               required
               disabled
             />
@@ -79,6 +81,7 @@ class UserInfoForm extends React.PureComponent<IUserInfoFormProps, IUserInfoForm
               name="email"
               className="input user-info__input"
               value={user.email}
+              aria-label="이메일"
               required
               disabled
             />
@@ -87,6 +90,7 @@ class UserInfoForm extends React.PureComponent<IUserInfoFormProps, IUserInfoForm
               name="birthDate"
               className="input user-info__input"
               value={user.birthDate}
+              aria-label="생일"
               required
               disabled
             />
@@ -97,6 +101,7 @@ class UserInfoForm extends React.PureComponent<IUserInfoFormProps, IUserInfoForm
               placeholder="변경 비밀번호"
               value={password}
               onChange={e => handleInputChange(e)}
+              aria-label="변경 비밀번호"
               required
             />
             <input
@@ -106,6 +111,7 @@ class UserInfoForm extends React.PureComponent<IUserInfoFormProps, IUserInfoForm
               placeholder="변경 비밀번호 확인"
               value={passwordCheck}
               onChange={e => handleInputChange(e)}
+              aria-label="변경 비밀번호 확인"
               required
             />
             <input

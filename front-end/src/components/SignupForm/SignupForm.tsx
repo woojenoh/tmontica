@@ -175,6 +175,7 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
             placeholder="아이디 *"
             onChange={e => handleIdInputChange(e)}
             autoComplete="off"
+            aria-label="아이디"
             required
           />
           <button
@@ -206,6 +207,7 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
           className="input signup__input"
           placeholder="비밀번호 *"
           onChange={e => handleInputChange(e)}
+          aria-label="비밀번호"
           required
         />
         <input
@@ -214,6 +216,7 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
           className="input signup__input"
           placeholder="비밀번호 확인 *"
           onChange={e => handleInputChange(e)}
+          aria-label="비밀번호 확인"
           required
         />
         <span
@@ -234,6 +237,7 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
           placeholder="이름 *"
           onChange={e => handleInputChange(e)}
           maxLength={6}
+          aria-label="이름"
           required
         />
         <input
@@ -242,6 +246,7 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
           className="input signup__input"
           placeholder="이메일 *"
           onChange={e => handleInputChange(e)}
+          aria-label="이메일"
           required
         />
         <div className="signup__birthday-container">
@@ -252,6 +257,7 @@ class SignupForm extends React.PureComponent<ISignupFormProps, ISignupFormState>
             className="input signup__input signup__birthday-input"
             onChange={e => handleInputChange(e)}
             max={moment().format("YYYY-MM-DD")}
+            aria-label="생일"
             required
           />
         </div>

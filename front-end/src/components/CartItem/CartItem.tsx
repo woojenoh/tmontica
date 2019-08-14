@@ -97,6 +97,7 @@ class CartItem extends PureComponent<ICartItemProps, ICartItemState> {
             name="quantity"
             value={quantity}
             onChange={e => handleQuantityChange(e)}
+            aria-label={`${name} 수량 수정`}
           >
             {buildSelectOptions()}
           </select>
