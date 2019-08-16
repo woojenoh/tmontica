@@ -3,6 +3,7 @@ package com.internship.tmontica.user;
 import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.user.exception.UserException;
 import com.internship.tmontica.user.exception.UserExceptionType;
+import com.internship.tmontica.user.model.response.UserChangePasswordDTO;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.MailSender;
 
 import java.util.Date;
@@ -32,6 +34,8 @@ public class UserServiceTest {
     private JwtService jwtService;
     @Mock
     private MailSender sender;
+    @Mock
+    private ModelMapper mapper;
     private User badUser;
     private User willSignUpUser;
     private User alreadySignUpUser;
@@ -216,6 +220,15 @@ public class UserServiceTest {
         userService.checkPassword(alreadySignUpUser);
     }
 
+    @Test
+    public void 비밀번호_수정_성공(){
+
+        // given
+        given(userDao.updateUserPassword(alreadySignUpUser)).willReturn(1);
+
+        // when
+        userService.changePassword(alreadySignUpUser);
+    }
 
 
 }

@@ -39,11 +39,11 @@ public class UserService {
         checkUserRoleMismatchException(user.getRole());
 
         //문제없는 회원가입 정보가 왔다면 활성화 코드 설정
-       String key = new AuthenticationKey().getAuthenticationKey();
+        String key = new AuthenticationKey().getAuthenticationKey();
         setActivateCode(user, key);
 
         if(userDao.addUser(user) < 1){
-            throw new UserException(UserExceptionType.DATABASE_FAIL_EXCEPTION);
+             throw new UserException(UserExceptionType.DATABASE_FAIL_EXCEPTION);
         }
 
         //Sign-up 메일 전송
