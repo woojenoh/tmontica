@@ -2,11 +2,12 @@ package com.internship.tmontica.user.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
-@AllArgsConstructor
 @Getter
-public class UserChangePasswordDTO {
+@Setter
+@AllArgsConstructor
+public class UserSignInResponseDTO {
 
-    private String id;
-    private String password;
+    private String authorization;
 }

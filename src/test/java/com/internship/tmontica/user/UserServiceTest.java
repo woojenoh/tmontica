@@ -3,7 +3,6 @@ package com.internship.tmontica.user;
 import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.user.exception.UserException;
 import com.internship.tmontica.user.exception.UserExceptionType;
-import com.internship.tmontica.user.model.response.UserChangePasswordDTO;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;

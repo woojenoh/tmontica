@@ -5,7 +5,7 @@ import com.internship.tmontica.point.PointLogType;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-public class PointLogReqDTO {
+public class PointLogRequestDTO {
 
     private String userId;
     @NotNull
