@@ -1,5 +1,8 @@
 package com.internship.tmontica.util.exception;
 
+import lombok.Getter;
+
+@Getter
 public class UtilException extends RuntimeException{
 
     private String field;
