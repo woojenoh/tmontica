@@ -2,12 +2,12 @@ package com.internship.tmontica.user.model.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+import java.util.List;
+
 @AllArgsConstructor
-public class UserSignInRespDTO {
+@Getter
+public class UserFindIdResponseDTO {
 
-    private String authorization;
+    private List<String> userIdList;
 }

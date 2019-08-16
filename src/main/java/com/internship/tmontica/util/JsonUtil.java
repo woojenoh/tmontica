@@ -2,6 +2,9 @@ package com.internship.tmontica.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.internship.tmontica.user.exception.UserException;
+import com.internship.tmontica.util.exception.UtilException;
+import com.internship.tmontica.util.exception.UtilExceptionType;
 
 import java.io.IOException;
 
@@ -15,7 +18,7 @@ public class JsonUtil {
             jsonNode = mapper.readTree(json);
         } catch (IOException e){
             e.printStackTrace();
-            return "fail to parse json";
+            throw new UtilException(UtilExceptionType.JSON_PARSING_EXCEPTION);
         }
 
         JsonNode keyNode = jsonNode.get(key);

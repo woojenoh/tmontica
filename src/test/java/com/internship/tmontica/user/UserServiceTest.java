@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.MailSender;
 
 import java.util.Date;
@@ -32,6 +33,8 @@ public class UserServiceTest {
     private JwtService jwtService;
     @Mock
     private MailSender sender;
+    @Mock
+    private ModelMapper mapper;
     private User badUser;
     private User willSignUpUser;
     private User alreadySignUpUser;
@@ -216,6 +219,15 @@ public class UserServiceTest {
         userService.checkPassword(alreadySignUpUser);
     }
 
+    @Test
+    public void 비밀번호_수정_성공(){
+
+        // given
+        given(userDao.updateUserPassword(alreadySignUpUser)).willReturn(1);
+
+        // when
+        userService.changePassword(alreadySignUpUser);
+    }
 
 
 }

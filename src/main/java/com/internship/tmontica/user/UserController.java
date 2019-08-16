@@ -7,16 +7,15 @@ import com.internship.tmontica.security.JwtService;
 import com.internship.tmontica.user.exception.UserValidException;
 import com.internship.tmontica.user.find.FindId;
 import com.internship.tmontica.user.model.request.*;
-import com.internship.tmontica.user.model.response.UserFindIdRespDTO;
-import com.internship.tmontica.user.model.response.UserInfoRespDTO;
-import com.internship.tmontica.user.model.response.UserSignInRespDTO;
+import com.internship.tmontica.user.model.response.UserFindIdResponseDTO;
+import com.internship.tmontica.user.model.response.UserInfoResponseDTO;
+import com.internship.tmontica.user.model.response.UserSignInResponseDTO;
 import com.internship.tmontica.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,15 +32,12 @@ public class UserController {
     private static final String SIGN_UP_CELEBRATE_POINT = "1000";
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signUp(@RequestBody @Valid UserSignUpReqDTO userSignUpReqDTO, BindingResult bindingResult) {
+    public ResponseEntity<String> signUp(@RequestBody @Valid UserSignUpRequestDTO userSignUpRequestDTO, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
-            for(FieldError f : bindingResult.getFieldErrors()){
-                System.out.println(f.getField() + " : " + f.getRejectedValue());
-            }
             throw new UserValidException("User Sign-up Form", "회원가입 폼 데이터가 올바르지 않습니다.", bindingResult);
         }
-        User user = modelMapper.map(userSignUpReqDTO, User.class);
+        User user = modelMapper.map(userSignUpRequestDTO, User.class);
         userService.signUp(user);
         return new ResponseEntity<>(UserResponseMessage.SIGN_UP_SUCCESS.getMessage(), HttpStatus.CREATED);
     }
@@ -63,31 +59,30 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<UserSignInRespDTO> signIn(@RequestBody @Valid UserSignInReqDTO userSignInReqDTO, BindingResult bindingResult) {
+    public ResponseEntity<UserSignInResponseDTO> signIn(@RequestBody @Valid UserSignInRequsetDTO userSignInRequsetDTO, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
             throw new UserValidException("User Sign-in Form", "로그인 폼 데이터가 올바르지 않습니다.", bindingResult);
         }
-        User user = modelMapper.map(userSignInReqDTO, User.class);
+        User user = modelMapper.map(userSignInRequsetDTO, User.class);
         userService.signInCheck(user);
-        UserSignInRespDTO userSignInRespDTO = userService.makeJwtToken(user);
-        return new ResponseEntity<>(userSignInRespDTO, HttpStatus.OK);
+        return new ResponseEntity<>(modelMapper.map(userService.makeJwtToken(user), UserSignInResponseDTO.class), HttpStatus.OK);
     }
 
     @PostMapping("/checkpw")
-    public ResponseEntity<String> checkPassword(@RequestBody @Valid UserCheckPasswordReqDTO userCheckPasswordReqDTO, BindingResult bindingResult) {
+    public ResponseEntity<String> checkPassword(@RequestBody @Valid UserCheckPasswordRequestDTO userCheckPasswordRequestDTO, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
             throw new UserValidException("User Check-password Form", "비밀번호 확인 폼 데이터가 올바르지 않습니다.", bindingResult);
         }
-        User user = modelMapper.map(userCheckPasswordReqDTO, User.class);
+        User user = modelMapper.map(userCheckPasswordRequestDTO, User.class);
         user.setId(JsonUtil.getJsonElementValue(jwtService.getUserInfo("userInfo"), "id"));
         userService.checkPassword(user);
         return new ResponseEntity<>(UserResponseMessage.PASSWORD_CHECK_SUCCESS.getMessage(), HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<String> changePassword(@RequestBody @Valid UserChangePasswordReqDTO userChangePasswordReqDTO, BindingResult bindingResult) {
+    public ResponseEntity<String> changePassword(@RequestBody @Valid UserChangePasswordRequestDTO userChangePasswordReqDTO, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
             throw new UserValidException("User Change-password Form", "비밀번호 변경 폼 데이터가 올바르지 않습니다.", bindingResult);
@@ -121,19 +116,19 @@ public class UserController {
     }
 
     @PostMapping("/findid/confirm")
-    public ResponseEntity<UserFindIdRespDTO> findIdConfirm(@RequestBody @Valid UserFindIdReqDTO userFindIdReqDTO, BindingResult bindingResult){
+    public ResponseEntity<UserFindIdResponseDTO> findIdConfirm(@RequestBody @Valid UserFindIdRequsetDTO userFindIdReqDTO, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()) {
             throw new UserValidException("User Find-id Form", "아이디 찾기 폼 데이터가 올바르지 않습니다.", bindingResult);
         }
         FindId findId = modelMapper.map(userFindIdReqDTO, FindId.class);
-        UserFindIdRespDTO userFindIdRespDTO = userService.checkAuthCode(findId);
-        return new ResponseEntity<>(userFindIdRespDTO, HttpStatus.OK);
+        UserFindIdResponseDTO userFindIdResponseDTO = userService.checkAuthCode(findId);
+        return new ResponseEntity<>(userFindIdResponseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserInfoRespDTO> getUserInfo(@PathVariable("userId") String id) {
+    public ResponseEntity<UserInfoResponseDTO> getUserInfo(@PathVariable("userId") String id) {
 
-        return new ResponseEntity<>(userService.getUserInfo(id), HttpStatus.OK);
+        return new ResponseEntity<>(modelMapper.map(userService.getUserInfo(id), UserInfoResponseDTO.class), HttpStatus.OK);
     }
 }
