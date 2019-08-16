@@ -36,9 +36,6 @@ public class UserController {
     public ResponseEntity<String> signUp(@RequestBody @Valid UserSignUpReqDTO userSignUpReqDTO, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()) {
-            for(FieldError f : bindingResult.getFieldErrors()){
-                System.out.println(f.getField() + " : " + f.getRejectedValue());
-            }
             throw new UserValidException("User Sign-up Form", "회원가입 폼 데이터가 올바르지 않습니다.", bindingResult);
         }
         User user = modelMapper.map(userSignUpReqDTO, User.class);
