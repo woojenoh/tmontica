@@ -1,5 +1,6 @@
 import { call, put, takeLatest, select } from "redux-saga/effects";
 import _ from "underscore";
+import history from "../../history";
 import * as cartActionTypes from "../actionTypes/cart";
 import * as cartActionCreators from "../actionCreators/cart";
 import * as cartTypes from "../../types/cart";
@@ -7,6 +8,15 @@ import * as userActionCreators from "../actionCreators/user";
 import { addCart, getCart, changeCart, removeCart } from "../../api/cart";
 import { CommonError } from "../../api/CommonError";
 import { handleError } from "../../api/common";
+
+function* initializeLocalCartSagas() {
+  const initCart = {
+    size: 0,
+    totalPrice: 0,
+    menus: []
+  } as cartTypes.ICart;
+  yield localStorage.setItem("localCart", JSON.stringify(initCart));
+}
 
 function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
   try {
@@ -235,7 +245,14 @@ function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
   }
 }
 
+function* setOrderCartSagas(action: cartTypes.ISetOrderCart) {
+  yield localStorage.setItem("orderCart", JSON.stringify(action.payload));
+  yield localStorage.setItem("isDirect", "N");
+  yield history.push("/payment");
+}
+
 export default function* userSagas() {
+  yield takeLatest(cartActionTypes.INITIALIZE_LOCAL_CART, initializeLocalCartSagas);
   yield takeLatest(cartActionTypes.ADD_LOCAL_CART, addLocalCartSagas);
   yield takeLatest(cartActionTypes.REMOVE_LOCAL_CART, removeLocalCartSagas);
   yield takeLatest(cartActionTypes.CHANGE_LOCAL_CART, changeLocalCartSagas);
@@ -243,4 +260,5 @@ export default function* userSagas() {
   yield takeLatest(cartActionTypes.FETCH_ADD_CART, fetchAddCartSagas);
   yield takeLatest(cartActionTypes.FETCH_REMOVE_CART, fetchRemoveCartSagas);
   yield takeLatest(cartActionTypes.FETCH_CHANGE_CART, fetchChangeCartSagas);
+  yield takeLatest(cartActionTypes.SET_ORDER_CART, setOrderCartSagas);
 }
