@@ -61,6 +61,7 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
       if (result === "signout") {
         this.props.signout();
       }
+      return Promise.reject();
     }
   }
 
@@ -107,7 +108,8 @@ export default class OrderList extends React.Component<IOrderListProps, IOrderLi
       () =>
         (this.intervalId = setInterval(() => {
           this.getOrderAll();
-        }, 10000))
+        }, 10000)),
+      () => {}
     );
   }
 
