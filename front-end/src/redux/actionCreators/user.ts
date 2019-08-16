@@ -1,6 +1,12 @@
 import * as actionTypes from "../actionTypes/user";
 import * as userTypes from "../../types/user";
 
+export function signout() {
+  return {
+    type: actionTypes.SIGNOUT
+  };
+}
+
 export function fetchSignup(payload: userTypes.IUserSignupInfo) {
   return {
     type: actionTypes.FETCH_SIGNUP,
@@ -59,18 +65,6 @@ export function fetchSigninActiveRejected(error: string) {
   return {
     type: actionTypes.FETCH_SIGNIN_ACTIVE_REJECTED,
     error
-  };
-}
-
-export function signout() {
-  return {
-    type: actionTypes.SIGNOUT
-  };
-}
-
-export function signoutFulfilled() {
-  return {
-    type: actionTypes.SIGNOUT_FULFILLED
   };
 }
 

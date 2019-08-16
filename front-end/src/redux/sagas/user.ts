@@ -1,4 +1,4 @@
-import { call, put, takeLatest, takeEvery } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 import {
   signUp,
   signIn,
@@ -17,10 +17,9 @@ import * as cartActionCreators from "../actionCreators/cart";
 import { CommonError } from "../../api/CommonError";
 import { handleError } from "../../api/common";
 
-export function* signout() {
-  localStorage.removeItem("jwt");
-  history.push("/signin");
-  yield put(userActionCreators.signoutFulfilled());
+function* signoutSagas() {
+  yield localStorage.removeItem("jwt");
+  yield history.push("/signin");
 }
 
 function* fetchSignupSagas(action: userTypes.IFetchSignup) {
@@ -30,14 +29,13 @@ function* fetchSignupSagas(action: userTypes.IFetchSignup) {
       throw data;
     }
 
-    yield put(userActionCreators.fetchSignupFulfilled());
     alert("가입 인증 메일이 발송되었습니다.");
     history.push("/signin");
+    yield put(userActionCreators.fetchSignupFulfilled());
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
       yield put(userActionCreators.signout());
-      yield call(signout);
     }
     yield put(userActionCreators.fetchSignupRejected(result));
   }
@@ -51,30 +49,25 @@ function* fetchSigninSagas(action: userTypes.IFetchSignin) {
     }
     const { authorization } = data;
 
-    // 토큰에서 유저 정보를 가져와 상태에 저장한다.
+    // 토큰을 로컬스토리지에 저장하고, 토큰에서 유저 정보를 가져와 상태를 업데이트한다.
+    yield localStorage.setItem("jwt", authorization);
     const jwtToken = jwt(authorization) as userTypes.IJwtToken;
     const parsedUserInfo = JSON.parse(jwtToken.userInfo);
-    // jwt를 로컬 스토리지에 저장한다.
-    localStorage.setItem("jwt", authorization);
     alert("환영합니다!");
+    history.push("/");
     yield put(
       userActionCreators.fetchSigninFulfilled({
         user: parsedUserInfo,
         isAdmin: parsedUserInfo.role === "ADMIN"
       })
     );
+
     // 로그인 후 유저의 장바구니를 가져온다. 순서를 보장하기 위해 로그인 사가에.
     yield put(cartActionCreators.fetchSetCart());
-    if (/admin/.test(window.location.href)) {
-      history.push("/admin");
-    } else {
-      history.push("/");
-    }
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
       yield put(userActionCreators.signout());
-      yield call(signout);
     }
     yield put(userActionCreators.fetchSigninRejected(result));
   }
@@ -96,7 +89,6 @@ function* fetchSigninActiveSagas(action: userTypes.IFetchSigninActive) {
     const result = yield handleError(error);
     if (result === "signout") {
       yield put(userActionCreators.signout());
-      yield call(signout);
     }
     yield put(userActionCreators.fetchSigninActiveRejected(result));
   }
@@ -117,7 +109,6 @@ function* fetchFindIdSagas(action: userTypes.IFetchFindId) {
     const result = yield handleError(error);
     if (result === "signout") {
       yield put(userActionCreators.signout());
-      yield call(signout);
     }
     yield put(userActionCreators.fetchFindIdRejected(result));
   }
@@ -138,7 +129,6 @@ function* fetchFindIdConfirmSagas(action: userTypes.IFetchFindIdConfirm) {
     const result = yield handleError(error);
     if (result === "signout") {
       yield put(userActionCreators.signout());
-      yield call(signout);
     }
     yield put(userActionCreators.fetchFindIdConfirmRejected(result));
   }
@@ -160,7 +150,6 @@ function* fetchFindPasswordSagas(action: userTypes.IFetchFindPassword) {
     const result = yield handleError(error);
     if (result === "signout") {
       yield put(userActionCreators.signout());
-      yield call(signout);
     }
     yield put(userActionCreators.fetchFindPasswordRejected(result));
   }
@@ -168,19 +157,20 @@ function* fetchFindPasswordSagas(action: userTypes.IFetchFindPassword) {
 
 function* fetchSetPointSagas(action: userTypes.IFetchSetPoint) {
   try {
+    // 포인트를 가져와 상태를 업데이트한다.
     const data = yield call(setPoint);
     yield put(userActionCreators.fetchSetPointFulfilled({ point: data }));
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
       yield put(userActionCreators.signout());
-      yield call(signout);
     }
     yield put(userActionCreators.fetchSetPointRejected(result));
   }
 }
 
 export default function* userSagas() {
+  yield takeLatest(userActionTypes.SIGNOUT, signoutSagas);
   yield takeLatest(userActionTypes.FETCH_SIGNUP, fetchSignupSagas);
   yield takeLatest(userActionTypes.FETCH_SIGNIN, fetchSigninSagas);
   yield takeLatest(userActionTypes.FETCH_SIGNIN_ACTIVE, fetchSigninActiveSagas);
@@ -188,5 +178,4 @@ export default function* userSagas() {
   yield takeLatest(userActionTypes.FETCH_FIND_ID_CONFIRM, fetchFindIdConfirmSagas);
   yield takeLatest(userActionTypes.FETCH_FIND_PASSWORD, fetchFindPasswordSagas);
   yield takeLatest(userActionTypes.FETCH_SET_POINT, fetchSetPointSagas);
-  yield takeEvery(userActionTypes.SIGNOUT, signout);
 }
