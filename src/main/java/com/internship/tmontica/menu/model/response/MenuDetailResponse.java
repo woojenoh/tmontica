@@ -1,6 +1,7 @@
 package com.internship.tmontica.menu.model.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +10,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuDetailResp {
+@Builder
+public class MenuDetailResponse {
     private int id;
     private String nameEng;
     private String nameKo;
@@ -25,7 +27,7 @@ public class MenuDetailResp {
     private boolean usable;
     private int stock;
     private boolean monthlyMenu;
-    private List<MenuOptionResp> option;
+    private List<MenuOptionResponse> option;
 
     public void setImgUrl(String imgUrl){
         this.imgUrl = "/images/".concat(imgUrl);

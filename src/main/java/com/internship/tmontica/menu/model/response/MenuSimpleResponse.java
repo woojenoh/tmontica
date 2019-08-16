@@ -5,7 +5,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuSimpleResp {
+public class MenuSimpleResponse {
     private int id;
     private String nameEng;
     private String nameKo;

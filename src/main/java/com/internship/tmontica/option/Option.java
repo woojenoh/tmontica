@@ -1,7 +1,8 @@
 package com.internship.tmontica.option;
 
-import lombok.*;
-import org.apache.ibatis.type.Alias;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

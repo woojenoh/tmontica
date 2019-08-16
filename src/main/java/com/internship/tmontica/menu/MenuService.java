@@ -2,23 +2,22 @@ package com.internship.tmontica.menu;
 
 import com.internship.tmontica.menu.exception.MenuException;
 import com.internship.tmontica.menu.exception.MenuExceptionType;
-import com.internship.tmontica.menu.model.response.MenuDetailResp;
-import com.internship.tmontica.menu.model.response.MenuMainResp;
-import com.internship.tmontica.menu.model.response.MenuOptionResp;
-import com.internship.tmontica.menu.model.response.MenuSimpleResp;
+import com.internship.tmontica.menu.model.response.MenuDetailResponse;
+import com.internship.tmontica.menu.model.response.MenuMainResponse;
+import com.internship.tmontica.menu.model.response.MenuOptionResponse;
+import com.internship.tmontica.menu.model.response.MenuSimpleResponse;
 import com.internship.tmontica.option.Option;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MenuService {
@@ -30,141 +29,119 @@ public class MenuService {
     @Value("${menu.imagepath}")
     private String location;
 
-    // 메인 화면에 나타나는 메뉴 정보
-    public List<MenuMainResp> getMainMenus(){
+    // 메인 화면에 나타나는 메뉴 정보 (이달의 메뉴, 카테고리 별 메뉴)
+    public List<MenuMainResponse> getMainMenus(){
 
-        List<MenuMainResp> allMenus = new ArrayList<>();
-        // 이달의 메뉴 , 커피 , 에이드 , 빵
-        for(CategoryName categoryName : CategoryName.values()){
-            allMenus.add(getMenuMainResp(categoryName.getCategoryEng()));
-        }
+        List<MenuMainResponse> allMenus = new ArrayList<>();
+        allMenus.add(getMonthlyMainMenu(4));
+        Arrays.stream(CategoryName.values())
+                .forEach(categoryName -> allMenus.add(getMainMenu(categoryName.getCategoryEng(), 8)));
 
         return allMenus;
     }
 
     // 하나의 메뉴 상세 정보 가져오기
-    public MenuDetailResp getMenuDetailById(int id){
-        Menu menu = null;
-        List<Menu> usableMenus = MenuScheduler.getUsableMenus();
-        // 사용가능한 메뉴가 존재하지 않을 경우
-        if(usableMenus.isEmpty()){
-            throw new MenuException(MenuExceptionType.MENU_NO_CONTENT_EXCEPTION);
-        }
+    public MenuDetailResponse getMenuDetailById(int id){
 
-        for(Menu checkMenu : usableMenus){
-            if(checkMenu.getId() == id){
-                menu = checkMenu;
-                break;
-            }
-        }
-
-        if(menu == null){
-            throw new MenuException(MenuExceptionType.MENU_NO_CONTENT_EXCEPTION);
-        }
-
-        // 메뉴의 옵션 정보 가져오기
+        Menu menu = MenuManager.getMenuById(id);
         List<Option> options = menuDao.getOptionsById(id);
 
-        MenuDetailResp menuDetailResp = modelMapper.map(menu, MenuDetailResp.class);
-        List<MenuOptionResp> menuOptions = modelMapper.map(options, new TypeToken<List<MenuOptionResp>>(){}.getType());
+        MenuDetailResponse menuDetailResponse = modelMapper.map(menu, MenuDetailResponse.class);
+        List<MenuOptionResponse> menuOptions = modelMapper.map(options, new TypeToken<List<MenuOptionResponse>>(){}.getType());
 
-        menuDetailResp.setOption(menuOptions);
+        menuDetailResponse.setOption(menuOptions);
 
-        return menuDetailResp;
+        return menuDetailResponse;
     }
 
     // 카테고리 별 메뉴 정보 가져오기
-    public List<Menu> getMenusByCategory(String category, int page, int size){
-        // 카테고리 이름 체크
-        checkCategoryName(category);
+    public List<MenuSimpleResponse> getMenusByCategory(String category, int page, int size){
 
-        List<Menu> usableMenus = MenuScheduler.getUsableMenus();
-        // 사용가능한 메뉴가 존재하지 않을 경우
-        if(usableMenus.isEmpty()){
+        validateCategoryName(category);
+        List<Menu> usableMenus = MenuManager.getUsableMenusWithCheckEmpty();
+        List<Menu> menus = usableMenus.stream()
+                .filter(menu -> menu.isSameCategory(category))
+                .collect(Collectors.toList());
+
+        List<Menu> menusByPage = getMenusByPage(page, size, menus);
+        if(menusByPage.isEmpty()){
             throw new MenuException(MenuExceptionType.MENU_NO_CONTENT_EXCEPTION);
         }
-        // 해당 카테고리의 모든 메뉴를 가져온다.
-        List<Menu> categoryMenus = usableMenus.stream().filter(menu -> menu.getCategoryEng().equals(category))
-                                              .collect(Collectors.toList());
-        // 가져온 메뉴들 중 페이지에 맞는 메뉴들만 리턴한다.
-        return getMenusByPage(page, size, categoryMenus);
 
+        return modelMapper.map(menus, new TypeToken<List<MenuSimpleResponse>>(){}.getType());
     }
 
     // 메뉴 정보 가져오기 (전체)
     public List<Menu> getAllMenus(int page, int size){
-        // 페이지에 맞는 메뉴들만 리턴한다.
-        List<Menu> usableMenus = MenuScheduler.getUsableMenus();
-        // 사용가능한 메뉴가 존재하지 않을 경우
-        if(usableMenus.isEmpty()){
-            throw new MenuException(MenuExceptionType.MENU_NO_CONTENT_EXCEPTION);
-        }
-        return getMenusByPage(page, size, usableMenus);
 
+        List<Menu> usableMenus = MenuManager.getUsableMenusWithCheckEmpty();
+        return getMenusByPage(page, size, usableMenus);
     }
 
     private List<Menu> getMenusByPage(int page, int size, List<Menu> menus) {
+
         int startIndex = (page - 1) * size;
 
-        if(startIndex < 0 || startIndex >= menus.size())
+        if(startIndex < 0 || startIndex >= menus.size()){
             return new ArrayList<>();
+        }
 
         int endIndex = (startIndex + size < menus.size())? startIndex + size : menus.size();
-
         return menus.subList(startIndex, endIndex);
     }
 
 
-    // 메인 화면에 필요한 메뉴정보 가져오기.
-    private MenuMainResp getMenuMainResp(String categoryEng){
-        // 메인 화면에 나타나는 메뉴 정보
-        List<Menu> usableMenus = MenuScheduler.getUsableMenus();
-        MenuMainResp menuMainResp = new MenuMainResp();
-        menuMainResp.setCategoryEng(categoryEng);
-        menuMainResp.setCategoryKo(CategoryName.convertEngToKo(categoryEng));
-        List<Menu> menus = new ArrayList<>();
+    // 메인 화면에 필요한 카테고리 별 메뉴 정보 가져오기.
+    private MenuMainResponse getMainMenu(String categoryEng, int contentsNumber){
 
-        int count = 0;
+        MenuMainResponse menuMainResponse = new MenuMainResponse(categoryEng, CategoryName.convertEngToKo(categoryEng));
+        List<Menu> usableMenus = MenuManager.getUsableMenus();
 
         if(usableMenus.isEmpty()){
-            menuMainResp.setMenus(new ArrayList<>());
-            return menuMainResp;
+            menuMainResponse.setMenus(new ArrayList<>());
+            return menuMainResponse;
         }
 
-        if(categoryEng.equals(CategoryName.CATEGORY_MONTHLY.getCategoryEng())){  // 4개 까지 가져온다.
-            for(Menu menu : usableMenus){
-                if(count == 4) break;
-                if(menu.isMonthlyMenu()){
-                    menus.add(menu);
-                    count++;
-                }
+        List<Menu> menus = usableMenus.stream()
+                              .filter(menu -> menu.isSameCategory(categoryEng))
+                              .limit(contentsNumber)
+                              .collect(Collectors.toList());
 
-            }
-        }else{
-            for(Menu menu : usableMenus){   // 8개 까지 가져온다.
-                if(count == 8) break;
-                if(menu.getCategoryEng().equals(categoryEng)){
-                    menus.add(menu);
-                    count++;
-                }
-            }
+        List<MenuSimpleResponse> menuSimpleList = modelMapper.map(menus, new TypeToken<List<MenuSimpleResponse>>(){}.getType());
+        menuMainResponse.setMenus(menuSimpleList);
+        return menuMainResponse;
+    }
+
+    // 메인 화면의 이달의 메뉴 가져오기
+    private MenuMainResponse getMonthlyMainMenu(int contentsNumber){
+
+        MenuMainResponse menuMainResponse = new MenuMainResponse("monthlymenu", "이달의 메뉴");
+        List<Menu> usableMenus = MenuManager.getUsableMenus();
+
+        if(usableMenus.isEmpty()){
+            menuMainResponse.setMenus(new ArrayList<>());
+            return menuMainResponse;
         }
 
-        List<MenuSimpleResp> menuSimpleList = modelMapper.map(menus, new TypeToken<List<MenuSimpleResp>>(){}.getType());
+        List<Menu> menus = usableMenus.stream()
+                                .filter(Menu::isMonthlyMenu)
+                                .limit(contentsNumber)
+                                .collect(Collectors.toList());
 
-        menuMainResp.setMenus(menuSimpleList);
-        return menuMainResp;
+        List<MenuSimpleResponse> menuSimpleList = modelMapper.map(menus, new TypeToken<List<MenuSimpleResponse>>(){}.getType());
+
+        menuMainResponse.setMenus(menuSimpleList);
+        return menuMainResponse;
     }
 
     // 카테고리 이름 체크
-    public void checkCategoryName(String categoryName){
+    private void validateCategoryName(String categoryName){
 
         for(CategoryName element : CategoryName.values()){
             if(element.getCategoryEng().equals(categoryName)){
                 return;
             }
         }
-
         throw new MenuException(MenuExceptionType.CATEGORY_NAME_MISMATCH_EXCEPTION);
     }
 }

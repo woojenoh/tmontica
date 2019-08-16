@@ -1,5 +1,7 @@
 package com.internship.tmontica.menu;
 
+import com.internship.tmontica.menu.exception.MenuException;
+import com.internship.tmontica.menu.exception.MenuExceptionType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -7,7 +9,6 @@ import lombok.Getter;
 @Getter
 public enum CategoryName {
 
-    CATEGORY_MONTHLY("monthlymenu", "이달의 메뉴"),
     CATEGORY_COFFEE("coffee", "커피"),
     CATEGORY_ADE("ade", "에이드"),
     CATEGORY_BREAD("bread", "빵");
@@ -23,7 +24,7 @@ public enum CategoryName {
             }
         }
 
-        return "non";
+        throw new MenuException(MenuExceptionType.CATEGORY_NAME_MISMATCH_EXCEPTION);
     }
 
 }

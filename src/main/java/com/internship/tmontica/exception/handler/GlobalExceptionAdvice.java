@@ -57,8 +57,8 @@ public class GlobalExceptionAdvice {
     // 메뉴
     @ExceptionHandler(MenuException.class)
     public ResponseEntity<TmonTicaExceptionFormat> handleMenuException(MenuException e){
-        log.info("MenuException : {}" , e.getErrorMessage());
-        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getErrorMessage()), e.getMenuExceptionType().getResponseType());
+        log.info("MenuException : {}" , e.getMessage());
+        return new ResponseEntity<>(new TmonTicaExceptionFormat(e.getField(), e.getMessage()), e.getMenuExceptionType().getResponseType());
     }
 
     // 카트

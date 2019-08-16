@@ -64,6 +64,14 @@ public class  Menu {
 
     private boolean deleted = false;
 
+    // 재고 확인
+
+
+    // 카테고리
+    public boolean isSameCategory(String categoryEng){
+        return this.categoryEng.equals(categoryEng);
+    }
+
 
 
 }
