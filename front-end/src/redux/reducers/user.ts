@@ -22,6 +22,14 @@ const INITIAL_STATE = {
 
 export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
   switch (action.type) {
+    // SIGNOUT
+    case actionTypes.SIGNOUT:
+      return {
+        ...state,
+        isSignin: false,
+        isAdmin: false,
+        user: null
+      };
     // FETCH_SIGNUP
     case actionTypes.FETCH_SIGNUP:
       return {
@@ -63,12 +71,6 @@ export default function(state = INITIAL_STATE, action: userTypes.TUserAction) {
       return {
         ...state,
         error: action.error
-      };
-    case actionTypes.SIGNOUT:
-      return {
-        ...state,
-        user: null,
-        isSignin: false
       };
     // FETCH_FIND_ID
     case actionTypes.FETCH_FIND_ID:

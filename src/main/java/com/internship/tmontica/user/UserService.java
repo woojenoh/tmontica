@@ -8,7 +8,6 @@ import com.internship.tmontica.user.find.FindId;
 import com.internship.tmontica.user.model.response.*;
 import com.internship.tmontica.security.AuthenticationKey;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.MailSender;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,6 @@ public class UserService {
     private final FindDao findDao;
     private final JwtService jwtService;
     private final MailSender sender;
-    private final ModelMapper modelMapper;
 
     @Transactional
     public void signUp(User user) throws MailSendException {
@@ -39,11 +37,11 @@ public class UserService {
         checkUserRoleMismatchException(user.getRole());
 
         //문제없는 회원가입 정보가 왔다면 활성화 코드 설정
-       String key = new AuthenticationKey().getAuthenticationKey();
+        String key = new AuthenticationKey().getAuthenticationKey();
         setActivateCode(user, key);
 
         if(userDao.addUser(user) < 1){
-            throw new UserException(UserExceptionType.DATABASE_FAIL_EXCEPTION);
+             throw new UserException(UserExceptionType.DATABASE_FAIL_EXCEPTION);
         }
 
         //Sign-up 메일 전송
@@ -112,15 +110,14 @@ public class UserService {
     }
 
     // Sign-in시 발급할 JWT 토큰을 만드는 메소드
-    public UserSignInRespDTO makeJwtToken(User user){
+    public String makeJwtToken(User user){
 
-        return new UserSignInRespDTO(jwtService.getToken(makeTokenUser(user.getId())));
+        return jwtService.getToken(makeTokenUser(user.getId()));
     }
 
-    private UserTokenInfoDTO makeTokenUser(String id){
+    private User makeTokenUser(String id){
 
-        User user = userDao.getUserByUserId(id);
-        return modelMapper.map(user, UserTokenInfoDTO.class);
+        return userDao.getUserByUserId(id);
     }
 
     public void checkPassword(User user){
@@ -132,9 +129,8 @@ public class UserService {
     public void changePassword(User user){
 
         checkPasswordMismatchException(user.getPassword(), user.getPasswordCheck());
-        UserChangePasswordDTO userChangePasswordDTO = new UserChangePasswordDTO(user.getId(), user.getPassword());
 
-        if(userDao.updateUserPassword(modelMapper.map(userChangePasswordDTO, User.class)) < 1){
+        if(userDao.updateUserPassword(user) < 1){
             throw new UserException(UserExceptionType.DATABASE_FAIL_EXCEPTION);
         }
     }
@@ -187,33 +183,31 @@ public class UserService {
         User user = userDao.getUserByUserId(id);
         checkEmailMismatchException(user.getEmail(), email);
 
-        String tempPassword = new AuthenticationKey().getAuthenticationKey();
-        UserChangePasswordDTO userChangePasswordDTO = new UserChangePasswordDTO(user.getId(), tempPassword);
-        userDao.updateUserPassword(modelMapper.map(userChangePasswordDTO, User.class));
+        user.setPassword(new AuthenticationKey().getAuthenticationKey());
+        userDao.updateUserPassword(user);
 
-        user.setPassword(tempPassword);
         UserMailForm userMailForm = new UserMailForm(MailType.FIND_PW, user, false);
         sender.send(userMailForm.getMsg());
     }
 
     // 아이디 찾기 관련 인증코드 확인 메소드
     @Transactional
-    public UserFindIdRespDTO checkAuthCode(FindId findId){
+    public UserFindIdResponseDTO checkAuthCode(FindId findId){
 
         FindId data = findDao.getAuthCode(findId.getAuthCode());
         if(data != null){
             List<String> findIds = new ArrayList<>(Arrays.asList(data.getFindIds().replace(" ","").replace("[","").replace("]","").split(",")));
             findDao.withdrawAuthCode(data.getAuthCode());
-            return new UserFindIdRespDTO(findIds);
+            return new UserFindIdResponseDTO(findIds);
         }
 
         throw new UserException(UserExceptionType.AUTHCODE_NOT_FOUND_EXCEPTION);
     }
 
-    public UserInfoRespDTO getUserInfo(String id){
+    public User getUserInfo(String id){
 
         checkUserIdNotFoundException(id);
-        return modelMapper.map(userDao.getUserByUserId(id), UserInfoRespDTO.class);
+        return userDao.getUserByUserId(id);
     }
 
     private void checkPasswordMismatchException(String password, String comparePassword){

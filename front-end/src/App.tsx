@@ -15,7 +15,6 @@ import "./assets/scss/reset.scss";
 
 export interface IAppProps extends RouteComponentProps {
   isSignin: boolean;
-  isAdmin: boolean;
 }
 
 class App extends React.PureComponent<IAppProps> {
@@ -53,8 +52,9 @@ class App extends React.PureComponent<IAppProps> {
         <Route
           {...rest}
           render={props =>
-            // 로그인이 돼있는 상태에서 로그인 페이지로 이동하면 리다이렉트한다.
-            isSignin && (rest.path === "/signin" || rest.path === "/find") ? (
+            // 로그인이 돼있는 상태에서 로그인 관련 페이지로 이동하면 리다이렉트한다.
+            isSignin &&
+            (rest.path === "/signin" || rest.path === "/signup" || rest.path === "/find") ? (
               <Redirect
                 to={{
                   pathname: "/",
@@ -105,8 +105,7 @@ class App extends React.PureComponent<IAppProps> {
 }
 
 const mapStateToProps = (state: rootTypes.IRootState) => ({
-  isSignin: state.user.isSignin,
-  isAdmin: state.user.isAdmin
+  isSignin: state.user.isSignin
 });
 
 export default connect(mapStateToProps)(withRouter(App));

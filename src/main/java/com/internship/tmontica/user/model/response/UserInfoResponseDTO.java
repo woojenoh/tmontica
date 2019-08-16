@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserInfoRespDTO {
+public class UserInfoResponseDTO {
 
     private String name;
     private String id;

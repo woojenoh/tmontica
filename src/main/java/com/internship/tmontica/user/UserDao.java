@@ -12,9 +12,11 @@ public interface UserDao {
             "VALUES(#{id}, #{name}, #{email}, #{birthDate}, #{password}, #{role}, #{activateCode})")
     int addUser(User user);
     // Read
-    @Select("SELECT * FROM users WHERE id = #{id}")
+    @Select("SELECT id, name, email, birth_date, password, role, created_date, point, is_active, activate_code" +
+            " FROM users WHERE id = #{id}")
     User getUserByUserId(String id);
-    @Select("SELECT * FROM users WHERE email = #{email}")
+    @Select("SELECT id, name, email, birth_date, password, role, created_date, point, is_active, activate_code" +
+            " FROM users WHERE email = #{email}")
     List<User> getUserByEmail(String email);
     @Select("SELECT id FROM users where id = #{id}")
     String getUserIdByUserId(String id);

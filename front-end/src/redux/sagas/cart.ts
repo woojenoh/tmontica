@@ -1,5 +1,6 @@
 import { call, put, takeLatest, select } from "redux-saga/effects";
 import _ from "underscore";
+import history from "../../history";
 import * as cartActionTypes from "../actionTypes/cart";
 import * as cartActionCreators from "../actionCreators/cart";
 import * as cartTypes from "../../types/cart";
@@ -7,7 +8,15 @@ import * as userActionCreators from "../actionCreators/user";
 import { addCart, getCart, changeCart, removeCart } from "../../api/cart";
 import { CommonError } from "../../api/CommonError";
 import { handleError } from "../../api/common";
-import { signout } from "./user";
+
+function* initializeLocalCartSagas() {
+  const initCart = {
+    size: 0,
+    totalPrice: 0,
+    menus: []
+  } as cartTypes.ICart;
+  yield localStorage.setItem("localCart", JSON.stringify(initCart));
+}
 
 function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
   try {
@@ -28,7 +37,7 @@ function* addLocalCartSagas(action: cartTypes.IAddLocalCart) {
     newCart.menus = newCart.menus.concat(action.payload);
 
     // 완성된 객체를 로컬 스토리지와 상태에 저장한다.
-    localStorage.setItem("localCart", JSON.stringify(newCart));
+    yield localStorage.setItem("localCart", JSON.stringify(newCart));
     alert("상품이 담겼습니다.");
     yield put(cartActionCreators.addLocalCartFulfilled(newCart));
   } catch (error) {
@@ -56,7 +65,7 @@ function* removeLocalCartSagas(action: cartTypes.IRemoveLocalCart) {
     newCart.menus = targetMenus;
 
     // 완성된 객체를 로컬 스토리지와 상태에 저장한다.
-    localStorage.setItem("localCart", JSON.stringify(newCart));
+    yield localStorage.setItem("localCart", JSON.stringify(newCart));
     yield put(cartActionCreators.removeLocalCartFulfilled(newCart));
   } catch (error) {
     alert("문제가 발생했습니다!");
@@ -91,7 +100,7 @@ function* changeLocalCartSagas(action: cartTypes.IChangeLocalCart) {
     newCart.menus = targetMenus;
 
     // 완성된 객체를 로컬 스토리지와 상태에 저장한다.
-    localStorage.setItem("localCart", JSON.stringify(newCart));
+    yield localStorage.setItem("localCart", JSON.stringify(newCart));
     yield put(cartActionCreators.changeLocalCartFulfilled(newCart));
   } catch (error) {
     alert("문제가 발생했습니다!");
@@ -102,7 +111,7 @@ function* changeLocalCartSagas(action: cartTypes.IChangeLocalCart) {
 function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
   try {
     // 로컬 카트에 메뉴가 있으면 먼저 카트 디비에 넣고 로컬 카트는 초기화한다.
-    const localCart = localStorage.getItem("localCart");
+    const localCart = yield localStorage.getItem("localCart");
     if (localCart) {
       const parsedLocalCart = JSON.parse(localCart) as cartTypes.ICart;
       if (parsedLocalCart.size > 0) {
@@ -115,12 +124,12 @@ function* fetchSetCartSagas(action: cartTypes.IFetchSetCart) {
     if (data instanceof CommonError) {
       throw data;
     }
+
     yield put(cartActionCreators.fetchSetCartFulfilled(data));
   } catch (error) {
     const result = yield handleError(error);
     if (result === "signout") {
       yield put(userActionCreators.signout());
-      yield call(signout);
     }
     yield put(cartActionCreators.fetchSetCartRejected(result));
   }
@@ -148,14 +157,12 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
 
     // 현재 카트 상태에 새로운 카트 메뉴들을 추가한다.
     const state = yield select();
-
     const newCart = _(state.cart.cart).clone() as cartTypes.ICart;
     const newCartMenus = cartMenus.map((m: cartTypes.ICartMenu, index: number) => {
       newCart.size += m.quantity;
       newCart.totalPrice += m.quantity * m.price;
-      const newCartMenu: cartTypes.ICartMenu = m;
-      newCartMenu.cartId = data[index].cartId;
-      return newCartMenu;
+      m.cartId = data[index].cartId;
+      return m;
     });
     newCart.menus = newCart.menus.concat(newCartMenus);
     alert("상품이 담겼습니다.");
@@ -164,7 +171,6 @@ function* fetchAddCartSagas(action: cartTypes.IFetchAddCart) {
     const result = yield handleError(error);
     if (result === "signout") {
       yield put(userActionCreators.signout());
-      yield call(signout);
     }
     yield put(cartActionCreators.fetchAddCartRejected(result));
   }
@@ -194,7 +200,6 @@ function* fetchRemoveCartSagas(action: cartTypes.IFetchRemoveCart) {
     const result = yield handleError(error);
     if (result === "signout") {
       yield put(userActionCreators.signout());
-      yield call(signout);
     }
     yield put(cartActionCreators.fetchRemoveCartRejected(result));
   }
@@ -235,13 +240,19 @@ function* fetchChangeCartSagas(action: cartTypes.IFetchChangeCart) {
     const result = yield handleError(error);
     if (result === "signout") {
       yield put(userActionCreators.signout());
-      yield call(signout);
     }
     yield put(cartActionCreators.fetchChangeCartRejected(result));
   }
 }
 
+function* setOrderCartSagas(action: cartTypes.ISetOrderCart) {
+  yield localStorage.setItem("orderCart", JSON.stringify(action.payload));
+  yield localStorage.setItem("isDirect", "N");
+  yield history.push("/payment");
+}
+
 export default function* userSagas() {
+  yield takeLatest(cartActionTypes.INITIALIZE_LOCAL_CART, initializeLocalCartSagas);
   yield takeLatest(cartActionTypes.ADD_LOCAL_CART, addLocalCartSagas);
   yield takeLatest(cartActionTypes.REMOVE_LOCAL_CART, removeLocalCartSagas);
   yield takeLatest(cartActionTypes.CHANGE_LOCAL_CART, changeLocalCartSagas);
@@ -249,4 +260,5 @@ export default function* userSagas() {
   yield takeLatest(cartActionTypes.FETCH_ADD_CART, fetchAddCartSagas);
   yield takeLatest(cartActionTypes.FETCH_REMOVE_CART, fetchRemoveCartSagas);
   yield takeLatest(cartActionTypes.FETCH_CHANGE_CART, fetchChangeCartSagas);
+  yield takeLatest(cartActionTypes.SET_ORDER_CART, setOrderCartSagas);
 }

@@ -48,6 +48,10 @@ export interface IJwtToken {
   userInfo: string;
 }
 
+export interface ISignout {
+  type: typeof userActionTypes.SIGNOUT;
+}
+
 export interface IFetchSignup {
   type: typeof userActionTypes.FETCH_SIGNUP;
   payload: IUserSignupInfo;
@@ -95,14 +99,6 @@ export interface IFetchSigninActiveFulfilled {
 export interface IFetchSigninActiveRejected {
   type: typeof userActionTypes.FETCH_SIGNIN_ACTIVE_REJECTED;
   error: string;
-}
-
-export interface ISignout {
-  type: typeof userActionTypes.SIGNOUT;
-}
-
-export interface ISignoutFulfilled {
-  type: typeof userActionTypes.SIGNOUT_FULFILLED;
 }
 
 export interface IFetchFindId {
@@ -167,13 +163,13 @@ export interface IFetchSetPointRejected {
 }
 
 export type TUserAction =
+  | ISignout
   | IFetchSignup
   | IFetchSignupFulfilled
   | IFetchSignupRejected
   | IFetchSignin
   | IFetchSigninFulfilled
   | IFetchSigninRejected
-  | ISignout
   | IFetchFindId
   | IFetchFindIdFulfilled
   | IFetchFindIdRejected
